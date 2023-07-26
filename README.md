@@ -1,4 +1,4 @@
-# My take on a manga reading website that allows people to upload their own manga as well with future plans to create an app
+# My take on a manga reading website that allows people to read and upload their own manga using React and Material UI with future plans to create an app using React Native
 
 # Getting Started with Create React App
 
