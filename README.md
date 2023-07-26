@@ -1,3 +1,5 @@
+# My take on a manga reading website that allows people to upload their own manga as well with future plans to create an app
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
