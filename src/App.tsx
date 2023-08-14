@@ -7,18 +7,8 @@ function App() {
 	return (
 		<Container
 			disableGutters
-			sx={{ minWidth: "100%", backgroundColor: "#181716" }}
+			sx={{ minWidth: "100%", backgroundColor: "#1A120B" }}
 		>
-			<Toolbar sx={{ justifyContent: "space-between" }}>
-				<div>
-					<Typography color='white'>Ink Paradise</Typography>
-					<Typography color='white'>Hello Degenerate</Typography>
-				</div>
-				<Button>Recent Updates</Button>
-				<Button>Recent Updates</Button>
-				<Button>Recent Updates</Button>
-			</Toolbar>
-			<Divider sx={{ height: 3, bgcolor: "#8A6240" }} />
 			<HashRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
