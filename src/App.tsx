@@ -7,7 +7,7 @@ function App() {
 	return (
 		<Container
 			disableGutters
-			sx={{ minWidth: "100%", backgroundColor: "#1A120B" }}
+			sx={{ backgroundColor: "#1A120B", minWidth: "100%" }}
 		>
 			<HashRouter>
 				<Routes>

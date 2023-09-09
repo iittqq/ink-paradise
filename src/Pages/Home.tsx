@@ -6,6 +6,7 @@ import hxhdragondive from "../Assets/hxhdragondive.jpg";
 import vagabondbuilding from "../Assets/vagabondbuilding.jpg";
 import vagabondsky from "../Assets/vagabondSky.jpg";
 import jjksukunavsjogo from "../Assets/jjksukunavsjogo.jpg";
+import Header from "../Components/Header";
 
 const buttons = [
 	{ name: "Home", location: "/", background: hxhdragondive },
@@ -15,21 +16,21 @@ const buttons = [
 ];
 const Home = () => {
 	return (
-		<Container>
+		<Container disableGutters sx={{ minWidth: "100%", height: "100vh" }}>
 			<Grid
 				container
 				direction='column'
 				justifyContent='space-evenly'
 				alignItems='center'
-				sx={{ paddingTop: "5vh" }}
 			>
+				<Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
+					<Header />
+				</Grid>
 				<Grid item>
 					<Typography sx={{ color: "white" }}>Going Somewhere?</Typography>
 					<NavigationBubbles buttons={buttons} />
 				</Grid>
-				<Grid item>
-					<NewAdditions />
-				</Grid>
+				<Grid item>{/**<NewAdditions />*/}</Grid>
 			</Grid>
 		</Container>
 	);
