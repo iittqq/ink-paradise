@@ -1,4 +1,4 @@
-# My take on a manga reading website that allows people to read and upload their own manga using React and Material UI with future plans to create an app using React Native
+# My take on a reader website that allows people to utilize a comfortable browser reader ny pulling media from websites and displaying them using React and Material UI for the frontend and ruby on rails with SQL for the backend with future plans to create an app
 
 # Getting Started with Create React App
 

@@ -27,7 +27,7 @@ const Home = () => {
 					<Header />
 				</Grid>
 				<Grid item>
-					<Typography sx={{ color: "white" }}>Going Somewhere?</Typography>
+					<Typography sx={{ color: "white" }}>Recently Added</Typography>
 					<NavigationBubbles buttons={buttons} />
 				</Grid>
 				<Grid item>{/**<NewAdditions />*/}</Grid>
