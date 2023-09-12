@@ -6,6 +6,7 @@ type Props = {
 	manga: {
 		name: string;
 		updatedDate: string;
+		latestChapter: string;
 		cover: string;
 		destination: string;
 	}[];

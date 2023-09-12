@@ -21,24 +21,28 @@ const newManga = [
 	{
 		name: "Jujutsu Kaisen",
 		updatedDate: "9/11/2023",
+		latestChapter: "Chapter 11",
 		cover: jjkCover,
 		destination: "/reader",
 	},
 	{
 		name: "Noragami",
 		updatedDate: "9/11/2023",
+		latestChapter: "Chapter 11",
 		cover: jjkCover,
 		destination: "/reader",
 	},
 	{
 		name: "Black Clover",
 		updatedDate: "9/11/2023",
+		latestChapter: "Chapter 11",
 		cover: jjkCover,
 		destination: "/reader",
 	},
 	{
 		name: "The Return of The Unkillable Demon Lord (Solo Leveling wannabe)",
 		updatedDate: "9/11/2023",
+		latestChapter: "Chapter 11",
 		cover: jjkCover,
 		destination: "/reader",
 	},
