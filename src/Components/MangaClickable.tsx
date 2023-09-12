@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { MangaDexAPI } from "../APIs/MangaDexAPI";
 import {
 	Card,
 	Container,
@@ -21,9 +22,25 @@ type Props = {
 	};
 };
 
+const tempName = "Jujutsu Kaisen";
 const MangaClickable = (props: Props) => {
-	const { manga } = props;
+	const [mangaSearchLoading, setMangaSearchLoading] = useState(false);
 	const [showDetails, setShowDetails] = useState(false);
+	const { manga } = props;
+
+	const pullClickedManga = () => {
+		setMangaSearchLoading(true);
+
+		MangaDexAPI.getMangaByName(tempName)
+			.then((response) => {
+				console.log(response);
+				return response;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
 	return (
 		<Container>
 			<Button
@@ -33,6 +50,7 @@ const MangaClickable = (props: Props) => {
 						bgcolor: "transparent",
 					},
 				}}
+				onClick={pullClickedManga}
 				onMouseEnter={() => setShowDetails(true)}
 				onMouseLeave={() => setShowDetails(false)}
 			>
