@@ -49,7 +49,7 @@ export const MangaDexAPI = {
 			method: "GET",
 		});
 
-		return response.data;
+		return response.data.data;
 	},
 
 	getAll: async function () {

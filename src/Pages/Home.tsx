@@ -20,21 +20,35 @@ const navButtons = [
 ];
 
 const Home = () => {
-	const [mangaData, setMangaData] = useState<string[]>([]);
+	const [mangaData, setMangaData] = useState<IRecentlyUpdatedMangaDetails[]>();
 	const [latestMangaCoversUrl, setLatestMangaCoversUrl] = useState<string[]>(
 		[]
 	);
 	const [mangaIds, setMangaIds] = useState<string[]>([]);
 
+	interface IRecentlyUpdatedMangaDetails {
+		id: string;
+		name: string;
+		updatedTime: string;
+		status: string;
+	}
+
+	let mangaDetails = Array<IRecentlyUpdatedMangaDetails>;
+	let mangaIdArray: string[] = [];
 	useEffect(() => {
 		MangaDexAPI.getNewUpdatedManga().then((response) => {
-			setMangaData(response.data);
-			createMangaList(response.data);
-			//getCovers(response.data);
+			response.forEach((element: any) => {
+				mangaIdArray.push(element.id);
+			});
+
+			getCoverFromId(mangaIdArray);
+			//console.log(mangaIdArray);
+			//createMangaList(response.data);
+
 			//addIds(response.data);
 		});
-	}, []);
-
+	});
+	console.log(mangaIdArray);
 	//latestMangaCovers.forEach((current) => {
 	//console.log(current);
 	//});
@@ -42,6 +56,7 @@ const Home = () => {
 
 	//https://uploads.mangadex.org/covers/:manga-id/:cover-filename
 
+	console.log(mangaData);
 	const addIds = (manga: any) => {
 		console.log(manga);
 		manga.forEach((element: any) => {
@@ -63,9 +78,12 @@ const Home = () => {
 		});
 	};
 
-	const getCovers = (manga: any) => {
+	const getCoverFromId = (manga: any) => {
 		console.log(manga);
 		MangaDexAPI.getMangaCoverByIds(manga).then((response) => {
+			response.data.forEach((element: any) => {
+				console.log(element);
+			});
 			console.log(response);
 		});
 
@@ -80,6 +98,7 @@ const Home = () => {
 			]);
 		});*/
 	};
+	console.log(mangaIdArray);
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", height: "100vh" }}>
 			<Grid
