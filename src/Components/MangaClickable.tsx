@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { MangaDexAPI } from "../APIs/MangaDexAPI";
 import {
 	Card,
@@ -11,36 +11,49 @@ import {
 	Grid,
 } from "@mui/material";
 import mangaCover from "../Assets/cover.jpg";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
 type Props = {
-	manga: {
-		name: string;
-		updatedDate: string;
-		latestChapter: string;
-		cover: string;
-		destination: string;
-	};
+	thumbnailImage: string;
+	//id: string;
+	//updatedDate: string;
+	//volume: string;
 };
+
+dayjs.extend(utc);
 
 const tempName = "Jujutsu Kaisen";
 const MangaClickable = (props: Props) => {
-	const [mangaSearchLoading, setMangaSearchLoading] = useState(false);
 	const [showDetails, setShowDetails] = useState(false);
-	const { manga } = props;
+	const { thumbnailImage } = props;
+	/** 
+	const [latestManga, setLatestManga] = useState<string[]>([]);
 
-	const pullClickedManga = () => {
-		setMangaSearchLoading(true);
+	useEffect(() => {
+		getCovers();
+	}, []);
 
-		MangaDexAPI.getMangaByName(tempName)
+	//https://uploads.mangadex.org/covers/:manga-id/:cover-filename
+	const getCovers = () => {
+		MangaDexAPI.getCoverArtList()
 			.then((response) => {
-				console.log(response);
-				return response;
+				response.data.forEach((element: any) => {
+					console.log(response);
+					setLatestManga((latestManga) => [
+						...latestManga,
+						"https://uploads.mangadex.org/covers/" +
+							element.relationships[0].id +
+							"/" +
+							element.attributes.fileName,
+					]);
+				});
 			})
 			.catch((error) => {
 				console.log(error);
 			});
 	};
-
+*/
 	return (
 		<Container>
 			<Button
@@ -50,7 +63,7 @@ const MangaClickable = (props: Props) => {
 						bgcolor: "transparent",
 					},
 				}}
-				onClick={pullClickedManga}
+				//onClick={pullClickedManga}
 				onMouseEnter={() => setShowDetails(true)}
 				onMouseLeave={() => setShowDetails(false)}
 			>
@@ -61,7 +74,7 @@ const MangaClickable = (props: Props) => {
 							width: "200px",
 						}}
 					>
-						<CardMedia sx={{ height: "100%" }} image={manga.cover} />
+						<CardMedia sx={{ height: "100%" }} image={thumbnailImage} />
 						{showDetails && (
 							<Grid
 								container
@@ -81,7 +94,7 @@ const MangaClickable = (props: Props) => {
 										}}
 									>
 										<Typography fontSize={13} color='white'>
-											{manga.updatedDate}
+											12
 										</Typography>
 									</Card>
 								</Grid>
@@ -101,7 +114,7 @@ const MangaClickable = (props: Props) => {
 											color='white'
 											textTransform='none'
 										>
-											{manga.latestChapter}
+											12
 										</Typography>
 									</Card>
 								</Grid>
@@ -115,7 +128,7 @@ const MangaClickable = (props: Props) => {
 							color='#EFEAD8'
 							textTransform='none'
 						>
-							{manga.name}
+							12
 						</Typography>
 					</div>
 				</div>

@@ -17,37 +17,6 @@ const navButtons = [
 	{ name: "Social", location: "/social", background: jjksukunavsjogo },
 ];
 
-const newManga = [
-	{
-		name: "Jujutsu Kaisen",
-		updatedDate: "9/11/2023",
-		latestChapter: "Chapter 11",
-		cover: jjkCover,
-		destination: "/reader",
-	},
-	{
-		name: "Noragami",
-		updatedDate: "9/11/2023",
-		latestChapter: "Chapter 11",
-		cover: jjkCover,
-		destination: "/reader",
-	},
-	{
-		name: "Black Clover",
-		updatedDate: "9/11/2023",
-		latestChapter: "Chapter 11",
-		cover: jjkCover,
-		destination: "/reader",
-	},
-	{
-		name: "The Return of The Unkillable Demon Lord (Solo Leveling wannabe)",
-		updatedDate: "9/11/2023",
-		latestChapter: "Chapter 11",
-		cover: jjkCover,
-		destination: "/reader",
-	},
-];
-
 const Home = () => {
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", height: "100vh" }}>
@@ -62,7 +31,7 @@ const Home = () => {
 				</Grid>
 				<Grid item>
 					<Typography sx={{ color: "white" }}>Recently Added</Typography>
-					<Upcoming manga={newManga} />
+					<Upcoming />
 				</Grid>
 				<Grid item>{/**<NewAdditions />*/}</Grid>
 			</Grid>
