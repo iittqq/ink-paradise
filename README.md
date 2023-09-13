@@ -1,4 +1,4 @@
-# My take on a reader website that allows people to utilize a comfortable browser reader by pulling Manga chapters from MangaDex and displaying them using React and Material UI for the frontend and ruby on rails with SQL for the backend with future plans to create an app
+# My take on a reader website that allows people to utilize a comfortable browser reader by pulling Manga chapters from the MangaDex API and displaying them using React and Material UI for the frontend and ruby on rails with SQL for the backend with future plans to create an app
 
 # Getting Started with Create React App
 
