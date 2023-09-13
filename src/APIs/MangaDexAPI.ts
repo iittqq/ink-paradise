@@ -15,16 +15,16 @@ export const MangaDexAPI = {
 		return response.data.data;
 	},
 
-	getMangaCoverById: async function name(id: string) {
+	getMangaCoverByIds: async function name(id: string[]) {
 		const response = await api.request({
 			url: `${baseUrl}/cover`,
 			method: "GET",
-			params: { mangaOrCoverId: id },
+			params: { manga: id },
 		});
 
 		return response.data;
 	},
-	getCoverArtList: async function name(input?: string) {
+	getCoverArtFromId: async function name(input?: string) {
 		const response = await api.request({
 			url: `${baseUrl}/cover`,
 			method: "GET",
@@ -32,7 +32,7 @@ export const MangaDexAPI = {
 		});
 		return response.data;
 	},
-
+	/** 
 	getNewUpdates: async function name(currentTime: string) {
 		const response = await api.request({
 			url: `${baseUrl}/manga`,
@@ -42,7 +42,8 @@ export const MangaDexAPI = {
 
 		return response.data;
 	},
-	getMangaOrder: async function name(input?: string) {
+	*/
+	getNewUpdatedManga: async function name(input?: string) {
 		const response = await api.request({
 			url: `${baseUrl}/manga`,
 			method: "GET",
