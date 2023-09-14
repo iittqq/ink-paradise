@@ -15,45 +15,60 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 type Props = {
-	thumbnailImage: string;
-	//id: string;
-	//updatedDate: string;
-	//volume: string;
+	ids: string[];
 };
 
 dayjs.extend(utc);
 
-const tempName = "Jujutsu Kaisen";
 const MangaClickable = (props: Props) => {
 	const [showDetails, setShowDetails] = useState(false);
-	const { thumbnailImage } = props;
-	/** 
-	const [latestManga, setLatestManga] = useState<string[]>([]);
+	const [latestMangaCoversUrl, setLatestMangaCoversUrl] = useState<string[]>(
+		[]
+	);
+	const [mangaName, setMangaName] = useState<string[]>([]);
+	const { ids } = props;
 
 	useEffect(() => {
-		getCovers();
-	}, []);
+		console.log(ids);
+		ids.forEach((current) => {
+			setMangaName((mangaName) => [...mangaName, current]);
+		});
 
-	//https://uploads.mangadex.org/covers/:manga-id/:cover-filename
-	const getCovers = () => {
-		MangaDexAPI.getCoverArtList()
-			.then((response) => {
-				response.data.forEach((element: any) => {
-					console.log(response);
-					setLatestManga((latestManga) => [
-						...latestManga,
-						"https://uploads.mangadex.org/covers/" +
-							element.relationships[0].id +
-							"/" +
-							element.attributes.fileName,
-					]);
-				});
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		getMangaCovers(mangaName);
+		getMangaCovers(mangaName);
+	}, []);
+	/** 
+	const getCoverFromId = (manga: any) => {
+		console.log(manga);
+		MangaDexAPI.getNewMangaCovers(manga).then((response) => {
+			buildCoverUrls(response);
+			console.log(response);
+		});
 	};
 */
+	const getMangaCovers = (manga: any) => {
+		console.log(manga);
+		MangaDexAPI.getNewMangaCovers(manga).then((response) => {
+			console.log(response);
+		});
+	};
+
+	const buildCoverUrls = (manga: any) => {
+		console.log(manga);
+		manga.data.forEach((element: any) => {
+			console.log(element);
+			console.log(element.relationships[0].id);
+			setLatestMangaCoversUrl((latestMangaCoversUrl) => [
+				...latestMangaCoversUrl,
+				"https://uploads.mangadex.org/covers/" +
+					element.relationships[0].id +
+					"/" +
+					element.attributes.fileName,
+			]);
+		});
+	};
+	console.log(mangaName);
+	console.log(latestMangaCoversUrl);
 	return (
 		<Container>
 			<Button
@@ -74,7 +89,7 @@ const MangaClickable = (props: Props) => {
 							width: "200px",
 						}}
 					>
-						<CardMedia sx={{ height: "100%" }} image={thumbnailImage} />
+						<CardMedia sx={{ height: "100%" }} image={mangaCover} />
 						{showDetails && (
 							<Grid
 								container
