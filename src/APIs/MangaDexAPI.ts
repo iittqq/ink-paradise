@@ -27,9 +27,8 @@ export const MangaDexAPI = {
 	},
 	getMangaCoverById: async function name(id: string) {
 		const response = await api.request({
-			url: `${baseUrl}/cover/`,
+			url: `${baseUrl}/cover/` + id,
 			method: "GET",
-			params: { mangaOrCoverId: id },
 		});
 
 		return response.data;

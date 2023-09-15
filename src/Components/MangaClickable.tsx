@@ -10,67 +10,27 @@ import {
 	Box,
 	Grid,
 } from "@mui/material";
-import mangaCover from "../Assets/cover.jpg";
+import mangaCoverTemp from "../Assets/cover.jpg";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 type Props = {
-	ids: string[];
+	mangaCover: string;
 };
 
 dayjs.extend(utc);
 
 const MangaClickable = (props: Props) => {
 	const [showDetails, setShowDetails] = useState(false);
-	const [latestMangaCoversUrl, setLatestMangaCoversUrl] = useState<string[]>(
-		[]
-	);
-	const [mangaName, setMangaName] = useState<string[]>([]);
-	const { ids } = props;
 
+	const { mangaCover } = props;
 	useEffect(() => {
-		console.log(ids);
-		ids.forEach((current) => {
-			setMangaName((mangaName) => [...mangaName, current]);
-		});
-
-		getMangaCovers(mangaName);
-		getMangaCovers(mangaName);
+		console.log(mangaCover);
 	}, []);
-	/** 
-	const getCoverFromId = (manga: any) => {
-		console.log(manga);
-		MangaDexAPI.getNewMangaCovers(manga).then((response) => {
-			buildCoverUrls(response);
-			console.log(response);
-		});
-	};
-*/
-	const getMangaCovers = (manga: any) => {
-		console.log(manga);
-		MangaDexAPI.getNewMangaCovers(manga).then((response) => {
-			console.log(response);
-		});
-	};
 
-	const buildCoverUrls = (manga: any) => {
-		console.log(manga);
-		manga.data.forEach((element: any) => {
-			console.log(element);
-			console.log(element.relationships[0].id);
-			setLatestMangaCoversUrl((latestMangaCoversUrl) => [
-				...latestMangaCoversUrl,
-				"https://uploads.mangadex.org/covers/" +
-					element.relationships[0].id +
-					"/" +
-					element.attributes.fileName,
-			]);
-		});
-	};
-	console.log(mangaName);
-	console.log(latestMangaCoversUrl);
 	return (
-		<Container>
+		<Container sx={{ backgorundColor: "white", height: "10px", width: "10px" }}>
+			<Typography color='white'>deez</Typography>
 			<Button
 				sx={{
 					color: "black",
@@ -89,7 +49,7 @@ const MangaClickable = (props: Props) => {
 							width: "200px",
 						}}
 					>
-						<CardMedia sx={{ height: "100%" }} image={mangaCover} />
+						<CardMedia sx={{ height: "100%" }} image={mangaCoverTemp} />
 						{showDetails && (
 							<Grid
 								container

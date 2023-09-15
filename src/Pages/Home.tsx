@@ -1,31 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Grid, Typography } from "@mui/material";
-import NavigationBubbles from "../Components/NavigationBubbles";
-import NewAdditions from "../Components/NewAdditions";
-import hxhdragondive from "../Assets/hxhdragondive.jpg";
-import vagabondbuilding from "../Assets/vagabondbuilding.jpg";
-import vagabondsky from "../Assets/vagabondSky.jpg";
-import jjksukunavsjogo from "../Assets/jjksukunavsjogo.jpg";
+import { Container, Grid, Typography } from "@mui/material";
+
 import Header from "../Components/Header";
 import MangaClickable from "../Components/MangaClickable";
-import jjkCover from "../Assets/cover.jpg";
+
 import { MangaDexAPI } from "../APIs/MangaDexAPI";
 
+const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
+
 const Home = () => {
-	const [mangaArray, setMangaArray] = useState<string[]>([]);
+	const [mangaDetails, setMangaDetails] = useState<string[]>([]);
+	let mangaIds: string[] = [];
+	let coverUrls: string[] = [];
+
 	useEffect(() => {
-		MangaDexAPI.getNewUpdatedManga(
-			10,
-			0,
-			"AND",
-			"OR",
-			["none"],
-			["safe", "suggestive", "erotica", "pornographic"]
-		).then((response) => {
-			console.log(response);
-			setMangaArray((mangaArray) => [...mangaArray, ...response]);
-		});
+		getNewUpdatedManga();
 	}, []);
+
+	const getNewUpdatedManga = () => {
+		MangaDexAPI.getNewUpdatedManga(10, 0, "AND", "OR", ["none"], noFilter)
+			.then((response) => {
+				return response;
+			})
+			.then((data) => {
+				data.forEach((element: any) => {
+					mangaIds.push(element["id"]);
+
+					element.relationships.forEach((coverArt: any) => {
+						if (coverArt["type"] === "cover_art") {
+							MangaDexAPI.getMangaCoverById(coverArt["id"]).then((response) => {
+								coverUrls.push(
+									"https://uploads.mangadex.org/covers/" +
+										element["id"] +
+										"/" +
+										response.data.attributes["fileName"]
+								);
+							});
+						}
+					});
+				});
+
+				console.log(coverUrls);
+				setMangaDetails(coverUrls);
+			});
+	};
 
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", height: "100vh" }}>
@@ -47,9 +65,11 @@ const Home = () => {
 					justifyContent='center'
 					alignItems='center'
 				>
-					<Grid item>
-						<MangaClickable ids={mangaArray} />
-					</Grid>
+					{mangaDetails.map((element) => (
+						<Grid item>
+							<MangaClickable mangaCover={element} />
+						</Grid>
+					))}
 				</Grid>
 				<Grid item>{/**<NewAdditions />*/}</Grid>
 			</Grid>
