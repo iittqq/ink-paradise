@@ -1,19 +1,19 @@
 import "./App.css";
 import { Container, Toolbar, Typography, Divider, Button } from "@mui/material";
-import { Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home";
-
+//#121212
 function App() {
 	return (
 		<Container
 			disableGutters
-			sx={{ backgroundColor: "#121212", minWidth: "100%" }}
+			sx={{ backgroundColor: "#121212", minWidth: "100%", minHeight: "100vh" }}
 		>
-			<HashRouter>
+			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
 				</Routes>
-			</HashRouter>
+			</BrowserRouter>
 		</Container>
 	);
 }

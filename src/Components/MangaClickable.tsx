@@ -15,7 +15,13 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 type Props = {
-	mangaCover: string;
+	id: string;
+	title: string;
+	description: string;
+	updatedAt: string;
+	tags: { tagName: string[]; tagGroup: string[] };
+	coverId: string;
+	coverUrl: string;
 };
 
 dayjs.extend(utc);
@@ -23,14 +29,13 @@ dayjs.extend(utc);
 const MangaClickable = (props: Props) => {
 	const [showDetails, setShowDetails] = useState(false);
 
-	const { mangaCover } = props;
+	const { id, title, description, updatedAt, tags, coverId, coverUrl } = props;
 	useEffect(() => {
-		console.log(mangaCover);
+		console.log(id, title, description, updatedAt, tags, coverId, coverUrl);
 	}, []);
 
 	return (
-		<Container sx={{ backgorundColor: "white", height: "10px", width: "10px" }}>
-			<Typography color='white'>deez</Typography>
+		<Container sx={{ height: "100%", width: "100%" }}>
 			<Button
 				sx={{
 					color: "black",
@@ -49,7 +54,7 @@ const MangaClickable = (props: Props) => {
 							width: "200px",
 						}}
 					>
-						<CardMedia sx={{ height: "100%" }} image={mangaCoverTemp} />
+						<CardMedia sx={{ height: "100%" }} image={coverUrl} />
 						{showDetails && (
 							<Grid
 								container
@@ -69,7 +74,7 @@ const MangaClickable = (props: Props) => {
 										}}
 									>
 										<Typography fontSize={13} color='white'>
-											12
+											{updatedAt}
 										</Typography>
 									</Card>
 								</Grid>
@@ -89,7 +94,7 @@ const MangaClickable = (props: Props) => {
 											color='white'
 											textTransform='none'
 										>
-											12
+											{updatedAt}
 										</Typography>
 									</Card>
 								</Grid>
@@ -103,7 +108,7 @@ const MangaClickable = (props: Props) => {
 							color='#EFEAD8'
 							textTransform='none'
 						>
-							12
+							{title}
 						</Typography>
 					</div>
 				</div>
