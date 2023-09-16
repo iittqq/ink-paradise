@@ -30,9 +30,6 @@ const MangaClickable = (props: Props) => {
 	const [showDetails, setShowDetails] = useState(false);
 
 	const { id, title, description, updatedAt, tags, coverId, coverUrl } = props;
-	useEffect(() => {
-		console.log(id, title, description, updatedAt, tags, coverId, coverUrl);
-	}, []);
 
 	return (
 		<Container sx={{ height: "100%", width: "100%" }}>

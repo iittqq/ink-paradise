@@ -7,12 +7,9 @@ import MangaClickable from "../Components/MangaClickable";
 import { MangaDexAPI } from "../APIs/MangaDexAPI";
 
 const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
-
+const baseUrl = "https://api.mangadex.org";
 const Home = () => {
 	const [mangaDetails, setMangaDetails] = useState<MangaDetails[]>([]);
-	const [doneFetching, setDoneFetching] = useState(false);
-
-	let tempMangaArray: MangaDetails[] = [];
 
 	interface MangaDetails {
 		id: string;
@@ -27,51 +24,51 @@ const Home = () => {
 	//type MangaInterfaceArray = MangaDetails[];
 	//let currentManga: MangaInterfaceArray[] = [];
 	useEffect(() => {
-		getNewUpdatedManga();
-	}, []);
-
-	const getNewUpdatedManga = () => {
-		MangaDexAPI.getNewUpdatedManga(10, 0, "AND", "OR", ["none"], noFilter)
-			.then((response) => {
-				return response;
-			})
+		let tempMangaArray: MangaDetails[] = [];
+		fetch(
+			`https://api.mangadex.org/manga?limit=10&offset=0&includedTagsMode=AND&excludedTagsMode=OR&publicationDemographic%5B%5D=none&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&contentRating%5B%5D=pornographic&order%5BlatestUploadedChapter%5D=desc`
+		)
+			.then((response) => response.json())
 			.then((data) => {
-				data.forEach((element: any, index: number) => {
+				console.log(data["data"]);
+
+				data["data"].forEach((element: any, index: number) => {
 					console.log(element);
 					element.relationships.forEach((coverArt: any) => {
 						if (coverArt["type"] === "cover_art") {
-							MangaDexAPI.getMangaCoverById(coverArt["id"]).then((response) => {
-								let temp: MangaDetails = {
-									id: element["id"],
-									title: element["attributes"]["title"]["en"],
-									description: element["attributes"]["description"]["en"],
-									updatedAt: element["attributes"]["updatedAt"],
-									tags: {
-										tagName: element["attributes"]["tags"].map(
-											(current: any) => current["attributes"]["name"]["en"]
-										),
-										tagGroup: element["attributes"]["tags"].map(
-											(current: any) => current["attributes"]["group"]
-										),
-									},
-									coverId: coverArt["id"],
-									coverUrl:
-										"https://uploads.mangadex.org/covers/" +
-										element["id"] +
-										"/" +
-										response.data.attributes["fileName"],
-								};
-								tempMangaArray.push(temp);
-								console.log(tempMangaArray);
-							});
+							fetch(`https://api.mangadex.org/cover/${coverArt["id"]}`)
+								.then((response) => response.json())
+								.then((fileName) => {
+									let temp: MangaDetails = {
+										id: element["id"],
+										title: element["attributes"]["title"]["en"],
+										description: element["attributes"]["description"]["en"],
+										updatedAt: element["attributes"]["updatedAt"],
+										tags: {
+											tagName: element["attributes"]["tags"].map(
+												(current: any) => current["attributes"]["name"]["en"]
+											),
+											tagGroup: element["attributes"]["tags"].map(
+												(current: any) => current["attributes"]["group"]
+											),
+										},
+										coverId: coverArt["id"],
+										coverUrl:
+											"https://uploads.mangadex.org/covers/" +
+											element["id"] +
+											"/" +
+											fileName.data.attributes["fileName"],
+									};
+									tempMangaArray.push(temp);
+									console.log(tempMangaArray);
+								});
 						}
 					});
 				});
 
 				setMangaDetails(tempMangaArray);
 			});
-		setDoneFetching(true);
-	};
+	}, []);
 
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
