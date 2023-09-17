@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { MangaDexAPI } from "../APIs/MangaDexAPI";
+import React, { useEffect, useState } from "react";
+import { CoverById } from "../APIs/MangaDexAPI";
+import axios from "axios";
+
 import {
 	Card,
 	Container,
-	CardContent,
 	CardMedia,
 	Button,
 	Typography,
-	Box,
 	Grid,
 } from "@mui/material";
-import mangaCoverTemp from "../Assets/cover.jpg";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -21,16 +20,33 @@ type Props = {
 	updatedAt: string;
 	tags: { tagName: string[]; tagGroup: string[] };
 	coverId: string;
-	coverUrl: string;
 };
 
 dayjs.extend(utc);
 
 const MangaClickable = (props: Props) => {
+	const [coverFile, setCoverFile] = useState("");
 	const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, description, updatedAt, tags, coverId, coverUrl } = props;
+	const { id, title, description, updatedAt, tags, coverId } = props;
 
+	const fetchCoverFile = async (id: any) => {
+		const { data } = await axios.get(CoverById(id));
+		console.log(data);
+		console.log(data.data);
+		setCoverFile(data.data["attributes"].fileName);
+	};
+
+	useEffect(() => {
+		fetchCoverFile(coverId);
+		console.log(coverFile);
+		console.log(id);
+		console.log(title);
+		console.log(description);
+		console.log(updatedAt);
+		console.log(tags);
+		console.log(coverId);
+	}, []);
 	return (
 		<Container sx={{ height: "100%", width: "100%" }}>
 			<Button
@@ -51,7 +67,12 @@ const MangaClickable = (props: Props) => {
 							width: "200px",
 						}}
 					>
-						<CardMedia sx={{ height: "100%" }} image={coverUrl} />
+						<CardMedia
+							sx={{ height: "100%" }}
+							image={
+								"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
+							}
+						/>
 						{showDetails && (
 							<Grid
 								container
