@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { CoverById } from "../APIs/MangaDexAPI";
 import axios from "axios";
-
-import {
-	Card,
-	Container,
-	CardMedia,
-	Button,
-	Typography,
-	Grid,
-} from "@mui/material";
+import { Card, CardMedia, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -26,28 +18,22 @@ dayjs.extend(utc);
 
 const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
-	const [showDetails, setShowDetails] = useState(false);
+	//const [showDetails, setShowDetails] = useState(false);
 
 	const { id, title, description, updatedAt, tags, coverId } = props;
 
-	const fetchCoverFile = async (id: any) => {
-		const { data } = await axios.get(CoverById(id));
-
+	const fetchCoverFile = async () => {
+		const { data } = await axios.get(CoverById(coverId));
 		setCoverFile(data.data["attributes"].fileName);
+		return data.data;
 	};
 
 	useEffect(() => {
-		fetchCoverFile(coverId);
+		fetchCoverFile();
 	}, []);
+
 	return (
-		<Container
-			sx={
-				{
-					//height: { xs: "200px", md: "100px", lg: "100px" },
-					//width: { xs: "100px", md: "50px", lg: "50px" },
-				}
-			}
-		>
+		<div>
 			<Button
 				sx={{
 					color: "black",
@@ -83,7 +69,7 @@ const MangaClickable = (props: Props) => {
 					</div>
 				</div>
 			</Button>
-		</Container>
+		</div>
 	);
 };
 
