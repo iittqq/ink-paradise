@@ -41,10 +41,11 @@ const Home = () => {
 					direction='row'
 					justifyContent='center'
 					alignItems='center'
-					sx={{ width: "80%", minHeight: "90vh" }}
+					wrap='nowrap'
+					sx={{ width: "80%", maxHeight: "400px", overflow: "auto" }}
 				>
 					{mangaDetails.map((element) => (
-						<Grid item xs={2.2}>
+						<Grid item>
 							<MangaClickable
 								id={element["id"]}
 								title={element["attributes"].title["en"]}

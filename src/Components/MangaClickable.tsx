@@ -32,23 +32,22 @@ const MangaClickable = (props: Props) => {
 
 	const fetchCoverFile = async (id: any) => {
 		const { data } = await axios.get(CoverById(id));
-		console.log(data);
-		console.log(data.data);
+
 		setCoverFile(data.data["attributes"].fileName);
 	};
 
 	useEffect(() => {
 		fetchCoverFile(coverId);
-		console.log(coverFile);
-		console.log(id);
-		console.log(title);
-		console.log(description);
-		console.log(updatedAt);
-		console.log(tags);
-		console.log(coverId);
 	}, []);
 	return (
-		<Container sx={{ height: "100%", width: "100%" }}>
+		<Container
+			sx={
+				{
+					//height: { xs: "200px", md: "100px", lg: "100px" },
+					//width: { xs: "100px", md: "50px", lg: "50px" },
+				}
+			}
+		>
 			<Button
 				sx={{
 					color: "black",
@@ -57,67 +56,20 @@ const MangaClickable = (props: Props) => {
 					},
 				}}
 				//onClick={pullClickedManga}
-				onMouseEnter={() => setShowDetails(true)}
-				onMouseLeave={() => setShowDetails(false)}
+				//onMouseEnter={() => setShowDetails(true)}
+				//onMouseLeave={() => setShowDetails(false)}
 			>
-				<div style={{ maxWidth: "220px" }}>
-					<Card
-						sx={{
-							height: "300px",
-							width: "200px",
-						}}
-					>
+				<div style={{ maxWidth: "200px" }}>
+					<Card sx={{ height: "300px", width: "200px" }}>
 						<CardMedia
-							sx={{ height: "100%" }}
+							sx={{
+								height: "100%",
+								width: "100%",
+							}}
 							image={
 								"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
 							}
 						/>
-						{showDetails && (
-							<Grid
-								container
-								direction='row'
-								justifyContent='space-between'
-								alignItems='center'
-								sx={{ marginTop: "-20px" }}
-							>
-								<Grid item>
-									<Card
-										sx={{
-											backgroundColor: "#000000",
-											opacity: 0.8,
-											height: "50px",
-											width: "80px",
-											borderRadius: 1,
-										}}
-									>
-										<Typography fontSize={13} color='white'>
-											{updatedAt}
-										</Typography>
-									</Card>
-								</Grid>
-
-								<Grid item>
-									<Card
-										sx={{
-											backgroundColor: "#000000",
-											height: "50px",
-											opacity: 0.8,
-											width: "80px",
-											borderRadius: 1,
-										}}
-									>
-										<Typography
-											fontSize={13}
-											color='white'
-											textTransform='none'
-										>
-											{updatedAt}
-										</Typography>
-									</Card>
-								</Grid>
-							</Grid>
-						)}
 					</Card>
 					<div style={{ paddingTop: "5px" }}>
 						<Typography
