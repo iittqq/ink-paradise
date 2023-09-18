@@ -19,10 +19,8 @@ const RecentlyUpdatedList = () => {
 		fetchRecentlyUpdatedManga();
 	}, []);
 
-	const scrollRef = useRef(null);
-
 	return (
-		<div style={{ width: "90%", alignSelf: "center" }} ref={scrollRef}>
+		<div style={{ width: "90%", alignSelf: "center" }}>
 			<Grid
 				container
 				direction='row'
