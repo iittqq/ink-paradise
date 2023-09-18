@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { DetailsById } from "../APIs/MangaDexAPI";
 import dayjs from "dayjs";
+import Header from "../Components/Header";
 var utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
@@ -37,6 +38,7 @@ const IndividualManga = () => {
 	const [mangaUpdatedAt, setMangaUpdatedAt] = useState();
 	const [mangaRelationships, setMangaRelationships] = useState();
 	const [mangaType, setMangaType] = useState();
+	const [mangaLatest, setMangaLatest] = useState();
 
 	const fetchRecentlyUpdatedManga = async () => {
 		const { data } = await axios.get(DetailsById(state.id));
@@ -54,6 +56,7 @@ const IndividualManga = () => {
 		setMangaTags(data.data["attributes"].tags);
 		setMangaUpdatedAt(data.data["attributes"].updatedAt);
 		setMangaRelationships(data.data["relationships"]);
+		setMangaLatest(data.data["attributes"].latestUploadedChapter);
 	};
 
 	useEffect(() => {
@@ -63,7 +66,6 @@ const IndividualManga = () => {
 	return (
 		<div
 			style={{
-				paddingTop: "50px",
 				display: "flex",
 				justifyContent: "center",
 			}}
@@ -72,9 +74,13 @@ const IndividualManga = () => {
 				container
 				direction='column'
 				justifyContent='center'
-				alignItems='flex-start'
+				alignItems='center'
+				sx={{}}
 			>
-				<Grid item>
+				<Grid item sx={{ width: "100%" }}>
+					<Header />
+				</Grid>
+				<Grid item sx={{ width: "95%" }}>
 					<Grid
 						sx={{
 							color: "white",
@@ -82,20 +88,24 @@ const IndividualManga = () => {
 						container
 						direction='row'
 						justifyContent='space-evenly'
-						alignItems='flex-start'
+						alignItems='center'
 					>
 						<Grid item sx={{}}>
 							<Card
 								sx={{
 									height: {
 										xs: mangaCoverHeightXs,
+										sm: mangaCoverHeightMd,
 										md: mangaCoverHeightMd,
 										lg: mangaCoverHeightLg,
+										xl: mangaCoverHeightLg,
 									},
 									width: {
 										xs: mangaCoverWidthXs,
+										sm: mangaCoverWidthMd,
 										md: mangaCoverWidthMd,
 										lg: mangaCoverWidthLg,
+										xl: mangaCoverWidthLg,
 									},
 								}}
 							>
@@ -152,13 +162,16 @@ const IndividualManga = () => {
 										Show more
 									</Button>
 								</div>
-								<Typography sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}>
-									Languages:
+								<Typography
+									align='center'
+									sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
+								>
+									Languages
 								</Typography>
 								<Grid
 									container
 									direction='row'
-									justifyContent='flex-start'
+									justifyContent='center'
 									alignItems='center'
 									sx={{ paddingTop: "10px" }}
 								>
@@ -182,47 +195,82 @@ const IndividualManga = () => {
 							</div>
 						</Grid>
 					</Grid>
+				</Grid>
+
+				<Grid item sx={{ width: "100%" }}>
 					<Grid
-						item
-						color='white'
-						sx={{ paddingTop: "20px", paddingLeft: "20px" }}
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+						spacing={1}
 					>
-						<Grid
-							container
-							direction='row'
-							justifyContent='flex-start'
-							alignItems='center'
-							spacing={1}
-						>
-							{mangaTags.map((current: any) => (
-								<Grid item>
-									<Button
-										sx={{
-											backgroundColor: "#191919",
-											width: { xs: "80px", sm: "90px", lg: "90px" },
-											height: { xs: "20px", sm: "20px", lg: "20px" },
-											textAlign: "center",
-										}}
+						{mangaTags.map((current: any) => (
+							<Grid item>
+								<Button
+									sx={{
+										backgroundColor: "#191919",
+										width: { xs: "110px", sm: "110px", lg: "110px" },
+										height: { xs: "20px", sm: "20px", lg: "20px" },
+										textAlign: "center",
+									}}
+								>
+									<Typography
+										noWrap
+										color='#333333'
+										sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
 									>
-										<Typography
-											noWrap
-											color='#333333'
-											sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
-										>
-											{current["attributes"].name["en"]}
-										</Typography>
-									</Button>
-								</Grid>
-							))}
-						</Grid>
-						<Grid item sx={{ paddingTop: "20px" }}>
-							<Typography>
-								Updated on:
-								{dayjs(mangaUpdatedAt).format(" MM/DD/YYYY ")}
-								at:
-								{dayjs(mangaUpdatedAt).format(" hh:mm")}
+										{current["attributes"].name["en"]}
+									</Typography>
+								</Button>
+							</Grid>
+						))}
+					</Grid>
+					<Grid item sx={{ paddingTop: "20px" }}>
+						<Typography
+							color='#555555'
+							sx={{ fontSize: { xs: 15, sm: 15, lg: 15 } }}
+						>
+							Updated on:
+							{dayjs(mangaUpdatedAt).format(" MM/DD/YYYY ")}
+							at:
+							{dayjs(mangaUpdatedAt).format(" hh:mm")}
+						</Typography>
+						<Button
+							sx={{
+								backgroundColor: "#191919",
+								width: { xs: "110px", sm: "110px", lg: "110px" },
+								height: { xs: "20px", sm: "20px", lg: "20px" },
+								textAlign: "center",
+							}}
+						>
+							<Typography
+								noWrap
+								color='#333333'
+								sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
+							>
+								Latest
 							</Typography>
-						</Grid>
+						</Button>
+					</Grid>
+					<Grid item sx={{ paddingTop: "5px" }}>
+						<Button
+							sx={{
+								backgroundColor: "#191919",
+								width: { xs: "110px", sm: "110px", lg: "110px" },
+								height: { xs: "20px", sm: "20px", lg: "20px" },
+								textAlign: "center",
+							}}
+							href={mangaRaw}
+						>
+							<Typography
+								noWrap
+								color='#333333'
+								sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
+							>
+								RAW
+							</Typography>
+						</Button>
 					</Grid>
 				</Grid>
 			</Grid>
