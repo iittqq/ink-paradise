@@ -9,7 +9,11 @@ function App() {
 	return (
 		<Container
 			disableGutters
-			sx={{ backgroundColor: "#121212", minWidth: "100%", minHeight: "100vh" }}
+			sx={{
+				backgroundColor: "#121212",
+				minWidth: "100%",
+				minHeight: "100vh",
+			}}
 		>
 			<BrowserRouter>
 				<Routes>
