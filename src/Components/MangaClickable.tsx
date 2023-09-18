@@ -1,54 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { CoverById } from "../APIs/MangaDexAPI";
 import axios from "axios";
-
-import {
-	Card,
-	Container,
-	CardMedia,
-	Button,
-	Typography,
-	Grid,
-} from "@mui/material";
+import { Card, CardMedia, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 type Props = {
 	id: string;
 	title: string;
-	description: string;
-	updatedAt: string;
-	tags: { tagName: string[]; tagGroup: string[] };
 	coverId: string;
 };
+const mangaCoverHeightXs = "200px";
+const mangaCoverWidthXs = "100px";
+const mangaCoverHeightMd = "250px";
+const mangaCoverWidthMd = "150px";
+const mangaCoverHeightLg = "300px";
+const mangaCoverWidthLg = "200px";
 
 dayjs.extend(utc);
 
 const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
-	const [showDetails, setShowDetails] = useState(false);
+	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, description, updatedAt, tags, coverId } = props;
+	const { id, title, coverId } = props;
 
-	const fetchCoverFile = async (id: any) => {
-		const { data } = await axios.get(CoverById(id));
-		console.log(data);
-		console.log(data.data);
+	const fetchCoverFile = async () => {
+		const { data } = await axios.get(CoverById(coverId));
 		setCoverFile(data.data["attributes"].fileName);
+		return data.data;
 	};
 
 	useEffect(() => {
-		fetchCoverFile(coverId);
-		console.log(coverFile);
-		console.log(id);
-		console.log(title);
-		console.log(description);
-		console.log(updatedAt);
-		console.log(tags);
-		console.log(coverId);
+		fetchCoverFile();
 	}, []);
+
 	return (
-		<Container sx={{ height: "100%", width: "100%" }}>
+		<div>
 			<Button
 				sx={{
 					color: "black",
@@ -57,81 +45,52 @@ const MangaClickable = (props: Props) => {
 					},
 				}}
 				//onClick={pullClickedManga}
-				onMouseEnter={() => setShowDetails(true)}
-				onMouseLeave={() => setShowDetails(false)}
+				//onMouseEnter={() => setShowDetails(true)}
+				//onMouseLeave={() => setShowDetails(false)}
 			>
-				<div style={{ maxWidth: "220px" }}>
+				<div>
 					<Card
 						sx={{
-							height: "300px",
-							width: "200px",
+							height: {
+								xs: mangaCoverHeightXs,
+								md: mangaCoverHeightMd,
+								lg: mangaCoverHeightLg,
+							},
+							width: {
+								xs: mangaCoverWidthXs,
+								md: mangaCoverWidthMd,
+								lg: mangaCoverWidthLg,
+							},
 						}}
 					>
 						<CardMedia
-							sx={{ height: "100%" }}
+							sx={{
+								height: "100%",
+								width: "100%",
+							}}
 							image={
 								"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
 							}
 						/>
-						{showDetails && (
-							<Grid
-								container
-								direction='row'
-								justifyContent='space-between'
-								alignItems='center'
-								sx={{ marginTop: "-20px" }}
-							>
-								<Grid item>
-									<Card
-										sx={{
-											backgroundColor: "#000000",
-											opacity: 0.8,
-											height: "50px",
-											width: "80px",
-											borderRadius: 1,
-										}}
-									>
-										<Typography fontSize={13} color='white'>
-											{updatedAt}
-										</Typography>
-									</Card>
-								</Grid>
-
-								<Grid item>
-									<Card
-										sx={{
-											backgroundColor: "#000000",
-											height: "50px",
-											opacity: 0.8,
-											width: "80px",
-											borderRadius: 1,
-										}}
-									>
-										<Typography
-											fontSize={13}
-											color='white'
-											textTransform='none'
-										>
-											{updatedAt}
-										</Typography>
-									</Card>
-								</Grid>
-							</Grid>
-						)}
 					</Card>
-					<div style={{ paddingTop: "5px" }}>
-						<Typography
-							fontSize={15}
-							noWrap
-							color='#EFEAD8'
-							textTransform='none'
-						>
-							{title}
-						</Typography>
-					</div>
+					<Typography
+						fontSize={15}
+						noWrap
+						color='#EFEAD8'
+						textTransform='none'
+						sx={{
+							width: {
+								xs: mangaCoverWidthXs,
+								md: mangaCoverWidthMd,
+								lg: mangaCoverWidthLg,
+							},
+						}}
+					>
+						{title}
+					</Typography>
 				</div>
 			</Button>
-		</Container>
+		</div>
 	);
 };
 
