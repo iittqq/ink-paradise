@@ -4,6 +4,7 @@ import Header from "../Components/Header";
 import { RecentlyUpdated } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import RecentlyUpdatedCarousel from "../Components/RecentlyUpdatedCarousel";
+import RecentlyUpdatedList from "../Components/RecentlyUpdatedList";
 
 const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
 const baseUrl = "https://api.mangadex.org";
@@ -36,8 +37,17 @@ const Home = () => {
 				<Grid item>
 					<Typography sx={{ color: "white" }}>Recently Updated</Typography>
 				</Grid>
-				<Grid item sx={{ width: "90%" }}>
-					<RecentlyUpdatedCarousel />
+				<Grid
+					item
+					sx={{
+						width: "100%",
+						display: "flex",
+						justifyContent: "center",
+					}}
+				>
+					{/**<RecentlyUpdatedCarousel />*/}
+
+					<RecentlyUpdatedList />
 				</Grid>
 			</Grid>
 		</Container>

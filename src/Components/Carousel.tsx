@@ -1,6 +1,5 @@
 import { Box, Container, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useSwipeable } from "react-swipeable";
 import arrow from "../Assets/arrow.png";
 import ReactScrollWheelHandler from "react-scroll-wheel-handler";
 
@@ -30,13 +29,18 @@ const Carousel = ({ children }: Props) => {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [paused, setPaused] = useState(false);
 
-	const buttonAmount = Math.round(React.Children.count(children) / 7);
+	const buttonAmount = Math.round(React.Children.count(children) / 4) - 1;
 	const updateIndex = (newIndex: number) => {
-		if (newIndex < 0) {
+		if (newIndex < 0 && activeIndex === 0) {
+			console.log(newIndex);
+			console.log("hello");
+			console.log(activeIndex);
 			setActiveIndex(buttonAmount);
-		} else if (newIndex >= Math.round(React.Children.count(children) / 7)) {
+		} else if (newIndex >= Math.round(React.Children.count(children) / 4)) {
+			console.log(newIndex);
 			setActiveIndex(0);
-		} else if (newIndex < Math.round(React.Children.count(children) / 7)) {
+		} else if (newIndex < Math.round(React.Children.count(children) / 4)) {
+			console.log(newIndex);
 			setActiveIndex(newIndex);
 		}
 	};
@@ -70,16 +74,18 @@ const Carousel = ({ children }: Props) => {
 				}}
 			>
 				<Box
-					style={{
-						transform: `translateX(-${activeIndex * 100}%)`,
+					sx={{
+						transform: `translateX(-${activeIndex * 50}%)`,
 						whiteSpace: "nowrap",
-						transition: "ease",
+						transition: "width 50s",
+						transitionDuration: "4s",
 					}}
 				>
 					{React.Children.map(children, (child, index) => {
 						return React.cloneElement(child, { width: "100%" });
 					})}
 				</Box>
+
 				<div
 					style={{
 						display: "flex",
@@ -110,7 +116,7 @@ const Carousel = ({ children }: Props) => {
 						></div>
 					</Button>
 					{React.Children.map(children, (child, index) => {
-						return index < buttonAmount ? (
+						return index < buttonAmount + 1 ? (
 							<Button
 								disableRipple
 								onClick={() => {

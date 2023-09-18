@@ -8,11 +8,14 @@ import utc from "dayjs/plugin/utc";
 type Props = {
 	id: string;
 	title: string;
-	description: string;
-	updatedAt: string;
-	tags: { tagName: string[]; tagGroup: string[] };
 	coverId: string;
 };
+const mangaCoverHeightXs = "200px";
+const mangaCoverWidthXs = "100px";
+const mangaCoverHeightMd = "250px";
+const mangaCoverWidthMd = "150px";
+const mangaCoverHeightLg = "300px";
+const mangaCoverWidthLg = "200px";
 
 dayjs.extend(utc);
 
@@ -20,7 +23,7 @@ const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, description, updatedAt, tags, coverId } = props;
+	const { id, title, coverId } = props;
 
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(CoverById(coverId));
@@ -45,8 +48,21 @@ const MangaClickable = (props: Props) => {
 				//onMouseEnter={() => setShowDetails(true)}
 				//onMouseLeave={() => setShowDetails(false)}
 			>
-				<div style={{ maxWidth: "200px" }}>
-					<Card sx={{ height: "300px", width: "200px" }}>
+				<div>
+					<Card
+						sx={{
+							height: {
+								xs: mangaCoverHeightXs,
+								md: mangaCoverHeightMd,
+								lg: mangaCoverHeightLg,
+							},
+							width: {
+								xs: mangaCoverWidthXs,
+								md: mangaCoverWidthMd,
+								lg: mangaCoverWidthLg,
+							},
+						}}
+					>
 						<CardMedia
 							sx={{
 								height: "100%",
@@ -57,16 +73,21 @@ const MangaClickable = (props: Props) => {
 							}
 						/>
 					</Card>
-					<div style={{ paddingTop: "5px" }}>
-						<Typography
-							fontSize={15}
-							noWrap
-							color='#EFEAD8'
-							textTransform='none'
-						>
-							{title}
-						</Typography>
-					</div>
+					<Typography
+						fontSize={15}
+						noWrap
+						color='#EFEAD8'
+						textTransform='none'
+						sx={{
+							width: {
+								xs: mangaCoverWidthXs,
+								md: mangaCoverWidthMd,
+								lg: mangaCoverWidthLg,
+							},
+						}}
+					>
+						{title}
+					</Typography>
 				</div>
 			</Button>
 		</div>
