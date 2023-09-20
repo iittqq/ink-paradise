@@ -22,9 +22,7 @@ const Home = () => {
 				<Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
 					<Header />
 				</Grid>
-				<Grid item>
-					<Typography sx={{ color: "white" }}>Recently Updated</Typography>
-				</Grid>
+
 				<Grid
 					item
 					sx={{
@@ -33,32 +31,21 @@ const Home = () => {
 						justifyContent: "center",
 					}}
 				>
-					{/**<RecentlyUpdatedCarousel />*/}
-
-					<RecentlyUpdatedList />
-
-				</Grid>
-			</Grid>
-			<Grid
-				container
-				direction='column'
-				justifyContent='space-evenly'
-				alignItems='center'
-			>
-				<Grid item sx={{paddingTop: "20px"}}>
-					<Typography sx={{ color: "white" }}>Recently Added</Typography>
-				</Grid>
-				<Grid
-					item
-					sx={{
-						width: "100%",
-						display: "flex",
-						justifyContent: "center",
-					}}
-				>
-
-					<RecentlyAddedList />
-
+					<Grid
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+					>
+						<Grid item sx={{ textAlign: "center", color: "white" }}>
+							<Typography>Recently Updated</Typography>
+							<RecentlyUpdatedList />
+						</Grid>
+						<Grid item sx={{ textAlign: "center", color: "white" }}>
+							<Typography>Recently Added</Typography>
+							<RecentlyAddedList />
+						</Grid>
+					</Grid>
 				</Grid>
 			</Grid>
 		</Container>

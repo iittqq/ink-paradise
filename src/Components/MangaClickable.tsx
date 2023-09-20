@@ -31,14 +31,14 @@ const MangaClickable = (props: Props) => {
 	}, []);
 
 	return (
-		<div style={{ width: "400px", display: "flex", justifyContent: "center" }}>
+		<div style={{ width: "300px", display: "flex", justifyContent: "center" }}>
 			<Button
 				sx={{
 					backgroundColor: "#222222",
 					"&.MuiButtonBase-root:hover": {
 						bgcolor: "transparent",
 					},
-					width: "80%",
+					width: "90%",
 					height: "120px",
 				}}
 				//onClick={pullClickedManga}

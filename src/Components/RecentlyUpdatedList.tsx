@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { RecentlyUpdated } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import Carousel, { CarouselItem } from "./Carousel";
@@ -20,10 +20,8 @@ const RecentlyUpdatedList = () => {
 		fetchRecentlyUpdatedManga();
 	}, []);
 
-	const scrollRef = useRef(null);
-
 	return (
-		<div style={{ alignSelf: "center" }} ref={scrollRef}>
+		<div style={{ alignSelf: "center" }}>
 			<Grid
 				container
 				direction='column'
@@ -31,7 +29,7 @@ const RecentlyUpdatedList = () => {
 				alignItems='center'
 				wrap='nowrap'
 				spacing={1}
-				sx={{ overflow: "auto", height: "80vh" }}
+				sx={{ overflow: "auto", height: "80vh", scrollbarWidth: "none" }}
 			>
 				{mangaDetails.map((element, index) => (
 					<Grid item>
