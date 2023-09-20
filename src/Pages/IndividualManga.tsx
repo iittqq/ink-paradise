@@ -42,6 +42,7 @@ const IndividualManga = () => {
 	const [mangaType, setMangaType] = useState();
 	const [mangaLatest, setMangaLatest] = useState();
 	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
+	const [showMoreToggled, setShowMoreToggled] = useState(false);
 
 	const fetchRecentlyUpdatedManga = async () => {
 		const { data: details } = await axios.get(DetailsById(state.id));
@@ -68,26 +69,9 @@ const IndividualManga = () => {
 		setMangaFeed(feed.data);
 	};
 
-	const getCountryDetails = (code: string) => {
-		switch (code) {
-			case "en":
-				return "us";
-
-			case "ja":
-				return "jp";
-
-			case "pt-br":
-				return "pt";
-
-			case "uk":
-				return "gb";
-
-			case "es-la":
-				return "es";
-			default:
-				//statements;
-				return code;
-		}
+	const handleShowMore = () => {
+		setShowMoreToggled(!showMoreToggled);
+		console.log(showMoreToggled);
 	};
 	useEffect(() => {
 		fetchRecentlyUpdatedManga();
@@ -204,7 +188,11 @@ const IndividualManga = () => {
 										display: "-webkit-box",
 										overflow: "hidden",
 										WebkitBoxOrient: "vertical",
-										WebkitLineClamp: { xs: 2, sm: 3, lg: 4 },
+
+										WebkitLineClamp:
+											showMoreToggled === true
+												? { xs: 5, sm: 3, lg: 4 }
+												: { xs: 1, sm: 1, lg: 1 },
 										fontSize: { xs: 15, sm: 15, lg: 20 },
 									}}
 								>
@@ -215,33 +203,53 @@ const IndividualManga = () => {
 										variant='text'
 										sx={{
 											height: { xs: "20px", sm: "25px", lg: "30px" },
-											color: "#333333",
-											fontSize: { xs: 8, sm: 10, lg: 12 },
+
 											"&:hover": {
 												backgroundColor: "transparent",
 											},
 										}}
+										onClick={handleShowMore}
 									>
-										Show more
+										{showMoreToggled === true ? (
+											<Typography
+												color='#333333'
+												sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+											>
+												Show less
+											</Typography>
+										) : (
+											<Typography
+												color='#333333'
+												sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+											>
+												Show more
+											</Typography>
+										)}
 									</Button>
 								</div>
 								<div>
 									<Typography
 										sx={{
 											color: "#555555",
-											fontSize: { xs: 8, sm: 10, lg: 15 },
+											fontSize: { xs: 10, sm: 10, lg: 15 },
 										}}
 									>
 										Content Rating:
 									</Typography>
-									<Typography
+									<Button
 										sx={{
-											color: "#555555",
-											fontSize: { xs: 8, sm: 10, lg: 15 },
+											backgroundColor: "#191919",
+											width: { xs: "20px", sm: "20px", lg: "20px" },
+											height: { xs: "20px", sm: "20px", lg: "20px" },
 										}}
 									>
-										{mangaContentRating}
-									</Typography>
+										<Typography
+											sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+											color='#333333'
+										>
+											{mangaContentRating}
+										</Typography>
+									</Button>
 								</div>
 							</div>
 						</Grid>
@@ -265,7 +273,7 @@ const IndividualManga = () => {
 						<Grid item>
 							<Typography
 								align='center'
-								color='white'
+								color='#555555'
 								sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
 							>
 								Languages
@@ -286,13 +294,15 @@ const IndividualManga = () => {
 											sx={{
 												backgroundColor: "#191919",
 												width: { xs: "20px", sm: "20px", lg: "20px" },
-												height: { xs: "30px", sm: "30px", lg: "30px" },
+												height: { xs: "20px", sm: "20px", lg: "20px" },
 											}}
 										>
-											<span
-												style={{ height: "20px", width: "20px" }}
-												className={`fi fi-${getCountryDetails(current)}`}
-											></span>
+											<Typography
+												sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+												color='#333333'
+											>
+												{current}
+											</Typography>
 										</Button>
 									</Grid>
 								))}
@@ -330,34 +340,7 @@ const IndividualManga = () => {
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item sx={{ paddingTop: "20px" }}>
-						<Typography
-							color='#555555'
-							sx={{ fontSize: { xs: 15, sm: 15, lg: 15 } }}
-						>
-							Updated on:
-							{dayjs(mangaUpdatedAt).format(" MM/DD/YYYY ")}
-							at:
-							{dayjs(mangaUpdatedAt).format(" hh:mm")}
-						</Typography>
-						<Button
-							sx={{
-								backgroundColor: "#191919",
-								width: { xs: "110px", sm: "110px", lg: "110px" },
-								height: { xs: "20px", sm: "20px", lg: "20px" },
-								textAlign: "center",
-							}}
-						>
-							<Typography
-								noWrap
-								color='#333333'
-								sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
-							>
-								Latest
-							</Typography>
-						</Button>
-					</Grid>
-					<Grid item sx={{ paddingTop: "5px" }}>
+					<Grid item sx={{ paddingTop: "10px" }}>
 						<Button
 							sx={{
 								backgroundColor: "#191919",
@@ -380,9 +363,11 @@ const IndividualManga = () => {
 				<Grid
 					item
 					sx={{
-						width: { xs: "80%", md: "50%", lg: "30%" },
+						width: "95%",
 						height: { xs: "330px", md: "300px", lg: "320px" },
-						overflow: "auto",
+						display: "flex",
+						paddingTop: "20px",
+						justifyContent: "flex-end",
 					}}
 				>
 					<Grid
@@ -391,6 +376,13 @@ const IndividualManga = () => {
 						justifyContent='center'
 						alignItems='center'
 						spacing={1}
+						sx={{
+							display: "inline",
+
+							width: "800px",
+							height: "300px",
+							overflow: "scroll",
+						}}
 					>
 						{mangaFeed.map((current: any) => (
 							<Grid item sx={{ width: "100%", height: "50px" }}>
@@ -399,23 +391,42 @@ const IndividualManga = () => {
 										width: "100%",
 										color: "white",
 										height: "100%",
-										backgroundColor: "#333333",
-										justifyContent: "flex-start",
+										backgroundColor: "#191919",
+										justifyContent: "space-between",
 									}}
 								>
-									<Typography sx={{ textTransform: "none" }}>
-										Chapter {current["attributes"].chapter}
-									</Typography>
-									<span
-										style={{
-											height: "10px",
-											width: "10px",
-											paddingLeft: "20px",
-										}}
-										className={`fi fi-${getCountryDetails(
-											current["attributes"].translatedLanguage
-										)}`}
-									></span>
+									<div style={{ display: "flex" }}>
+										<Typography
+											sx={{
+												textTransform: "none",
+												fontSize: { xs: 10, sm: 10, lg: 15 },
+											}}
+											color='#555555'
+										>
+											Chapter {current["attributes"].chapter}
+										</Typography>
+										<Typography
+											color='#555555'
+											sx={{
+												fontSize: { xs: 10, sm: 10, lg: 15 },
+												paddingLeft: "10px",
+											}}
+										>
+											{current["attributes"].translatedLanguage}
+										</Typography>
+									</div>
+									<div>
+										<Typography
+											color='#555555'
+											sx={{
+												fontSize: { xs: 10, sm: 10, lg: 15 },
+											}}
+										>
+											{dayjs(current["attributes"].createdAt).format(
+												"DD/MM/YYYY / HH:mm"
+											)}
+										</Typography>
+									</div>
 								</Button>
 							</Grid>
 						))}
@@ -425,5 +436,5 @@ const IndividualManga = () => {
 		</div>
 	);
 };
-//{Object.keys(mangaDetails)["attributes"].title["en"]}
+
 export default IndividualManga;
