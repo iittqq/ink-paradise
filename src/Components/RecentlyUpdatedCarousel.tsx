@@ -23,6 +23,7 @@ const RecentlyUpdatedCarousel = () => {
 			<Carousel>
 				{mangaDetails.map((element, index) => (
 					<CarouselItem width={""}>
+						{/** 
 						<MangaClickable
 							id={element["id"]}
 							title={element["attributes"].title["en"]}
@@ -34,7 +35,7 @@ const RecentlyUpdatedCarousel = () => {
 									(i: any) => i.type === "cover_art"
 								).id
 							}
-						/>
+						/>*/}
 					</CarouselItem>
 				))}
 			</Carousel>

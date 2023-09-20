@@ -4,6 +4,7 @@ import axios from "axios";
 import Carousel, { CarouselItem } from "./Carousel";
 import MangaClickable from "./MangaClickable";
 import { Container, Grid } from "@mui/material";
+import dayjs from "dayjs";
 
 const RecentlyUpdatedList = () => {
 	const [mangaDetails, setMangaDetails] = useState<any[]>([]);
@@ -22,14 +23,15 @@ const RecentlyUpdatedList = () => {
 	const scrollRef = useRef(null);
 
 	return (
-		<div style={{ width: "90%", alignSelf: "center" }} ref={scrollRef}>
+		<div style={{ alignSelf: "center" }} ref={scrollRef}>
 			<Grid
 				container
-				direction='row'
+				direction='column'
 				justifyContent='flex-start'
 				alignItems='center'
 				wrap='nowrap'
-				sx={{ overflow: "auto" }}
+				spacing={1}
+				sx={{ overflow: "auto", height: "80vh" }}
 			>
 				{mangaDetails.map((element, index) => (
 					<Grid item>
@@ -41,6 +43,9 @@ const RecentlyUpdatedList = () => {
 									(i: any) => i.type === "cover_art"
 								).id
 							}
+							updatedAt={dayjs(element["attributes"].updatedAt).format(
+								"DD/MM/YYYY / HH:mm"
+							)}
 						/>
 					</Grid>
 				))}
