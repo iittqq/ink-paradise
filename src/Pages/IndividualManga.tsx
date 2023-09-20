@@ -13,9 +13,7 @@ import { DetailsById, FeedById } from "../APIs/MangaDexAPI";
 import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-
-var utc = require("dayjs/plugin/utc");
-dayjs.extend(utc);
+import { Box } from "@mui/system";
 
 const mangaCoverHeightXs = "200px";
 const mangaCoverWidthXs = "100px";
@@ -342,7 +340,18 @@ const IndividualManga = () => {
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item sx={{ paddingTop: "10px" }}>
+				</Grid>
+				<Grid
+					item
+					sx={{
+						width: "95%",
+						height: { xs: "330px", md: "300px", lg: "320px" },
+						display: "flex",
+						paddingTop: "20px",
+						justifyContent: "space-between",
+					}}
+				>
+					<div>
 						<Button
 							sx={{
 								backgroundColor: "#191919",
@@ -360,24 +369,44 @@ const IndividualManga = () => {
 								RAW
 							</Typography>
 						</Button>
-					</Grid>
-				</Grid>
-				<Grid
-					item
-					sx={{
-						width: "95%",
-						height: { xs: "330px", md: "300px", lg: "320px" },
-						display: "flex",
-						paddingTop: "20px",
-						justifyContent: "flex-end",
-					}}
-				>
+
+						<Grid
+							container
+							direction='row'
+							justifyContent='flex-start'
+							alignItems='center'
+							spacing={1}
+							sx={{ width: "50%", paddingTop: "10px" }}
+						>
+							{mangaTags.map((current: any) => (
+								<Grid item>
+									<Button
+										sx={{
+											backgroundColor: "#191919",
+											width: { xs: "120px", sm: "120px", lg: "120px" },
+											height: { xs: "20px", sm: "20px", lg: "20px" },
+											textAlign: "center",
+										}}
+									>
+										<Typography
+											noWrap
+											color='#333333'
+											sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
+										>
+											{current["attributes"].name["en"]}
+										</Typography>
+									</Button>
+								</Grid>
+							))}
+						</Grid>
+					</div>
+
 					<div
 						style={{
 							height: "300px",
 							overflow: "scroll",
 							display: "inline",
-							width: "700px",
+							width: "800px",
 							scrollbarWidth: "none",
 						}}
 					>
@@ -386,12 +415,14 @@ const IndividualManga = () => {
 							direction='column'
 							justifyContent='center'
 							alignItems='center'
-							spacing={1}
 						>
 							{mangaFeed.map((current: any) =>
 								current["attributes"]["translatedLanguage"] ===
 								selectedLanguage ? (
-									<Grid item sx={{ width: "90%", height: "50px" }}>
+									<Grid
+										item
+										sx={{ width: "90%", height: "50px", padding: "2px" }}
+									>
 										<Button
 											sx={{
 												width: "100%",
