@@ -4,6 +4,7 @@ import axios from "axios";
 import { Card, CardMedia, Button, Typography, Grid } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
 	id: string;
@@ -15,6 +16,7 @@ type Props = {
 dayjs.extend(utc);
 
 const MangaClickable = (props: Props) => {
+	let navigate = useNavigate();
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
@@ -25,6 +27,12 @@ const MangaClickable = (props: Props) => {
 		setCoverFile(data.data["attributes"].fileName);
 		return data.data;
 	};
+
+	function handleClick() {
+		navigate("/individualView", {
+			state: { id: id, coverFile: coverFile },
+		});
+	}
 
 	useEffect(() => {
 		fetchCoverFile();
@@ -41,7 +49,9 @@ const MangaClickable = (props: Props) => {
 					width: "90%",
 					height: "120px",
 				}}
-				//onClick={pullClickedManga}
+				onClick={() => {
+					handleClick();
+				}}
 				//onMouseEnter={() => setShowDetails(true)}
 				//onMouseLeave={() => setShowDetails(false)}
 			>
