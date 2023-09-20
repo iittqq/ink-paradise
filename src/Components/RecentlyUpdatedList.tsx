@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { RecentlyUpdated } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import Carousel, { CarouselItem } from "./Carousel";
 import MangaClickable from "./MangaClickable";
 import { Container, Grid } from "@mui/material";
+import dayjs from "dayjs";
 
 const RecentlyUpdatedList = () => {
 	const [mangaDetails, setMangaDetails] = useState<any[]>([]);
@@ -20,14 +21,15 @@ const RecentlyUpdatedList = () => {
 	}, []);
 
 	return (
-		<div style={{ width: "90%", alignSelf: "center" }}>
+		<div style={{ alignSelf: "center" }}>
 			<Grid
 				container
-				direction='row'
+				direction='column'
 				justifyContent='flex-start'
 				alignItems='center'
 				wrap='nowrap'
-				sx={{ overflow: "auto" }}
+				spacing={1}
+				sx={{ overflow: "auto", height: "80vh", scrollbarWidth: "none" }}
 			>
 				{mangaDetails.map((element, index) => (
 					<Grid item>
@@ -39,6 +41,9 @@ const RecentlyUpdatedList = () => {
 									(i: any) => i.type === "cover_art"
 								).id
 							}
+							updatedAt={dayjs(element["attributes"].updatedAt).format(
+								"DD/MM/YYYY / HH:mm"
+							)}
 						/>
 					</Grid>
 				))}
