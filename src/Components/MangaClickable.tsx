@@ -1,7 +1,7 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, useState } from "react";
 import { CoverById } from "../APIs/MangaDexAPI";
 import axios from "axios";
-import { Card, CardMedia, Button, Typography } from "@mui/material";
+import { Card, CardMedia, Button, Typography, Grid } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
@@ -9,13 +9,8 @@ type Props = {
 	id: string;
 	title: string;
 	coverId: string;
+	updatedAt: string;
 };
-const mangaCoverHeightXs = "200px";
-const mangaCoverWidthXs = "100px";
-const mangaCoverHeightMd = "250px";
-const mangaCoverWidthMd = "150px";
-const mangaCoverHeightLg = "300px";
-const mangaCoverWidthLg = "200px";
 
 dayjs.extend(utc);
 
@@ -23,7 +18,7 @@ const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, coverId } = props;
+	const { id, title, coverId, updatedAt } = props;
 
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(CoverById(coverId));
@@ -36,59 +31,80 @@ const MangaClickable = (props: Props) => {
 	}, []);
 
 	return (
-		<div>
+		<div style={{ width: "400px", display: "flex", justifyContent: "center" }}>
 			<Button
 				sx={{
-					color: "black",
+					backgroundColor: "#222222",
 					"&.MuiButtonBase-root:hover": {
 						bgcolor: "transparent",
 					},
+					width: "80%",
+					height: "120px",
 				}}
 				//onClick={pullClickedManga}
 				//onMouseEnter={() => setShowDetails(true)}
 				//onMouseLeave={() => setShowDetails(false)}
 			>
-				<div>
-					<Card
+				<Grid
+					sx={{
+						color: "white",
+						height: "100%",
+						width: "100%",
+					}}
+					container
+					direction='row'
+					justifyContent='space-between'
+					alignItems='center'
+				>
+					<Grid item sx={{ width: "30%", minHeight: "100%" }}>
+						<Card sx={{ width: "80px", height: "108px", overflow: "contain" }}>
+							<CardMedia
+								sx={{ width: "100%", height: "100%" }}
+								image={
+									"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
+								}
+							/>
+						</Card>
+					</Grid>
+					<Grid
+						item
 						sx={{
-							height: {
-								xs: mangaCoverHeightXs,
-								md: mangaCoverHeightMd,
-								lg: mangaCoverHeightLg,
-							},
-							width: {
-								xs: mangaCoverWidthXs,
-								md: mangaCoverWidthMd,
-								lg: mangaCoverWidthLg,
-							},
+							width: { xs: "60%", md: "60%", lg: "60%" },
 						}}
 					>
-						<CardMedia
-							sx={{
-								height: "100%",
-								width: "100%",
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "flex-start",
+								alignItems: "flex-start",
 							}}
-							image={
-								"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
-							}
-						/>
-					</Card>
-					<Typography
-						fontSize={15}
-						noWrap
-						color='#EFEAD8'
-						textTransform='none'
-						sx={{
-							width: {
-								xs: mangaCoverWidthXs,
-								md: mangaCoverWidthMd,
-								lg: mangaCoverWidthLg,
-							},
-						}}
-					>
-						{title}
-					</Typography>
-				</div>
+						>
+							<Typography
+								sx={{
+									display: "-webkit-box",
+									overflow: "hidden",
+									textAlign: "left",
+									WebkitBoxOrient: "vertical",
+									WebkitLineClamp: 2.5,
+									fontSize: { xs: 10, sm: 10, lg: 10 },
+									paddingBottom: "20px",
+									paddingTop: "10px",
+								}}
+							>
+								{title}
+							</Typography>
+
+							<Typography
+								sx={{
+									fontSize: { xs: 10, sm: 10, lg: 10 },
+								}}
+							>
+								{updatedAt}
+							</Typography>
+						</div>
+					</Grid>
+				</Grid>
 			</Button>
 		</div>
 	);
