@@ -43,6 +43,7 @@ const IndividualManga = () => {
 	const [mangaLatest, setMangaLatest] = useState();
 	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
+	const [selectedLanguage, setSelectedLanguage] = useState("");
 
 	const fetchRecentlyUpdatedManga = async () => {
 		const { data: details } = await axios.get(DetailsById(state.id));
@@ -239,7 +240,7 @@ const IndividualManga = () => {
 									<Button
 										sx={{
 											backgroundColor: "#191919",
-											width: { xs: "20px", sm: "20px", lg: "20px" },
+											minWidth: { xs: "50px", sm: "50px", lg: "50px" },
 											height: { xs: "20px", sm: "20px", lg: "20px" },
 										}}
 									>
@@ -296,6 +297,7 @@ const IndividualManga = () => {
 												width: { xs: "20px", sm: "20px", lg: "20px" },
 												height: { xs: "20px", sm: "20px", lg: "20px" },
 											}}
+											onClick={() => setSelectedLanguage(current)}
 										>
 											<Typography
 												sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
@@ -344,7 +346,7 @@ const IndividualManga = () => {
 						<Button
 							sx={{
 								backgroundColor: "#191919",
-								width: { xs: "110px", sm: "110px", lg: "110px" },
+								width: { xs: "50px", sm: "50px", lg: "50px" },
 								height: { xs: "20px", sm: "20px", lg: "20px" },
 								textAlign: "center",
 							}}
@@ -370,67 +372,73 @@ const IndividualManga = () => {
 						justifyContent: "flex-end",
 					}}
 				>
-					<Grid
-						container
-						direction='column'
-						justifyContent='center'
-						alignItems='center'
-						spacing={1}
-						sx={{
-							display: "inline",
-
-							width: "800px",
+					<div
+						style={{
 							height: "300px",
 							overflow: "scroll",
+							display: "inline",
+							width: "700px",
+							scrollbarWidth: "none",
 						}}
 					>
-						{mangaFeed.map((current: any) => (
-							<Grid item sx={{ width: "100%", height: "50px" }}>
-								<Button
-									sx={{
-										width: "100%",
-										color: "white",
-										height: "100%",
-										backgroundColor: "#191919",
-										justifyContent: "space-between",
-									}}
-								>
-									<div style={{ display: "flex" }}>
-										<Typography
+						<Grid
+							container
+							direction='column'
+							justifyContent='center'
+							alignItems='center'
+							spacing={1}
+						>
+							{mangaFeed.map((current: any) =>
+								current["attributes"]["translatedLanguage"] ===
+								selectedLanguage ? (
+									<Grid item sx={{ width: "90%", height: "50px" }}>
+										<Button
 											sx={{
-												textTransform: "none",
-												fontSize: { xs: 10, sm: 10, lg: 15 },
-											}}
-											color='#555555'
-										>
-											Chapter {current["attributes"].chapter}
-										</Typography>
-										<Typography
-											color='#555555'
-											sx={{
-												fontSize: { xs: 10, sm: 10, lg: 15 },
-												paddingLeft: "10px",
+												width: "100%",
+												color: "white",
+												height: "100%",
+												backgroundColor: "#191919",
+												justifyContent: "space-between",
 											}}
 										>
-											{current["attributes"].translatedLanguage}
-										</Typography>
-									</div>
-									<div>
-										<Typography
-											color='#555555'
-											sx={{
-												fontSize: { xs: 10, sm: 10, lg: 15 },
-											}}
-										>
-											{dayjs(current["attributes"].createdAt).format(
-												"DD/MM/YYYY / HH:mm"
-											)}
-										</Typography>
-									</div>
-								</Button>
-							</Grid>
-						))}
-					</Grid>
+											<div style={{ display: "flex" }}>
+												<Typography
+													sx={{
+														textTransform: "none",
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+													color='#555555'
+												>
+													Chapter {current["attributes"].chapter}
+												</Typography>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+														paddingLeft: "10px",
+													}}
+												>
+													{current["attributes"].translatedLanguage}
+												</Typography>
+											</div>
+											<div>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+												>
+													{dayjs(current["attributes"].createdAt).format(
+														"DD/MM/YYYY / HH:mm"
+													)}
+												</Typography>
+											</div>
+										</Button>
+									</Grid>
+								) : null
+							)}
+						</Grid>
+					</div>
 				</Grid>
 			</Grid>
 		</div>
