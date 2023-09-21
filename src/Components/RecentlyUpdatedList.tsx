@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { RecentlyUpdated } from "../APIs/MangaDexAPI";
 import axios from "axios";
-import Carousel, { CarouselItem } from "./Carousel";
 import MangaClickable from "./MangaClickable";
 import { Container, Grid } from "@mui/material";
 import dayjs from "dayjs";

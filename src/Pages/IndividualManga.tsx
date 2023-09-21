@@ -63,7 +63,7 @@ const IndividualManga = () => {
 		setMangaLatest(details.data["attributes"].latestUploadedChapter);
 	};
 
-	const fetchMangaFee = async () => {
+	const fetchMangaFeed = async () => {
 		const { data: feed } = await axios.get(FeedById(state.id));
 		console.log(feed.data);
 		setMangaFeed(feed.data);
@@ -75,7 +75,7 @@ const IndividualManga = () => {
 
 	useEffect(() => {
 		fetchRecentlyUpdatedManga();
-		fetchMangaFee();
+		fetchMangaFeed();
 	}, []);
 
 	return (
