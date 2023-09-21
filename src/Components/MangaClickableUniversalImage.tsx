@@ -10,6 +10,7 @@ type Props = {
 	id: string;
 	title: string;
 	coverUrl: string;
+	rank: string;
 };
 
 dayjs.extend(utc);
@@ -17,7 +18,7 @@ dayjs.extend(utc);
 const MangaClickableUniversalImage = (props: Props) => {
 	let navigate = useNavigate();
 
-	const { id, title, coverUrl } = props;
+	const { id, title, coverUrl, rank } = props;
 
 	function handleClick() {}
 
@@ -65,11 +66,19 @@ const MangaClickableUniversalImage = (props: Props) => {
 							color='white'
 							noWrap
 							sx={{
-								fontSize: { xs: 10, sm: 10, lg: 11 },
+								fontSize: { xs: 10, sm: 10, lg: 10 },
 								maxWidth: "100px",
 							}}
 						>
 							{title}
+						</Typography>
+						<Typography
+							color='white'
+							sx={{
+								fontSize: { xs: 10, sm: 10, lg: 10 },
+							}}
+						>
+							Rank: {rank}
 						</Typography>
 					</Grid>
 				</Grid>

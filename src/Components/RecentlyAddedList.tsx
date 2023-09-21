@@ -20,15 +20,12 @@ const RecentlyAddedList = () => {
 	}, []);
 
 	return (
-		<div style={{ alignSelf: "center" }}>
+		<div style={{}}>
 			<Grid
 				container
-				direction='column'
-				justifyContent='flex-start'
+				direction='row'
+				justifyContent='center'
 				alignItems='center'
-				wrap='nowrap'
-				spacing={1}
-				sx={{ overflow: "auto", height: "80vh", scrollbarWidth: "none" }}
 			>
 				{mangaDetails.map((element, index) => (
 					<Grid item>
@@ -40,9 +37,7 @@ const RecentlyAddedList = () => {
 									(i: any) => i.type === "cover_art"
 								).id
 							}
-							updatedAt={dayjs(element["attributes"].updatedAt).format(
-								"DD/MM/YYYY / HH:mm"
-							)}
+							updatedAt={element["attributes"].createdAt}
 						/>
 					</Grid>
 				))}

@@ -23,6 +23,7 @@ const TrendingHomePage = (props: Props) => {
 							id={element["mal_id"]}
 							title={element["title"]}
 							coverUrl={element["images"]["jpg"]["image_url"]}
+							rank={element["rank"]}
 						/>
 					</Grid>
 				))}

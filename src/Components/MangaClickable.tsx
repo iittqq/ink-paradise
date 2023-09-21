@@ -89,7 +89,7 @@ const MangaClickable = (props: Props) => {
 								color='white'
 								noWrap
 								sx={{
-									fontSize: { xs: 10, sm: 10, lg: 11 },
+									fontSize: { xs: 10, sm: 10, lg: 10 },
 									maxWidth: "100px",
 								}}
 							>

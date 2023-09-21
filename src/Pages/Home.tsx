@@ -7,7 +7,8 @@ import StandardButton from "../Components/StandardButton";
 import { useNavigate } from "react-router-dom";
 import { getTopManga } from "../APIs/MyAnimeListAPI";
 import TrendingHomePage from "../Components/TrendingHomePage";
-import RecentlyUpdatedHomePage from "../Components/RecentlyUpdatedMangaSection";
+import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSection";
+import RecentlyAddedList from "../Components/RecentlyAddedList";
 
 const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
 
@@ -63,9 +64,10 @@ const Home = () => {
 						direction='row'
 						justifyContent='space-between'
 						alignItems='center'
+						sx={{ height: "60vh" }}
 					>
 						<Grid item sx={{ width: "35%" }}>
-							<Typography color='white'>Trending</Typography>
+							<Typography color='white'>Trending Now</Typography>
 							<TrendingHomePage mangaData={topMangaData} />
 						</Grid>
 						<Grid item sx={{ width: "30%" }}>
@@ -93,25 +95,25 @@ const Home = () => {
 								))}
 							</Grid>
 						</Grid>
+						<Grid
+							item
+							sx={{
+								width: "600px",
+							}}
+						>
+							<div>
+								<Typography color='white'>Recently Updated</Typography>
+								<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
+							</div>
+						</Grid>
+					</Grid>
+					<Grid item sx={{ display: "flex", justifyContent: "center" }}>
+						<div>
+							<Typography color='white'>Recently Added</Typography>
+							<RecentlyAddedList />
+						</div>
 					</Grid>
 				</Grid>
-				<Grid
-					item
-					sx={{
-						width: "600px",
-					}}
-				>
-					<div>
-						<Typography color='white'>Updated Recently</Typography>
-						<RecentlyUpdatedHomePage mangaData={recentlyUpdatedManga} />
-					</div>
-				</Grid>
-				<Grid
-					item
-					sx={{
-						width: "600px",
-					}}
-				></Grid>
 			</Grid>
 		</Container>
 	);
