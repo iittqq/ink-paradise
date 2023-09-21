@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RecentlyAdded } from "../APIs/MangaDexAPI";
+import { RecentlyAddedAPI } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import MangaClickable from "./MangaClickable";
 import { Grid } from "@mui/material";
@@ -9,7 +9,7 @@ const RecentlyAddedList = () => {
 	const [mangaDetails, setMangaDetails] = useState<any[]>([]);
 
 	const fetchRecentlyAddedManga = async () => {
-		const { data } = await axios.get(RecentlyAdded());
+		const { data } = await axios.get(RecentlyAddedAPI());
 		setMangaDetails(data.data);
 
 		console.log(data.data);
