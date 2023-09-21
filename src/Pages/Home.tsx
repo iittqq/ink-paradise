@@ -1,36 +1,52 @@
 import { useState, useEffect } from "react";
 import { Container, Grid, Typography, Button } from "@mui/material";
 import Header from "../Components/Header";
-import { RecentlyUpdated } from "../APIs/MangaDexAPI";
+import { RecentlyUpdated, MangaTags } from "../APIs/MangaDexAPI";
 import axios from "axios";
-import RecentlyUpdatedCarousel from "../Components/RecentlyUpdatedCarousel";
-import RecentlyUpdatedList from "../Components/RecentlyUpdatedList";
-import RecentlyAddedList from "../Components/RecentlyAddedList";
+import StandardButton from "../Components/StandardButton";
 import { useNavigate } from "react-router-dom";
 import { getTopManga } from "../APIs/MyAnimeListAPI";
 import TrendingHomePage from "../Components/TrendingHomePage";
+import RecentlyUpdatedHomePage from "../Components/RecentlyUpdatedMangaSection";
 
 const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
 
 const Home = () => {
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
+	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
+	const [mangaTags, setMangaTags] = useState<any[]>([]);
 	const fetchTopManga = async () => {
 		const { data: top } = await axios.get(getTopManga());
 		console.log(top.data);
 		setTopMangaData(top.data);
 	};
 
+	const fetchRecentlyUpdatedManga = async () => {
+		const { data: recent } = await axios.get(RecentlyUpdated());
+		console.log(recent.data);
+		setRecentlyUpdatedManga(recent.data);
+	};
+
+	const fetchTags = async () => {
+		const { data: tags } = await axios.get(MangaTags());
+		console.log(tags.data);
+		setMangaTags(tags.data);
+	};
+
 	useEffect(() => {
 		fetchTopManga();
+		fetchRecentlyUpdatedManga();
+		fetchTags();
 	}, []);
+
 	let navigate = useNavigate();
 	return (
-		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+		<Container disableGutters sx={{ minWidth: "95%", minHeight: "100vh" }}>
 			<Grid
 				container
 				direction='column'
-				justifyContent='flex-start'
-				alignItems='flex-start'
+				justifyContent='center'
+				alignItems='center'
 			>
 				<Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
 					<Header />
@@ -39,15 +55,63 @@ const Home = () => {
 				<Grid
 					item
 					sx={{
+						width: "100%",
+					}}
+				>
+					<Grid
+						container
+						direction='row'
+						justifyContent='space-between'
+						alignItems='center'
+					>
+						<Grid item sx={{ width: "35%" }}>
+							<Typography color='white'>Trending</Typography>
+							<TrendingHomePage mangaData={topMangaData} />
+						</Grid>
+						<Grid item sx={{ width: "30%" }}>
+							<Typography color='white'>Tags</Typography>
+							<Grid
+								container
+								direction='row'
+								justifyContent='space-between'
+								alignItems='center'
+							>
+								{mangaTags.map((element: any) => (
+									<Grid item>
+										<StandardButton
+											backgroundColor='#191919'
+											width='120px'
+											height='20px'
+											textColor='#333333'
+											fontSizeXs={10}
+											fontSizeSm={10}
+											fontSizeLg={12}
+											text={element["attributes"].name["en"]}
+											location={element["attributes"].name["en"]}
+										/>
+									</Grid>
+								))}
+							</Grid>
+						</Grid>
+					</Grid>
+				</Grid>
+				<Grid
+					item
+					sx={{
 						width: "600px",
-						paddingLeft: "20px",
 					}}
 				>
 					<div>
-						<Typography color='white'>Trending</Typography>
-						<TrendingHomePage mangaData={topMangaData} />
+						<Typography color='white'>Updated Recently</Typography>
+						<RecentlyUpdatedHomePage mangaData={recentlyUpdatedManga} />
 					</div>
 				</Grid>
+				<Grid
+					item
+					sx={{
+						width: "600px",
+					}}
+				></Grid>
 			</Grid>
 		</Container>
 	);
