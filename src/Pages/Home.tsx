@@ -69,62 +69,60 @@ const Home = () => {
 				<Grid
 					item
 					sx={{
-						width: "95%",
+						width: "100%",
 					}}
 				>
 					<Grid
 						container
 						direction='row'
-						justifyContent='space-between'
+						justifyContent='space-evenly'
 						alignItems='center'
 						sx={{ height: "60vh" }}
 					>
-						<Grid item sx={{ width: "35%", textAlign: "center" }}>
+						<Grid item sx={{ width: "31%", textAlign: "center" }}>
 							<Typography color='white'>Trending Now</Typography>
 							<TrendingHomePage mangaData={topMangaData} />
 						</Grid>
-						<Grid item sx={{ width: "30%", textAlign: "center" }}>
-							<Typography color='white'>Tags</Typography>
-							<Grid
-								container
-								direction='row'
-								justifyContent='space-between'
-								alignItems='center'
-							>
-								{mangaTags.map((element: any) => (
-									<Grid item>
-										<StandardButton
-											backgroundColor='#191919'
-											width='120px'
-											height='20px'
-											textColor='#333333'
-											fontSizeXs={10}
-											fontSizeSm={10}
-											fontSizeLg={12}
-											text={element["attributes"].name["en"]}
-											location={element["attributes"].name["en"]}
-										/>
-									</Grid>
-								))}
-							</Grid>
+						<Grid item sx={{ width: "31%", textAlign: "center" }}>
+							<Typography color='white'>Recently Added</Typography>
+							<RecentlyAddedList />
 						</Grid>
 						<Grid
 							item
 							sx={{
-								width: "35%",
+								width: "31%",
+								textAlign: "center",
 							}}
 						>
-							<div style={{ textAlign: "center" }}>
-								<Typography color='white'>Recently Updated</Typography>
-								<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
-							</div>
+							<Typography color='white'>Recently Updated</Typography>
+							<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
 						</Grid>
 					</Grid>
-					<Grid item sx={{ display: "flex", justifyContent: "center" }}>
-						<div style={{ textAlign: "center" }}>
-							<Typography color='white'>Recently Added</Typography>
-							<RecentlyAddedList />
-						</div>
+				</Grid>
+				<Grid item sx={{ width: "90%", textAlign: "center" }}>
+					<Typography color='white'>Tags</Typography>
+					<Grid
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+						spacing={1}
+					>
+						{mangaTags.map((element: any) => (
+							<Grid item>
+								<StandardButton
+									backgroundColor='#191919'
+									width='120px'
+									height='20px'
+									textColor='#333333'
+									fontSizeXs={10}
+									fontSizeSm={10}
+									fontSizeLg={12}
+									text={element["attributes"].name["en"]}
+									location={element["attributes"].name["en"]}
+								/>
+							</Grid>
+						))}
 					</Grid>
 				</Grid>
 			</Grid>
