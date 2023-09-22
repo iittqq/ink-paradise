@@ -35,6 +35,7 @@ const RecentlyAddedList = () => {
 				direction='row'
 				justifyContent='center'
 				alignItems='center'
+				sx={{ height: "580px", overflow: "clip" }}
 			>
 				{mangaDetails.map((element, index) => (
 					<Grid item>

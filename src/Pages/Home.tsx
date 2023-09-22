@@ -70,6 +70,7 @@ const Home = () => {
 					item
 					sx={{
 						width: "100%",
+						height: { xs: "70vh", md: "65vh", lg: "none" },
 					}}
 				>
 					<Grid
@@ -77,36 +78,104 @@ const Home = () => {
 						direction='row'
 						justifyContent='space-evenly'
 						alignItems='center'
-						sx={{ height: "60vh" }}
+						sx={{}}
 					>
-						<Grid item sx={{ width: "31%", textAlign: "center" }}>
-							<Typography color='white'>Trending Now</Typography>
-							<TrendingHomePage mangaData={topMangaData} />
-						</Grid>
-						<Grid item sx={{ width: "31%", textAlign: "center" }}>
+						<Grid
+							item
+							sx={{
+								width: "31%",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
 							<Typography color='white'>Recently Added</Typography>
 							<RecentlyAddedList />
+							<Button
+								sx={{
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+								}}
+							>
+								<div
+									style={{
+										width: 0,
+										height: 0,
+										borderLeft: "15px solid transparent",
+										borderRight: "15px solid transparent",
+										borderTop: "15px solid #333333",
+									}}
+								></div>
+							</Button>
 						</Grid>
 						<Grid
 							item
 							sx={{
 								width: "31%",
-								textAlign: "center",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+								paddingBottom: "27px",
 							}}
 						>
-							<Typography color='white'>Recently Updated</Typography>
+							<Typography color='white'>Trending Now</Typography>
+							<TrendingHomePage mangaData={topMangaData} />
+						</Grid>
+						<Grid
+							item
+							sx={{
+								width: "31%",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Typography color='white' noWrap>
+								Recently Updated
+							</Typography>
 							<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
+							<Button
+								sx={{
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+								}}
+							>
+								<div
+									style={{
+										width: 0,
+										height: 0,
+										borderLeft: "15px solid transparent",
+										borderRight: "15px solid transparent",
+										borderTop: "15px solid #333333",
+									}}
+								></div>
+							</Button>
 						</Grid>
 					</Grid>
 				</Grid>
-				<Grid item sx={{ width: "90%", textAlign: "center" }}>
-					<Typography color='white'>Tags</Typography>
+				<Grid
+					item
+					sx={{ width: { xs: "100%", lg: "90%" }, textAlign: "center" }}
+				>
+					<Typography color='white' sx={{ height: { xs: "30px" } }}>
+						Tags
+					</Typography>
 					<Grid
 						container
 						direction='row'
 						justifyContent='center'
 						alignItems='center'
 						spacing={1}
+						sx={{ height: { xs: "200px" }, overflow: "scroll" }}
 					>
 						{mangaTags.map((element: any) => (
 							<Grid item>

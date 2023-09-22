@@ -16,6 +16,7 @@ const TrendingHomePage = (props: Props) => {
 				direction='row'
 				justifyContent='center'
 				alignItems='center'
+				sx={{ height: "580px", overflow: "clip" }}
 			>
 				{mangaData.map((element: any) => (
 					<Grid item>
