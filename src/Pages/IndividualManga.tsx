@@ -9,7 +9,6 @@ import {
 	Button,
 	Typography,
 } from "@mui/material";
-import { DetailsById, FeedById } from "../APIs/MangaDexAPI";
 import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
@@ -44,8 +43,9 @@ const IndividualManga = () => {
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("");
 
+	const baseUrl = "https://api.mangadex.org/";
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: details } = await axios.get(DetailsById(state.id));
+		const { data: details } = await axios.get(`${baseUrl}manga/${state.id}`);
 		setMangaDetails(details.data);
 		console.log(details.data);
 		setMangaName(details.data["attributes"].title["en"]);
@@ -63,8 +63,9 @@ const IndividualManga = () => {
 		setMangaLatest(details.data["attributes"].latestUploadedChapter);
 	};
 
-	const fetchMangaFee = async () => {
-		const { data: feed } = await axios.get(FeedById(state.id));
+	const fetchMangaFeed = async () => {
+		const { data: feed } = await axios.get(`${baseUrl}manga/${state.id}/feed`);
+
 		console.log(feed.data);
 		setMangaFeed(feed.data);
 	};
@@ -75,7 +76,7 @@ const IndividualManga = () => {
 
 	useEffect(() => {
 		fetchRecentlyUpdatedManga();
-		fetchMangaFee();
+		fetchMangaFeed();
 	}, []);
 
 	return (

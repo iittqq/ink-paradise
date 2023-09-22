@@ -48,7 +48,6 @@ const StandardButton = (props: Props) => {
 		});
 	}
 
-	console.log(width);
 	return (
 		<Button
 			sx={{

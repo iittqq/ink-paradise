@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CoverById } from "../APIs/MangaDexAPI";
+
 import axios from "axios";
 import { Card, CardMedia, Button, Typography, Grid } from "@mui/material";
 import dayjs from "dayjs";
@@ -14,7 +14,7 @@ type Props = {
 };
 
 dayjs.extend(utc);
-
+const baseUrl = "https://api.mangadex.org/";
 const MangaClickable = (props: Props) => {
 	let navigate = useNavigate();
 	const [coverFile, setCoverFile] = useState("");
@@ -23,7 +23,7 @@ const MangaClickable = (props: Props) => {
 	const { id, title, coverId, updatedAt } = props;
 
 	const fetchCoverFile = async () => {
-		const { data } = await axios.get(CoverById(coverId));
+		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
 		setCoverFile(data.data["attributes"].fileName);
 		return data.data;
 	};
