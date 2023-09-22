@@ -23,7 +23,6 @@ const MangaClickable = (props: Props) => {
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
 		setCoverFile(data.data["attributes"].fileName);
-		return data.data;
 	};
 
 	function handleClick() {

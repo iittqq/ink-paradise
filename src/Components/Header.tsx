@@ -17,31 +17,23 @@ const customTheme = createTheme({
 });
 const primary = "#FFEEF4";
 const secondary = "#94A684";
-const baseUrl = "https://api.mangadex.org/";
+
 const Header = () => {
 	const navigate = useNavigate();
 	const [searchInput, setSearchInput] = useState("");
 
-	const handleClick = async (input: any) => {
-		console.log(input);
-		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: {
-				limit: 10,
-				title: input,
-				contentRating: ["safe", "suggestive", "erotica"],
-				order: {
-					createdAt: "desc",
-				},
-			},
-		});
-		navigate("/results", {
-			state: { mangaData: data.data },
-		});
-		console.log(data);
+	const handleClickHome = async () => {
+		navigate("/");
 	};
+	const handleClick = async () => {
+		navigate("/results", {
+			state: { id: searchInput },
+		});
+	};
+
 	return (
 		<ThemeProvider theme={customTheme}>
-			<Container sx={{ height: "11vh", minWidth: "100%" }}>
+			<Container sx={{ height: "10vh", minWidth: "100%" }}>
 				<Grid
 					container
 					direction='row'
@@ -53,7 +45,9 @@ const Header = () => {
 					}}
 				>
 					<Grid item>
-						<Typography>Ink Paradise</Typography>
+						<Button onClick={() => handleClickHome()}>
+							<Typography textTransform='none'>Ink Paradise</Typography>
+						</Button>
 					</Grid>
 					<Grid
 						item
@@ -61,13 +55,18 @@ const Header = () => {
 							width: "300px",
 							display: "flex",
 							justifyContent: "space-evenly",
+							alignItems: "center",
 						}}
 					>
 						<TextField
 							variant='outlined'
 							focused
-							sx={{
-								input: { color: "white" },
+							size='small'
+							sx={{ input: { color: "white" } }}
+							onKeyDown={(e: any) => {
+								if (e.key === "Enter") {
+									handleClick();
+								}
 							}}
 							onChange={(event) => {
 								setSearchInput(event.target.value);
@@ -76,10 +75,10 @@ const Header = () => {
 
 						<Button
 							sx={{
-								height: "50px",
+								height: "20px",
 								backgroundColor: "#333333",
 							}}
-							onClick={() => handleClick(searchInput)}
+							onClick={() => handleClick()}
 						>
 							Enter
 						</Button>

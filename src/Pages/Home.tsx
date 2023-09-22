@@ -55,21 +55,21 @@ const Home = () => {
 
 	let navigate = useNavigate();
 	return (
-		<Container disableGutters sx={{ minWidth: "95%", minHeight: "100vh" }}>
+		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
 			<Grid
 				container
 				direction='column'
 				justifyContent='center'
 				alignItems='center'
 			>
-				<Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
+				<Grid item sx={{ width: "100%" }}>
 					<Header />
 				</Grid>
 
 				<Grid
 					item
 					sx={{
-						width: "100%",
+						width: "95%",
 					}}
 				>
 					<Grid
@@ -79,11 +79,11 @@ const Home = () => {
 						alignItems='center'
 						sx={{ height: "60vh" }}
 					>
-						<Grid item sx={{ width: "35%" }}>
+						<Grid item sx={{ width: "35%", textAlign: "center" }}>
 							<Typography color='white'>Trending Now</Typography>
 							<TrendingHomePage mangaData={topMangaData} />
 						</Grid>
-						<Grid item sx={{ width: "30%" }}>
+						<Grid item sx={{ width: "30%", textAlign: "center" }}>
 							<Typography color='white'>Tags</Typography>
 							<Grid
 								container
@@ -111,17 +111,17 @@ const Home = () => {
 						<Grid
 							item
 							sx={{
-								width: "600px",
+								width: "35%",
 							}}
 						>
-							<div>
+							<div style={{ textAlign: "center" }}>
 								<Typography color='white'>Recently Updated</Typography>
 								<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
 							</div>
 						</Grid>
 					</Grid>
 					<Grid item sx={{ display: "flex", justifyContent: "center" }}>
-						<div>
+						<div style={{ textAlign: "center" }}>
 							<Typography color='white'>Recently Added</Typography>
 							<RecentlyAddedList />
 						</div>
