@@ -1,15 +1,24 @@
 import { useState, useEffect } from "react";
-import { RecentlyUpdated } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import MangaClickable from "./MangaClickable";
 import { Container, Grid } from "@mui/material";
 import dayjs from "dayjs";
 
+const baseUrl = "https://api.mangadex.org/";
+
 const RecentlyUpdatedList = () => {
 	const [mangaDetails, setMangaDetails] = useState<any[]>([]);
 
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data } = await axios.get(RecentlyUpdated());
+		const { data } = await axios.get(`${baseUrl}/manga`, {
+			params: {
+				limit: 10,
+				contentRating: ["safe", "suggestive", "erotica"],
+				order: {
+					latestUploadedChapter: "desc",
+				},
+			},
+		});
 		setMangaDetails(data.data);
 
 		console.log(data.data);

@@ -1,35 +1,48 @@
 import { useState, useEffect } from "react";
 import { Container, Grid, Typography, Button } from "@mui/material";
 import Header from "../Components/Header";
-import { RecentlyUpdated, MangaTags } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import StandardButton from "../Components/StandardButton";
 import { useNavigate } from "react-router-dom";
-import { getTopManga } from "../APIs/MyAnimeListAPI";
 import TrendingHomePage from "../Components/TrendingHomePage";
 import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSection";
 import RecentlyAddedList from "../Components/RecentlyAddedList";
 
-const noFilter = ["safe", "suggestive", "erotica", "pornographic"];
-
+const baseUrlMangaDex = "https://api.mangadex.org/";
+const baseUrlMal = "https://api.jikan.moe/v4";
 const Home = () => {
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
 	const fetchTopManga = async () => {
-		const { data: top } = await axios.get(getTopManga());
+		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
+			params: {
+				limit: 10,
+			},
+		});
 		console.log(top.data);
 		setTopMangaData(top.data);
 	};
 
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: recent } = await axios.get(RecentlyUpdated());
+		const { data: recent } = await axios.get(`${baseUrlMangaDex}/manga`, {
+			params: {
+				limit: 10,
+				order: {
+					latestUploadedChapter: "desc",
+				},
+			},
+		});
 		console.log(recent.data);
 		setRecentlyUpdatedManga(recent.data);
 	};
 
 	const fetchTags = async () => {
-		const { data: tags } = await axios.get(MangaTags());
+		const { data: tags } = await axios.get(`${baseUrlMangaDex}/manga/tag`, {
+			params: {
+				limit: 10,
+			},
+		});
 		console.log(tags.data);
 		setMangaTags(tags.data);
 	};

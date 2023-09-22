@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { CoverById } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import { Card, CardMedia, Button, Typography, Grid } from "@mui/material";
 import dayjs from "dayjs";

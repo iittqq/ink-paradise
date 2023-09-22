@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Grid, Typography, Button } from "@mui/material";
 import MangaClickable from "./MangaClickable";
-import { CoverById } from "../APIs/MangaDexAPI";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +11,7 @@ type Props = {
 const RecentlyUpdatedMangaSection = (props: Props) => {
 	const { mangaData } = props;
 	let navigate = useNavigate();
+	console.log(mangaData);
 
 	return (
 		<div>
