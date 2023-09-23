@@ -1,53 +1,35 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
 import MangaClickable from "./MangaClickable";
 import { Grid } from "@mui/material";
-import dayjs from "dayjs";
 
-const baseUrl = "https://api.mangadex.org/";
+type Props = { mangaData: any };
 
-const RecentlyAddedList = () => {
-	const [mangaDetails, setMangaDetails] = useState<any[]>([]);
-
-	const fetchRecentlyAddedManga = async () => {
-		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: {
-				limit: 10,
-				contentRating: ["safe", "suggestive", "erotica"],
-				order: {
-					createdAt: "desc",
-				},
-			},
-		});
-		setMangaDetails(data.data);
-
-		console.log(data.data);
-	};
-
-	useEffect(() => {
-		fetchRecentlyAddedManga();
-	}, []);
+const RecentlyAddedList = (props: Props) => {
+	const { mangaData } = props;
 
 	return (
-		<div style={{}}>
+		<div>
 			<Grid
 				container
 				direction='row'
 				justifyContent='center'
 				alignItems='center'
-				sx={{ height: "580px", overflow: "clip" }}
+				sx={{
+					height: "580px",
+					overflow: "clip",
+				}}
 			>
-				{mangaDetails.map((element, index) => (
+				{mangaData.map((element: any) => (
 					<Grid item>
 						<MangaClickable
 							id={element["id"]}
-							title={element["attributes"].title["en"]}
+							title={element["attributes"]["title"]["en"]}
 							coverId={
 								element["relationships"].find(
 									(i: any) => i.type === "cover_art"
 								).id
 							}
-							updatedAt={element["attributes"].createdAt}
+							updatedAt={element["attributes"].updatedAt}
+							homePage={true}
 						/>
 					</Grid>
 				))}

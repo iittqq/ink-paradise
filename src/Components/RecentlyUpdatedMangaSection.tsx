@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Container, Grid, Typography, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import MangaClickable from "./MangaClickable";
-import axios from "axios";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
 
 type Props = {
 	mangaData: any;
 };
 const RecentlyUpdatedMangaSection = (props: Props) => {
 	const { mangaData } = props;
-	let navigate = useNavigate();
-	console.log(mangaData);
 
 	return (
 		<div>
@@ -36,6 +30,7 @@ const RecentlyUpdatedMangaSection = (props: Props) => {
 								).id
 							}
 							updatedAt={element["attributes"].updatedAt}
+							homePage={true}
 						/>
 					</Grid>
 				))}

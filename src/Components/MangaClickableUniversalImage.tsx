@@ -19,7 +19,11 @@ const MangaClickableUniversalImage = (props: Props) => {
 
 	const { id, title, coverUrl, rank } = props;
 
-	function handleClick() {}
+	function handleClick() {
+		navigate("/individualView", {
+			state: { title: title },
+		});
+	}
 
 	return (
 		<div

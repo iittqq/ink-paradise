@@ -25,6 +25,7 @@ const Home = () => {
 	const [open, setOpen] = useState(false);
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
+	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
 	const fetchTopManga = async () => {
 		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
@@ -35,18 +36,35 @@ const Home = () => {
 		console.log(top.data);
 		setTopMangaData(top.data);
 	};
-
-	const fetchRecentlyUpdatedManga = async () => {
-		const { data: recent } = await axios.get(`${baseUrlMangaDex}/manga`, {
+	const fetchRecentlyAddedManga = async () => {
+		const { data: recentAdded } = await axios.get(`${baseUrlMangaDex}/manga`, {
 			params: {
 				limit: 10,
+				contentRating: ["safe", "suggestive", "erotica"],
 				order: {
-					latestUploadedChapter: "desc",
+					createdAt: "desc",
 				},
 			},
 		});
-		console.log(recent.data);
-		setRecentlyUpdatedManga(recent.data);
+		setRecentlyAddedManga(recentAdded.data);
+
+		console.log(recentAdded.data);
+	};
+
+	const fetchRecentlyUpdatedManga = async () => {
+		const { data: recentUpdated } = await axios.get(
+			`${baseUrlMangaDex}/manga`,
+			{
+				params: {
+					limit: 10,
+					order: {
+						latestUploadedChapter: "desc",
+					},
+				},
+			}
+		);
+		console.log(recentUpdated.data);
+		setRecentlyUpdatedManga(recentUpdated.data);
 	};
 
 	const fetchTags = async () => {
@@ -63,6 +81,7 @@ const Home = () => {
 		fetchTopManga();
 		fetchRecentlyUpdatedManga();
 		fetchTags();
+		fetchRecentlyAddedManga();
 	}, []);
 
 	const handleOpenTags = () => {
@@ -107,7 +126,7 @@ const Home = () => {
 							}}
 						>
 							<Typography color='white'>Recently Added</Typography>
-							<RecentlyAddedList />
+							<RecentlyAddedList mangaData={recentlyAddedManga} />
 							<Button
 								sx={{
 									color: "#121212",

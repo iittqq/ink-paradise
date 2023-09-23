@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Container, Grid, Typography, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import MangaClickableUniversalImage from "./MangaClickableUniversalImage";
-import dayjs from "dayjs";
 
 type Props = {
 	mangaData: any;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Grid, Typography } from "@mui/material";
 import MangaClickable from "../Components/MangaClickable";
-import dayjs from "dayjs";
 import Header from "../Components/Header";
 import axios from "axios";
 
@@ -45,9 +44,9 @@ const SearchResults = () => {
 				<Grid item>
 					<Typography color='white' textTransform={"capitalize"}>
 						{state.id}
-					</Typography>{" "}
+					</Typography>
 				</Grid>
-				<Grid item>
+				<Grid item sx={{ width: "95%" }}>
 					<Grid
 						container
 						direction='row'
@@ -55,7 +54,7 @@ const SearchResults = () => {
 						alignItems='center'
 					>
 						{mangaData.map((element: any) => (
-							<Grid item>
+							<Grid item sx={{ height: "192px" }}>
 								<MangaClickable
 									id={element["id"]}
 									title={element["attributes"].title["en"]}
@@ -64,7 +63,6 @@ const SearchResults = () => {
 											(i: any) => i.type === "cover_art"
 										).id
 									}
-									updatedAt={element["attributes"].updatedAt}
 								/>
 							</Grid>
 						))}

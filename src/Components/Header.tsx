@@ -1,12 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Container, Grid, TextField, Typography, Button } from "@mui/material";
-import {
-	createTheme,
-	ThemeProvider,
-	Theme,
-	useTheme,
-} from "@mui/material/styles";
-import axios from "axios";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
 const customTheme = createTheme({

@@ -12,7 +12,6 @@ import {
 import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import { Box } from "@mui/system";
 import StandardButton from "../Components/StandardButton";
 
 const mangaCoverHeightXs = "200px";
@@ -22,8 +21,17 @@ const mangaCoverWidthMd = "150px";
 const mangaCoverHeightLg = "300px";
 const mangaCoverWidthLg = "200px";
 
-const IndividualManga = () => {
+type Props = {
+	notFromMangaDex?: boolean;
+};
+const IndividualManga = (props: Props) => {
+	const { notFromMangaDex } = props;
 	const { state } = useLocation();
+	console.log(state["title"]);
+	const [mangaFromMal, setMangaFromMal] = useState<string>("");
+	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
+		useState<string>("");
+	const [mangaFromMalCoverId, setMangaFromMalCoverId] = useState<string>("");
 	const [mangaDetails, setMangaDetails] = useState(Object);
 	const [mangaName, setMangaName] = useState();
 	const [mangaDescription, setMangaDescription] = useState();
@@ -67,11 +75,67 @@ const IndividualManga = () => {
 		setMangaLatest(details.data["attributes"].latestUploadedChapter);
 	};
 
-	const fetchMangaFeed = async () => {
-		const { data: feed } = await axios.get(`${baseUrl}manga/${state.id}/feed`);
+	const fetchMangaFeed = async (id: string) => {
+		const { data: feed } = await axios.get(`${baseUrl}manga/${id}/feed`, {
+			params: { order: { chapter: "desc" } },
+		});
 
 		console.log(feed.data);
 		setMangaFeed(feed.data);
+	};
+
+	const fetchMangaByName = async () => {
+		const { data: details } = await axios.get(`${baseUrl}/manga/`, {
+			params: {
+				limit: 10,
+				title: state["title"],
+				contentRating: ["safe", "suggestive", "erotica"],
+				order: {
+					title: "asc",
+				},
+			},
+		});
+		setMangaFromMal(details.data[0]["id"]);
+		fetchMangaFeed(details.data[0]["id"]);
+		setMangaFromMalCoverId(
+			details.data[0]["relationships"].find((i: any) => i.type === "cover_art")
+				.id
+		);
+
+		const { data: coverFile } = await axios.get(
+			`${baseUrl}/cover/${
+				details.data[0]["relationships"].find(
+					(i: any) => i.type === "cover_art"
+				).id
+			}`,
+			{}
+		);
+		console.log(coverFile);
+
+		setMangaFromMalCoverFile(coverFile["data"]["attributes"]["fileName"]);
+
+		setMangaDetails(details.data[0]);
+
+		console.log(details.data[0]);
+		setMangaName(details.data[0]["attributes"].title["en"]);
+		setMangaDescription(details.data[0]["attributes"].description["en"]);
+		setMangaAltTitles(details.data[0]["attributes"].altTitles);
+		setMangaLanguages(
+			details.data[0]["attributes"].availableTranslatedLanguages
+		);
+		setMangaContentRating(details.data[0]["attributes"].contentRating);
+		setMangaCreatedAt(details.data[0]["attributes"].createdAt);
+		setMangaRaw(
+			details.data[0]["attributes"].links === null
+				? ""
+				: details.data[0]["attributes"].links["raw"]
+		);
+		setMangaState(details.data[0]["attributes"].state);
+		setMangaStatus(details.data[0]["attributes"].status);
+		setMangaTags(details.data[0]["attributes"].tags);
+		setMangaUpdatedAt(details.data[0]["attributes"].updatedAt);
+		setMangaRelationships(details.data[0]["relationships"]);
+		setMangaLatest(details.data[0]["attributes"].latestUploadedChapter);
 	};
 
 	const handleShowMore = () => {
@@ -79,8 +143,12 @@ const IndividualManga = () => {
 	};
 
 	useEffect(() => {
-		fetchRecentlyUpdatedManga();
-		fetchMangaFeed();
+		if (state["title"] !== undefined) {
+			fetchMangaByName();
+		} else {
+			fetchRecentlyUpdatedManga();
+			fetchMangaFeed(state.id);
+		}
 	}, []);
 
 	return (
@@ -142,10 +210,15 @@ const IndividualManga = () => {
 										width: "100%",
 									}}
 									image={
-										"https://uploads.mangadex.org/covers/" +
-										state.id +
-										"/" +
-										state.coverFile
+										state["title"] === undefined
+											? "https://uploads.mangadex.org/covers/" +
+											  state.id +
+											  "/" +
+											  state.coverFile
+											: "https://uploads.mangadex.org/covers/" +
+											  mangaFromMal +
+											  "/" +
+											  mangaFromMalCoverFile
 									}
 								/>
 							</Card>

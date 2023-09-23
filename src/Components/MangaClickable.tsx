@@ -9,7 +9,8 @@ type Props = {
 	id: string;
 	title: string;
 	coverId: string;
-	updatedAt: string;
+	updatedAt?: string;
+	homePage?: boolean;
 };
 
 const baseUrl = "https://api.mangadex.org/";
@@ -18,7 +19,7 @@ const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, coverId, updatedAt } = props;
+	const { id, title, coverId, updatedAt, homePage } = props;
 
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
@@ -39,6 +40,7 @@ const MangaClickable = (props: Props) => {
 		<div
 			style={{
 				display: "flex",
+
 				justifyContent: "center",
 			}}
 		>
@@ -87,10 +89,13 @@ const MangaClickable = (props: Props) => {
 						>
 							<Typography
 								color='white'
-								noWrap
 								sx={{
 									fontSize: { xs: 10, sm: 10, lg: 10 },
 									maxWidth: "100px",
+									display: "-webkit-box",
+									overflow: "hidden",
+									WebkitBoxOrient: "vertical",
+									WebkitLineClamp: homePage === true ? 1 : 2,
 								}}
 							>
 								{title}
@@ -101,7 +106,9 @@ const MangaClickable = (props: Props) => {
 									fontSize: { xs: 10, sm: 10, lg: 10 },
 								}}
 							>
-								{dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}
+								{updatedAt === undefined
+									? null
+									: dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}
 							</Typography>
 						</div>
 					</Grid>
