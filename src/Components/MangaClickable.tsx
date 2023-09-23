@@ -33,7 +33,7 @@ const MangaClickable = (props: Props) => {
 
 	useEffect(() => {
 		fetchCoverFile();
-	}, []);
+	}, [props]);
 
 	return (
 		<div

@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { Container, Grid, Typography, Button } from "@mui/material";
+import {
+	Container,
+	Grid,
+	Typography,
+	Button,
+	List,
+	ListItemButton,
+	ListItemText,
+	Collapse,
+	Box,
+} from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../Components/Header";
 import axios from "axios";
 import StandardButton from "../Components/StandardButton";
@@ -11,6 +22,7 @@ import RecentlyAddedList from "../Components/RecentlyAddedList";
 const baseUrlMangaDex = "https://api.mangadex.org/";
 const baseUrlMal = "https://api.jikan.moe/v4";
 const Home = () => {
+	const [open, setOpen] = useState(false);
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
@@ -52,6 +64,10 @@ const Home = () => {
 		fetchRecentlyUpdatedManga();
 		fetchTags();
 	}, []);
+
+	const handleOpenTags = () => {
+		setOpen(!open);
+	};
 
 	let navigate = useNavigate();
 	return (
@@ -99,17 +115,11 @@ const Home = () => {
 									"&.MuiButtonBase-root:hover": {
 										bgcolor: "transparent",
 									},
+									width: "20px",
+									height: "20px",
 								}}
 							>
-								<div
-									style={{
-										width: 0,
-										height: 0,
-										borderLeft: "15px solid transparent",
-										borderRight: "15px solid transparent",
-										borderTop: "15px solid #333333",
-									}}
-								></div>
+								<ExpandMore sx={{ color: "#333333" }} />
 							</Button>
 						</Grid>
 						<Grid
@@ -120,7 +130,7 @@ const Home = () => {
 								flexDirection: "column",
 								justifyContent: "center",
 								alignItems: "center",
-								paddingBottom: "27px",
+								paddingBottom: "20px",
 							}}
 						>
 							<Typography color='white'>Trending Now</Typography>
@@ -147,52 +157,81 @@ const Home = () => {
 									"&.MuiButtonBase-root:hover": {
 										bgcolor: "transparent",
 									},
+									width: "20px",
+									height: "20px",
 								}}
 							>
-								<div
-									style={{
-										width: 0,
-										height: 0,
-										borderLeft: "15px solid transparent",
-										borderRight: "15px solid transparent",
-										borderTop: "15px solid #333333",
-									}}
-								></div>
+								<ExpandMore sx={{ color: "#333333" }} />
 							</Button>
 						</Grid>
 					</Grid>
 				</Grid>
 				<Grid
 					item
-					sx={{ width: { xs: "100%", lg: "90%" }, textAlign: "center" }}
+					sx={{
+						width: { xs: "100%", lg: "90%" },
+					}}
 				>
-					<Typography color='white' sx={{ height: { xs: "30px" } }}>
-						Tags
-					</Typography>
-					<Grid
-						container
-						direction='row'
-						justifyContent='center'
-						alignItems='center'
-						spacing={1}
-						sx={{ height: { xs: "200px" }, overflow: "scroll" }}
+					<List
+						sx={{
+							width: "100%",
+							justifyContent: "center",
+							display: "flex",
+							alignItems: "center",
+							flexDirection: "column",
+						}}
 					>
-						{mangaTags.map((element: any) => (
-							<Grid item>
-								<StandardButton
-									backgroundColor='#191919'
-									width='120px'
-									height='20px'
-									textColor='#333333'
-									fontSizeXs={10}
-									fontSizeSm={10}
-									fontSizeLg={12}
-									text={element["attributes"].name["en"]}
-									location={element["attributes"].name["en"]}
-								/>
+						<ListItemButton
+							sx={{
+								width: "100px",
+								color: "#121212",
+								backgroundColor: "transparent",
+								"&.MuiButtonBase-root:hover": {
+									bgcolor: "transparent",
+								},
+							}}
+							onClick={() => handleOpenTags()}
+						>
+							<ListItemText sx={{ color: "white" }} primary='Tags' />
+							{open ? (
+								<ExpandLess sx={{ color: "#333333" }} />
+							) : (
+								<ExpandMore sx={{ color: "#333333" }} />
+							)}
+						</ListItemButton>
+						<Collapse
+							sx={{
+								width: "100%",
+								height: "20%",
+							}}
+							in={open}
+							timeout='auto'
+						>
+							<Grid
+								container
+								justifyContent='center'
+								direction='row'
+								alignItems='center'
+								spacing={0.5}
+							>
+								{mangaTags.map((element: any) => (
+									<Grid item>
+										<StandardButton
+											backgroundColor='#191919'
+											width='120px'
+											height='20px'
+											textColor='#333333'
+											fontSizeXs={10}
+											fontSizeSm={10}
+											fontSizeLg={12}
+											text={element["attributes"].name["en"]}
+											location={element["attributes"].name["en"]}
+										/>
+									</Grid>
+								))}
 							</Grid>
-						))}
-					</Grid>
+						</Collapse>
+					</List>
 				</Grid>
 			</Grid>
 		</Container>

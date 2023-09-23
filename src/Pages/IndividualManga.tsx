@@ -54,7 +54,11 @@ const IndividualManga = () => {
 		setMangaLanguages(details.data["attributes"].availableTranslatedLanguages);
 		setMangaContentRating(details.data["attributes"].contentRating);
 		setMangaCreatedAt(details.data["attributes"].createdAt);
-		setMangaRaw(details.data["attributes"].links["raw"]);
+		setMangaRaw(
+			details.data["attributes"].links === null
+				? ""
+				: details.data["attributes"].links["raw"]
+		);
 		setMangaState(details.data["attributes"].state);
 		setMangaStatus(details.data["attributes"].status);
 		setMangaTags(details.data["attributes"].tags);
