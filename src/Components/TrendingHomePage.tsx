@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Container, Grid, Typography, Button } from "@mui/material";
+import { Grid } from "@mui/material";
 import MangaClickableUniversalImage from "./MangaClickableUniversalImage";
-import dayjs from "dayjs";
 
 type Props = {
 	mangaData: any;
@@ -16,6 +14,7 @@ const TrendingHomePage = (props: Props) => {
 				direction='row'
 				justifyContent='center'
 				alignItems='center'
+				sx={{ height: "580px", overflow: "clip" }}
 			>
 				{mangaData.map((element: any) => (
 					<Grid item>

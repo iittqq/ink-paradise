@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { Container, Grid, Typography, Button } from "@mui/material";
+import {
+	Container,
+	Grid,
+	Typography,
+	Button,
+	List,
+	ListItemButton,
+	ListItemText,
+	Collapse,
+	Box,
+} from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../Components/Header";
 import axios from "axios";
 import StandardButton from "../Components/StandardButton";
@@ -11,8 +22,10 @@ import RecentlyAddedList from "../Components/RecentlyAddedList";
 const baseUrlMangaDex = "https://api.mangadex.org/";
 const baseUrlMal = "https://api.jikan.moe/v4";
 const Home = () => {
+	const [open, setOpen] = useState(false);
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
+	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
 	const fetchTopManga = async () => {
 		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
@@ -23,18 +36,35 @@ const Home = () => {
 		console.log(top.data);
 		setTopMangaData(top.data);
 	};
-
-	const fetchRecentlyUpdatedManga = async () => {
-		const { data: recent } = await axios.get(`${baseUrlMangaDex}/manga`, {
+	const fetchRecentlyAddedManga = async () => {
+		const { data: recentAdded } = await axios.get(`${baseUrlMangaDex}/manga`, {
 			params: {
 				limit: 10,
+				contentRating: ["safe", "suggestive", "erotica"],
 				order: {
-					latestUploadedChapter: "desc",
+					createdAt: "desc",
 				},
 			},
 		});
-		console.log(recent.data);
-		setRecentlyUpdatedManga(recent.data);
+		setRecentlyAddedManga(recentAdded.data);
+
+		console.log(recentAdded.data);
+	};
+
+	const fetchRecentlyUpdatedManga = async () => {
+		const { data: recentUpdated } = await axios.get(
+			`${baseUrlMangaDex}/manga`,
+			{
+				params: {
+					limit: 10,
+					order: {
+						latestUploadedChapter: "desc",
+					},
+				},
+			}
+		);
+		console.log(recentUpdated.data);
+		setRecentlyUpdatedManga(recentUpdated.data);
 	};
 
 	const fetchTags = async () => {
@@ -51,18 +81,23 @@ const Home = () => {
 		fetchTopManga();
 		fetchRecentlyUpdatedManga();
 		fetchTags();
+		fetchRecentlyAddedManga();
 	}, []);
+
+	const handleOpenTags = () => {
+		setOpen(!open);
+	};
 
 	let navigate = useNavigate();
 	return (
-		<Container disableGutters sx={{ minWidth: "95%", minHeight: "100vh" }}>
+		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
 			<Grid
 				container
 				direction='column'
 				justifyContent='center'
 				alignItems='center'
 			>
-				<Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
+				<Grid item sx={{ width: "100%" }}>
 					<Header />
 				</Grid>
 
@@ -70,26 +105,133 @@ const Home = () => {
 					item
 					sx={{
 						width: "100%",
+						height: { xs: "70vh", md: "65vh", lg: "none" },
 					}}
 				>
 					<Grid
 						container
 						direction='row'
-						justifyContent='space-between'
+						justifyContent='space-evenly'
 						alignItems='center'
-						sx={{ height: "60vh" }}
+						sx={{}}
 					>
-						<Grid item sx={{ width: "35%" }}>
+						<Grid
+							item
+							sx={{
+								width: "31%",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Typography color='white'>Recently Added</Typography>
+							<RecentlyAddedList mangaData={recentlyAddedManga} />
+							<Button
+								sx={{
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+									width: "20px",
+									height: "20px",
+								}}
+							>
+								<ExpandMore sx={{ color: "#333333" }} />
+							</Button>
+						</Grid>
+						<Grid
+							item
+							sx={{
+								width: "31%",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+								paddingBottom: "20px",
+							}}
+						>
 							<Typography color='white'>Trending Now</Typography>
 							<TrendingHomePage mangaData={topMangaData} />
 						</Grid>
-						<Grid item sx={{ width: "30%" }}>
-							<Typography color='white'>Tags</Typography>
+						<Grid
+							item
+							sx={{
+								width: "31%",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Typography color='white' noWrap>
+								Recently Updated
+							</Typography>
+							<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
+							<Button
+								sx={{
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+									width: "20px",
+									height: "20px",
+								}}
+							>
+								<ExpandMore sx={{ color: "#333333" }} />
+							</Button>
+						</Grid>
+					</Grid>
+				</Grid>
+				<Grid
+					item
+					sx={{
+						width: { xs: "100%", lg: "90%" },
+					}}
+				>
+					<List
+						sx={{
+							width: "100%",
+							justifyContent: "center",
+							display: "flex",
+							alignItems: "center",
+							flexDirection: "column",
+						}}
+					>
+						<ListItemButton
+							sx={{
+								width: "100px",
+								color: "#121212",
+								backgroundColor: "transparent",
+								"&.MuiButtonBase-root:hover": {
+									bgcolor: "transparent",
+								},
+							}}
+							onClick={() => handleOpenTags()}
+						>
+							<ListItemText sx={{ color: "white" }} primary='Tags' />
+							{open ? (
+								<ExpandLess sx={{ color: "#333333" }} />
+							) : (
+								<ExpandMore sx={{ color: "#333333" }} />
+							)}
+						</ListItemButton>
+						<Collapse
+							sx={{
+								width: "100%",
+								height: "20%",
+							}}
+							in={open}
+							timeout='auto'
+						>
 							<Grid
 								container
+								justifyContent='center'
 								direction='row'
-								justifyContent='space-between'
 								alignItems='center'
+								spacing={0.5}
 							>
 								{mangaTags.map((element: any) => (
 									<Grid item>
@@ -107,25 +249,8 @@ const Home = () => {
 									</Grid>
 								))}
 							</Grid>
-						</Grid>
-						<Grid
-							item
-							sx={{
-								width: "600px",
-							}}
-						>
-							<div>
-								<Typography color='white'>Recently Updated</Typography>
-								<RecentlyUpdatedMangaSection mangaData={recentlyUpdatedManga} />
-							</div>
-						</Grid>
-					</Grid>
-					<Grid item sx={{ display: "flex", justifyContent: "center" }}>
-						<div>
-							<Typography color='white'>Recently Added</Typography>
-							<RecentlyAddedList />
-						</div>
-					</Grid>
+						</Collapse>
+					</List>
 				</Grid>
 			</Grid>
 		</Container>
