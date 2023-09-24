@@ -17,7 +17,7 @@ const SearchResults = () => {
 				title: state.id,
 				contentRating: ["safe", "suggestive", "erotica"],
 				order: {
-					createdAt: "desc",
+					relevance: "desc",
 				},
 			},
 		});

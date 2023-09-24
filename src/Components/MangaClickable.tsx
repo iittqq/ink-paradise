@@ -8,9 +8,12 @@ import { useNavigate } from "react-router-dom";
 type Props = {
 	id: string;
 	title: string;
-	coverId: string;
+	coverId?: string;
 	updatedAt?: string;
 	homePage?: boolean;
+	rank?: string;
+	coverUrl?: string;
+	author?: string;
 };
 
 const baseUrl = "https://api.mangadex.org/";
@@ -19,7 +22,8 @@ const MangaClickable = (props: Props) => {
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, coverId, updatedAt, homePage } = props;
+	const { id, title, coverId, updatedAt, homePage, rank, coverUrl, author } =
+		props;
 
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
@@ -28,19 +32,23 @@ const MangaClickable = (props: Props) => {
 
 	function handleClick() {
 		navigate("/individualView", {
-			state: { id: id, coverFile: coverFile },
+			state:
+				coverUrl === undefined
+					? { id: id, coverFile: coverFile }
+					: { title: title, author: author },
 		});
 	}
 
 	useEffect(() => {
-		fetchCoverFile();
+		if (coverUrl === undefined) {
+			fetchCoverFile();
+		}
 	}, [props]);
 
 	return (
 		<div
 			style={{
 				display: "flex",
-
 				justifyContent: "center",
 			}}
 		>
@@ -73,7 +81,12 @@ const MangaClickable = (props: Props) => {
 							<CardMedia
 								sx={{ width: "100%", height: "100%" }}
 								image={
-									"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
+									coverUrl === undefined
+										? "https://uploads.mangadex.org/covers/" +
+										  id +
+										  "/" +
+										  coverFile
+										: coverUrl
 								}
 							/>
 						</Card>
@@ -83,8 +96,8 @@ const MangaClickable = (props: Props) => {
 							style={{
 								display: "flex",
 								flexDirection: "column",
-								justifyContent: "flex-start",
-								alignItems: "flex-start",
+								justifyContent: "center",
+								alignItems: "center",
 							}}
 						>
 							<Typography
@@ -110,6 +123,16 @@ const MangaClickable = (props: Props) => {
 									? null
 									: dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}
 							</Typography>
+							{rank === undefined ? null : (
+								<Typography
+									color='white'
+									sx={{
+										fontSize: { xs: 10, sm: 10, lg: 10 },
+									}}
+								>
+									Rank: {rank}
+								</Typography>
+							)}
 						</div>
 					</Grid>
 				</Grid>

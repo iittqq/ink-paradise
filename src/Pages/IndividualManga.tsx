@@ -21,32 +21,19 @@ const mangaCoverWidthMd = "150px";
 const mangaCoverHeightLg = "300px";
 const mangaCoverWidthLg = "200px";
 
-type Props = {
-	notFromMangaDex?: boolean;
-};
+type Props = {};
 const IndividualManga = (props: Props) => {
-	const { notFromMangaDex } = props;
 	const { state } = useLocation();
-	console.log(state["title"]);
 	const [mangaFromMal, setMangaFromMal] = useState<string>("");
 	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
 		useState<string>("");
-	const [mangaFromMalCoverId, setMangaFromMalCoverId] = useState<string>("");
-	const [mangaDetails, setMangaDetails] = useState(Object);
 	const [mangaName, setMangaName] = useState();
 	const [mangaDescription, setMangaDescription] = useState();
 	const [mangaAltTitles, setMangaAltTitles] = useState<Object[]>([]);
 	const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
 	const [mangaContentRating, setMangaContentRating] = useState("");
-	const [mangaCreatedAt, setMangaCreatedAt] = useState();
 	const [mangaRaw, setMangaRaw] = useState("");
-	const [mangaState, setMangaState] = useState();
-	const [mangaStatus, setMangaStatus] = useState();
 	const [mangaTags, setMangaTags] = useState<Object[]>([]);
-	const [mangaUpdatedAt, setMangaUpdatedAt] = useState();
-	const [mangaRelationships, setMangaRelationships] = useState();
-	const [mangaType, setMangaType] = useState();
-	const [mangaLatest, setMangaLatest] = useState();
 	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -54,25 +41,21 @@ const IndividualManga = (props: Props) => {
 	const baseUrl = "https://api.mangadex.org/";
 	const fetchRecentlyUpdatedManga = async () => {
 		const { data: details } = await axios.get(`${baseUrl}manga/${state.id}`);
-		setMangaDetails(details.data);
+
 		console.log(details.data);
 		setMangaName(details.data["attributes"].title["en"]);
 		setMangaDescription(details.data["attributes"].description["en"]);
 		setMangaAltTitles(details.data["attributes"].altTitles);
 		setMangaLanguages(details.data["attributes"].availableTranslatedLanguages);
 		setMangaContentRating(details.data["attributes"].contentRating);
-		setMangaCreatedAt(details.data["attributes"].createdAt);
+
 		setMangaRaw(
 			details.data["attributes"].links === null
 				? ""
 				: details.data["attributes"].links["raw"]
 		);
-		setMangaState(details.data["attributes"].state);
-		setMangaStatus(details.data["attributes"].status);
+
 		setMangaTags(details.data["attributes"].tags);
-		setMangaUpdatedAt(details.data["attributes"].updatedAt);
-		setMangaRelationships(details.data["relationships"]);
-		setMangaLatest(details.data["attributes"].latestUploadedChapter);
 	};
 
 	const fetchMangaFeed = async (id: string) => {
@@ -84,23 +67,26 @@ const IndividualManga = (props: Props) => {
 		setMangaFeed(feed.data);
 	};
 
-	const fetchMangaByName = async () => {
+	const fetchMangaByName = async (id: string) => {
 		const { data: details } = await axios.get(`${baseUrl}/manga/`, {
 			params: {
 				limit: 10,
 				title: state["title"],
+				authorOrArtist: id,
 				contentRating: ["safe", "suggestive", "erotica"],
 				order: {
 					title: "asc",
 				},
 			},
 		});
-		setMangaFromMal(details.data[0]["id"]);
-		fetchMangaFeed(details.data[0]["id"]);
-		setMangaFromMalCoverId(
-			details.data[0]["relationships"].find((i: any) => i.type === "cover_art")
-				.id
+		console.log(details.data);
+		details.data.map((element: any) =>
+			element["attributes"]["title"]["en"] === state["title"]
+				? setMangaFromMal(element["id"])
+				: console.log(element)
 		);
+
+		fetchMangaFeed(details.data[0]["id"]);
 
 		const { data: coverFile } = await axios.get(
 			`${baseUrl}/cover/${
@@ -114,8 +100,6 @@ const IndividualManga = (props: Props) => {
 
 		setMangaFromMalCoverFile(coverFile["data"]["attributes"]["fileName"]);
 
-		setMangaDetails(details.data[0]);
-
 		console.log(details.data[0]);
 		setMangaName(details.data[0]["attributes"].title["en"]);
 		setMangaDescription(details.data[0]["attributes"].description["en"]);
@@ -124,18 +108,25 @@ const IndividualManga = (props: Props) => {
 			details.data[0]["attributes"].availableTranslatedLanguages
 		);
 		setMangaContentRating(details.data[0]["attributes"].contentRating);
-		setMangaCreatedAt(details.data[0]["attributes"].createdAt);
+
 		setMangaRaw(
 			details.data[0]["attributes"].links === null
 				? ""
 				: details.data[0]["attributes"].links["raw"]
 		);
-		setMangaState(details.data[0]["attributes"].state);
-		setMangaStatus(details.data[0]["attributes"].status);
+
 		setMangaTags(details.data[0]["attributes"].tags);
-		setMangaUpdatedAt(details.data[0]["attributes"].updatedAt);
-		setMangaRelationships(details.data[0]["relationships"]);
-		setMangaLatest(details.data[0]["attributes"].latestUploadedChapter);
+	};
+	const fetchAuthorByName = async (name: string) => {
+		const { data: authorDetails } = await axios.get(`${baseUrl}/author`, {
+			params: {
+				limit: 10,
+				name: name,
+			},
+		});
+		console.log(authorDetails);
+
+		fetchMangaByName(authorDetails.data[0]["id"]);
 	};
 
 	const handleShowMore = () => {
@@ -144,7 +135,8 @@ const IndividualManga = (props: Props) => {
 
 	useEffect(() => {
 		if (state["title"] !== undefined) {
-			fetchMangaByName();
+			let temp = state["author"].split(",");
+			fetchAuthorByName(temp[1] + " " + temp[0]);
 		} else {
 			fetchRecentlyUpdatedManga();
 			fetchMangaFeed(state.id);
