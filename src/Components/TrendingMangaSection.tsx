@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import MangaClickableUniversalImage from "./MangaClickableUniversalImage";
+import MangaClickable from "./MangaClickable";
 
 type Props = {
 	mangaData: any;
@@ -18,11 +18,13 @@ const TrendingHomePage = (props: Props) => {
 			>
 				{mangaData.map((element: any) => (
 					<Grid item>
-						<MangaClickableUniversalImage
+						<MangaClickable
 							id={element["mal_id"]}
 							title={element["title"]}
 							coverUrl={element["images"]["jpg"]["image_url"]}
 							rank={element["rank"]}
+							homePage={true}
+							author={element["authors"][0]["name"]}
 						/>
 					</Grid>
 				))}

@@ -15,9 +15,9 @@ import Header from "../Components/Header";
 import axios from "axios";
 import StandardButton from "../Components/StandardButton";
 import { useNavigate } from "react-router-dom";
-import TrendingHomePage from "../Components/TrendingHomePage";
+import TrendingMangaSection from "../Components/TrendingMangaSection";
 import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSection";
-import RecentlyAddedList from "../Components/RecentlyAddedList";
+import RecentlyAddedMangaSection from "../Components/RecentlyAddedMangaSection";
 
 const baseUrlMangaDex = "https://api.mangadex.org/";
 const baseUrlMal = "https://api.jikan.moe/v4";
@@ -126,7 +126,7 @@ const Home = () => {
 							}}
 						>
 							<Typography color='white'>Recently Added</Typography>
-							<RecentlyAddedList mangaData={recentlyAddedManga} />
+							<RecentlyAddedMangaSection mangaData={recentlyAddedManga} />
 							<Button
 								sx={{
 									color: "#121212",
@@ -153,7 +153,7 @@ const Home = () => {
 							}}
 						>
 							<Typography color='white'>Trending Now</Typography>
-							<TrendingHomePage mangaData={topMangaData} />
+							<TrendingMangaSection mangaData={topMangaData} />
 						</Grid>
 						<Grid
 							item
