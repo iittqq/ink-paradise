@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Carousel, { CarouselItem } from "./Carousel";
-import MangaClickable from "./MangaClickable";
+import MangaClickable from "../MangaClickable";
 
 const baseUrl = "https://api.mangadex.org/";
 
