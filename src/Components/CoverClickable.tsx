@@ -1,31 +1,29 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
-import { Card, CardMedia, Button, Typography, Grid } from "@mui/material";
+import { Card, CardMedia, Button, Typography, Grid, CardContent, Box, CardActionArea } from "@mui/material";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
 	id: string;
 	title: string;
 	coverId: string;
-	updatedAt: string;
+	updatedAt?: string;
+	homePage?: boolean;
 };
 
-dayjs.extend(utc);
 const baseUrl = "https://api.mangadex.org/";
-const MangaClickable = (props: Props) => {
+const CoverClickable = (props: Props) => {
 	let navigate = useNavigate();
 	const [coverFile, setCoverFile] = useState("");
 	//const [showDetails, setShowDetails] = useState(false);
 
-	const { id, title, coverId, updatedAt } = props;
+	const { id, title, coverId, updatedAt, homePage } = props;
 
 	const fetchCoverFile = async () => {
 		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
 		setCoverFile(data.data["attributes"].fileName);
-		return data.data;
 	};
 
 	function handleClick() {
@@ -36,18 +34,27 @@ const MangaClickable = (props: Props) => {
 
 	useEffect(() => {
 		fetchCoverFile();
-	}, []);
+	}, [props]);
 
 	return (
-		<div style={{ width: "300px", display: "flex", justifyContent: "center" }}>
+		<div
+			style={{
+				display: "flex",
+
+				justifyContent: "center",
+			}}
+		>
 			<Button
 				sx={{
-					backgroundColor: "#222222",
+					//backgroundColor: "#222222",
+					backgroundColor: "transparent",
 					"&.MuiButtonBase-root:hover": {
 						bgcolor: "transparent",
 					},
-					width: "90%",
-					height: "120px",
+					".MuiTouchRipple-child": {
+						backgroundColor: "white",
+					},
+					width: "100%",
 				}}
 				onClick={() => {
 					handleClick();
@@ -56,63 +63,35 @@ const MangaClickable = (props: Props) => {
 				//onMouseLeave={() => setShowDetails(false)}
 			>
 				<Grid
-					sx={{
-						color: "white",
-						height: "100%",
-						width: "100%",
-					}}
 					container
-					direction='row'
-					justifyContent='space-between'
+					direction='column'
+					justifyContent='space-evenly'
 					alignItems='center'
 				>
-					<Grid item sx={{ width: "30%", minHeight: "100%" }}>
-						<Card sx={{ width: "80px", height: "108px", overflow: "contain" }}>
-							<CardMedia
-								sx={{ width: "100%", height: "100%" }}
-								image={
-									"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
-								}
-							/>
-						</Card>
-					</Grid>
-					<Grid
-						item
-						sx={{
-							width: { xs: "60%", md: "60%", lg: "60%" },
-						}}
-					>
-						<div
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "flex-start",
-								alignItems: "flex-start",
-							}}
-						>
+					<Grid item>
+						<Card sx={{ width: "100px", height: "150px" }}>
 							<Typography
+								color='white'
 								sx={{
+									fontSize: { xs: 10, sm: 10, lg: 10 },
+									maxWidth: "100px",
 									display: "-webkit-box",
 									overflow: "hidden",
-									textAlign: "left",
 									WebkitBoxOrient: "vertical",
-									WebkitLineClamp: 2.5,
-									fontSize: { xs: 10, sm: 10, lg: 10 },
-									paddingBottom: "20px",
-									paddingTop: "10px",
+									WebkitLineClamp: homePage === true ? 1 : 2,
+									position: "top",
 								}}
 							>
 								{title}
 							</Typography>
-
-							<Typography
-								sx={{
-									fontSize: { xs: 10, sm: 10, lg: 10 },
-								}}
-							>
-								{updatedAt}
-							</Typography>
-						</div>
+							<CardMedia
+								sx={{ width: "100%", height: "100%", position: "relative"}}
+								image={
+									"https://uploads.mangadex.org/covers/" + id + "/" + coverFile
+								}
+							/>
+							
+						</Card>
 					</Grid>
 				</Grid>
 			</Button>
@@ -120,4 +99,4 @@ const MangaClickable = (props: Props) => {
 	);
 };
 
-export default MangaClickable;
+export default CoverClickable;
