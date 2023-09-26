@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Header from "../Components/Header";
 import axios from "axios";
-import CoverClickable from "../Components/MangaClickable";
+import CoverClickable from "../Components/CoverClickable";
 import dayjs from "dayjs";
 
 const baseUrl = "https://api.mangadex.org";
