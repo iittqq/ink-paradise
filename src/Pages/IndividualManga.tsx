@@ -67,25 +67,19 @@ const IndividualManga = (props: Props) => {
 		setMangaFeed(feed.data);
 	};
 
-	const fetchMangaByName = async (id: string) => {
+	const fetchMangaByName = async () => {
 		const { data: details } = await axios.get(`${baseUrl}/manga/`, {
 			params: {
 				limit: 10,
 				title: state["title"],
-				authorOrArtist: id,
 				contentRating: ["safe", "suggestive", "erotica"],
 				order: {
-					title: "asc",
+					relevance: "desc",
 				},
 			},
 		});
 		console.log(details.data);
-		details.data.map((element: any) =>
-			element["attributes"]["title"]["en"] === state["title"]
-				? setMangaFromMal(element["id"])
-				: console.log(element)
-		);
-
+		setMangaFromMal(details.data[0]["id"]);
 		fetchMangaFeed(details.data[0]["id"]);
 
 		const { data: coverFile } = await axios.get(
@@ -117,17 +111,6 @@ const IndividualManga = (props: Props) => {
 
 		setMangaTags(details.data[0]["attributes"].tags);
 	};
-	const fetchAuthorByName = async (name: string) => {
-		const { data: authorDetails } = await axios.get(`${baseUrl}/author`, {
-			params: {
-				limit: 10,
-				name: name,
-			},
-		});
-		console.log(authorDetails);
-
-		fetchMangaByName(authorDetails.data[0]["id"]);
-	};
 
 	const handleShowMore = () => {
 		setShowMoreToggled(!showMoreToggled);
@@ -135,13 +118,12 @@ const IndividualManga = (props: Props) => {
 
 	useEffect(() => {
 		if (state["title"] !== undefined) {
-			let temp = state["author"].split(",");
-			fetchAuthorByName(temp[1] + " " + temp[0]);
+			fetchMangaByName();
 		} else {
 			fetchRecentlyUpdatedManga();
 			fetchMangaFeed(state.id);
 		}
-	}, []);
+	}, [state]);
 
 	return (
 		<div
