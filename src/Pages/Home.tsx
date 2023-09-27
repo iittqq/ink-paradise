@@ -131,11 +131,10 @@ const Home = () => {
 								alignItems: "center",
 							}}
 						>
-							<Button onClick={() => handleClickRecentlyAdded()}>
-								<Typography textTransform='none' color={"white"}>
-									Recently Added
-								</Typography>
-							</Button>
+							<Typography textTransform='none' noWrap color={"white"}>
+								Recently Added
+							</Typography>
+
 							<RecentlyAddedMangaSection mangaData={recentlyAddedManga} />
 							<Button
 								sx={{
@@ -148,7 +147,10 @@ const Home = () => {
 									height: "20px",
 								}}
 							>
-								<ExpandMore sx={{ color: "#333333" }} />
+								<ExpandMore
+									sx={{ color: "#333333" }}
+									onClick={() => handleClickRecentlyAdded()}
+								/>
 							</Button>
 						</Grid>
 						<Grid
