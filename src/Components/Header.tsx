@@ -46,7 +46,7 @@ const Header = () => {
 					<Grid
 						item
 						sx={{
-							width: { xs: "250px", lg: "300px" },
+							width: { xs: "230px", lg: "300px" },
 							display: "flex",
 							justifyContent: "space-evenly",
 							alignItems: "center",
