@@ -101,6 +101,7 @@ const MangaClickable = (props: Props) => {
 							}}
 						>
 							<Typography
+								textTransform='none'
 								color='white'
 								sx={{
 									fontSize: { xs: 10, sm: 10, lg: 10 },
@@ -125,6 +126,7 @@ const MangaClickable = (props: Props) => {
 							</Typography>
 							{rank === undefined ? null : (
 								<Typography
+									textTransform='none'
 									color='white'
 									sx={{
 										fontSize: { xs: 10, sm: 10, lg: 10 },

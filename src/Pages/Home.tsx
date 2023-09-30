@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import TrendingMangaSection from "../Components/TrendingMangaSection";
 import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSection";
 import RecentlyAddedMangaSection from "../Components/RecentlyAddedMangaSection";
+import IndividualManga from "./IndividualManga";
 
 const baseUrlMangaDex = "https://api.mangadex.org/";
 const baseUrlMal = "https://api.jikan.moe/v4";
@@ -40,6 +41,9 @@ const Home = () => {
 
 	const handleClickRecentlyAdded = async () => {
 		navigate("/recentlyAdded");
+	};
+	const handleClickRecentlyUpdated = async () => {
+		navigate("/mangalist");
 	};
 
 	const fetchRecentlyAddedManga = async () => {
@@ -192,7 +196,10 @@ const Home = () => {
 									height: "20px",
 								}}
 							>
-								<ExpandMore sx={{ color: "#333333" }} />
+								<ExpandMore
+									sx={{ color: "#333333" }}
+									onClick={() => handleClickRecentlyUpdated()}
+								/>
 							</Button>
 						</Grid>
 					</Grid>
