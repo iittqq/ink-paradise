@@ -20,7 +20,9 @@ function App() {
 	const fetchRecentlyAddedManga = async () => {
 		const { data } = await axios.get(`${baseUrl}/manga`, {
 			params: {
-				order: { updatedAt: "desc" },
+				order: {
+					latestUploadedChapter: "desc",
+				},
 				limit: 50,
 				contentRating: ["safe", "suggestive", "erotica"],
 			},
