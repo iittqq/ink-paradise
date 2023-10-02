@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import StandardButton from "../Components/StandardButton";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const mangaCoverHeightXs = "200px";
 const mangaCoverWidthXs = "100px";
@@ -36,7 +38,8 @@ const IndividualManga = (props: Props) => {
 	const [mangaTags, setMangaTags] = useState<Object[]>([]);
 	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
-	const [selectedLanguage, setSelectedLanguage] = useState("");
+	const [selectedLanguage, setSelectedLanguage] = useState("en");
+	const [currentOffset, setCurrentOffset] = useState(0);
 
 	const baseUrl = "https://api.mangadex.org/";
 	const fetchRecentlyUpdatedManga = async () => {
@@ -58,13 +61,22 @@ const IndividualManga = (props: Props) => {
 		setMangaTags(details.data["attributes"].tags);
 	};
 
-	const fetchMangaFeed = async (id: string) => {
+	const fetchMangaFeed = async (
+		id: string,
+		language: string,
+		offset: number
+	) => {
 		const { data: feed } = await axios.get(`${baseUrl}manga/${id}/feed`, {
-			params: { order: { chapter: "desc" } },
+			params: {
+				limit: 100,
+				offset: offset,
+				translatedLanguage: [language],
+				order: { chapter: "desc" },
+			},
 		});
 
+		feed.data.length === 0 ? setCurrentOffset(0) : setMangaFeed(feed.data);
 		console.log(feed.data);
-		setMangaFeed(feed.data);
 	};
 
 	const fetchMangaByName = async () => {
@@ -78,9 +90,9 @@ const IndividualManga = (props: Props) => {
 				},
 			},
 		});
-		console.log(details.data);
+
 		setMangaFromMal(details.data[0]["id"]);
-		fetchMangaFeed(details.data[0]["id"]);
+		fetchMangaFeed(details.data[0]["id"], selectedLanguage, currentOffset);
 
 		const { data: coverFile } = await axios.get(
 			`${baseUrl}/cover/${
@@ -90,7 +102,6 @@ const IndividualManga = (props: Props) => {
 			}`,
 			{}
 		);
-		console.log(coverFile);
 
 		setMangaFromMalCoverFile(coverFile["data"]["attributes"]["fileName"]);
 
@@ -121,9 +132,9 @@ const IndividualManga = (props: Props) => {
 			fetchMangaByName();
 		} else {
 			fetchRecentlyUpdatedManga();
-			fetchMangaFeed(state.id);
+			fetchMangaFeed(state.id, selectedLanguage, currentOffset);
 		}
-	}, [state]);
+	}, [state, selectedLanguage, currentOffset]);
 
 	return (
 		<div
@@ -313,7 +324,7 @@ const IndividualManga = (props: Props) => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "160px", sm: "100px", lg: "120px" },
+						height: { xs: "23vh", sm: "100px", lg: "120px" },
 					}}
 				>
 					<div
@@ -391,54 +402,110 @@ const IndividualManga = (props: Props) => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "330px", md: "300px", lg: "320px" },
+						height: { xs: "330px", md: "300px", lg: "350px" },
 						display: "flex",
 						paddingTop: "20px",
 						justifyContent: "space-between",
 					}}
 				>
-					<div style={{ width: "50%" }}>
-						<Typography
-							align='center'
-							color='#555555'
-							sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
-						>
-							Languages
-						</Typography>
-						<Grid
-							container
-							direction='row'
-							justifyContent='center'
-							alignItems='center'
-							sx={{}}
-							spacing={1}
-						>
-							{mangaLanguages.map((current) => (
-								<Grid item>
-									<Button
-										sx={{
-											backgroundColor: "#191919",
-											width: { xs: "20px", sm: "20px", lg: "20px" },
-											height: { xs: "20px", sm: "20px", lg: "20px" },
-											"&.MuiButtonBase-root:hover": {
-												bgcolor: "transparent",
-											},
-											".MuiTouchRipple-child": {
-												backgroundColor: "white",
-											},
-										}}
-										onClick={() => setSelectedLanguage(current)}
-									>
-										<Typography
-											sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-											color='#333333'
+					<div
+						style={{
+							width: "50%",
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
+					>
+						<div>
+							<Typography
+								align='center'
+								color='#555555'
+								sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
+							>
+								Languages
+							</Typography>
+							<Grid
+								container
+								direction='row'
+								justifyContent='center'
+								alignItems='center'
+								sx={{}}
+								spacing={1}
+							>
+								{mangaLanguages.map((current) => (
+									<Grid item>
+										<Button
+											sx={{
+												backgroundColor: "#191919",
+												width: { xs: "20px", sm: "20px", lg: "20px" },
+												height: { xs: "20px", sm: "20px", lg: "20px" },
+												"&.MuiButtonBase-root:hover": {
+													bgcolor: "transparent",
+												},
+												".MuiTouchRipple-child": {
+													backgroundColor: "white",
+												},
+											}}
+											onClick={() => {
+												setSelectedLanguage(current);
+												setCurrentOffset(0);
+											}}
 										>
-											{current}
-										</Typography>
-									</Button>
-								</Grid>
-							))}
-						</Grid>
+											<Typography
+												sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+												color='#333333'
+											>
+												{current}
+											</Typography>
+										</Button>
+									</Grid>
+								))}
+							</Grid>
+						</div>
+						<div
+							style={{
+								width: "100%",
+								display: "flex",
+								justifyContent: "center",
+								paddingTop: "10px",
+							}}
+						>
+							<Button
+								sx={{
+									color: "#333333",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+									".MuiTouchRipple-child": {
+										backgroundColor: "white",
+									},
+								}}
+								onClick={() =>
+									currentOffset === 0
+										? null
+										: setCurrentOffset(currentOffset - 100)
+								}
+							>
+								<ArrowBackIosNewIcon />
+							</Button>
+							<Button
+								sx={{
+									color: "#333333",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+									".MuiTouchRipple-child": {
+										backgroundColor: "white",
+									},
+								}}
+								onClick={() => {
+									setCurrentOffset(currentOffset + 100);
+								}}
+							>
+								<ArrowForwardIosIcon />
+							</Button>
+						</div>
 					</div>
 
 					<Grid
@@ -450,7 +517,7 @@ const IndividualManga = (props: Props) => {
 							height: "100%",
 							overflow: "scroll",
 							display: "inline",
-							width: { xs: "100%", sm: "100%", lg: "50%" },
+							width: { xs: "60%", sm: "100%", lg: "50%" },
 							scrollbarWidth: "none",
 						}}
 					>
