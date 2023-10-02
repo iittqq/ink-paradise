@@ -12,12 +12,31 @@ import CoverClickable from "../Components/CoverClickable";
 
 type Props = {
 	title: string;
-	mangaData: Object[];
 };
-
+const baseUrl = "https://api.mangadex.org";
 const ListOfMangaPage = (props: Props) => {
-	const { mangaData, title } = props;
+	const { title } = props;
+	const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
+		useState<Object[]>([]);
 
+	const fetchRecentlyAddedManga = async () => {
+		const { data } = await axios.get(`${baseUrl}/manga`, {
+			params: {
+				order: {
+					latestUploadedChapter: "desc",
+				},
+				limit: 50,
+				contentRating: ["safe", "suggestive", "erotica"],
+			},
+		});
+		setRecentlyUpdatedMangaDetails(data.data);
+
+		console.log(data.data);
+	};
+
+	useEffect(() => {
+		fetchRecentlyAddedManga();
+	}, []);
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
 			<Grid
@@ -52,7 +71,7 @@ const ListOfMangaPage = (props: Props) => {
 						justifyContent: "center",
 					}}
 				>
-					{mangaData.map((element: any) => (
+					{recentlyUpdatedMangaDetails.map((element: any) => (
 						<Grid item>
 							<CoverClickable
 								id={element["id"]}
