@@ -145,6 +145,7 @@ const IndividualManga = (props: Props) => {
 	};
 
 	const handleClick = (
+		mangaId: string,
 		chapterId: string,
 		title: string,
 		volume: string,
@@ -153,6 +154,7 @@ const IndividualManga = (props: Props) => {
 	) => {
 		navigate("/reader", {
 			state: {
+				mangaId: mangaId,
 				chapterId: chapterId,
 				title: title,
 				volume: volume,
@@ -653,6 +655,7 @@ const IndividualManga = (props: Props) => {
 										}}
 										onClick={() => {
 											handleClick(
+												state.id,
 												current["id"],
 												current["attributes"]["title"],
 												current["attributes"]["volume"],
