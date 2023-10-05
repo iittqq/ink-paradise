@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
 	Container,
@@ -26,10 +26,11 @@ const mangaCoverWidthLg = "200px";
 type Props = {};
 const IndividualManga = (props: Props) => {
 	const { state } = useLocation();
+	let navigate = useNavigate();
 	const [mangaFromMal, setMangaFromMal] = useState<string>("");
 	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
 		useState<string>("");
-	const [mangaName, setMangaName] = useState();
+	const [mangaName, setMangaName] = useState("");
 	const [mangaDescription, setMangaDescription] = useState();
 	const [mangaAltTitles, setMangaAltTitles] = useState<Object[]>([]);
 	const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
@@ -42,9 +43,9 @@ const IndividualManga = (props: Props) => {
 	const [currentOffset, setCurrentOffset] = useState(0);
 	const [ascending, setAscending] = useState(false);
 
-	const baseUrl = "https://api.mangadex.org/";
+	const baseUrl = "https://api.mangadex.org";
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: details } = await axios.get(`${baseUrl}manga/${state.id}`);
+		const { data: details } = await axios.get(`${baseUrl}/manga/${state.id}`);
 
 		console.log(details.data);
 		setMangaName(details.data["attributes"].title["en"]);
@@ -68,7 +69,7 @@ const IndividualManga = (props: Props) => {
 		offset: number,
 		ascending: boolean
 	) => {
-		const { data: feed } = await axios.get(`${baseUrl}manga/${id}/feed`, {
+		const { data: feed } = await axios.get(`${baseUrl}/manga/${id}/feed`, {
 			params: {
 				limit: 100,
 				offset: offset,
@@ -132,6 +133,24 @@ const IndividualManga = (props: Props) => {
 
 	const handleShowMore = () => {
 		setShowMoreToggled(!showMoreToggled);
+	};
+
+	const handleClick = (
+		chapterId: string,
+		title: string,
+		volume: string,
+		chapter: string,
+		mangaName: string
+	) => {
+		navigate("/reader", {
+			state: {
+				chapterId: chapterId,
+				title: title,
+				volume: volume,
+				chapter: chapter,
+				mangaName: mangaName,
+			},
+		});
 	};
 
 	useEffect(() => {
@@ -588,6 +607,15 @@ const IndividualManga = (props: Props) => {
 											".MuiTouchRipple-child": {
 												backgroundColor: "white",
 											},
+										}}
+										onClick={() => {
+											handleClick(
+												current["id"],
+												current["attributes"]["title"],
+												current["attributes"]["volume"],
+												current["attributes"]["chapter"],
+												mangaName
+											);
 										}}
 									>
 										<div style={{ display: "flex" }}>
