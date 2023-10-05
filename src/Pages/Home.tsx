@@ -115,7 +115,6 @@ const Home = () => {
 					item
 					sx={{
 						width: "100%",
-						height: { xs: "70vh", md: "65vh", lg: "none" },
 					}}
 				>
 					<Grid

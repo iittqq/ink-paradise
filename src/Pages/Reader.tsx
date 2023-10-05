@@ -18,6 +18,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 type Props = {};
 const baseUrl = "https://api.mangadex.org";
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
+
 const Reader = (props: Props) => {
 	const { state } = useLocation();
 	const [pages, setPages] = useState<string[]>([]);
@@ -45,6 +46,7 @@ const Reader = (props: Props) => {
 
 	useEffect(() => {
 		fetchChapterData();
+
 		console.log(pages);
 	}, [state]);
 	return (
@@ -63,7 +65,7 @@ const Reader = (props: Props) => {
 				direction='column'
 				justifyContent='space-between'
 				alignItems='center'
-				sx={{ height: "90vh" }}
+				sx={{ height: "95vh" }}
 			>
 				<Grid item sx={{ width: "100%" }}>
 					<Header />
@@ -98,7 +100,7 @@ const Reader = (props: Props) => {
 						<Button
 							sx={{
 								backgroundColor: "transparent",
-								height: "60vh",
+								height: "65vh",
 								width: "50%",
 								position: "absolute",
 								"&.MuiButtonBase-root:hover": {
@@ -108,20 +110,24 @@ const Reader = (props: Props) => {
 									backgroundColor: "white",
 								},
 							}}
-							onClick={() => {
-								setCurrentPage(currentPage - 1);
-							}}
+							onClick={() =>
+								currentPage === 0 ? null : setCurrentPage(currentPage - 1)
+							}
 						></Button>
 
 						<img
-							style={{ width: "100%", height: "60vh", objectFit: "contain" }}
+							style={{
+								width: "100%",
+								height: "65vh",
+								objectFit: "contain",
+							}}
 							src={pageBaseUrl + hash + "/" + pages[currentPage]}
 							alt=''
 						/>
 						<Button
 							sx={{
 								backgroundColor: "transparent",
-								height: "60vh",
+								height: "65vh",
 								width: "50%",
 								position: "absolute",
 								transform: "translate(-100%)",
@@ -132,9 +138,11 @@ const Reader = (props: Props) => {
 									backgroundColor: "white",
 								},
 							}}
-							onClick={() => {
-								setCurrentPage(currentPage + 1);
-							}}
+							onClick={() =>
+								currentPage === pages.length - 1
+									? null
+									: setCurrentPage(currentPage + 1)
+							}
 						></Button>
 					</div>
 
@@ -173,7 +181,7 @@ const Reader = (props: Props) => {
 						</Button>
 					</div>
 					<Typography color='white'>
-						{currentPage} / {pages.length}
+						{currentPage} / {pages.length - 1}
 					</Typography>
 				</Grid>
 			</Grid>
