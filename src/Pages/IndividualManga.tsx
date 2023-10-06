@@ -447,7 +447,7 @@ const IndividualManga = (props: Props) => {
 				>
 					<div
 						style={{
-							width: "50%",
+							width: "100%",
 							display: "flex",
 							flexDirection: "column",
 							justifyContent: "space-evenly",
@@ -655,7 +655,7 @@ const IndividualManga = (props: Props) => {
 										}}
 										onClick={() => {
 											handleClick(
-												state.id,
+												state.id === undefined ? mangaFromMal : state.id,
 												current["id"],
 												current["attributes"]["title"],
 												current["attributes"]["volume"],

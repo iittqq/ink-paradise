@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -33,6 +33,8 @@ const Reader = (props: Props) => {
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentPage, setCurrentPage] = useState(0);
 	const [open, setOpen] = useState(false);
+	let navigate = useNavigate();
+
 	const fetchChapterData = async () => {
 		const { data } = await axios.get(
 			`${baseUrl}/at-home/server/${state.chapterId}`,
@@ -77,6 +79,25 @@ const Reader = (props: Props) => {
 	const handleOpenChapters = () => {
 		setOpen(!open);
 	};
+	const handleClick = (
+		mangaId: string,
+		chapterId: string,
+		title: string,
+		volume: string,
+		chapter: string,
+		mangaName: string
+	) => {
+		navigate("/reader", {
+			state: {
+				mangaId: mangaId,
+				chapterId: chapterId,
+				title: title,
+				volume: volume,
+				chapter: chapter,
+				mangaName: mangaName,
+			},
+		});
+	};
 	useEffect(() => {
 		fetchChapterData();
 		fetchMangaFeed(selectedLanguage, 0, false);
@@ -98,135 +119,143 @@ const Reader = (props: Props) => {
 				direction='column'
 				justifyContent='flex-start'
 				alignItems='center'
-				sx={{ height: "95vh" }}
+				sx={{ height: "100vh" }}
 			>
 				<Grid item sx={{ width: "100%" }}>
 					<Header />
 				</Grid>
-				<Grid item>
-					<div
-						style={{
+				<Grid
+					item
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+						flexDirection: "column",
+						textAlign: "center",
+					}}
+				>
+					<Typography color='white'>{state.mangaName}</Typography>
+					<Typography color='white'>{state.title}</Typography>
+					<List
+						sx={{
 							width: "100%",
-							height: "100px",
+							height: "25px",
+							justifyContent: "center",
 							display: "flex",
-							flexDirection: "column",
-							justifyContent: "flex-start",
 							alignItems: "center",
+							flexDirection: "column",
 						}}
 					>
-						<Typography color='white'>{state.mangaName}</Typography>
-						<Typography color='white'>{state.title}</Typography>
-						<List
+						<ListItemButton
+							sx={{
+								width: "70%",
+								color: "#121212",
+								backgroundColor: "transparent",
+								"&.MuiButtonBase-root:hover": {
+									bgcolor: "transparent",
+								},
+							}}
+							onClick={() => handleOpenChapters()}
+						>
+							<ListItemText
+								primary={
+									<Typography color='white' sx={{ width: "100%" }} noWrap>
+										{"Volume " + state.volume + " Chapter " + state.chapter}
+									</Typography>
+								}
+							/>
+							{open ? (
+								<ExpandLess sx={{ color: "white" }} />
+							) : (
+								<ExpandMore sx={{ color: "white" }} />
+							)}
+						</ListItemButton>
+						<Collapse
 							sx={{
 								width: "100%",
-								height: "50px",
-								justifyContent: "center",
-								display: "flex",
-								alignItems: "center",
-								flexDirection: "column",
+								height: "100vh",
 							}}
+							in={open}
+							timeout='auto'
 						>
-							<ListItemButton
-								sx={{
-									width: "70%",
-									color: "#121212",
-									backgroundColor: "transparent",
-									"&.MuiButtonBase-root:hover": {
-										bgcolor: "transparent",
-									},
-								}}
-								onClick={() => handleOpenChapters()}
+							<Grid
+								container
+								direction='row'
+								justifyContent='center'
+								alignItems='center'
+								sx={{}}
+								spacing={1}
 							>
-								<ListItemText
-									primary={
-										<Typography color='white' sx={{ width: "100%" }} noWrap>
-											{"Volume " + state.volume + " Chapter " + state.chapter}
-										</Typography>
-									}
-								/>
-								{open ? (
-									<ExpandLess sx={{ color: "white" }} />
-								) : (
-									<ExpandMore sx={{ color: "white" }} />
-								)}
-							</ListItemButton>
-							<Collapse
-								sx={{
-									width: "100%",
-									height: "100vh",
-								}}
-								in={open}
-								timeout='auto'
-							>
-								<Grid
-									container
-									direction='row'
-									justifyContent='center'
-									alignItems='center'
-									sx={{}}
-									spacing={1}
-								>
-									{chapters.map((current: any) => (
-										<Grid
-											item
-											sx={{ width: "100%", height: "50px", padding: "2px" }}
+								{chapters.map((current: any) => (
+									<Grid
+										item
+										sx={{ width: "100%", height: "50px", padding: "2px" }}
+									>
+										<Button
+											sx={{
+												width: "100%",
+												color: "white",
+												height: "100%",
+												backgroundColor: "#191919",
+												justifyContent: "space-between",
+												"&.MuiButtonBase-root:hover": {
+													bgcolor: "transparent",
+												},
+												".MuiTouchRipple-child": {
+													backgroundColor: "white",
+												},
+											}}
+											onClick={() => {
+												handleClick(
+													state.mangaId,
+													current["id"],
+													current["attributes"]["title"],
+													current["attributes"]["volume"],
+													current["attributes"]["chapter"],
+													state.mangaName
+												);
+												setOpen(false);
+											}}
 										>
-											<Button
-												sx={{
-													width: "100%",
-													color: "white",
-													height: "100%",
-													backgroundColor: "#191919",
-													justifyContent: "space-between",
-													"&.MuiButtonBase-root:hover": {
-														bgcolor: "transparent",
-													},
-													".MuiTouchRipple-child": {
-														backgroundColor: "white",
-													},
-												}}
-												onClick={() => {}}
-											>
-												<div style={{ display: "flex" }}>
-													<Typography
-														sx={{
-															textTransform: "none",
-															fontSize: { xs: 10, sm: 10, lg: 15 },
-														}}
-														color='#555555'
-													>
-														Chapter {current["attributes"]["chapter"]}{" "}
-														{current["attributes"].title}
-													</Typography>
-													<Typography
-														color='#555555'
-														sx={{
-															fontSize: { xs: 10, sm: 10, lg: 15 },
-															paddingLeft: "10px",
-														}}
-													>
-														{current["attributes"].translatedLanguage}
-													</Typography>
-												</div>
-												<div>
-													<Typography
-														color='#555555'
-														sx={{
-															fontSize: { xs: 10, sm: 10, lg: 15 },
-														}}
-													>
-														{dayjs(current["attributes"].createdAt).format(
-															"DD/MM/YYYY / HH:mm"
-														)}
-													</Typography>
-												</div>
-											</Button>
-										</Grid>
-									))}
-								</Grid>
-							</Collapse>
-						</List>
-					</div>
+											<div style={{ display: "flex" }}>
+												<Typography
+													sx={{
+														textTransform: "none",
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+													color='#555555'
+												>
+													Chapter {current["attributes"]["chapter"]}{" "}
+													{current["attributes"].title}
+												</Typography>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+														paddingLeft: "10px",
+													}}
+												>
+													{current["attributes"].translatedLanguage}
+												</Typography>
+											</div>
+											<div>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+												>
+													{dayjs(current["attributes"].createdAt).format(
+														"DD/MM/YYYY / HH:mm"
+													)}
+												</Typography>
+											</div>
+										</Button>
+									</Grid>
+								))}
+							</Grid>
+						</Collapse>
+					</List>
 				</Grid>
 				{open === true ? null : (
 					<Grid
@@ -330,7 +359,7 @@ const Reader = (props: Props) => {
 							</Button>
 						</div>
 						<Typography color='white'>
-							{currentPage} / {pages.length - 1}
+							{currentPage + 1} / {pages.length}
 						</Typography>
 					</Grid>
 				)}
