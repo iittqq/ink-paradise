@@ -77,7 +77,7 @@ const IndividualManga = (props: Props) => {
 	) => {
 		const { data: feed } = await axios.get(`${baseUrl}/manga/${id}/feed`, {
 			params: {
-				limit: 100,
+				limit: 50,
 				offset: offset,
 				translatedLanguage: [language],
 				order: { chapter: ascending === true ? "asc" : "desc" },

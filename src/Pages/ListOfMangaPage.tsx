@@ -9,34 +9,19 @@ import {
 import Header from "../Components/Header";
 import axios from "axios";
 import CoverClickable from "../Components/CoverClickable";
+import { useLocation } from "react-router-dom";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type Props = {
 	title: string;
 };
-const baseUrl = "https://api.mangadex.org";
+
 const ListOfMangaPage = (props: Props) => {
+	const { state } = useLocation();
 	const { title } = props;
-	const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
-		useState<Object[]>([]);
 
-	const fetchRecentlyAddedManga = async () => {
-		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: {
-				order: {
-					latestUploadedChapter: "desc",
-				},
-				limit: 50,
-				contentRating: ["safe", "suggestive", "erotica"],
-			},
-		});
-		setRecentlyUpdatedMangaDetails(data.data);
-
-		console.log(data.data);
-	};
-
-	useEffect(() => {
-		fetchRecentlyAddedManga();
-	}, []);
+	console.log(state);
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
 			<Grid
@@ -71,7 +56,7 @@ const ListOfMangaPage = (props: Props) => {
 						justifyContent: "center",
 					}}
 				>
-					{recentlyUpdatedMangaDetails.map((element: any) => (
+					{state.mangaData.map((element: any) => (
 						<Grid item>
 							<CoverClickable
 								id={element["id"]}
@@ -85,18 +70,36 @@ const ListOfMangaPage = (props: Props) => {
 						</Grid>
 					))}
 				</Grid>
-
-				<ButtonGroup
-					variant='text'
-					aria-label='text button group'
-					sx={{ color: "white", paddingTop: "10px" }}
-				>
-					<Button sx={{ color: "white" }}>1</Button>
-					<Button sx={{ color: "white" }}>2</Button>
-					<Button sx={{ color: "white" }}>3</Button>
-					<Button sx={{ color: "white" }}>...</Button>
-					<Button sx={{ color: "white" }}>15</Button>
-				</ButtonGroup>
+				<div>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => {}}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => {}}
+					>
+						<ArrowForwardIosIcon />
+					</Button>
+				</div>
 			</Grid>
 		</Container>
 	);

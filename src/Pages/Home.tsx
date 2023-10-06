@@ -43,7 +43,9 @@ const Home = () => {
 		navigate("/recentlyAdded");
 	};
 	const handleClickRecentlyUpdated = async () => {
-		navigate("/mangalist");
+		navigate("/mangalist", {
+			state: { mangaData: recentlyUpdatedManga },
+		});
 	};
 
 	const fetchRecentlyAddedManga = async () => {
@@ -66,7 +68,7 @@ const Home = () => {
 			`${baseUrlMangaDex}/manga`,
 			{
 				params: {
-					limit: 10,
+					limit: 60,
 					order: {
 						latestUploadedChapter: "desc",
 					},
