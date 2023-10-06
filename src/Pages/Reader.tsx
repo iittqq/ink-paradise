@@ -64,7 +64,7 @@ const Reader = (props: Props) => {
 			`${baseUrl}/manga/${state.mangaId}/feed`,
 			{
 				params: {
-					limit: 200,
+					limit: 20,
 					offset: offset,
 					translatedLanguage: [language],
 					order: { chapter: ascending === true ? "asc" : "desc" },
