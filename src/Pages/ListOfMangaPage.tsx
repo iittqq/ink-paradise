@@ -17,11 +17,35 @@ type Props = {
 	title: string;
 };
 
+const baseUrl = "https://api.mangadex.org";
 const ListOfMangaPage = (props: Props) => {
 	const { state } = useLocation();
 	const { title } = props;
+	const [offset, setOffset] = useState<number>(0);
 
 	console.log(state);
+	const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
+		useState<Object[]>([]);
+
+	const fetchRecentlyAddedManga = async () => {
+		const { data } = await axios.get(`${baseUrl}/manga`, {
+			params: {
+				order: {
+					latestUploadedChapter: "desc",
+				},
+				offset: offset,
+				limit: 60,
+				contentRating: ["safe", "suggestive", "erotica"],
+			},
+		});
+		setRecentlyUpdatedMangaDetails(data.data);
+
+		console.log(data.data);
+	};
+
+	useEffect(() => {
+		fetchRecentlyAddedManga();
+	}, [offset, props]);
 	return (
 		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
 			<Grid
@@ -56,7 +80,7 @@ const ListOfMangaPage = (props: Props) => {
 						justifyContent: "center",
 					}}
 				>
-					{state.mangaData.map((element: any) => (
+					{recentlyUpdatedMangaDetails.map((element: any) => (
 						<Grid item>
 							<CoverClickable
 								id={element["id"]}
@@ -81,7 +105,7 @@ const ListOfMangaPage = (props: Props) => {
 								backgroundColor: "white",
 							},
 						}}
-						onClick={() => {}}
+						onClick={() => (offset - 60 > 0 ? setOffset(offset - 60) : null)}
 					>
 						<ArrowBackIosNewIcon />
 					</Button>
@@ -95,7 +119,9 @@ const ListOfMangaPage = (props: Props) => {
 								backgroundColor: "white",
 							},
 						}}
-						onClick={() => {}}
+						onClick={() => {
+							setOffset(offset + 60);
+						}}
 					>
 						<ArrowForwardIosIcon />
 					</Button>

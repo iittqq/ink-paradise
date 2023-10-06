@@ -68,7 +68,7 @@ const Home = () => {
 			`${baseUrlMangaDex}/manga`,
 			{
 				params: {
-					limit: 60,
+					limit: 10,
 					order: {
 						latestUploadedChapter: "desc",
 					},
