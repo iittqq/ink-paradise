@@ -32,6 +32,7 @@ const Reader = (props: Props) => {
 	const [chapters, setChapters] = useState<Object[]>([]);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentPage, setCurrentPage] = useState(0);
+	const [offset, setOffset] = useState(state.chapterNumber);
 	const [open, setOpen] = useState(false);
 	let navigate = useNavigate();
 
@@ -55,11 +56,7 @@ const Reader = (props: Props) => {
 		console.log(pages);
 	};
 
-	const fetchMangaFeed = async (
-		language: string,
-		offset: number,
-		ascending: boolean
-	) => {
+	const fetchMangaFeed = async (language: string, ascending: boolean) => {
 		const { data: feed } = await axios.get(
 			`${baseUrl}/manga/${state.mangaId}/feed`,
 			{
@@ -85,7 +82,8 @@ const Reader = (props: Props) => {
 		title: string,
 		volume: string,
 		chapter: string,
-		mangaName: string
+		mangaName: string,
+		chapterNumber: number
 	) => {
 		navigate("/reader", {
 			state: {
@@ -95,13 +93,16 @@ const Reader = (props: Props) => {
 				volume: volume,
 				chapter: chapter,
 				mangaName: mangaName,
+				chapterNumber: chapterNumber,
 			},
 		});
 	};
 	useEffect(() => {
 		fetchChapterData();
-		fetchMangaFeed(selectedLanguage, 0, false);
+
+		fetchMangaFeed(selectedLanguage, true);
 		console.log(pages);
+		console.log(state.chapterNumber);
 	}, [state]);
 	return (
 		<div
@@ -148,7 +149,7 @@ const Reader = (props: Props) => {
 					>
 						<ListItemButton
 							sx={{
-								width: "70%",
+								width: "100%",
 								color: "#121212",
 								backgroundColor: "transparent",
 								"&.MuiButtonBase-root:hover": {
@@ -212,7 +213,8 @@ const Reader = (props: Props) => {
 													current["attributes"]["title"],
 													current["attributes"]["volume"],
 													current["attributes"]["chapter"],
-													state.mangaName
+													state.mangaName,
+													+current["attributes"]["chapter"]
 												);
 												setOpen(false);
 											}}

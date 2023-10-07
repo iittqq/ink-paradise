@@ -22,7 +22,7 @@ type Props = {
 	homePage?: boolean;
 };
 
-const baseUrl = "https://api.mangadex.org/";
+const baseUrl = "https://api.mangadex.org";
 const CoverClickable = (props: Props) => {
 	let navigate = useNavigate();
 	const [coverFile, setCoverFile] = useState("");

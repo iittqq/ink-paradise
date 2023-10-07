@@ -34,7 +34,7 @@ const ListOfMangaPage = (props: Props) => {
 					latestUploadedChapter: "desc",
 				},
 				offset: offset,
-				limit: 60,
+				limit: 10,
 				contentRating: ["safe", "suggestive", "erotica"],
 			},
 		});
@@ -105,7 +105,7 @@ const ListOfMangaPage = (props: Props) => {
 								backgroundColor: "white",
 							},
 						}}
-						onClick={() => (offset - 60 > 0 ? setOffset(offset - 60) : null)}
+						onClick={() => (offset - 60 >= 0 ? setOffset(offset - 60) : null)}
 					>
 						<ArrowBackIosNewIcon />
 					</Button>

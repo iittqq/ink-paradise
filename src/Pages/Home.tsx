@@ -20,7 +20,7 @@ import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSecti
 import RecentlyAddedMangaSection from "../Components/RecentlyAddedMangaSection";
 import IndividualManga from "./IndividualManga";
 
-const baseUrlMangaDex = "https://api.mangadex.org/";
+const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
 const Home = () => {
 	const [open, setOpen] = useState(false);

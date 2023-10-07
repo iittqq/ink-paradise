@@ -150,7 +150,8 @@ const IndividualManga = (props: Props) => {
 		title: string,
 		volume: string,
 		chapter: string,
-		mangaName: string
+		mangaName: string,
+		chapterNumber: number
 	) => {
 		navigate("/reader", {
 			state: {
@@ -160,6 +161,7 @@ const IndividualManga = (props: Props) => {
 				volume: volume,
 				chapter: chapter,
 				mangaName: mangaName,
+				chapterNumber: chapterNumber,
 			},
 		});
 	};
@@ -660,7 +662,8 @@ const IndividualManga = (props: Props) => {
 												current["attributes"]["title"],
 												current["attributes"]["volume"],
 												current["attributes"]["chapter"],
-												mangaName
+												mangaName,
+												+current["attributes"]["chapter"]
 											);
 										}}
 									>

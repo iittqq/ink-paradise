@@ -18,9 +18,11 @@ const RecentlyAdded = () => {
 
 	const fetchRecentlyAddedManga = async () => {
 		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: { order: {createdAt: "desc"},
-			limit: 50,
-			contentRating: ["safe", "suggestive", "erotica"]},
+			params: {
+				order: { createdAt: "desc" },
+				limit: 10,
+				contentRating: ["safe", "suggestive", "erotica"],
+			},
 		});
 		setMangaDetails(data.data);
 
@@ -77,21 +79,21 @@ const RecentlyAdded = () => {
 						</Grid>
 					))}
 				</Grid>
-			
-			<ButtonGroup
-				variant='text'
-				aria-label='text button group'
-				sx={{ color: "white" }}
-			>
-				<Button sx={{ color: "white" }}>1</Button>
-				<Button sx={{ color: "white" }}>2</Button>
-				<Button sx={{ color: "white" }}>3</Button>
-				<Button sx={{ color: "white" }}>...</Button>
-				<Button sx={{ color: "white" }}>15</Button>
-			</ButtonGroup>
+
+				<ButtonGroup
+					variant='text'
+					aria-label='text button group'
+					sx={{ color: "white" }}
+				>
+					<Button sx={{ color: "white" }}>1</Button>
+					<Button sx={{ color: "white" }}>2</Button>
+					<Button sx={{ color: "white" }}>3</Button>
+					<Button sx={{ color: "white" }}>...</Button>
+					<Button sx={{ color: "white" }}>15</Button>
+				</ButtonGroup>
 			</Grid>
-	</Container>
-);
+		</Container>
+	);
 };
 
 export default RecentlyAdded;
