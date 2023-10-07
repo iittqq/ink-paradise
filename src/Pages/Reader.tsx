@@ -29,11 +29,11 @@ const Reader = (props: Props) => {
 	const { state } = useLocation();
 	const [pages, setPages] = useState<string[]>([]);
 	const [hash, setHash] = useState<string>("");
-	const [chapters, setChapters] = useState<Object[]>([]);
+	const [chapters, setChapters] = useState<any[]>([]);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentPage, setCurrentPage] = useState(0);
-	const [offset, setOffset] = useState(state.chapterNumber);
 	const [open, setOpen] = useState(false);
+	const [lastMangaName, setLastMangaName] = useState("");
 	let navigate = useNavigate();
 
 	const fetchChapterData = async () => {
@@ -61,8 +61,8 @@ const Reader = (props: Props) => {
 			`${baseUrl}/manga/${state.mangaId}/feed`,
 			{
 				params: {
-					limit: 20,
-					offset: offset,
+					limit: 30,
+					offset: state.chapterNumber,
 					translatedLanguage: [language],
 					order: { chapter: ascending === true ? "asc" : "desc" },
 				},
@@ -187,74 +187,144 @@ const Reader = (props: Props) => {
 								sx={{}}
 								spacing={1}
 							>
-								{chapters.map((current: any) => (
-									<Grid
-										item
-										sx={{ width: "100%", height: "50px", padding: "2px" }}
-									>
-										<Button
-											sx={{
-												width: "100%",
-												color: "white",
-												height: "100%",
-												backgroundColor: "#191919",
-												justifyContent: "space-between",
-												"&.MuiButtonBase-root:hover": {
-													bgcolor: "transparent",
-												},
-												".MuiTouchRipple-child": {
-													backgroundColor: "white",
-												},
-											}}
-											onClick={() => {
-												handleClick(
-													state.mangaId,
-													current["id"],
-													current["attributes"]["title"],
-													current["attributes"]["volume"],
-													current["attributes"]["chapter"],
-													state.mangaName,
-													+current["attributes"]["chapter"]
-												);
-												setOpen(false);
-											}}
+								{chapters.map((current: any, index) =>
+									index === 0 ? (
+										<Grid
+											item
+											sx={{ width: "100%", height: "50px", padding: "2px" }}
 										>
-											<div style={{ display: "flex" }}>
-												<Typography
-													sx={{
-														textTransform: "none",
-														fontSize: { xs: 10, sm: 10, lg: 15 },
-													}}
-													color='#555555'
-												>
-													Chapter {current["attributes"]["chapter"]}{" "}
-													{current["attributes"].title}
-												</Typography>
-												<Typography
-													color='#555555'
-													sx={{
-														fontSize: { xs: 10, sm: 10, lg: 15 },
-														paddingLeft: "10px",
-													}}
-												>
-													{current["attributes"].translatedLanguage}
-												</Typography>
-											</div>
-											<div>
-												<Typography
-													color='#555555'
-													sx={{
-														fontSize: { xs: 10, sm: 10, lg: 15 },
-													}}
-												>
-													{dayjs(current["attributes"].createdAt).format(
-														"DD/MM/YYYY / HH:mm"
-													)}
-												</Typography>
-											</div>
-										</Button>
-									</Grid>
-								))}
+											<Button
+												sx={{
+													width: "100%",
+													color: "white",
+													height: "100%",
+													backgroundColor: "#191919",
+													justifyContent: "space-between",
+													"&.MuiButtonBase-root:hover": {
+														bgcolor: "transparent",
+													},
+													".MuiTouchRipple-child": {
+														backgroundColor: "white",
+													},
+												}}
+												onClick={() => {
+													handleClick(
+														state.mangaId,
+														current["id"],
+														current["attributes"]["title"],
+														current["attributes"]["volume"],
+														current["attributes"]["chapter"],
+														state.mangaName,
+														+current["attributes"]["chapter"]
+													);
+													setOpen(false);
+												}}
+											>
+												<div style={{ display: "flex" }}>
+													<Typography
+														sx={{
+															textTransform: "none",
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+														}}
+														color='#555555'
+													>
+														Chapter {current["attributes"]["chapter"]}{" "}
+														{current["attributes"].title}
+													</Typography>
+													<Typography
+														color='#555555'
+														sx={{
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+															paddingLeft: "10px",
+														}}
+													>
+														{current["attributes"].translatedLanguage}
+													</Typography>
+												</div>
+												<div>
+													<Typography
+														color='#555555'
+														sx={{
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+														}}
+													>
+														{dayjs(current["attributes"].createdAt).format(
+															"DD/MM/YYYY / HH:mm"
+														)}
+													</Typography>
+												</div>
+											</Button>
+										</Grid>
+									) : current["attributes"]["chapter"] ===
+									  chapters[index - 1]["attributes"]["chapter"] ? null : (
+										<Grid
+											item
+											sx={{ width: "100%", height: "50px", padding: "2px" }}
+										>
+											<Button
+												sx={{
+													width: "100%",
+													color: "white",
+													height: "100%",
+													backgroundColor: "#191919",
+													justifyContent: "space-between",
+													"&.MuiButtonBase-root:hover": {
+														bgcolor: "transparent",
+													},
+													".MuiTouchRipple-child": {
+														backgroundColor: "white",
+													},
+												}}
+												onClick={() => {
+													handleClick(
+														state.mangaId,
+														current["id"],
+														current["attributes"]["title"],
+														current["attributes"]["volume"],
+														current["attributes"]["chapter"],
+														state.mangaName,
+														+current["attributes"]["chapter"]
+													);
+													setOpen(false);
+												}}
+											>
+												<div style={{ display: "flex" }}>
+													<Typography
+														sx={{
+															textTransform: "none",
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+														}}
+														color='#555555'
+													>
+														Chapter {current["attributes"]["chapter"]}{" "}
+														{current["attributes"].title}
+													</Typography>
+													<Typography
+														color='#555555'
+														sx={{
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+															paddingLeft: "10px",
+														}}
+													>
+														{current["attributes"].translatedLanguage}
+													</Typography>
+												</div>
+												<div>
+													<Typography
+														color='#555555'
+														sx={{
+															fontSize: { xs: 10, sm: 10, lg: 15 },
+														}}
+													>
+														{dayjs(current["attributes"].createdAt).format(
+															"DD/MM/YYYY / HH:mm"
+														)}
+													</Typography>
+												</div>
+											</Button>
+										</Grid>
+									)
+								)}
 							</Grid>
 						</Collapse>
 					</List>

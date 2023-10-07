@@ -270,20 +270,22 @@ const IndividualManga = (props: Props) => {
 										{mangaName}
 									</Typography>
 
-									{mangaAltTitles.map((current) => (
-										<Typography
-											sx={{
-												display: "-webkit-box",
-												overflow: "hidden",
-												WebkitBoxOrient: "vertical",
-												WebkitLineClamp: 2,
-												fontSize: { xs: 0, sm: 9, lg: 10 },
-												paddingRight: "5px",
-											}}
-										>
-											/ {Object.values(current)}
-										</Typography>
-									))}
+									{mangaAltTitles.map((current, index) =>
+										index > 10 ? null : (
+											<Typography
+												sx={{
+													display: "-webkit-box",
+													overflow: "hidden",
+													WebkitBoxOrient: "vertical",
+													WebkitLineClamp: 2,
+													fontSize: { xs: 0, sm: 9, lg: 10 },
+													paddingRight: "5px",
+												}}
+											>
+												/ {Object.values(current)}
+											</Typography>
+										)
+									)}
 								</div>
 								<Typography
 									sx={{
