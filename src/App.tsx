@@ -6,6 +6,7 @@ import IndividualManga from "./Pages/IndividualManga";
 import RecentlyAdded from "./Pages/RecentlyAdded";
 import SearchResults from "./Pages/SearchResults";
 import ListOfMangaPage from "./Pages/ListOfMangaPage";
+import Reader from "./Pages/Reader";
 
 //#121212
 
@@ -17,7 +18,7 @@ function App() {
 				backgroundColor: "#121212",
 				minWidth: "100%",
 				minHeight: "100vh",
-				overflow: "scroll",
+				overflow: "hidden",
 			}}
 		>
 			<BrowserRouter>
@@ -30,6 +31,7 @@ function App() {
 						path='/mangaList'
 						element={<ListOfMangaPage title='Recently Updated' />}
 					></Route>
+					<Route path='/reader' element={<Reader />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</Container>

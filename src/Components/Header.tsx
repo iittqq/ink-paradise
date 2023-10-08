@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Grid, TextField, Typography, Button } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 const customTheme = createTheme({
 	palette: {
@@ -19,11 +20,12 @@ const Header = () => {
 	const handleClickHome = async () => {
 		navigate("/");
 	};
-	const handleClick = async () => {
-		navigate("/results", {
-			state: { id: searchInput },
-		});
-	};
+	const handleClick = async () =>
+		searchInput === ""
+			? null
+			: navigate("/results", {
+					state: { id: searchInput },
+			  });
 
 	return (
 		<ThemeProvider theme={customTheme}>
@@ -67,14 +69,8 @@ const Header = () => {
 							}}
 						/>
 
-						<Button
-							sx={{
-								height: "20px",
-								backgroundColor: "#333333",
-							}}
-							onClick={() => handleClick()}
-						>
-							Enter
+						<Button onClick={() => handleClick()}>
+							<KeyboardArrowRightIcon />
 						</Button>
 					</Grid>
 				</Grid>

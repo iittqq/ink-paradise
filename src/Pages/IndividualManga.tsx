@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
 	Container,
@@ -8,7 +8,12 @@ import {
 	CardMedia,
 	Button,
 	Typography,
+	List,
+	ListItemButton,
+	ListItemText,
+	Collapse,
 } from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
@@ -26,25 +31,27 @@ const mangaCoverWidthLg = "200px";
 type Props = {};
 const IndividualManga = (props: Props) => {
 	const { state } = useLocation();
+	let navigate = useNavigate();
+	const [open, setOpen] = useState(false);
 	const [mangaFromMal, setMangaFromMal] = useState<string>("");
 	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
 		useState<string>("");
-	const [mangaName, setMangaName] = useState();
+	const [mangaName, setMangaName] = useState("");
 	const [mangaDescription, setMangaDescription] = useState();
 	const [mangaAltTitles, setMangaAltTitles] = useState<Object[]>([]);
 	const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
 	const [mangaContentRating, setMangaContentRating] = useState("");
 	const [mangaRaw, setMangaRaw] = useState("");
 	const [mangaTags, setMangaTags] = useState<Object[]>([]);
-	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
+	const [mangaFeed, setMangaFeed] = useState<any[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentOffset, setCurrentOffset] = useState(0);
 	const [ascending, setAscending] = useState(false);
 
-	const baseUrl = "https://api.mangadex.org/";
+	const baseUrl = "https://api.mangadex.org";
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: details } = await axios.get(`${baseUrl}manga/${state.id}`);
+		const { data: details } = await axios.get(`${baseUrl}/manga/${state.id}`);
 
 		console.log(details.data);
 		setMangaName(details.data["attributes"].title["en"]);
@@ -68,9 +75,9 @@ const IndividualManga = (props: Props) => {
 		offset: number,
 		ascending: boolean
 	) => {
-		const { data: feed } = await axios.get(`${baseUrl}manga/${id}/feed`, {
+		const { data: feed } = await axios.get(`${baseUrl}/manga/${id}/feed`, {
 			params: {
-				limit: 100,
+				limit: 50,
 				offset: offset,
 				translatedLanguage: [language],
 				order: { chapter: ascending === true ? "asc" : "desc" },
@@ -132,6 +139,31 @@ const IndividualManga = (props: Props) => {
 
 	const handleShowMore = () => {
 		setShowMoreToggled(!showMoreToggled);
+	};
+	const handleOpenTags = () => {
+		setOpen(!open);
+	};
+
+	const handleClick = (
+		mangaId: string,
+		chapterId: string,
+		title: string,
+		volume: string,
+		chapter: string,
+		mangaName: string,
+		chapterNumber: number
+	) => {
+		navigate("/reader", {
+			state: {
+				mangaId: mangaId,
+				chapterId: chapterId,
+				title: title,
+				volume: volume,
+				chapter: chapter,
+				mangaName: mangaName,
+				chapterNumber: chapterNumber,
+			},
+		});
 	};
 
 	useEffect(() => {
@@ -238,20 +270,22 @@ const IndividualManga = (props: Props) => {
 										{mangaName}
 									</Typography>
 
-									{mangaAltTitles.map((current) => (
-										<Typography
-											sx={{
-												display: "-webkit-box",
-												overflow: "hidden",
-												WebkitBoxOrient: "vertical",
-												WebkitLineClamp: 2,
-												fontSize: { xs: 0, sm: 9, lg: 10 },
-												paddingRight: "5px",
-											}}
-										>
-											/ {Object.values(current)}
-										</Typography>
-									))}
+									{mangaAltTitles.map((current, index) =>
+										index > 10 ? null : (
+											<Typography
+												sx={{
+													display: "-webkit-box",
+													overflow: "hidden",
+													WebkitBoxOrient: "vertical",
+													WebkitLineClamp: 2,
+													fontSize: { xs: 0, sm: 9, lg: 10 },
+													paddingRight: "5px",
+												}}
+											>
+												/ {Object.values(current)}
+											</Typography>
+										)
+									)}
 								</div>
 								<Typography
 									sx={{
@@ -362,7 +396,7 @@ const IndividualManga = (props: Props) => {
 								<Grid item>
 									<StandardButton
 										backgroundColor='#191919'
-										widthXs='120px'
+										widthXs='110px'
 										widthSm='120px'
 										widthLg='120px'
 										heightXs='20px'
@@ -409,69 +443,100 @@ const IndividualManga = (props: Props) => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "400px", md: "300px", lg: "350px" },
+						height: { xs: "35vh", md: "35vh", lg: "35vh", xl: "40vh" },
 						display: "flex",
 						paddingTop: "20px",
-						justifyContent: "space-between",
+						justifyContent: "center",
 					}}
 				>
 					<div
 						style={{
-							width: "50%",
+							width: "100%",
 							display: "flex",
 							flexDirection: "column",
-							justifyContent: "space-between",
+							justifyContent: "center",
 							alignItems: "center",
 						}}
 					>
-						<Typography
-							align='center'
-							color='#555555'
-							sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
+						<List
+							sx={{
+								width: "100%",
+								justifyContent: "center",
+								display: "flex",
+								alignItems: "center",
+								flexDirection: "column",
+							}}
 						>
-							Languages
-						</Typography>
-						<Grid
-							container
-							direction='row'
-							justifyContent='center'
-							alignItems='center'
-							sx={{}}
-							spacing={1}
-						>
-							{mangaLanguages.map((current) => (
-								<Grid item>
-									<Button
-										sx={{
-											backgroundColor: "#191919",
-											width: { xs: "20px", sm: "20px", lg: "20px" },
-											height: { xs: "20px", sm: "20px", lg: "20px" },
-											"&.MuiButtonBase-root:hover": {
-												bgcolor: "transparent",
-											},
-											".MuiTouchRipple-child": {
-												backgroundColor: "white",
-											},
-										}}
-										onClick={() => {
-											setSelectedLanguage(current);
-											setCurrentOffset(0);
-										}}
-									>
-										<Typography
-											sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-											color='#333333'
-										>
-											{current}
-										</Typography>
-									</Button>
+							<ListItemButton
+								sx={{
+									width: "150px",
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+								}}
+								onClick={() => handleOpenTags()}
+							>
+								<ListItemText sx={{ color: "#555555" }} primary='Languages' />
+								{open ? (
+									<ExpandLess sx={{ color: "#333333" }} />
+								) : (
+									<ExpandMore sx={{ color: "#333333" }} />
+								)}
+							</ListItemButton>
+							<Collapse
+								sx={{
+									width: "100%",
+									height: "20%",
+								}}
+								in={open}
+								timeout='auto'
+							>
+								<Grid
+									container
+									direction='row'
+									justifyContent='center'
+									alignItems='center'
+									sx={{}}
+									spacing={1}
+								>
+									{mangaLanguages.map((current) => (
+										<Grid item>
+											<Button
+												sx={{
+													backgroundColor: "#191919",
+													width: { xs: "20px", sm: "20px", lg: "20px" },
+													height: { xs: "20px", sm: "20px", lg: "20px" },
+													"&.MuiButtonBase-root:hover": {
+														bgcolor: "transparent",
+													},
+													".MuiTouchRipple-child": {
+														backgroundColor: "white",
+													},
+												}}
+												onClick={() => {
+													setSelectedLanguage(current);
+													setCurrentOffset(0);
+												}}
+											>
+												<Typography
+													sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+													color='#333333'
+												>
+													{current}
+												</Typography>
+											</Button>
+										</Grid>
+									))}
 								</Grid>
-							))}
-						</Grid>
+							</Collapse>
+						</List>
 
 						<Button
 							sx={{
 								color: "#333333",
+
 								height: "20px",
 								width: { xs: "80%", md: "60%", lg: "20%" },
 								backgroundColor: "#191919",
@@ -489,10 +554,11 @@ const IndividualManga = (props: Props) => {
 						>
 							<Typography textTransform={"none"}>Ascending</Typography>
 						</Button>
-
+						<div style={{ height: "10px" }}></div>
 						<Button
 							sx={{
 								color: "#333333",
+
 								height: "20px",
 								width: { xs: "80%", md: "60%", lg: "20%" },
 								backgroundColor: "#191919",
@@ -509,15 +575,7 @@ const IndividualManga = (props: Props) => {
 						>
 							<Typography textTransform={"none"}>Descending</Typography>
 						</Button>
-
-						<div
-							style={{
-								width: "100%",
-								display: "flex",
-								justifyContent: "center",
-								paddingTop: "10px",
-							}}
-						>
+						<div>
 							<Button
 								sx={{
 									color: "#333333",
@@ -564,13 +622,86 @@ const IndividualManga = (props: Props) => {
 							height: "100%",
 							overflow: "scroll",
 							display: "inline",
-							width: { xs: "60%", sm: "100%", lg: "50%" },
+							width: { xs: "100%", sm: "100%", lg: "50%" },
 							scrollbarWidth: "none",
+							"::-webkit-scrollbar": {
+								display: "none",
+							},
 						}}
 					>
-						{mangaFeed.map((current: any) =>
-							current["attributes"]["translatedLanguage"] ===
-							selectedLanguage ? (
+						{mangaFeed.map((current: any, index) =>
+							index === 0 ? (
+								current["attributes"]["translatedLanguage"] ===
+								selectedLanguage ? (
+									<Grid
+										item
+										sx={{ width: "100%", height: "50px", padding: "2px" }}
+									>
+										<Button
+											sx={{
+												width: "100%",
+												color: "white",
+												height: "100%",
+												backgroundColor: "#191919",
+												justifyContent: "space-between",
+												"&.MuiButtonBase-root:hover": {
+													bgcolor: "transparent",
+												},
+												".MuiTouchRipple-child": {
+													backgroundColor: "white",
+												},
+											}}
+											onClick={() => {
+												handleClick(
+													state.id === undefined ? mangaFromMal : state.id,
+													current["id"],
+													current["attributes"]["title"],
+													current["attributes"]["volume"],
+													current["attributes"]["chapter"],
+													mangaName,
+													+current["attributes"]["chapter"]
+												);
+											}}
+										>
+											<div style={{ display: "flex" }}>
+												<Typography
+													sx={{
+														textTransform: "none",
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+													color='#555555'
+												>
+													Chapter {current["attributes"].chapter}
+												</Typography>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+														paddingLeft: "10px",
+													}}
+												>
+													{current["attributes"].translatedLanguage}
+												</Typography>
+											</div>
+											<div>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+												>
+													{dayjs(current["attributes"].createdAt).format(
+														"DD/MM/YYYY / HH:mm"
+													)}
+												</Typography>
+											</div>
+										</Button>
+									</Grid>
+								) : null
+							) : current["attributes"]["chapter"] ===
+							  mangaFeed[index - 1]["attributes"]["chapter"] ? null : current[
+									"attributes"
+							  ]["translatedLanguage"] === selectedLanguage ? (
 								<Grid
 									item
 									sx={{ width: "100%", height: "50px", padding: "2px" }}
@@ -588,6 +719,17 @@ const IndividualManga = (props: Props) => {
 											".MuiTouchRipple-child": {
 												backgroundColor: "white",
 											},
+										}}
+										onClick={() => {
+											handleClick(
+												state.id === undefined ? mangaFromMal : state.id,
+												current["id"],
+												current["attributes"]["title"],
+												current["attributes"]["volume"],
+												current["attributes"]["chapter"],
+												mangaName,
+												+current["attributes"]["chapter"]
+											);
 										}}
 									>
 										<div style={{ display: "flex" }}>

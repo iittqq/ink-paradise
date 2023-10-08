@@ -9,13 +9,21 @@ import {
 import Header from "../Components/Header";
 import axios from "axios";
 import CoverClickable from "../Components/CoverClickable";
+import { useLocation } from "react-router-dom";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type Props = {
 	title: string;
 };
+
 const baseUrl = "https://api.mangadex.org";
 const ListOfMangaPage = (props: Props) => {
+	const { state } = useLocation();
 	const { title } = props;
+	const [offset, setOffset] = useState<number>(0);
+
+	console.log(state);
 	const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
 		useState<Object[]>([]);
 
@@ -25,7 +33,8 @@ const ListOfMangaPage = (props: Props) => {
 				order: {
 					latestUploadedChapter: "desc",
 				},
-				limit: 50,
+				offset: offset,
+				limit: 60,
 				contentRating: ["safe", "suggestive", "erotica"],
 			},
 		});
@@ -36,9 +45,9 @@ const ListOfMangaPage = (props: Props) => {
 
 	useEffect(() => {
 		fetchRecentlyAddedManga();
-	}, []);
+	}, [offset, props]);
 	return (
-		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+		<div>
 			<Grid
 				container
 				direction='column'
@@ -65,9 +74,8 @@ const ListOfMangaPage = (props: Props) => {
 					wrap='wrap'
 					spacing={1}
 					sx={{
-						overflow: "scroll",
+						overflow: "hidden",
 						height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
-						scrollbarWidth: "none",
 						justifyContent: "center",
 					}}
 				>
@@ -85,20 +93,40 @@ const ListOfMangaPage = (props: Props) => {
 						</Grid>
 					))}
 				</Grid>
-
-				<ButtonGroup
-					variant='text'
-					aria-label='text button group'
-					sx={{ color: "white", paddingTop: "10px" }}
-				>
-					<Button sx={{ color: "white" }}>1</Button>
-					<Button sx={{ color: "white" }}>2</Button>
-					<Button sx={{ color: "white" }}>3</Button>
-					<Button sx={{ color: "white" }}>...</Button>
-					<Button sx={{ color: "white" }}>15</Button>
-				</ButtonGroup>
+				<div>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => (offset - 60 >= 0 ? setOffset(offset - 60) : null)}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => {
+							setOffset(offset + 60);
+						}}
+					>
+						<ArrowForwardIosIcon />
+					</Button>
+				</div>
 			</Grid>
-		</Container>
+		</div>
 	);
 };
 

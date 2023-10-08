@@ -20,7 +20,7 @@ import RecentlyUpdatedMangaSection from "../Components/RecentlyUpdatedMangaSecti
 import RecentlyAddedMangaSection from "../Components/RecentlyAddedMangaSection";
 import IndividualManga from "./IndividualManga";
 
-const baseUrlMangaDex = "https://api.mangadex.org/";
+const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
 const Home = () => {
 	const [open, setOpen] = useState(false);
@@ -43,7 +43,9 @@ const Home = () => {
 		navigate("/recentlyAdded");
 	};
 	const handleClickRecentlyUpdated = async () => {
-		navigate("/mangalist");
+		navigate("/mangalist", {
+			state: { mangaData: recentlyUpdatedManga },
+		});
 	};
 
 	const fetchRecentlyAddedManga = async () => {
@@ -100,7 +102,7 @@ const Home = () => {
 
 	let navigate = useNavigate();
 	return (
-		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+		<div>
 			<Grid
 				container
 				direction='column'
@@ -115,7 +117,6 @@ const Home = () => {
 					item
 					sx={{
 						width: "100%",
-						height: { xs: "70vh", md: "65vh", lg: "none" },
 					}}
 				>
 					<Grid
@@ -272,7 +273,7 @@ const Home = () => {
 					</List>
 				</Grid>
 			</Grid>
-		</Container>
+		</div>
 	);
 };
 
