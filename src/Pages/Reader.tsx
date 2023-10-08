@@ -33,7 +33,6 @@ const Reader = (props: Props) => {
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentPage, setCurrentPage] = useState(0);
 	const [open, setOpen] = useState(false);
-	const [lastMangaName, setLastMangaName] = useState("");
 	let navigate = useNavigate();
 
 	const fetchChapterData = async () => {
@@ -61,8 +60,7 @@ const Reader = (props: Props) => {
 			`${baseUrl}/manga/${state.mangaId}/feed`,
 			{
 				params: {
-					limit: 30,
-					offset: state.chapterNumber,
+					limit: 300,
 					translatedLanguage: [language],
 					order: { chapter: ascending === true ? "asc" : "desc" },
 				},
@@ -76,15 +74,56 @@ const Reader = (props: Props) => {
 	const handleOpenChapters = () => {
 		setOpen(!open);
 	};
+
+	const handleNextChapter = () => {
+		chapters.forEach((current, index) =>
+			current["attributes"]["chapter"] === state.chapter
+				? handleClick(
+						state.mangaId,
+						chapters[index - 1]["id"],
+						chapters[index - 1]["attributes"]["title"],
+						chapters[index - 1]["attributes"]["volume"],
+						chapters[index - 1]["attributes"]["chapter"],
+						state.mangaName
+				  )
+				: null
+		);
+	};
+
+	const handlePreviousChapter = () => {
+		chapters.forEach((current, index) =>
+			current["attributes"]["chapter"] === state.chapter
+				? handleClick(
+						state.mangaId,
+						chapters[index + 1]["id"],
+						chapters[index + 1]["attributes"]["title"],
+						chapters[index + 1]["attributes"]["volume"],
+						chapters[index + 1]["attributes"]["chapter"],
+						state.mangaName
+				  )
+				: null
+		);
+	};
+
+	const handlePreviousChapterButton = () =>
+		currentPage === 0
+			? handlePreviousChapter()
+			: setCurrentPage(currentPage - 1);
+
+	const handleNextChapterButton = () =>
+		currentPage === pages.length - 1
+			? handleNextChapter()
+			: setCurrentPage(currentPage + 1);
+
 	const handleClick = (
 		mangaId: string,
 		chapterId: string,
 		title: string,
 		volume: string,
 		chapter: string,
-		mangaName: string,
-		chapterNumber: number
+		mangaName: string
 	) => {
+		setCurrentPage(0);
 		navigate("/reader", {
 			state: {
 				mangaId: mangaId,
@@ -93,16 +132,14 @@ const Reader = (props: Props) => {
 				volume: volume,
 				chapter: chapter,
 				mangaName: mangaName,
-				chapterNumber: chapterNumber,
 			},
 		});
 	};
 	useEffect(() => {
 		fetchChapterData();
 
-		fetchMangaFeed(selectedLanguage, true);
+		fetchMangaFeed(selectedLanguage, false);
 		console.log(pages);
-		console.log(state.chapterNumber);
 	}, [state]);
 	return (
 		<div
@@ -214,8 +251,7 @@ const Reader = (props: Props) => {
 														current["attributes"]["title"],
 														current["attributes"]["volume"],
 														current["attributes"]["chapter"],
-														state.mangaName,
-														+current["attributes"]["chapter"]
+														state.mangaName
 													);
 													setOpen(false);
 												}}
@@ -282,8 +318,7 @@ const Reader = (props: Props) => {
 														current["attributes"]["title"],
 														current["attributes"]["volume"],
 														current["attributes"]["chapter"],
-														state.mangaName,
-														+current["attributes"]["chapter"]
+														state.mangaName
 													);
 													setOpen(false);
 												}}
@@ -346,18 +381,12 @@ const Reader = (props: Props) => {
 									height: "65vh",
 									width: "50%",
 									position: "absolute",
+									color: "white",
 									"&.MuiButtonBase-root:hover": {
 										backgroundColor: "transparent",
 									},
-									".MuiTouchRipple-child": {
-										backgroundColor: "white",
-									},
 								}}
-								onClick={() =>
-									currentPage === pages.length - 1
-										? null
-										: setCurrentPage(currentPage + 1)
-								}
+								onClick={() => handleNextChapterButton()}
 							></Button>
 
 							<img
@@ -372,6 +401,7 @@ const Reader = (props: Props) => {
 							<Button
 								sx={{
 									backgroundColor: "transparent",
+									color: "white",
 									height: "65vh",
 									width: "50%",
 									position: "absolute",
@@ -379,13 +409,8 @@ const Reader = (props: Props) => {
 									"&.MuiButtonBase-root:hover": {
 										backgroundColor: "transparent",
 									},
-									".MuiTouchRipple-child": {
-										backgroundColor: "white",
-									},
 								}}
-								onClick={() =>
-									currentPage === 0 ? null : setCurrentPage(currentPage - 1)
-								}
+								onClick={() => handlePreviousChapterButton()}
 							></Button>
 						</div>
 
@@ -400,7 +425,7 @@ const Reader = (props: Props) => {
 							<Button
 								sx={{ color: "white" }}
 								onClick={() => {
-									setCurrentPage(pages.length - 1);
+									handleNextChapter();
 								}}
 							>
 								<KeyboardDoubleArrowLeftIcon />
@@ -408,7 +433,7 @@ const Reader = (props: Props) => {
 							<Button
 								sx={{ color: "white" }}
 								onClick={() => {
-									setCurrentPage(currentPage + 1);
+									handleNextChapterButton();
 								}}
 							>
 								<KeyboardArrowLeftIcon />
@@ -416,7 +441,7 @@ const Reader = (props: Props) => {
 							<Button
 								sx={{ color: "white" }}
 								onClick={() => {
-									setCurrentPage(currentPage - 1);
+									handlePreviousChapterButton();
 								}}
 							>
 								<KeyboardArrowRightIcon />
@@ -424,7 +449,7 @@ const Reader = (props: Props) => {
 							<Button
 								sx={{ color: "white" }}
 								onClick={() => {
-									setCurrentPage(0);
+									handlePreviousChapter();
 								}}
 							>
 								<KeyboardDoubleArrowRightIcon />

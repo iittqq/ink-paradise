@@ -43,7 +43,7 @@ const IndividualManga = (props: Props) => {
 	const [mangaContentRating, setMangaContentRating] = useState("");
 	const [mangaRaw, setMangaRaw] = useState("");
 	const [mangaTags, setMangaTags] = useState<Object[]>([]);
-	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
+	const [mangaFeed, setMangaFeed] = useState<any[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentOffset, setCurrentOffset] = useState(0);
@@ -443,10 +443,10 @@ const IndividualManga = (props: Props) => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "400px", md: "300px", lg: "350px" },
+						height: { xs: "35vh", md: "35vh", lg: "35vh", xl: "40vh" },
 						display: "flex",
 						paddingTop: "20px",
-						justifyContent: "space-between",
+						justifyContent: "center",
 					}}
 				>
 					<div
@@ -454,7 +454,7 @@ const IndividualManga = (props: Props) => {
 							width: "100%",
 							display: "flex",
 							flexDirection: "column",
-							justifyContent: "space-evenly",
+							justifyContent: "center",
 							alignItems: "center",
 						}}
 					>
@@ -533,22 +533,70 @@ const IndividualManga = (props: Props) => {
 							</Collapse>
 						</List>
 
-						<div
-							style={{
-								width: "100%",
-								display: "flex",
-								justifyContent: "space-evenly",
-								flexDirection: "column",
-								alignItems: "center",
+						<Button
+							sx={{
+								color: "#333333",
+
+								height: "20px",
+								width: { xs: "80%", md: "60%", lg: "20%" },
+								backgroundColor: "#191919",
+								"&.MuiButtonBase-root:hover": {
+									bgcolor: "transparent",
+								},
+								".MuiTouchRipple-child": {
+									backgroundColor: "white",
+								},
+							}}
+							onClick={() => {
+								setAscending(true);
+								setCurrentOffset(0);
 							}}
 						>
+							<Typography textTransform={"none"}>Ascending</Typography>
+						</Button>
+						<div style={{ height: "10px" }}></div>
+						<Button
+							sx={{
+								color: "#333333",
+
+								height: "20px",
+								width: { xs: "80%", md: "60%", lg: "20%" },
+								backgroundColor: "#191919",
+								"&.MuiButtonBase-root:hover": {
+									bgcolor: "transparent",
+								},
+								".MuiTouchRipple-child": {
+									backgroundColor: "white",
+								},
+							}}
+							onClick={() => {
+								setAscending(false);
+							}}
+						>
+							<Typography textTransform={"none"}>Descending</Typography>
+						</Button>
+						<div>
 							<Button
 								sx={{
 									color: "#333333",
-
-									height: "20px",
-									width: { xs: "80%", md: "60%", lg: "20%" },
-									backgroundColor: "#191919",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+									".MuiTouchRipple-child": {
+										backgroundColor: "white",
+									},
+								}}
+								onClick={() =>
+									currentOffset === 0
+										? null
+										: setCurrentOffset(currentOffset - 100)
+								}
+							>
+								<ArrowBackIosNewIcon />
+							</Button>
+							<Button
+								sx={{
+									color: "#333333",
 									"&.MuiButtonBase-root:hover": {
 										bgcolor: "transparent",
 									},
@@ -557,69 +605,11 @@ const IndividualManga = (props: Props) => {
 									},
 								}}
 								onClick={() => {
-									setAscending(true);
-									setCurrentOffset(0);
+									setCurrentOffset(currentOffset + 100);
 								}}
 							>
-								<Typography textTransform={"none"}>Ascending</Typography>
+								<ArrowForwardIosIcon />
 							</Button>
-							<div style={{ height: "10px" }}></div>
-							<Button
-								sx={{
-									color: "#333333",
-
-									height: "20px",
-									width: { xs: "80%", md: "60%", lg: "20%" },
-									backgroundColor: "#191919",
-									"&.MuiButtonBase-root:hover": {
-										bgcolor: "transparent",
-									},
-									".MuiTouchRipple-child": {
-										backgroundColor: "white",
-									},
-								}}
-								onClick={() => {
-									setAscending(false);
-								}}
-							>
-								<Typography textTransform={"none"}>Descending</Typography>
-							</Button>
-							<div>
-								<Button
-									sx={{
-										color: "#333333",
-										"&.MuiButtonBase-root:hover": {
-											bgcolor: "transparent",
-										},
-										".MuiTouchRipple-child": {
-											backgroundColor: "white",
-										},
-									}}
-									onClick={() =>
-										currentOffset === 0
-											? null
-											: setCurrentOffset(currentOffset - 100)
-									}
-								>
-									<ArrowBackIosNewIcon />
-								</Button>
-								<Button
-									sx={{
-										color: "#333333",
-										"&.MuiButtonBase-root:hover": {
-											bgcolor: "transparent",
-										},
-										".MuiTouchRipple-child": {
-											backgroundColor: "white",
-										},
-									}}
-									onClick={() => {
-										setCurrentOffset(currentOffset + 100);
-									}}
-								>
-									<ArrowForwardIosIcon />
-								</Button>
-							</div>
 						</div>
 					</div>
 
@@ -632,13 +622,83 @@ const IndividualManga = (props: Props) => {
 							height: "100%",
 							overflow: "scroll",
 							display: "inline",
-							width: { xs: "60%", sm: "100%", lg: "50%" },
+							width: { xs: "100%", sm: "100%", lg: "50%" },
 							scrollbarWidth: "none",
 						}}
 					>
-						{mangaFeed.map((current: any) =>
-							current["attributes"]["translatedLanguage"] ===
-							selectedLanguage ? (
+						{mangaFeed.map((current: any, index) =>
+							index === 0 ? (
+								current["attributes"]["translatedLanguage"] ===
+								selectedLanguage ? (
+									<Grid
+										item
+										sx={{ width: "100%", height: "50px", padding: "2px" }}
+									>
+										<Button
+											sx={{
+												width: "100%",
+												color: "white",
+												height: "100%",
+												backgroundColor: "#191919",
+												justifyContent: "space-between",
+												"&.MuiButtonBase-root:hover": {
+													bgcolor: "transparent",
+												},
+												".MuiTouchRipple-child": {
+													backgroundColor: "white",
+												},
+											}}
+											onClick={() => {
+												handleClick(
+													state.id === undefined ? mangaFromMal : state.id,
+													current["id"],
+													current["attributes"]["title"],
+													current["attributes"]["volume"],
+													current["attributes"]["chapter"],
+													mangaName,
+													+current["attributes"]["chapter"]
+												);
+											}}
+										>
+											<div style={{ display: "flex" }}>
+												<Typography
+													sx={{
+														textTransform: "none",
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+													color='#555555'
+												>
+													Chapter {current["attributes"].chapter}
+												</Typography>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+														paddingLeft: "10px",
+													}}
+												>
+													{current["attributes"].translatedLanguage}
+												</Typography>
+											</div>
+											<div>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+												>
+													{dayjs(current["attributes"].createdAt).format(
+														"DD/MM/YYYY / HH:mm"
+													)}
+												</Typography>
+											</div>
+										</Button>
+									</Grid>
+								) : null
+							) : current["attributes"]["chapter"] ===
+							  mangaFeed[index - 1]["attributes"]["chapter"] ? null : current[
+									"attributes"
+							  ]["translatedLanguage"] === selectedLanguage ? (
 								<Grid
 									item
 									sx={{ width: "100%", height: "50px", padding: "2px" }}
