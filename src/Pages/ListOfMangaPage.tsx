@@ -22,30 +22,61 @@ const ListOfMangaPage = (props: Props) => {
 	const { state } = useLocation();
 	const { title } = props;
 	const [offset, setOffset] = useState<number>(0);
-
+	console.log(state.title);
+	console.log(state.tagId !== undefined);
 	console.log(state);
 	const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
 		useState<Object[]>([]);
 
-	const fetchRecentlyAddedManga = async () => {
-		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: {
-				order: {
-					latestUploadedChapter: "desc",
-				},
-				offset: offset,
-				limit: 60,
-				contentRating: ["safe", "suggestive", "erotica"],
-			},
-		});
-		setRecentlyUpdatedMangaDetails(data.data);
+	const fetchRecentlyUpdatedManga = async () => {
+		if (state.title !== undefined) {
+			fetch(
+				`${baseUrl}/manga?limit=60&offset=${offset}&title=${
+					state.title === undefined ? "" : state.title
+				}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					setRecentlyUpdatedMangaDetails(data.data);
 
-		console.log(data.data);
+					console.log(data.data);
+				});
+		} else if (state.authorId !== undefined) {
+			fetch(
+				`${baseUrl}/manga?limit=60&offset=0&authors%5B%5D=${state.authorId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					setRecentlyUpdatedMangaDetails(data.data);
+
+					console.log(data.data);
+				});
+		} else if (state.tagId !== undefined) {
+			fetch(
+				`${baseUrl}/manga?limit=60&offset=0&includedTags%5B%5D=${state.tagId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					setRecentlyUpdatedMangaDetails(data.data);
+
+					console.log(data.data);
+				});
+		} else {
+			fetch(
+				`${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					setRecentlyUpdatedMangaDetails(data.data);
+
+					console.log(data.data);
+				});
+		}
 	};
 
 	useEffect(() => {
-		fetchRecentlyAddedManga();
-	}, [offset, props]);
+		fetchRecentlyUpdatedManga();
+	}, [offset, props, state]);
 	return (
 		<div>
 			<Grid

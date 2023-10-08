@@ -31,8 +31,11 @@ const CoverClickable = (props: Props) => {
 	const { id, title, coverId, updatedAt, homePage } = props;
 
 	const fetchCoverFile = async () => {
-		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
-		setCoverFile(data.data["attributes"].fileName);
+		fetch(`${baseUrl}/cover/${coverId}`)
+			.then((response) => response.json())
+			.then((data) => {
+				setCoverFile(data.data["attributes"].fileName);
+			});
 	};
 
 	function handleClick() {

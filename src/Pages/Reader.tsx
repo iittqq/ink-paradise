@@ -33,43 +33,35 @@ const Reader = (props: Props) => {
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentPage, setCurrentPage] = useState(0);
 	const [open, setOpen] = useState(false);
+	const [order, setOrder] = useState("desc");
 	let navigate = useNavigate();
 
 	const fetchChapterData = async () => {
-		const { data } = await axios.get(
-			`${baseUrl}/at-home/server/${state.chapterId}`,
-			{
-				params: {},
-			}
-		);
-
-		console.log(
-			pageBaseUrl +
-				data["chapter"]["hash"] +
-				"/" +
-				data["chapter"]["data"][currentPage]
-		);
-		setPages(data["chapter"]["data"]);
-		setHash(data["chapter"]["hash"]);
-		console.log(data);
-		console.log(pages);
+		fetch(`${baseUrl}/at-home/server/${state.chapterId}`)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(
+					pageBaseUrl +
+						data["chapter"]["hash"] +
+						"/" +
+						data["chapter"]["data"][currentPage]
+				);
+				setPages(data["chapter"]["data"]);
+				setHash(data["chapter"]["hash"]);
+				console.log(data);
+				console.log(pages);
+			});
 	};
 
 	const fetchMangaFeed = async (language: string, ascending: boolean) => {
-		const { data: feed } = await axios.get(
-			`${baseUrl}/manga/${state.mangaId}/feed`,
-			{
-				params: {
-					limit: 300,
-					translatedLanguage: [language],
-					order: { chapter: ascending === true ? "asc" : "desc" },
-				},
-			}
-		);
-
-		//feed.data.length === 0 ? setCurrentOffset(0) : setMangaFeed(feed.data);
-		console.log(feed.data);
-		setChapters(feed.data);
+		fetch(
+			`${baseUrl}/manga/${state.mangaId}/feed?limit=300&offset=0&translatedLanguage%5B%5D=${selectedLanguage}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=0&order%5Bchapter%5D=${order}`
+		)
+			.then((response) => response.json())
+			.then((feed) => {
+				console.log(feed.data);
+				setChapters(feed.data);
+			});
 	};
 	const handleOpenChapters = () => {
 		setOpen(!open);

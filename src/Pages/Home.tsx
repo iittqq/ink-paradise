@@ -22,10 +22,10 @@ import IndividualManga from "./IndividualManga";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
-const config = {
-	"User-Agent": "Ink-Paradise",
-	"Access-Control-Allow-Origin": "*",
-};
+const headers = new Headers();
+headers.append("User-Agent", "Ink-Paradise");
+headers.append("Access-Control-Allow-Origin", "*");
+
 const Home = () => {
 	const [open, setOpen] = useState(false);
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
@@ -53,45 +53,43 @@ const Home = () => {
 	};
 
 	const fetchRecentlyAddedManga = async () => {
-		const { data: recentAdded } = await axios.get(`${baseUrlMangaDex}/manga`, {
-			params: {
-				limit: 10,
-				contentRating: ["safe", "suggestive", "erotica"],
-				order: {
-					createdAt: "desc",
-				},
-			},
-		});
-		setRecentlyAddedManga(recentAdded.data);
+		fetch(
+			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
+			{
+				method: "GET",
+				headers: headers,
+			}
+		)
+			.then((response) => response.json())
+			.then((newManga) => {
+				setRecentlyAddedManga(newManga.data);
 
-		console.log(recentAdded.data);
+				console.log(newManga.data);
+			});
 	};
 
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: recentUpdated } = await axios.get(
-			`${baseUrlMangaDex}/manga`,
+		fetch(
+			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
 			{
-				headers: config,
-				params: {
-					limit: 10,
-					order: {
-						latestUploadedChapter: "desc",
-					},
-				},
+				method: "GET",
+				headers: headers,
 			}
-		);
-		console.log(recentUpdated.data);
-		setRecentlyUpdatedManga(recentUpdated.data);
+		)
+			.then((response) => response.json())
+			.then((newUpdates) => {
+				console.log(newUpdates.data);
+				setRecentlyUpdatedManga(newUpdates.data);
+			});
 	};
 
 	const fetchTags = async () => {
-		const { data: tags } = await axios.get(`${baseUrlMangaDex}/manga/tag`, {
-			params: {
-				limit: 10,
-			},
-		});
-		console.log(tags.data);
-		setMangaTags(tags.data);
+		fetch(`${baseUrlMangaDex}/manga/tag`, {})
+			.then((response) => response.json())
+			.then((tags) => {
+				console.log(tags.data);
+				setMangaTags(tags.data);
+			});
 	};
 
 	useEffect(() => {
@@ -144,7 +142,6 @@ const Home = () => {
 							<Typography textTransform='none' noWrap color={"white"}>
 								Recently Added
 							</Typography>
-
 							<RecentlyAddedMangaSection mangaData={recentlyAddedManga} />
 							<Button
 								sx={{
@@ -269,7 +266,8 @@ const Home = () => {
 											fontSizeSm={10}
 											fontSizeLg={12}
 											text={element["attributes"].name["en"]}
-											location={element["attributes"].name["en"]}
+											location={"mangaList"}
+											tagId={element["id"]}
 										/>
 									</Grid>
 								))}
