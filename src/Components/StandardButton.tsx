@@ -19,6 +19,7 @@ type Props = {
 	fontSizeSm?: number;
 	fontSizeLg?: number;
 	fontSize?: number;
+	tagId?: string;
 };
 
 const StandardButton = (props: Props) => {
@@ -39,12 +40,14 @@ const StandardButton = (props: Props) => {
 		fontSizeSm,
 		fontSizeLg,
 		fontSize,
+		tagId,
 	} = props;
 	let navigate = useNavigate();
 
 	function handleClick() {
+		console.log(tagId);
 		navigate(location, {
-			state: {},
+			state: { tagId: tagId },
 		});
 	}
 

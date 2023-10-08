@@ -11,18 +11,14 @@ const SearchResults = () => {
 	const [mangaData, setMangaData] = useState<any[]>([]);
 	const [refreshData, setRefreshData] = useState(false);
 	const fetchMangaByName = async () => {
-		const { data } = await axios.get(`${baseUrl}/manga`, {
-			params: {
-				limit: 100,
-				title: state.id,
-				contentRating: ["safe", "suggestive", "erotica"],
-				order: {
-					relevance: "desc",
-				},
-			},
-		});
-		setMangaData(data.data);
-		console.log(data.data);
+		fetch(
+			`${baseUrl}/manga?limit=100&title=${state.id}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
+		)
+			.then((response) => response.json())
+			.then((mangaBySearch) => {
+				setMangaData(mangaBySearch.data);
+				console.log(mangaBySearch.data);
+			});
 	};
 	useEffect(() => {
 		fetchMangaByName();
