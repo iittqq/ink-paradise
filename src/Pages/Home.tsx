@@ -22,6 +22,10 @@ import IndividualManga from "./IndividualManga";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
+const config = {
+	"User-Agent": "Ink-Paradise",
+	"Access-Control-Allow-Origin": "*",
+};
 const Home = () => {
 	const [open, setOpen] = useState(false);
 	const [topMangaData, setTopMangaData] = useState<any[]>([]);
@@ -67,6 +71,7 @@ const Home = () => {
 		const { data: recentUpdated } = await axios.get(
 			`${baseUrlMangaDex}/manga`,
 			{
+				headers: config,
 				params: {
 					limit: 10,
 					order: {
