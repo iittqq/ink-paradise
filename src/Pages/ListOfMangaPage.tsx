@@ -34,7 +34,7 @@ const ListOfMangaPage = (props: Props) => {
 					latestUploadedChapter: "desc",
 				},
 				offset: offset,
-				limit: 10,
+				limit: 15,
 				contentRating: ["safe", "suggestive", "erotica"],
 			},
 		});
@@ -47,7 +47,7 @@ const ListOfMangaPage = (props: Props) => {
 		fetchRecentlyAddedManga();
 	}, [offset, props]);
 	return (
-		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+		<div>
 			<Grid
 				container
 				direction='column'
@@ -74,9 +74,8 @@ const ListOfMangaPage = (props: Props) => {
 					wrap='wrap'
 					spacing={1}
 					sx={{
-						overflow: "scroll",
+						overflow: "hidden",
 						height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
-						scrollbarWidth: "none",
 						justifyContent: "center",
 					}}
 				>
@@ -127,7 +126,7 @@ const ListOfMangaPage = (props: Props) => {
 					</Button>
 				</div>
 			</Grid>
-		</Container>
+		</div>
 	);
 };
 

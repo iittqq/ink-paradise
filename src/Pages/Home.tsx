@@ -102,7 +102,7 @@ const Home = () => {
 
 	let navigate = useNavigate();
 	return (
-		<Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+		<div>
 			<Grid
 				container
 				direction='column'
@@ -273,7 +273,7 @@ const Home = () => {
 					</List>
 				</Grid>
 			</Grid>
-		</Container>
+		</div>
 	);
 };
 

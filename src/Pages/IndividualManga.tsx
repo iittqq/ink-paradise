@@ -624,6 +624,9 @@ const IndividualManga = (props: Props) => {
 							display: "inline",
 							width: { xs: "100%", sm: "100%", lg: "50%" },
 							scrollbarWidth: "none",
+							"::-webkit-scrollbar": {
+								display: "none",
+							},
 						}}
 					>
 						{mangaFeed.map((current: any, index) =>

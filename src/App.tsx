@@ -18,7 +18,7 @@ function App() {
 				backgroundColor: "#121212",
 				minWidth: "100%",
 				minHeight: "100vh",
-				overflow: "scroll",
+				overflow: "hidden",
 			}}
 		>
 			<BrowserRouter>
