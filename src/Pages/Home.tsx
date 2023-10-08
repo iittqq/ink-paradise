@@ -22,9 +22,6 @@ import IndividualManga from "./IndividualManga";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
-const headers = new Headers();
-headers.append("User-Agent", "Ink-Paradise");
-headers.append("Access-Control-Allow-Origin", "*");
 
 const Home = () => {
 	const [open, setOpen] = useState(false);
@@ -58,7 +55,10 @@ const Home = () => {
 			{
 				mode: "cors",
 				method: "GET",
-				headers: headers,
+				headers: {
+					"User-Agent": "Ink-Paradise",
+					"Access-Control-Allow-Origin": "*",
+				},
 			}
 		)
 			.then((response) => response.json())
@@ -75,7 +75,10 @@ const Home = () => {
 			{
 				mode: "cors",
 				method: "GET",
-				headers: headers,
+				headers: {
+					"User-Agent": "Ink-Paradise",
+					"Access-Control-Allow-Origin": "*",
+				},
 			}
 		)
 			.then((response) => response.json())
