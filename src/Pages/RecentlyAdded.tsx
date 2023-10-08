@@ -11,13 +11,15 @@ import {
 import Header from "../Components/Header";
 import axios from "axios";
 import CoverClickable from "../Components/CoverClickable";
-import dayjs from "dayjs";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { off } from "process";
-import { ConstructionRounded } from "@mui/icons-material";
 
-const RecentlyAdded = () => {
+type Props = {
+  title: string;
+};
+
+const RecentlyAdded = (props: Props) => {
+  const {title} = props;
   const [mangaDetails, setMangaDetails] = useState<any[]>([]);
   const [offsetState, setOffsetState] = useState<number>(0);
   const baseUrl = "https://api.mangadex.org";
@@ -25,7 +27,7 @@ const RecentlyAdded = () => {
     const { data } = await axios.get(`${baseUrl}/manga`, {
       params: {
         order: { createdAt: "desc" },
-        limit: 60,
+        limit: 50,
         offset: offsetState,
         contentRating: ["safe", "suggestive", "erotica"],
       },
@@ -52,44 +54,58 @@ const RecentlyAdded = () => {
   }, [offsetState]);
  
   const handleLeft = () =>
-    offsetState !== 0 ? setOffsetState((a) => a - 60): null;
+    offsetState !== 0 ? setOffsetState((a) => a - 30): null;
 
   const handleRight = () =>
-     setOffsetState((a) => a + 60);
+     setOffsetState((a) => a + 30);
   
   return (
-    <Container disableGutters sx={{ minWidth: "100%", minHeight: "100vh" }}>
+    <Container
+      disableGutters
+      sx={{
+        minWidth: "100%",
+        minHeight: "100vh",
+      }}
+    >
       <Grid
         container
         direction="column"
         justifyContent="space-evenly"
         alignItems="center"
       >
-        <Grid item sx={{ paddingTop: "1vh", width: "100%" }}>
+        <Grid item sx={{ width: "100%",}}>
           <Header />
         </Grid>
         <Grid item>
           <Typography
-            sx={{ paddingTop: "25px", paddingBottom: "25px", color: "white" }}
+            fontSize={30}
+            sx={{
+              paddingTop: "0px",
+              paddingBottom: "5px",
+              color: "white",
+            }}
           >
-            Recently Added
+            {title}
           </Typography>
         </Grid>
         <Grid
           container
           direction="row"
-          justifyContent="flex-start"
+          justifyContent="center"
           alignItems="center"
           wrap="wrap"
           spacing={1}
           sx={{
             overflow: "auto",
-            height: "80vh",
-            scrollbarWidth: "none",
+            height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
             justifyContent: "center",
+            scrollbarWidth: "none",
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
           }}
         >
-          {mangaDetails.map((element, index) => (
+          {mangaDetails.map((element, any) => (
             <Grid item>
               <CoverClickable
                 id={element["id"]}
@@ -108,20 +124,13 @@ const RecentlyAdded = () => {
             variant="text"
             aria-label="text button group"
             color="primary"
+            sx={{paddingTop: "10px"}}
           >
-            <IconButton 
-            onClick={()=>handleLeft()}
-            >
-              <ArrowBackIosNewIcon
-               sx={{ color: "white" }} 
-               />
+            <IconButton onClick={() => handleLeft()}>
+              <ArrowBackIosNewIcon sx={{ color: "white" }} />
             </IconButton>
-            <IconButton
-            onClick={()=>handleRight()}
-            >
-              <ArrowForwardIosIcon 
-              sx={{ color: "white" }} 
-              />
+            <IconButton onClick={() => handleRight()}>
+              <ArrowForwardIosIcon sx={{ color: "white" }} />
             </IconButton>
           </ButtonGroup>
         </ThemeProvider>

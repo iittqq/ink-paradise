@@ -38,8 +38,6 @@ const CoverClickable = (props: Props) => {
     <div
       style={{
         display: "flex",
-
-        justifyContent: "center",
       }}
     >
       <Button
@@ -64,10 +62,20 @@ const CoverClickable = (props: Props) => {
           alignItems="center"
         >
           <Grid item>
-            <Card sx={{ width: "100px", height: "150px" }}>
+            <Card
+              sx={{
+                width: "100px",
+                height: "150px",
+                borderRadius: "6%",
+              }}
+            >
               <Box sx={{ position: "absolute" }}>
                 <CardMedia
-                  sx={{ width: "100px", height: "150px" }}
+                  sx={{
+                    width: "100px",
+                    height: "150px",
+                    borderRadius: "6%",
+                  }}
                   image={
                     "https://uploads.mangadex.org/covers/" +
                     id +
@@ -78,12 +86,13 @@ const CoverClickable = (props: Props) => {
                 <Box
                   sx={{
                     position: "absolute",
-                    bottom: '0px',
+                    bottom: "-1px",
                     left: 0,
                     width: "80%",
-					height: "130px",
+                    height: "130px",
                     backgroundImage:
                       "linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05)) ",
+                    borderRadius: "4%",
                     backgroundSize: "100px 150px",
                     color: "white",
                     padding: "10px",
@@ -91,9 +100,10 @@ const CoverClickable = (props: Props) => {
                 >
                   <Typography
                     color="white"
-					marginTop={14}
-					marginRight={0}
-					marginLeft={-1}
+                    marginTop={14}
+                    marginRight={0}
+                    marginLeft={0}
+                    textTransform="none"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 10 },
                       maxWidth: "100px",
@@ -102,7 +112,7 @@ const CoverClickable = (props: Props) => {
                       WebkitBoxOrient: "vertical",
                       WebkitLineClamp: homePage === true ? 1 : 2,
                       position: "static",
-					  alignContent: 'flex-end',
+                      alignContent: "flex-end",
                     }}
                   >
                     {title}

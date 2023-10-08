@@ -17,14 +17,17 @@ function App() {
 				backgroundColor: "#121212",
 				minWidth: "100%",
 				minHeight: "100vh",
-				overflow: "scroll",
+				overflow: "hidden",
 			}}
 		>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
 					<Route path='/individualView' element={<IndividualManga />}></Route>
-					<Route path='/recentlyAdded' element={<RecentlyAdded />}></Route>
+					<Route 
+						path='/recentlyAdded' 
+						element={<RecentlyAdded title='Recently Added' />}
+					></Route>
 					<Route path='/results' element={<SearchResults />}></Route>
 					<Route
 						path='/mangaList'
