@@ -34,7 +34,7 @@ const ListOfMangaPage = (props: Props) => {
 					latestUploadedChapter: "desc",
 				},
 				offset: offset,
-				limit: 15,
+				limit: 60,
 				contentRating: ["safe", "suggestive", "erotica"],
 			},
 		});
