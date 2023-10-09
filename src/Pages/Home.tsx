@@ -22,9 +22,6 @@ import IndividualManga from "./IndividualManga";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
-const headers = new Headers();
-headers.append("User-Agent", "Ink-Paradise");
-headers.append("Access-Control-Allow-Origin", "*");
 
 const Home = () => {
 	const [open, setOpen] = useState(false);
@@ -57,7 +54,6 @@ const Home = () => {
 			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
 			{
 				method: "GET",
-				headers: headers,
 			}
 		)
 			.then((response) => response.json())
@@ -73,7 +69,6 @@ const Home = () => {
 			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
 			{
 				method: "GET",
-				headers: headers,
 			}
 		)
 			.then((response) => response.json())
