@@ -53,12 +53,7 @@ const Home = () => {
 		fetch(
 			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
 			{
-				mode: "cors",
 				method: "GET",
-				headers: {
-					"User-Agent": "Ink-Paradise",
-					"Access-Control-Allow-Origin": "*",
-				},
 			}
 		)
 			.then((response) => response.json())
@@ -73,12 +68,7 @@ const Home = () => {
 		fetch(
 			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
 			{
-				mode: "cors",
 				method: "GET",
-				headers: {
-					"User-Agent": "Ink-Paradise",
-					"Access-Control-Allow-Origin": "*",
-				},
 			}
 		)
 			.then((response) => response.json())
