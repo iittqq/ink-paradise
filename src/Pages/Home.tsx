@@ -238,7 +238,6 @@ const Home = () => {
 						<Collapse
 							sx={{
 								width: "100%",
-								height: "20%",
 							}}
 							in={open}
 							timeout='auto'
