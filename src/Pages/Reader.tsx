@@ -67,23 +67,31 @@ const Reader = (props: Props) => {
 		setOpen(!open);
 	};
 
+
+
 	const handleNextChapter = () => {
 		chapters.forEach((current, index) =>
-			current["attributes"]["chapter"] === state.chapter
+		current["attributes"]["chapter"] === chapters[0]["attributes"]["chapter"]
+			?	null
+			: 	current["attributes"]["chapter"] === state.chapter
 				? handleClick(
-						state.mangaId,
-						chapters[index - 1]["id"],
-						chapters[index - 1]["attributes"]["title"],
-						chapters[index - 1]["attributes"]["volume"],
-						chapters[index - 1]["attributes"]["chapter"],
-						state.mangaName
-				  )
+					state.mangaId,
+					chapters[index - 1]["id"],
+					chapters[index - 1]["attributes"]["title"],
+					chapters[index - 1]["attributes"]["volume"],
+					chapters[index - 1]["attributes"]["chapter"],
+					state.mangaName
+			  	)
 				: null
+			
 		);
 	};
 
 	const handlePreviousChapter = () => {
 		chapters.forEach((current, index) =>
+		current["attributes"]["chapter"] === chapters[chapters.length - 1]["attributes"]["chapter"]
+			?	null
+			:
 			current["attributes"]["chapter"] === state.chapter
 				? handleClick(
 						state.mangaId,
