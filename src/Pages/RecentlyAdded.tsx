@@ -27,7 +27,7 @@ const RecentlyAdded = (props: Props) => {
     const { data } = await axios.get(`${baseUrl}/manga`, {
       params: {
         order: { createdAt: "desc" },
-        limit: 50,
+        limit: 60,
         offset: offsetState,
         contentRating: ["safe", "suggestive", "erotica"],
       },
