@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
 	Container,
@@ -8,7 +8,12 @@ import {
 	CardMedia,
 	Button,
 	Typography,
+	List,
+	ListItemButton,
+	ListItemText,
+	Collapse,
 } from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import dayjs from "dayjs";
 import Header from "../Components/Header";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
@@ -26,112 +31,136 @@ const mangaCoverWidthLg = "200px";
 type Props = {};
 const IndividualManga = (props: Props) => {
 	const { state } = useLocation();
+	let navigate = useNavigate();
+	const [open, setOpen] = useState(false);
+	const [sensitivityLevel, setSensitivityLevel] = useState<string[]>([
+		"safe",
+		"suggestive",
+		"erotica",
+	]);
 	const [mangaFromMal, setMangaFromMal] = useState<string>("");
 	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
 		useState<string>("");
-	const [mangaName, setMangaName] = useState();
+	const [mangaName, setMangaName] = useState("");
 	const [mangaDescription, setMangaDescription] = useState();
 	const [mangaAltTitles, setMangaAltTitles] = useState<Object[]>([]);
 	const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
 	const [mangaContentRating, setMangaContentRating] = useState("");
 	const [mangaRaw, setMangaRaw] = useState("");
 	const [mangaTags, setMangaTags] = useState<Object[]>([]);
-	const [mangaFeed, setMangaFeed] = useState<Object[]>([]);
+	const [mangaFeed, setMangaFeed] = useState<any[]>([]);
 	const [showMoreToggled, setShowMoreToggled] = useState(false);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentOffset, setCurrentOffset] = useState(0);
-	const [ascending, setAscending] = useState(false);
+	const [currentOrder, setCurrentOrder] = useState("asc");
 
-	const baseUrl = "https://api.mangadex.org/";
+	const baseUrl = "https://api.mangadex.org";
 	const fetchRecentlyUpdatedManga = async () => {
-		const { data: details } = await axios.get(`${baseUrl}manga/${state.id}`);
+		fetch(`${baseUrl}/manga/${state.id}`)
+			.then((response) => response.json())
+			.then((mangaDetails) => {
+				console.log(mangaDetails.data);
+				setMangaName(mangaDetails.data["attributes"].title["en"]);
+				setMangaDescription(mangaDetails.data["attributes"].description["en"]);
+				setMangaAltTitles(mangaDetails.data["attributes"].altTitles);
+				setMangaLanguages(
+					mangaDetails.data["attributes"].availableTranslatedLanguages
+				);
+				setMangaContentRating(mangaDetails.data["attributes"].contentRating);
 
-		console.log(details.data);
-		setMangaName(details.data["attributes"].title["en"]);
-		setMangaDescription(details.data["attributes"].description["en"]);
-		setMangaAltTitles(details.data["attributes"].altTitles);
-		setMangaLanguages(details.data["attributes"].availableTranslatedLanguages);
-		setMangaContentRating(details.data["attributes"].contentRating);
+				setMangaRaw(
+					mangaDetails.data["attributes"].links === null
+						? ""
+						: mangaDetails.data["attributes"].links["raw"]
+				);
 
-		setMangaRaw(
-			details.data["attributes"].links === null
-				? ""
-				: details.data["attributes"].links["raw"]
-		);
-
-		setMangaTags(details.data["attributes"].tags);
+				setMangaTags(mangaDetails.data["attributes"].tags);
+			});
 	};
 
-	const fetchMangaFeed = async (
-		id: string,
-		language: string,
-		offset: number,
-		ascending: boolean
-	) => {
-		const { data: feed } = await axios.get(`${baseUrl}manga/${id}/feed`, {
-			params: {
-				limit: 100,
-				offset: offset,
-				translatedLanguage: [language],
-				order: { chapter: ascending === true ? "asc" : "desc" },
-			},
-		});
-
-		feed.data.length === 0 ? setCurrentOffset(0) : setMangaFeed(feed.data);
-		console.log(feed.data);
+	const fetchMangaFeed = async (id: string) => {
+		fetch(
+			`${baseUrl}/manga/${id}/feed?limit=50&offset=${currentOffset}&translatedLanguage%5B%5D=${selectedLanguage}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5Bchapter%5D=${currentOrder}`
+		)
+			.then((response) => response.json())
+			.then((mangaFeed) => {
+				mangaFeed.data.length === 0
+					? setCurrentOffset(0)
+					: setMangaFeed(mangaFeed.data);
+				console.log(mangaFeed.data);
+			});
 	};
 
 	const fetchMangaByName = async () => {
-		const { data: details } = await axios.get(`${baseUrl}/manga/`, {
-			params: {
-				limit: 10,
-				title: state["title"],
-				contentRating: ["safe", "suggestive", "erotica"],
-				order: {
-					relevance: "desc",
-				},
-			},
-		});
+		console.log(state.title);
+		fetch(
+			`${baseUrl}/manga?limit=10&title=${state.title}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
+		)
+			.then((response) => response.json())
+			.then((details) => {
+				setMangaFromMal(details.data[0]["id"]);
+				fetchMangaFeed(details.data[0]["id"]);
 
-		setMangaFromMal(details.data[0]["id"]);
-		fetchMangaFeed(
-			details.data[0]["id"],
-			selectedLanguage,
-			currentOffset,
-			ascending
-		);
+				fetch(
+					`${baseUrl}/cover/${
+						details.data[0]["relationships"].find(
+							(i: any) => i.type === "cover_art"
+						).id
+					}`
+				)
+					.then((response) => response.json())
+					.then((coverFile) => {
+						setMangaFromMalCoverFile(
+							coverFile["data"]["attributes"]["fileName"]
+						);
+					});
 
-		const { data: coverFile } = await axios.get(
-			`${baseUrl}/cover/${
-				details.data[0]["relationships"].find(
-					(i: any) => i.type === "cover_art"
-				).id
-			}`,
-			{}
-		);
+				console.log(details.data[0]);
+				setMangaName(details.data[0]["attributes"].title["en"]);
+				setMangaDescription(details.data[0]["attributes"].description["en"]);
+				setMangaAltTitles(details.data[0]["attributes"].altTitles);
+				setMangaLanguages(
+					details.data[0]["attributes"].availableTranslatedLanguages
+				);
+				setMangaContentRating(details.data[0]["attributes"].contentRating);
 
-		setMangaFromMalCoverFile(coverFile["data"]["attributes"]["fileName"]);
+				setMangaRaw(
+					details.data[0]["attributes"].links === null
+						? ""
+						: details.data[0]["attributes"].links["raw"]
+				);
 
-		console.log(details.data[0]);
-		setMangaName(details.data[0]["attributes"].title["en"]);
-		setMangaDescription(details.data[0]["attributes"].description["en"]);
-		setMangaAltTitles(details.data[0]["attributes"].altTitles);
-		setMangaLanguages(
-			details.data[0]["attributes"].availableTranslatedLanguages
-		);
-		setMangaContentRating(details.data[0]["attributes"].contentRating);
-
-		setMangaRaw(
-			details.data[0]["attributes"].links === null
-				? ""
-				: details.data[0]["attributes"].links["raw"]
-		);
-
-		setMangaTags(details.data[0]["attributes"].tags);
+				setMangaTags(details.data[0]["attributes"].tags);
+			});
 	};
 
 	const handleShowMore = () => {
 		setShowMoreToggled(!showMoreToggled);
+	};
+	const handleOpenTags = () => {
+		setOpen(!open);
+	};
+
+	const handleClick = (
+		mangaId: string,
+		chapterId: string,
+		title: string,
+		volume: string,
+		chapter: string,
+		mangaName: string,
+		chapterNumber: number
+	) => {
+		navigate("/reader", {
+			state: {
+				mangaId: mangaId,
+				chapterId: chapterId,
+				title: title,
+				volume: volume,
+				chapter: chapter,
+				mangaName: mangaName,
+				chapterNumber: chapterNumber,
+			},
+		});
 	};
 
 	useEffect(() => {
@@ -139,9 +168,9 @@ const IndividualManga = (props: Props) => {
 			fetchMangaByName();
 		} else {
 			fetchRecentlyUpdatedManga();
-			fetchMangaFeed(state.id, selectedLanguage, currentOffset, ascending);
+			fetchMangaFeed(state.id);
 		}
-	}, [state, selectedLanguage, currentOffset, ascending]);
+	}, [state, selectedLanguage, currentOffset, currentOrder]);
 
 	return (
 		<div
@@ -238,20 +267,22 @@ const IndividualManga = (props: Props) => {
 										{mangaName}
 									</Typography>
 
-									{mangaAltTitles.map((current) => (
-										<Typography
-											sx={{
-												display: "-webkit-box",
-												overflow: "hidden",
-												WebkitBoxOrient: "vertical",
-												WebkitLineClamp: 2,
-												fontSize: { xs: 0, sm: 9, lg: 10 },
-												paddingRight: "5px",
-											}}
-										>
-											/ {Object.values(current)}
-										</Typography>
-									))}
+									{mangaAltTitles.map((current, index) =>
+										index > 10 ? null : (
+											<Typography
+												sx={{
+													display: "-webkit-box",
+													overflow: "hidden",
+													WebkitBoxOrient: "vertical",
+													WebkitLineClamp: 2,
+													fontSize: { xs: 0, sm: 9, lg: 10 },
+													paddingRight: "5px",
+												}}
+											>
+												/ {Object.values(current)}
+											</Typography>
+										)
+									)}
 								</div>
 								<Typography
 									sx={{
@@ -362,7 +393,7 @@ const IndividualManga = (props: Props) => {
 								<Grid item>
 									<StandardButton
 										backgroundColor='#191919'
-										widthXs='120px'
+										widthXs='110px'
 										widthSm='120px'
 										widthLg='120px'
 										heightXs='20px'
@@ -409,69 +440,100 @@ const IndividualManga = (props: Props) => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "400px", md: "300px", lg: "350px" },
+						height: { xs: "35vh", md: "35vh", lg: "35vh", xl: "40vh" },
 						display: "flex",
 						paddingTop: "20px",
-						justifyContent: "space-between",
+						justifyContent: "center",
 					}}
 				>
 					<div
 						style={{
-							width: "50%",
+							width: "100%",
 							display: "flex",
 							flexDirection: "column",
-							justifyContent: "space-between",
+							justifyContent: "center",
 							alignItems: "center",
 						}}
 					>
-						<Typography
-							align='center'
-							color='#555555'
-							sx={{ fontSize: { xs: 12, sm: 14, lg: 16 } }}
+						<List
+							sx={{
+								width: "100%",
+								justifyContent: "center",
+								display: "flex",
+								alignItems: "center",
+								flexDirection: "column",
+							}}
 						>
-							Languages
-						</Typography>
-						<Grid
-							container
-							direction='row'
-							justifyContent='center'
-							alignItems='center'
-							sx={{}}
-							spacing={1}
-						>
-							{mangaLanguages.map((current) => (
-								<Grid item>
-									<Button
-										sx={{
-											backgroundColor: "#191919",
-											width: { xs: "20px", sm: "20px", lg: "20px" },
-											height: { xs: "20px", sm: "20px", lg: "20px" },
-											"&.MuiButtonBase-root:hover": {
-												bgcolor: "transparent",
-											},
-											".MuiTouchRipple-child": {
-												backgroundColor: "white",
-											},
-										}}
-										onClick={() => {
-											setSelectedLanguage(current);
-											setCurrentOffset(0);
-										}}
-									>
-										<Typography
-											sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-											color='#333333'
-										>
-											{current}
-										</Typography>
-									</Button>
+							<ListItemButton
+								sx={{
+									width: "150px",
+									color: "#121212",
+									backgroundColor: "transparent",
+									"&.MuiButtonBase-root:hover": {
+										bgcolor: "transparent",
+									},
+								}}
+								onClick={() => handleOpenTags()}
+							>
+								<ListItemText sx={{ color: "#555555" }} primary='Languages' />
+								{open ? (
+									<ExpandLess sx={{ color: "#333333" }} />
+								) : (
+									<ExpandMore sx={{ color: "#333333" }} />
+								)}
+							</ListItemButton>
+							<Collapse
+								sx={{
+									width: "100%",
+									height: "20%",
+								}}
+								in={open}
+								timeout='auto'
+							>
+								<Grid
+									container
+									direction='row'
+									justifyContent='center'
+									alignItems='center'
+									sx={{}}
+									spacing={1}
+								>
+									{mangaLanguages.map((current) => (
+										<Grid item>
+											<Button
+												sx={{
+													backgroundColor: "#191919",
+													width: { xs: "20px", sm: "20px", lg: "20px" },
+													height: { xs: "20px", sm: "20px", lg: "20px" },
+													"&.MuiButtonBase-root:hover": {
+														bgcolor: "transparent",
+													},
+													".MuiTouchRipple-child": {
+														backgroundColor: "white",
+													},
+												}}
+												onClick={() => {
+													setSelectedLanguage(current);
+													setCurrentOffset(0);
+												}}
+											>
+												<Typography
+													sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+													color='#333333'
+												>
+													{current}
+												</Typography>
+											</Button>
+										</Grid>
+									))}
 								</Grid>
-							))}
-						</Grid>
+							</Collapse>
+						</List>
 
 						<Button
 							sx={{
 								color: "#333333",
+
 								height: "20px",
 								width: { xs: "80%", md: "60%", lg: "20%" },
 								backgroundColor: "#191919",
@@ -483,16 +545,17 @@ const IndividualManga = (props: Props) => {
 								},
 							}}
 							onClick={() => {
-								setAscending(true);
+								setCurrentOrder("asc");
 								setCurrentOffset(0);
 							}}
 						>
 							<Typography textTransform={"none"}>Ascending</Typography>
 						</Button>
-
+						<div style={{ height: "10px" }}></div>
 						<Button
 							sx={{
 								color: "#333333",
+
 								height: "20px",
 								width: { xs: "80%", md: "60%", lg: "20%" },
 								backgroundColor: "#191919",
@@ -504,20 +567,12 @@ const IndividualManga = (props: Props) => {
 								},
 							}}
 							onClick={() => {
-								setAscending(false);
+								setCurrentOrder("desc");
 							}}
 						>
 							<Typography textTransform={"none"}>Descending</Typography>
 						</Button>
-
-						<div
-							style={{
-								width: "100%",
-								display: "flex",
-								justifyContent: "center",
-								paddingTop: "10px",
-							}}
-						>
+						<div>
 							<Button
 								sx={{
 									color: "#333333",
@@ -564,13 +619,86 @@ const IndividualManga = (props: Props) => {
 							height: "100%",
 							overflow: "scroll",
 							display: "inline",
-							width: { xs: "60%", sm: "100%", lg: "50%" },
+							width: { xs: "100%", sm: "100%", lg: "50%" },
 							scrollbarWidth: "none",
+							"::-webkit-scrollbar": {
+								display: "none",
+							},
 						}}
 					>
-						{mangaFeed.map((current: any) =>
-							current["attributes"]["translatedLanguage"] ===
-							selectedLanguage ? (
+						{mangaFeed.map((current: any, index) =>
+							index === 0 ? (
+								current["attributes"]["translatedLanguage"] ===
+								selectedLanguage ? (
+									<Grid
+										item
+										sx={{ width: "100%", height: "50px", padding: "2px" }}
+									>
+										<Button
+											sx={{
+												width: "100%",
+												color: "white",
+												height: "100%",
+												backgroundColor: "#191919",
+												justifyContent: "space-between",
+												"&.MuiButtonBase-root:hover": {
+													bgcolor: "transparent",
+												},
+												".MuiTouchRipple-child": {
+													backgroundColor: "white",
+												},
+											}}
+											onClick={() => {
+												handleClick(
+													state.id === undefined ? mangaFromMal : state.id,
+													current["id"],
+													current["attributes"]["title"],
+													current["attributes"]["volume"],
+													current["attributes"]["chapter"],
+													mangaName,
+													+current["attributes"]["chapter"]
+												);
+											}}
+										>
+											<div style={{ display: "flex" }}>
+												<Typography
+													sx={{
+														textTransform: "none",
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+													color='#555555'
+												>
+													Chapter {current["attributes"].chapter}
+												</Typography>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+														paddingLeft: "10px",
+													}}
+												>
+													{current["attributes"].translatedLanguage}
+												</Typography>
+											</div>
+											<div>
+												<Typography
+													color='#555555'
+													sx={{
+														fontSize: { xs: 10, sm: 10, lg: 15 },
+													}}
+												>
+													{dayjs(current["attributes"].createdAt).format(
+														"DD/MM/YYYY / HH:mm"
+													)}
+												</Typography>
+											</div>
+										</Button>
+									</Grid>
+								) : null
+							) : current["attributes"]["chapter"] ===
+							  mangaFeed[index - 1]["attributes"]["chapter"] ? null : current[
+									"attributes"
+							  ]["translatedLanguage"] === selectedLanguage ? (
 								<Grid
 									item
 									sx={{ width: "100%", height: "50px", padding: "2px" }}
@@ -588,6 +716,17 @@ const IndividualManga = (props: Props) => {
 											".MuiTouchRipple-child": {
 												backgroundColor: "white",
 											},
+										}}
+										onClick={() => {
+											handleClick(
+												state.id === undefined ? mangaFromMal : state.id,
+												current["id"],
+												current["attributes"]["title"],
+												current["attributes"]["volume"],
+												current["attributes"]["chapter"],
+												mangaName,
+												+current["attributes"]["chapter"]
+											);
 										}}
 									>
 										<div style={{ display: "flex" }}>

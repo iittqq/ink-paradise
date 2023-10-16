@@ -12,7 +12,7 @@ type Props = {
 	homePage?: boolean;
 };
 
-const baseUrl = "https://api.mangadex.org/";
+const baseUrl = "https://api.mangadex.org";
 const CoverClickable = (props: Props) => {
 	let navigate = useNavigate();
 	const [coverFile, setCoverFile] = useState("");
@@ -20,8 +20,11 @@ const CoverClickable = (props: Props) => {
 	const { id, title, coverId, homePage } = props;
 
 	const fetchCoverFile = async () => {
-		const { data } = await axios.get(`${baseUrl}/cover/${coverId}`);
-		setCoverFile(data.data["attributes"].fileName);
+		fetch(`${baseUrl}/cover/${coverId}`)
+			.then((response) => response.json())
+			.then((data) => {
+				setCoverFile(data.data["attributes"].fileName);
+			});
 	};
 
 	function handleClick() {

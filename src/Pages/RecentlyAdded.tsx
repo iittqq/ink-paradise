@@ -19,7 +19,7 @@ type Props = {
 };
 
 const RecentlyAdded = (props: Props) => {
-  const {title} = props;
+  const { title } = props;
   const [mangaDetails, setMangaDetails] = useState<any[]>([]);
   const [offsetState, setOffsetState] = useState<number>(0);
   const baseUrl = "https://api.mangadex.org";
@@ -35,10 +35,8 @@ const RecentlyAdded = (props: Props) => {
 
     setMangaDetails(data.data);
 
-
     console.log(data.data);
   };
-
 
   const customTheme = createTheme({
     palette: {
@@ -47,18 +45,16 @@ const RecentlyAdded = (props: Props) => {
     },
   });
 
-
   useEffect(() => {
     fetchRecentlyAddedManga();
-    console.log(offsetState)
+    console.log(offsetState);
   }, [offsetState]);
- 
-  const handleLeft = () =>
-    offsetState !== 0 ? setOffsetState((a) => a - 30): null;
 
-  const handleRight = () =>
-     setOffsetState((a) => a + 30);
-  
+  const handleLeft = () =>
+    offsetState !== 0 ? setOffsetState((a) => a - 30) : null;
+
+  const handleRight = () => setOffsetState((a) => a + 30);
+
   return (
     <Container
       disableGutters
@@ -73,7 +69,7 @@ const RecentlyAdded = (props: Props) => {
         justifyContent="space-evenly"
         alignItems="center"
       >
-        <Grid item sx={{ width: "100%",}}>
+        <Grid item sx={{ width: "100%" }}>
           <Header />
         </Grid>
         <Grid item>
@@ -81,7 +77,7 @@ const RecentlyAdded = (props: Props) => {
             fontSize={30}
             sx={{
               paddingTop: "0px",
-              paddingBottom: "5px",
+              paddingBottom: "0px",
               color: "white",
             }}
           >
@@ -124,7 +120,7 @@ const RecentlyAdded = (props: Props) => {
             variant="text"
             aria-label="text button group"
             color="primary"
-            sx={{paddingTop: "10px"}}
+            sx={{ paddingTop: "10px" }}
           >
             <IconButton onClick={() => handleLeft()}>
               <ArrowBackIosNewIcon sx={{ color: "white" }} />
