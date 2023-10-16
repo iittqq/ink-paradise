@@ -77,7 +77,7 @@ const RecentlyAdded = (props: Props) => {
             fontSize={30}
             sx={{
               paddingTop: "0px",
-              paddingBottom: "0px",
+              paddingBottom: "5px",
               color: "white",
             }}
           >
