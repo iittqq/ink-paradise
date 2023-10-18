@@ -71,7 +71,7 @@ const ListOfMangaPage = (props: Props) => {
 
 					console.log(data.data);
 				});
-		}
+			}
 	};
 
 	useEffect(() => {

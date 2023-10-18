@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import { Card, CardMedia, Button, Typography, Grid, Box} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 

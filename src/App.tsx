@@ -7,6 +7,7 @@ import RecentlyAdded from "./Pages/RecentlyAdded";
 import SearchResults from "./Pages/SearchResults";
 import ListOfMangaPage from "./Pages/ListOfMangaPage";
 import Reader from "./Pages/Reader";
+import MangaCoverList from "./Pages/MangaCoverList";
 
 //#121212
 
@@ -26,8 +27,8 @@ function App() {
 					<Route path='/' element={<Home />} />
 					<Route path='/individualView' element={<IndividualManga />}></Route>
 					<Route 
-						path='/recentlyAdded' 
-						element={<RecentlyAdded title='Recently Added' />}
+						path='/mangaCoverList' 
+						element={<MangaCoverList />}
 					></Route>
 					<Route path='/results' element={<SearchResults />}></Route>
 					<Route
