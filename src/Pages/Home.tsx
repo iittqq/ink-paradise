@@ -27,7 +27,6 @@ const Home = () => {
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
 	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
-	const [coverListType, setCoverListType] = useState("");
  	const fetchTopManga = async () => {
 		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
 			params: {

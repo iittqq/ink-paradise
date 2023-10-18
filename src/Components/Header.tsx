@@ -23,8 +23,8 @@ const Header = () => {
 	const handleClick = async () =>
 		searchInput === ""
 			? null
-			: navigate("/results", {
-					state: { id: searchInput },
+			: navigate("/mangaCoverList", {
+					state: { listType: "Search Results" ,id: searchInput },
 			  });
 
 	return (

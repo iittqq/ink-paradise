@@ -13,12 +13,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 const baseUrl = "https://api.mangadex.org";
 const MangaCoverList = () => {
   const { state } = useLocation();
-  let pageTitle = state.listType;
   const [offset, setOffset] = useState<number>(0);
   console.log(state.title);
   console.log(state.tagId !== undefined);
   console.log(state.listType);
-  const [recentlyUpdatedMangaDetails, setRecentlyUpdatedMangaDetails] =
+  const [mangaDetails, setmangaDetails] =
     useState<Object[]>([]);
 
 
@@ -27,7 +26,7 @@ const MangaCoverList = () => {
     (fetch(`${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`)
       .then((response) => response.json())
       .then((data) => {
-        setRecentlyUpdatedMangaDetails(data.data);
+        setmangaDetails(data.data);
 
             console.log(data.data);
           })
@@ -42,7 +41,7 @@ const MangaCoverList = () => {
         )
           .then((response) => response.json())
           .then((data) => {
-            setRecentlyUpdatedMangaDetails(data.data);
+            setmangaDetails(data.data);
 
             console.log(data.data);
           })
@@ -55,7 +54,7 @@ const MangaCoverList = () => {
         )
           .then((response) => response.json())
           .then((data) => {
-            setRecentlyUpdatedMangaDetails(data.data);
+            setmangaDetails(data.data);
 
             console.log(data.data);
           }))
@@ -67,7 +66,7 @@ const MangaCoverList = () => {
           )
           .then((response) => response.json())
           .then((data) => {
-            setRecentlyUpdatedMangaDetails(data.data);
+            setmangaDetails(data.data);
 
             console.log(data.data);
           }))
@@ -79,16 +78,29 @@ const MangaCoverList = () => {
           )
           .then((response) => response.json())
           .then((data) => {
-            setRecentlyUpdatedMangaDetails(data.data);
+            setmangaDetails(data.data);
 
             console.log(data.data);
           }))
+  }
+
+  const fetchMangaByName = async () => {
+    fetch(
+			`${baseUrl}/manga?limit=100&title=${state.id}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
+		)
+			.then((response) => response.json())
+			.then((mangaBySearch) => {
+				setmangaDetails(mangaBySearch.data);
+				console.log(mangaBySearch.data);
+			});
   }
 
   const fetchMangaCoverList = async () => {
     console.log(state.listType);
     state.listType === "RecentlyAdded"
       ? (fetchMangaByRecentlyAdded())
+      : state.listType === "Search Results" 
+      ? fetchMangaByName()
       : //Add New Page Logic Here
       state.listType === "RecentlyUpdated"
       ? state.title !== undefined
@@ -120,6 +132,7 @@ const MangaCoverList = () => {
           <Typography
             sx={{
               color: "white",
+              paddingBottom: "5px"
             }}
           >
             {state.listType}
@@ -138,7 +151,7 @@ const MangaCoverList = () => {
             justifyContent: "center",
           }}
         >
-          {recentlyUpdatedMangaDetails.map((element: any) => (
+          {mangaDetails.map((element: any) => (
             <Grid item>
               <CoverClickable
                 id={element["id"]}

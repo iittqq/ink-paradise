@@ -3,8 +3,6 @@ import { Container } from "@mui/material";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home";
 import IndividualManga from "./Pages/IndividualManga";
-import SearchResults from "./Pages/SearchResults";
-import ListOfMangaPage from "./Pages/ListOfMangaPage";
 import Reader from "./Pages/Reader";
 import MangaCoverList from "./Pages/MangaCoverList";
 
@@ -26,11 +24,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/individualView" element={<IndividualManga />}></Route>
           <Route path="/mangaCoverList" element={<MangaCoverList />}></Route>
-          <Route path="/results" element={<SearchResults />}></Route>
-          <Route
-            path="/mangaList"
-            element={<ListOfMangaPage title="Recently Updated" />}
-          ></Route>
           <Route path="/reader" element={<Reader />}></Route>
         </Routes>
       </BrowserRouter>
