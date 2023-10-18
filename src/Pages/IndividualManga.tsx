@@ -216,7 +216,7 @@ const IndividualManga = () => {
 						mangaLanguages={mangaLanguages}
 						currentOffset={currentOffset}
 						setCurrentOffset={setCurrentOffset}
-						currentOrder={currentOffset}
+						currentOrder={currentOrder}
 						setCurrentOrder={setCurrentOrder}
 						selectedLanguage={selectedLanguage}
 						setSelectedLanguage={setSelectedLanguage}

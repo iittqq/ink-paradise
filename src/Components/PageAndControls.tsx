@@ -1,5 +1,5 @@
 import { Grid, Button, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -14,6 +14,7 @@ type Props = {
 	currentChapter: string;
 	mangaId: string;
 	mangaName: string;
+	offsetStart: number;
 };
 
 const PageAndControls = (props: Props) => {
@@ -25,29 +26,12 @@ const PageAndControls = (props: Props) => {
 		currentChapter,
 		mangaId,
 		mangaName,
+		offsetStart,
 	} = props;
 	let navigate = useNavigate();
+
 	const [currentPage, setCurrentPage] = useState(0);
-	const handleClick = (
-		mangaId: string,
-		chapterId: string,
-		title: string,
-		volume: string,
-		chapter: string,
-		mangaName: string
-	) => {
-		setCurrentPage(0);
-		navigate("/reader", {
-			state: {
-				mangaId: mangaId,
-				chapterId: chapterId,
-				title: title,
-				volume: volume,
-				chapter: chapter,
-				mangaName: mangaName,
-			},
-		});
-	};
+
 	const handleNextChapter = () => {
 		chapters.forEach((current, index) =>
 			current["attributes"]["chapter"] === currentChapter
@@ -72,7 +56,8 @@ const PageAndControls = (props: Props) => {
 						chapters[index + 1]["attributes"]["title"],
 						chapters[index + 1]["attributes"]["volume"],
 						chapters[index + 1]["attributes"]["chapter"],
-						mangaName
+						mangaName,
+						chapters[index + 1]["attributes"]["pages"]
 				  )
 				: null
 		);
@@ -87,6 +72,34 @@ const PageAndControls = (props: Props) => {
 		currentPage === pages.length - 1
 			? handleNextChapter()
 			: setCurrentPage(currentPage + 1);
+
+	const handleClick = (
+		mangaId: string,
+		chapterId: string,
+		title: string,
+		volume: string,
+		chapter: string,
+		mangaName: string,
+		startingPage?: number
+	) => {
+		navigate("/reader", {
+			state: {
+				mangaId: mangaId,
+				chapterId: chapterId,
+				title: title,
+				volume: volume,
+				chapter: chapter,
+				mangaName: mangaName,
+				startingPage: startingPage,
+			},
+		});
+	};
+
+	useEffect(() => {
+		offsetStart === 0 ? setCurrentPage(0) : setCurrentPage(offsetStart - 1);
+		console.log(currentPage);
+	}, [props]);
+
 	return (
 		<div>
 			<Grid
@@ -137,7 +150,6 @@ const PageAndControls = (props: Props) => {
 						onClick={() => handlePreviousChapterButton()}
 					></Button>
 				</div>
-
 				<div
 					style={{
 						width: "100%",
@@ -179,6 +191,7 @@ const PageAndControls = (props: Props) => {
 						<KeyboardDoubleArrowRightIcon />
 					</Button>
 				</div>
+
 				<Typography color='white'>
 					{currentPage + 1} / {pages.length}
 				</Typography>

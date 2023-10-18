@@ -1,5 +1,5 @@
 import { Grid, Button, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
@@ -66,6 +66,7 @@ const MangaChapterList = (props: Props) => {
 			},
 		});
 	};
+	useEffect(() => console.log(mangaFeed), []);
 	return (
 		<div
 			style={{

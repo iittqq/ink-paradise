@@ -60,6 +60,7 @@ const Reader = () => {
 				setChapters(feed.data);
 			});
 	};
+
 	const handleOpenChapters = () => {
 		chapters.forEach((current) => {
 			fetchScantalationGroup(current["relationships"][0]["id"]);
@@ -84,6 +85,7 @@ const Reader = () => {
 		fetchMangaFeed();
 		console.log(pages);
 	}, [state]);
+
 	return (
 		<div
 			style={{
@@ -179,6 +181,12 @@ const Reader = () => {
 						currentChapter={state.chapter}
 						mangaId={state.mangaId}
 						mangaName={state.mangaName}
+						offsetStart={
+							isNaN(state.startingPage) === true ||
+							state.startingPage === undefined
+								? 0
+								: state.startingPage
+						}
 					/>
 				)}
 			</Grid>
