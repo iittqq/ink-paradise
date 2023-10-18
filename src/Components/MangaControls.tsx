@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	List,
 	ListItemButton,
@@ -39,6 +39,7 @@ const MangaControls = (props: Props) => {
 	const handleOpenTags = () => {
 		setOpen(!open);
 	};
+	useEffect(() => {}, [currentOrder]);
 	return (
 		<div
 			style={{
@@ -123,49 +124,52 @@ const MangaControls = (props: Props) => {
 					</Grid>
 				</Collapse>
 			</List>
+			{currentOrder === "desc" ? (
+				<Button
+					sx={{
+						color: "#333333",
 
-			<Button
-				sx={{
-					color: "#333333",
+						height: "20px",
+						width: { xs: "80%", md: "60%", lg: "20%" },
+						backgroundColor: "#191919",
+						"&.MuiButtonBase-root:hover": {
+							bgcolor: "transparent",
+						},
+						".MuiTouchRipple-child": {
+							backgroundColor: "white",
+						},
+					}}
+					onClick={() => {
+						setCurrentOrder("asc");
+						console.log(currentOrder);
+						setCurrentOffset(0);
+					}}
+				>
+					<Typography textTransform={"none"}>Ascending</Typography>
+				</Button>
+			) : (
+				<Button
+					sx={{
+						color: "#333333",
 
-					height: "20px",
-					width: { xs: "80%", md: "60%", lg: "20%" },
-					backgroundColor: "#191919",
-					"&.MuiButtonBase-root:hover": {
-						bgcolor: "transparent",
-					},
-					".MuiTouchRipple-child": {
-						backgroundColor: "white",
-					},
-				}}
-				onClick={() => {
-					setCurrentOrder("asc");
-					setCurrentOffset(0);
-				}}
-			>
-				<Typography textTransform={"none"}>Ascending</Typography>
-			</Button>
-			<div style={{ height: "10px" }}></div>
-			<Button
-				sx={{
-					color: "#333333",
-
-					height: "20px",
-					width: { xs: "80%", md: "60%", lg: "20%" },
-					backgroundColor: "#191919",
-					"&.MuiButtonBase-root:hover": {
-						bgcolor: "transparent",
-					},
-					".MuiTouchRipple-child": {
-						backgroundColor: "white",
-					},
-				}}
-				onClick={() => {
-					setCurrentOrder("desc");
-				}}
-			>
-				<Typography textTransform={"none"}>Descending</Typography>
-			</Button>
+						height: "20px",
+						width: { xs: "80%", md: "60%", lg: "20%" },
+						backgroundColor: "#191919",
+						"&.MuiButtonBase-root:hover": {
+							bgcolor: "transparent",
+						},
+						".MuiTouchRipple-child": {
+							backgroundColor: "white",
+						},
+					}}
+					onClick={() => {
+						setCurrentOrder("desc");
+						console.log(currentOrder);
+					}}
+				>
+					<Typography textTransform={"none"}>Descending</Typography>
+				</Button>
+			)}
 			<div>
 				<Button
 					sx={{
