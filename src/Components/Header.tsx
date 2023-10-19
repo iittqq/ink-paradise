@@ -24,36 +24,44 @@ const Header = () => {
 		searchInput === ""
 			? null
 			: navigate("/mangaCoverList", {
-					state: { listType: "Search Results" ,id: searchInput },
+					state: { listType: "Search Results", id: searchInput },
 			  });
+
+	const loginPrompt = () => {};
 
 	return (
 		<ThemeProvider theme={customTheme}>
-			<Container sx={{ height: "10vh", minWidth: "100%" }}>
-				<Grid
-					container
-					direction='row'
-					justifyContent='space-between'
-					alignItems='center'
-					sx={{
-						color: "white",
-						height: "10vh",
+			<div
+				style={{
+					marginLeft: "10px",
+					marginRight: "10px",
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					height: "10vh",
+				}}
+			>
+				<div>
+					<Button onClick={() => handleClickHome()}>
+						<Typography textTransform='none'>Ink Paradise</Typography>
+					</Button>
+				</div>
+
+				<div
+					style={{
+						width: "50%",
+						display: "flex",
+						justifyContent: "flex-end",
+						flexDirection: "row",
+						alignItems: "center",
 					}}
 				>
-					<Grid item>
-						<Button onClick={() => handleClickHome()}>
-							<Typography textTransform='none'>Ink Paradise</Typography>
-						</Button>
-					</Grid>
-					<Grid
-						item
-						sx={{
-							width: { xs: "230px", lg: "300px" },
-							display: "flex",
-							justifyContent: "space-evenly",
-							alignItems: "center",
-						}}
-					>
+					<Button onClick={() => loginPrompt()}>
+						{" "}
+						<Typography textTransform='none'>Login</Typography>
+					</Button>
+					<div style={{ paddingLeft: "20px" }}>
 						<TextField
 							variant='outlined'
 							focused
@@ -72,9 +80,9 @@ const Header = () => {
 						<Button onClick={() => handleClick()}>
 							<KeyboardArrowRightIcon />
 						</Button>
-					</Grid>
-				</Grid>
-			</Container>
+					</div>
+				</div>
+			</div>
 		</ThemeProvider>
 	);
 };
