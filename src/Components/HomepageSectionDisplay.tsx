@@ -42,13 +42,3 @@ const HomepageSectionDisplay = (props: Props) => {
 };
 
 export default HomepageSectionDisplay;
-
-/*<MangaClickable
-  id={element["mal_id"]}
-  title={element["title"]}
-  coverUrl={element["images"]["jpg"]["image_url"]}
-  rank={element["rank"]}
-  homePage={true}
-  author={element["authors"][0]["name"]}
-/>;
-*/

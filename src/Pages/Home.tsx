@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import {
-	Container,
-	Grid,
-	Typography,
-	Button,
-	List,
-	ListItemButton,
-	ListItemText,
-	Collapse,
-	Box,
+  Container,
+  Grid,
+  Typography,
+  Button,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  Box,
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../Components/Header";
@@ -22,85 +22,85 @@ const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
 
 const Home = () => {
-	const [open, setOpen] = useState(false);
-	const [topMangaData, setTopMangaData] = useState<any[]>([]);
-	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
-	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
-	const [mangaTags, setMangaTags] = useState<any[]>([]);
- 	const fetchTopManga = async () => {
-		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
-			params: {
-				limit: 10,
-				order: { relevance: "desc" },
-			},
-		});
-		console.log(top.data);
-		setTopMangaData(top.data);
-	};
+  const [open, setOpen] = useState(false);
+  const [topMangaData, setTopMangaData] = useState<any[]>([]);
+  const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
+  const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
+  const [mangaTags, setMangaTags] = useState<any[]>([]);
+  const fetchTopManga = async () => {
+    const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
+      params: {
+        limit: 10,
+        order: { relevance: "desc" },
+      },
+    });
+    console.log(top.data);
+    setTopMangaData(top.data);
+  };
 
-	const handleClickRecentlyUpdated = async () => {
-		navigate("/mangaCoverList", {
-			state: { listType: "Recently Updated" }
-		});
-	};
+  const handleClickRecentlyUpdated = async () => {
+    navigate("/mangaCoverList", {
+      state: { listType: "RecentlyUpdated" },
+    });
+  };
 
-	const handleClickMangaCoverListRA = async () => {
-		navigate("/mangaCoverList", {
-			state: {listType: "Recently Added"}
-		});
-	};
+  const handleClickMangaCoverListRA = async () => {
+    navigate("/mangaCoverList", {
+      state: { listType: "RecentlyAdded" },
+    });
+  };
 
-	const fetchRecentlyAddedManga = async () => {
-		fetch(
-			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
-			{
-				method: "GET",
-			}
-		)
-			.then((response) => response.json())
-			.then((newManga) => {
-				setRecentlyAddedManga(newManga.data);
+  const fetchRecentlyAddedManga = async () => {
+    fetch(
+      `${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((newManga) => {
+        setRecentlyAddedManga(newManga.data);
 
-				console.log(newManga.data);
-			});
-	};
+        console.log(newManga.data);
+      });
+  };
 
-	const fetchRecentlyUpdatedManga = async () => {
-		fetch(
-			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
-			{
-				method: "GET",
-			}
-		)
-			.then((response) => response.json())
-			.then((newUpdates) => {
-				console.log(newUpdates.data);
-				setRecentlyUpdatedManga(newUpdates.data);
-			});
-	};
+  const fetchRecentlyUpdatedManga = async () => {
+    fetch(
+      `${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((newUpdates) => {
+        console.log(newUpdates.data);
+        setRecentlyUpdatedManga(newUpdates.data);
+      });
+  };
 
-	const fetchTags = async () => {
-		fetch(`${baseUrlMangaDex}/manga/tag`, {})
-			.then((response) => response.json())
-			.then((tags) => {
-				console.log(tags.data);
-				setMangaTags(tags.data);
-			});
-	};
+  const fetchTags = async () => {
+    fetch(`${baseUrlMangaDex}/manga/tag`, {})
+      .then((response) => response.json())
+      .then((tags) => {
+        console.log(tags.data);
+        setMangaTags(tags.data);
+      });
+  };
 
-	useEffect(() => {
-		fetchTopManga();
-		fetchRecentlyUpdatedManga();
-		fetchTags();
-		fetchRecentlyAddedManga();
-	}, []);
+  useEffect(() => {
+    fetchTopManga();
+    fetchRecentlyUpdatedManga();
+    fetchTags();
+    fetchRecentlyAddedManga();
+  }, []);
 
-	const handleOpenTags = () => {
-		setOpen(!open);
-	};
+  const handleOpenTags = () => {
+    setOpen(!open);
+  };
 
-	let navigate = useNavigate();
-	return (
+  let navigate = useNavigate();
+  return (
     <div>
       <Grid
         container
@@ -171,9 +171,7 @@ const Home = () => {
               }}
             >
               <Typography color="white">Trending Now</Typography>
-              <TrendingMangaSection
-                mangaData={topMangaData}
-              />
+              <TrendingMangaSection mangaData={topMangaData} />
             </Grid>
             <Grid
               item

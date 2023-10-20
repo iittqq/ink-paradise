@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Grid,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 import Header from "../Components/Header";
 import CoverClickable from "../Components/CoverClickable";
 import { useLocation } from "react-router-dom";
@@ -17,89 +13,87 @@ const MangaCoverList = () => {
   console.log(state.title);
   console.log(state.tagId !== undefined);
   console.log(state.listType);
-  const [mangaDetails, setmangaDetails] =
-    useState<Object[]>([]);
-
+  const [mangaDetails, setmangaDetails] = useState<Object[]>([]);
 
   const fetchMangaByRecentlyAdded = async () => {
     //pageTitle = "Recently Added";
-    (fetch(`${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`)
+    fetch(
+      `${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`
+    )
       .then((response) => response.json())
       .then((data) => {
         setmangaDetails(data.data);
 
-            console.log(data.data);
-          })
-    )
-  }
+        console.log(data.data);
+      });
+  };
 
   const fetchMangaByTitle = async () => {
-    (fetch(
-          `${baseUrl}/manga?limit=60&offset=${offset}&title=${
-            state.title === undefined ? "" : state.title
-          }&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setmangaDetails(data.data);
+    fetch(
+      `${baseUrl}/manga?limit=60&offset=${offset}&title=${
+        state.title === undefined ? "" : state.title
+      }&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setmangaDetails(data.data);
 
-            console.log(data.data);
-          })
-          )
-  }
+        console.log(data.data);
+      });
+  };
 
   const fetchMangaByAuthor = async () => {
-    (fetch(
-        `${baseUrl}/manga?limit=60&offset=0&authors%5B%5D=${state.authorId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setmangaDetails(data.data);
+    fetch(
+      `${baseUrl}/manga?limit=60&offset=0&authors%5B%5D=${state.authorId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setmangaDetails(data.data);
 
-            console.log(data.data);
-          }))
-  }
+        console.log(data.data);
+      });
+  };
 
   const fetchMangaByTag = async () => {
-    (fetch(
-          `${baseUrl}/manga?limit=60&offset=0&includedTags%5B%5D=${state.tagId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-          )
-          .then((response) => response.json())
-          .then((data) => {
-            setmangaDetails(data.data);
+    fetch(
+      `${baseUrl}/manga?limit=60&offset=0&includedTags%5B%5D=${state.tagId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setmangaDetails(data.data);
 
-            console.log(data.data);
-          }))
-  }
+        console.log(data.data);
+      });
+  };
 
   const fetchMangaByRecentlyUpdated = async () => {
-    (fetch(
-          `${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-          )
-          .then((response) => response.json())
-          .then((data) => {
-            setmangaDetails(data.data);
+    fetch(
+      `${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setmangaDetails(data.data);
 
-            console.log(data.data);
-          }))
-  }
+        console.log(data.data);
+      });
+  };
 
   const fetchMangaByName = async () => {
     fetch(
-			`${baseUrl}/manga?limit=100&title=${state.id}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
-		)
-			.then((response) => response.json())
-			.then((mangaBySearch) => {
-				setmangaDetails(mangaBySearch.data);
-				console.log(mangaBySearch.data);
-			});
-  }
+      `${baseUrl}/manga?limit=100&title=${state.id}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
+    )
+      .then((response) => response.json())
+      .then((mangaBySearch) => {
+        setmangaDetails(mangaBySearch.data);
+        console.log(mangaBySearch.data);
+      });
+  };
 
   const fetchMangaCoverList = async () => {
     console.log(state.listType);
     state.listType === "RecentlyAdded"
-      ? (fetchMangaByRecentlyAdded())
-      : state.listType === "Search Results" 
+      ? fetchMangaByRecentlyAdded()
+      : state.listType === "SearchResults"
       ? fetchMangaByName()
       : //Add New Page Logic Here
       state.listType === "RecentlyUpdated"
@@ -110,13 +104,12 @@ const MangaCoverList = () => {
         : state.tagId !== undefined
         ? fetchMangaByTag()
         : fetchMangaByRecentlyUpdated()
-      : fetchMangaByRecentlyAdded()
-        };
-          
+      : fetchMangaByRecentlyAdded();
+  };
 
- useEffect(() => {
-		fetchMangaCoverList();
-	}, [offset, state]);
+  useEffect(() => {
+    fetchMangaCoverList();
+  }, [offset, state]);
   return (
     <div>
       <Grid
@@ -132,7 +125,7 @@ const MangaCoverList = () => {
           <Typography
             sx={{
               color: "white",
-              paddingBottom: "5px"
+              paddingBottom: "5px",
             }}
           >
             {state.listType}
@@ -200,5 +193,5 @@ const MangaCoverList = () => {
       </Grid>
     </div>
   );
-          };
+};
 export default MangaCoverList;

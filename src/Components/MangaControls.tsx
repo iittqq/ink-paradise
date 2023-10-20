@@ -122,7 +122,7 @@ const MangaControls = (props: Props) => {
             spacing={1}
           >
             {uniqueTranslators.map((current) => (
-              <Grid item sx={{ width: { xs: "80px", sm: "80px", lg: "80px" } }}>
+              <Grid item>
                 <Button
                   sx={{
                     backgroundColor: "#191919",
