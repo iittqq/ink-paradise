@@ -9,26 +9,18 @@ import MangaCoverList from "./Pages/MangaCoverList";
 //#121212
 
 function App() {
-  return (
-    <Container
-      disableGutters
-      sx={{
-        backgroundColor: "#121212",
-        minWidth: "100%",
-        minHeight: "100vh",
-        overflow: "hidden",
-      }}
-    >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/individualView" element={<IndividualManga />}></Route>
-          <Route path="/mangaCoverList" element={<MangaCoverList />}></Route>
-          <Route path="/reader" element={<Reader />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </Container>
-  );
+	return (
+		<div style={{ backgroundColor: "#121212", minHeight: "100vh" }}>
+			<BrowserRouter>
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path='/individualView' element={<IndividualManga />}></Route>
+					<Route path='/mangaCoverList' element={<MangaCoverList />}></Route>
+					<Route path='/reader' element={<Reader />}></Route>
+				</Routes>
+			</BrowserRouter>
+		</div>
+	);
 }
 
 export default App;

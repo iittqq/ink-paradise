@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 import axios from "axios";
 import StandardButton from "../Components/StandardButton";
 import { useNavigate } from "react-router-dom";
 import TrendingMangaSection from "../Components/TrendingMangaSection";
 import HomepageSectionDisplay from "../Components/HomepageSectionDisplay";
-import { fetchRecentlyUpdatedManga } from "../api/MangaDexApi";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
@@ -66,10 +66,20 @@ const Home = () => {
 			});
 	};
 
-	const getRecentlyUpdatedManga = async () => {
-		const manga = await fetchRecentlyUpdatedManga();
-		setRecentlyUpdatedManga(manga);
+	const fetchRecentlyUpdatedManga = async () => {
+		fetch(
+			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
+			{
+				method: "GET",
+			}
+		)
+			.then((response) => response.json())
+			.then((newUpdates) => {
+				console.log(newUpdates.data);
+				setRecentlyUpdatedManga(newUpdates.data);
+			});
 	};
+
 	const fetchTags = async () => {
 		fetch(`${baseUrlMangaDex}/manga/tag`, {})
 			.then((response) => response.json())
@@ -81,8 +91,7 @@ const Home = () => {
 
 	useEffect(() => {
 		fetchTopManga();
-		//fetchRecentlyUpdatedManga();
-		getRecentlyUpdatedManga();
+		fetchRecentlyUpdatedManga();
 		fetchTags();
 		fetchRecentlyAddedManga();
 	}, []);
@@ -93,12 +102,13 @@ const Home = () => {
 
 	let navigate = useNavigate();
 	return (
-		<div>
+		<div style={{ minHeight: "100vh" }}>
 			<Grid
 				container
 				direction='column'
-				justifyContent='center'
+				justifyContent='space-between'
 				alignItems='center'
+				sx={{ flexWrap: "nowrap", minHeight: "100vh" }}
 			>
 				<Grid item sx={{ width: "100%" }}>
 					<Header />
@@ -267,6 +277,14 @@ const Home = () => {
 							</Grid>
 						</Collapse>
 					</List>
+				</Grid>
+				<Grid
+					item
+					sx={{
+						width: "100%",
+					}}
+				>
+					<Footer />
 				</Grid>
 			</Grid>
 		</div>

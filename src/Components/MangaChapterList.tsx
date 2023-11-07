@@ -74,6 +74,7 @@ const MangaChapterList = (props: Props) => {
 				flexDirection: "column",
 				justifyContent: "center",
 				alignItems: "center",
+				width: "50%",
 			}}
 		>
 			<Grid
