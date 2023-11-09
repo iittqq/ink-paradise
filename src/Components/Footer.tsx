@@ -12,6 +12,9 @@ const Footer = () => {
 	const handleClickHome = async () => {
 		navigate("/");
 	};
+	const handleClickProfile = async () => {
+		navigate("/account");
+	};
 
 	return (
 		<div
@@ -20,6 +23,7 @@ const Footer = () => {
 				justifyContent: "space-evenly",
 				alignContent: "center",
 				flexDirection: "row",
+				width: "100%",
 			}}
 		>
 			<Button
@@ -64,6 +68,7 @@ const Footer = () => {
 						bgcolor: "transparent",
 					},
 				}}
+				onClick={() => handleClickProfile()}
 			>
 				<AccountBoxIcon />
 			</Button>
