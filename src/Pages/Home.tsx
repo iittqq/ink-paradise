@@ -28,6 +28,7 @@ const Home = () => {
 	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
 	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
+	let navigate = useNavigate();
 	const fetchTopManga = async () => {
 		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
 			params: {
@@ -100,7 +101,6 @@ const Home = () => {
 		setOpen(!open);
 	};
 
-	let navigate = useNavigate();
 	return (
 		<div style={{ minHeight: "100vh" }}>
 			<Grid

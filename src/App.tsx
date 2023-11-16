@@ -7,6 +7,7 @@ import Reader from "./Pages/Reader";
 import MangaCoverList from "./Pages/MangaCoverList";
 import Library from "./Pages/Library";
 import Account from "./Pages/Account";
+import Login from "./Pages/Login";
 
 //#121212
 
@@ -21,6 +22,7 @@ function App() {
 					<Route path='/reader' element={<Reader />}></Route>
 					<Route path='/library' element={<Library />}></Route>
 					<Route path='/account' element={<Account />}></Route>
+					<Route path='/login' element={<Login />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</div>

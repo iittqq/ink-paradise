@@ -13,7 +13,7 @@ const Footer = () => {
 		navigate("/");
 	};
 	const handleClickProfile = async () => {
-		navigate("/account");
+		navigate("/login");
 	};
 
 	return (
