@@ -1,7 +1,8 @@
-import { Box, Card, CardMedia, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardMedia, Grid, Typography } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Footer from "../Components/Footer";
 
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
@@ -10,26 +11,11 @@ const Account = () => {
 	const { state } = useLocation();
 	const [favorites, setFavorites] = useState<any[]>([]);
 	const [updates, setUpdates] = useState<any[]>([]);
-	const getFavoritesList = async () => {
-		fetch(`${baseUrlMal}/users/${state.account["username"]}/favorites`)
-			.then((response) => response.json())
-			.then((favorites) => {
-				console.log(favorites.data);
-				setFavorites(favorites.data);
-			});
-	};
-	const getUpdatesList = async () => {
-		fetch(`${baseUrlMal}/users/${state.account["username"]}/userupdates`)
-			.then((response) => response.json())
-			.then((updates) => {
-				console.log(updates.data["manga"]);
-				setUpdates(updates.data["manga"]);
-			});
-	};
+
 	useEffect(() => {
-		console.log(state.account["username"]);
-		getFavoritesList();
-		getUpdatesList();
+		console.log(state.account);
+		setUpdates(state.account["updates"]["manga"]);
+		setFavorites(state.account["favorites"]["manga"]);
 	}, []);
 	return (
 		<div
@@ -42,65 +28,104 @@ const Account = () => {
 				alignItems: "center",
 			}}
 		>
-			<Grid
-				container
-				direction='row'
-				justifyContent='center'
-				alignItems='center'
-			>
-				<Grid item>
+			<div>
+				<Typography color='white'>{state.account["username"]}</Typography>
+			</div>
+			<div style={{ width: "50%" }}>
+				<Typography color='white' align='center'>
+					Updated
+				</Typography>
+				<Grid
+					container
+					direction='row'
+					justifyContent='space-evenly'
+					alignItems='center'
+				>
 					{updates.map((current) => (
-						<Box sx={{ position: "absolute" }}>
-							<Card>
-								<CardMedia
+						<Button>
+							<Grid item>
+								<Card
 									sx={{
-										width: "100px",
-										height: "150px",
-										borderRadius: "6%",
-									}}
-									image={current["entry"]["images"]["jpg"]["large_image_url"]}
-								/>
-							</Card>
-							<Box
-								sx={{
-									position: "absolute",
-									bottom: "-1px",
-									left: 0,
-									width: "80%",
-									height: "130px",
-									backgroundImage:
-										"linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05)) ",
-									borderRadius: "4%",
-									backgroundSize: "100px 150px",
-									color: "white",
-									padding: "10px",
-								}}
-							>
-								<Typography
-									color='white'
-									marginTop={14}
-									marginRight={0}
-									marginLeft={0}
-									textTransform='none'
-									align='center'
-									sx={{
-										fontSize: { xs: 10, sm: 10, lg: 10 },
-										maxWidth: "100px",
-										display: "-webkit-box",
-										overflow: "hidden",
-										WebkitBoxOrient: "vertical",
-										WebkitLineClamp: 2,
-										position: "static",
-										alignContent: "flex-end",
+										position: "relative",
 									}}
 								>
-									{current["entry"]["title"]}
-								</Typography>
-							</Box>
-						</Box>
+									<CardMedia
+										sx={{
+											width: "100px",
+											height: "150px",
+											borderRadius: "6%",
+											filter: "brightness(40%)",
+										}}
+										image={current["entry"]["images"]["jpg"]["large_image_url"]}
+									/>
+
+									<Typography
+										color='white'
+										textTransform='none'
+										align='center'
+										noWrap
+										sx={{
+											position: "absolute",
+											bottom: "10px",
+											width: "100%",
+										}}
+									>
+										{current["entry"]["title"]}
+									</Typography>
+								</Card>
+							</Grid>
+						</Button>
 					))}
 				</Grid>
-			</Grid>
+			</div>
+			<div style={{ width: "50%" }}>
+				<Typography color='white' align='center'>
+					Favorites
+				</Typography>
+				<Grid
+					container
+					direction='row'
+					justifyContent='space-evenly'
+					alignItems='center'
+				>
+					{favorites.map((current) => (
+						<Button>
+							<Grid item>
+								<Card
+									sx={{
+										position: "relative",
+									}}
+								>
+									<CardMedia
+										sx={{
+											width: "100px",
+											height: "150px",
+											borderRadius: "6%",
+											filter: "brightness(40%)",
+										}}
+										image={current["images"]["jpg"]["large_image_url"]}
+									/>
+
+									<Typography
+										color='white'
+										textTransform='none'
+										align='center'
+										noWrap
+										sx={{
+											position: "absolute",
+											bottom: "10px",
+											width: "100%",
+										}}
+									>
+										{current["title"]}
+									</Typography>
+								</Card>
+							</Grid>
+						</Button>
+					))}
+				</Grid>
+			</div>
+			<Footer />
 		</div>
 	);
 };
