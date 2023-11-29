@@ -66,7 +66,10 @@ const MangaChapterList = (props: Props) => {
 			},
 		});
 	};
-	useEffect(() => console.log(mangaFeed), []);
+	useEffect(() => {
+		console.log(mangaId);
+		console.log(mangaFeed);
+	}, []);
 	return (
 		<div
 			style={{
@@ -74,7 +77,7 @@ const MangaChapterList = (props: Props) => {
 				flexDirection: "column",
 				justifyContent: "center",
 				alignItems: "center",
-				width: "50%",
+				width: "100%",
 			}}
 		>
 			<Grid

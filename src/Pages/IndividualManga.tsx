@@ -132,13 +132,13 @@ const IndividualManga = () => {
 	}, [state, selectedLanguage, currentOffset, currentOrder]);
 
 	return (
-		<div>
+		<div style={{ minHeight: "100vh", overflow: "scroll" }}>
 			<Grid
 				container
 				direction='column'
 				justifyContent='space-between'
 				alignItems='center'
-				sx={{ height: "100vh" }}
+				sx={{ width: "100%", height: "100%" }}
 			>
 				<Grid item sx={{ width: "100%" }}>
 					<Header />
@@ -201,7 +201,7 @@ const IndividualManga = () => {
 					item
 					sx={{
 						width: "95%",
-						height: { xs: "35vh", md: "35vh", lg: "35vh", xl: "40vh" },
+						height: "45vh",
 						display: "flex",
 						paddingTop: "20px",
 						justifyContent: "center",
@@ -238,12 +238,7 @@ const IndividualManga = () => {
 						/>
 					)}
 				</Grid>
-				<Grid
-					item
-					sx={{
-						width: "100%",
-					}}
-				>
+				<Grid item>
 					<Footer />
 				</Grid>
 			</Grid>
