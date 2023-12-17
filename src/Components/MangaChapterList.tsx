@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 type Props = {
 	mangaId: string;
 	mangaFeed: any[];
-	mangaFromMal?: string;
 	mangaName: string;
 	selectedLanguage: any;
 	setOpen?: any;
@@ -17,14 +16,15 @@ const MangaChapterList = (props: Props) => {
 	const {
 		mangaId,
 		mangaFeed,
-		mangaFromMal,
 		mangaName,
 		selectedLanguage,
 		insideReader,
 		setOpen,
 		scantalationGroups,
 	} = props;
+
 	let navigate = useNavigate();
+
 	const handleClick = (
 		mangaId: string,
 		chapterId: string,
@@ -46,6 +46,7 @@ const MangaChapterList = (props: Props) => {
 			},
 		});
 	};
+
 	const handleClickInsideReader = (
 		mangaId: string,
 		chapterId: string,
@@ -66,10 +67,12 @@ const MangaChapterList = (props: Props) => {
 			},
 		});
 	};
+
 	useEffect(() => {
 		console.log(mangaId);
 		console.log(mangaFeed);
 	}, []);
+
 	return (
 		<div
 			style={{
@@ -97,7 +100,14 @@ const MangaChapterList = (props: Props) => {
 			>
 				{mangaFeed.map((current: any, index) =>
 					current["attributes"]["translatedLanguage"] === selectedLanguage ? (
-						<Grid item sx={{ width: "100%", height: "50px", padding: "2px" }}>
+						<Grid
+							item
+							sx={{
+								width: "100%",
+								height: "50px",
+								padding: "2px",
+							}}
+						>
 							{insideReader === true ? (
 								<Button
 									sx={{

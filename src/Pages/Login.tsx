@@ -13,7 +13,7 @@ import {
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const baseUrlMal = "https://api.jikan.moe/v4";
+import { fetchAccountData } from "../api/MalApi";
 
 const Login = () => {
 	const [username, setUsername] = useState<string>("");
@@ -21,14 +21,12 @@ const Login = () => {
 	let navigate = useNavigate();
 
 	const handleLogin = async (username: string) => {
-		fetch(`${baseUrlMal}/users/${username}/full`)
-			.then((response) => response.json())
-			.then((account) => {
-				console.log(account.data);
-				navigate("/account", {
-					state: { account: account.data },
-				});
+		fetchAccountData(username).then((data) => {
+			console.log(data);
+			navigate("/account", {
+				state: { account: data },
 			});
+		});
 	};
 	return (
 		<div

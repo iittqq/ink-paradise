@@ -19,6 +19,8 @@ import dayjs from "dayjs";
 import PageAndControls from "../Components/PageAndControls";
 import MangaChapterList from "../Components/MangaChapterList";
 
+import { fetchChapterData, fetchMangaFeed } from "../api/MangaDexApi";
+
 const baseUrl = "https://api.mangadex.org";
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
 
@@ -33,41 +35,14 @@ const Reader = () => {
 	const [order, setOrder] = useState("desc");
 	const [scantalationGroups, setScantalationGroups] = useState<any[]>([]);
 
-	const fetchChapterData = async () => {
-		fetch(`${baseUrl}/at-home/server/${state.chapterId}`)
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(
-					pageBaseUrl +
-						data["chapter"]["hash"] +
-						"/" +
-						data["chapter"]["data"][currentPage]
-				);
-				setPages(data["chapter"]["data"]);
-				setHash(data["chapter"]["hash"]);
-				console.log(data);
-				console.log(pages);
-			});
-	};
-
-	const fetchMangaFeed = async () => {
-		fetch(
-			`${baseUrl}/manga/${state.mangaId}/feed?limit=300&offset=0&translatedLanguage%5B%5D=${selectedLanguage}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=0&order%5Bchapter%5D=${order}`
-		)
-			.then((response) => response.json())
-			.then((feed) => {
-				console.log(feed.data);
-				setChapters(feed.data);
-			});
-	};
-
 	const handleOpenChapters = () => {
+		/** 
 		chapters.forEach((current) => {
 			fetchScantalationGroup(current["relationships"][0]["id"]);
-		});
+		});*/
 		setOpen(!open);
 	};
-
+	/** 
 	const fetchScantalationGroup = async (id: string) => {
 		fetch(`${baseUrl}/group/${id}`)
 			.then((response) => response.json())
@@ -79,10 +54,27 @@ const Reader = () => {
 				console.log(group);
 			});
 	};
-
+*/
 	useEffect(() => {
-		fetchChapterData();
-		fetchMangaFeed();
+		fetchChapterData(state.chapterId).then((data) => {
+			console.log(
+				pageBaseUrl +
+					data["chapter"]["hash"] +
+					"/" +
+					data["chapter"]["data"][currentPage]
+			);
+			setPages(data["chapter"]["data"]);
+			setHash(data["chapter"]["hash"]);
+			console.log(data);
+			console.log(pages);
+		});
+
+		fetchMangaFeed(state.mangaId, 300, 0, order, selectedLanguage).then(
+			(data: Object[]) => {
+				setChapters(data);
+				console.log(data);
+			}
+		);
 		console.log(pages);
 	}, [state]);
 
@@ -159,7 +151,11 @@ const Reader = () => {
 								<ExpandMore sx={{ color: "white" }} />
 							)}
 						</ListItemButton>
-						<Collapse sx={{}} in={open} timeout='auto'>
+						<Collapse
+							sx={{ outline: "1px red solid", width: "100%" }}
+							in={open}
+							timeout='auto'
+						>
 							<MangaChapterList
 								mangaId={state.mangaId}
 								mangaFeed={chapters}

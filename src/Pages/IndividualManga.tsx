@@ -9,9 +9,17 @@ import MangaTags from "../Components/MangaTags";
 import MangaControls from "../Components/MangaControls";
 import MangaChapterList from "../Components/MangaChapterList";
 
+import {
+	fetchMangaByName,
+	fetchMangaCover,
+	fetchMangaFeed,
+	fetchMangaById,
+	fetchScantalationGroup,
+} from "../api/MangaDexApi";
+
 const IndividualManga = () => {
 	const { state } = useLocation();
-	const [mangaFromMal, setMangaFromMal] = useState<string>("");
+	const [mangaId, setMangaId] = useState<string>("");
 	const [mangaFromMalCoverFile, setMangaFromMalCoverFile] =
 		useState<string>("");
 	const [mangaName, setMangaName] = useState("");
@@ -27,108 +35,98 @@ const IndividualManga = () => {
 	const [currentOrder, setCurrentOrder] = useState("asc");
 	const [scantalationGroups, setScantalationGroups] = useState<any[]>([]);
 
-	const baseUrl = "https://api.mangadex.org";
-	const fetchMangaDetails = async () => {
-		fetch(`${baseUrl}/manga/${state.id}`)
-			.then((response) => response.json())
-			.then((mangaDetails) => {
-				console.log(mangaDetails.data);
-				setMangaName(mangaDetails.data["attributes"].title["en"]);
-				setMangaDescription(mangaDetails.data["attributes"].description["en"]);
-				setMangaAltTitles(mangaDetails.data["attributes"].altTitles);
-				setMangaLanguages(
-					mangaDetails.data["attributes"].availableTranslatedLanguages
-				);
-				setMangaContentRating(mangaDetails.data["attributes"].contentRating);
-
-				setMangaRaw(
-					mangaDetails.data["attributes"].links === null
-						? ""
-						: mangaDetails.data["attributes"].links["raw"]
-				);
-
-				setMangaTags(mangaDetails.data["attributes"].tags);
-			});
-	};
-
-	const fetchMangaFeed = async (id: string) => {
-		fetch(
-			`${baseUrl}/manga/${id}/feed?limit=50&offset=${currentOffset}&translatedLanguage%5B%5D=${selectedLanguage}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5Bchapter%5D=${currentOrder}`
-		)
-			.then((response) => response.json())
-			.then((mangaFeed) => {
-				mangaFeed.data.length === 0
-					? setCurrentOffset(0)
-					: setMangaFeed(mangaFeed.data);
-
-				setScantalationGroups([]);
-				mangaFeed.data.forEach((current: any) => {
-					fetchScantalationGroup(current["relationships"][0]["id"]);
-				});
-				console.log(mangaFeed.data);
-			});
-	};
-
-	const fetchMangaByName = async () => {
-		console.log(state.title);
-		fetch(
-			`${baseUrl}/manga?limit=10&title=${state.title}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
-		)
-			.then((response) => response.json())
-			.then((details) => {
-				setMangaFromMal(details.data[0]["id"]);
-				fetchMangaFeed(details.data[0]["id"]);
-
-				fetch(
-					`${baseUrl}/cover/${
-						details.data[0]["relationships"].find(
-							(i: any) => i.type === "cover_art"
-						).id
-					}`
-				)
-					.then((response) => response.json())
-					.then((coverFile) => {
-						setMangaFromMalCoverFile(
-							coverFile["data"]["attributes"]["fileName"]
-						);
-					});
-
-				console.log(details.data[0]);
-				setMangaName(details.data[0]["attributes"].title["en"]);
-				setMangaDescription(details.data[0]["attributes"].description["en"]);
-				setMangaAltTitles(details.data[0]["attributes"].altTitles);
-				setMangaLanguages(
-					details.data[0]["attributes"].availableTranslatedLanguages
-				);
-				setMangaContentRating(details.data[0]["attributes"].contentRating);
-
-				setMangaRaw(
-					details.data[0]["attributes"].links === null
-						? ""
-						: details.data[0]["attributes"].links["raw"]
-				);
-
-				setMangaTags(details.data[0]["attributes"].tags);
-			});
-	};
-	const fetchScantalationGroup = async (id: string) => {
-		fetch(`${baseUrl}/group/${id}`)
-			.then((response) => response.json())
-			.then((group) => {
-				setScantalationGroups((scantalationGroups) => [
-					...scantalationGroups,
-					group["data"]["attributes"]["name"],
-				]);
-			});
-	};
-
 	useEffect(() => {
 		if (state["title"] !== undefined) {
-			fetchMangaByName();
+			fetchMangaByName(state["title"]).then((data: any) => {
+				console.log(data);
+				setMangaId(data[0]["id"]);
+
+				fetchMangaFeed(
+					data[0]["id"],
+					50,
+					currentOffset,
+					currentOrder,
+					selectedLanguage
+				).then((data: any) => {
+					data.length === 0 ? setCurrentOffset(0) : setMangaFeed(data);
+
+					setScantalationGroups([]);
+					/**
+						data.forEach((current: any) => {
+							fetchScantalationGroup(current["relationships"][0]["id"]).then(
+								(data) => {
+									setScantalationGroups((scantalationGroups) => [
+										...scantalationGroups,
+										data["attributes"]["name"],
+									]);
+								}
+							);
+						}); */
+					console.log(data);
+				});
+				console.log(mangaFeed);
+				fetchMangaCover(
+					data[0]["relationships"].find((i: any) => i.type === "cover_art").id
+				).then((coverFile) => {
+					setMangaFromMalCoverFile(coverFile["attributes"]["fileName"]);
+				});
+				setMangaName(data[0]["attributes"].title["en"]);
+				setMangaDescription(data[0]["attributes"].description["en"]);
+				setMangaAltTitles(data[0]["attributes"].altTitles);
+				setMangaLanguages(data[0]["attributes"].availableTranslatedLanguages);
+				setMangaContentRating(data[0]["attributes"].contentRating);
+
+				setMangaRaw(
+					data[0]["attributes"].links === null
+						? ""
+						: data[0]["attributes"].links["raw"]
+				);
+
+				setMangaTags(data[0]["attributes"].tags);
+			});
+			//fetchMangaByName();
 		} else {
-			fetchMangaDetails();
-			fetchMangaFeed(state.id);
+			fetchMangaById(state.id).then((data: any) => {
+				console.log(data);
+				setMangaName(data["attributes"].title["en"]);
+				setMangaDescription(data["attributes"].description["en"]);
+				setMangaAltTitles(data["attributes"].altTitles);
+				setMangaLanguages(data["attributes"].availableTranslatedLanguages);
+				setMangaContentRating(data["attributes"].contentRating);
+
+				setMangaRaw(
+					data["attributes"].links === null
+						? ""
+						: data["attributes"].links["raw"]
+				);
+
+				setMangaTags(data["attributes"].tags);
+			});
+			fetchMangaFeed(
+				state.id,
+				50,
+				currentOffset,
+				currentOrder,
+				selectedLanguage
+			).then((data: any) => {
+				data.length === 0 ? setCurrentOffset(0) : setMangaFeed(data);
+				/**
+					setScantalationGroups([]);
+					data.forEach((current: any) => {
+						fetchScantalationGroup(current["relationships"][0]["id"]).then(
+							(data) => {
+								setScantalationGroups((scantalationGroups) => [
+									...scantalationGroups,
+									data["attributes"]["name"],
+								]);
+							}
+						);
+					});
+				*/
+				console.log(data);
+			});
 		}
+		console.log(mangaFeed);
 	}, [state, selectedLanguage, currentOffset, currentOrder]);
 
 	return (
@@ -154,7 +152,7 @@ const IndividualManga = () => {
 						title={state.title}
 						id={state.id}
 						coverFile={state.coverFile}
-						mangaFromMal={mangaFromMal}
+						mangaFromMal={mangaId}
 						mangaFromMalCoverFile={mangaFromMalCoverFile}
 						mangaAltTitles={mangaAltTitles}
 						mangaDescription={mangaDescription}
@@ -218,25 +216,15 @@ const IndividualManga = () => {
 						mangaTranslators={scantalationGroups}
 						setTranslator={setScantalationGroups}
 					/>
-					{mangaFromMal === undefined ? (
-						<MangaChapterList
-							mangaFeed={mangaFeed}
-							mangaName={mangaName}
-							selectedLanguage={selectedLanguage}
-							mangaId={state.id}
-							insideReader={false}
-							scantalationGroups={scantalationGroups}
-						/>
-					) : (
-						<MangaChapterList
-							mangaFeed={mangaFeed}
-							mangaName={mangaName}
-							selectedLanguage={selectedLanguage}
-							mangaId={mangaFromMal}
-							insideReader={false}
-							scantalationGroups={scantalationGroups}
-						/>
-					)}
+
+					<MangaChapterList
+						mangaFeed={mangaFeed}
+						mangaName={mangaName}
+						selectedLanguage={selectedLanguage}
+						mangaId={state.id === undefined ? mangaId : state.id}
+						insideReader={false}
+						scantalationGroups={scantalationGroups}
+					/>
 				</Grid>
 				<Grid item>
 					<Footer />

@@ -19,6 +19,15 @@ import { useNavigate } from "react-router-dom";
 import TrendingMangaSection from "../Components/TrendingMangaSection";
 import HomepageSectionDisplay from "../Components/HomepageSectionDisplay";
 
+import {
+	fetchMangaById,
+	fetchRecentlyUpdated,
+	fetchRecentlyAdded,
+	fetchMangaTags,
+} from "../api/MangaDexApi";
+
+import { fetchTopManga } from "../api/MalApi";
+
 const baseUrlMangaDex = "https://api.mangadex.org";
 const baseUrlMal = "https://api.jikan.moe/v4";
 
@@ -29,16 +38,6 @@ const Home = () => {
 	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
 	const [mangaTags, setMangaTags] = useState<any[]>([]);
 	let navigate = useNavigate();
-	const fetchTopManga = async () => {
-		const { data: top } = await axios.get(`${baseUrlMal}/top/manga`, {
-			params: {
-				limit: 10,
-				order: { relevance: "desc" },
-			},
-		});
-		console.log(top.data);
-		setTopMangaData(top.data);
-	};
 
 	const handleClickRecentlyUpdated = async () => {
 		navigate("/mangaCoverList", {
@@ -52,49 +51,21 @@ const Home = () => {
 		});
 	};
 
-	const fetchRecentlyAddedManga = async () => {
-		fetch(
-			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`,
-			{
-				method: "GET",
-			}
-		)
-			.then((response) => response.json())
-			.then((newManga) => {
-				setRecentlyAddedManga(newManga.data);
-
-				console.log(newManga.data);
-			});
-	};
-
-	const fetchRecentlyUpdatedManga = async () => {
-		fetch(
-			`${baseUrlMangaDex}/manga?limit=10&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`,
-			{
-				method: "GET",
-			}
-		)
-			.then((response) => response.json())
-			.then((newUpdates) => {
-				console.log(newUpdates.data);
-				setRecentlyUpdatedManga(newUpdates.data);
-			});
-	};
-
-	const fetchTags = async () => {
-		fetch(`${baseUrlMangaDex}/manga/tag`, {})
-			.then((response) => response.json())
-			.then((tags) => {
-				console.log(tags.data);
-				setMangaTags(tags.data);
-			});
-	};
-
 	useEffect(() => {
-		fetchTopManga();
-		fetchRecentlyUpdatedManga();
-		fetchTags();
-		fetchRecentlyAddedManga();
+		fetchTopManga().then((data: any) => {
+			setTopMangaData(data);
+		});
+		fetchRecentlyUpdated(10, 0).then((data: Object[]) => {
+			setRecentlyUpdatedManga(data);
+		});
+
+		fetchMangaTags().then((data: Object[]) => {
+			setMangaTags(data);
+		});
+
+		fetchRecentlyAdded(10, 0).then((data: Object[]) => {
+			setRecentlyAddedManga(data);
+		});
 	}, []);
 
 	const handleOpenTags = () => {
