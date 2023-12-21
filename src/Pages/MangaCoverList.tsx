@@ -6,15 +6,23 @@ import { useLocation } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-const baseUrl = "https://api.mangadex.org";
-const MangaCoverList = () => {
-  const { state } = useLocation();
-  const [offset, setOffset] = useState<number>(0);
-  console.log(state.title);
-  console.log(state.tagId !== undefined);
-  console.log(state.listType);
-  const [mangaDetails, setmangaDetails] = useState<Object[]>([]);
+import {
+	fetchRecentlyAdded,
+	fetchMangaByName,
+	fetchMangaByAuthor,
+	fetchMangaByTag,
+	fetchRecentlyUpdated,
+} from "../api/MangaDexApi";
 
+const MangaCoverList = () => {
+	const { state } = useLocation();
+	const [offset, setOffset] = useState<number>(0);
+	console.log(state.title);
+	console.log(state.tagId !== undefined);
+	console.log(state.listType);
+	const [mangaDetails, setmangaDetails] = useState<Object[]>([]);
+
+	/**
   const fetchMangaByRecentlyAdded = async () => {
     //pageTitle = "Recently Added";
     fetch(
@@ -105,93 +113,129 @@ const MangaCoverList = () => {
         ? fetchMangaByTag()
         : fetchMangaByRecentlyUpdated()
       : fetchMangaByRecentlyAdded();
-  };
+  }; */
 
-  useEffect(() => {
-    fetchMangaCoverList();
-  }, [offset, state]);
-  return (
-    <div>
-      <Grid
-        container
-        direction="column"
-        justifyContent="space-evenly"
-        alignItems="center"
-      >
-        <Grid item sx={{ width: "100%" }}>
-          <Header />
-        </Grid>
-        <Grid item>
-          <Typography
-            sx={{
-              color: "white",
-              paddingBottom: "5px",
-            }}
-          >
-            {state.listType}
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          wrap="wrap"
-          spacing={1}
-          sx={{
-            overflow: "auto",
-            height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
-            justifyContent: "center",
-          }}
-        >
-          {mangaDetails.map((element: any) => (
-            <Grid item>
-              <CoverClickable
-                id={element["id"]}
-                title={element["attributes"].title["en"]}
-                coverId={
-                  element["relationships"].find(
-                    (i: any) => i.type === "cover_art"
-                  ).id
-                }
-              />
-            </Grid>
-          ))}
-        </Grid>
-        <div>
-          <Button
-            sx={{
-              color: "#333333",
-              "&.MuiButtonBase-root:hover": {
-                bgcolor: "transparent",
-              },
-              ".MuiTouchRipple-child": {
-                backgroundColor: "white",
-              },
-            }}
-            onClick={() => (offset - 60 >= 0 ? setOffset(offset - 60) : null)}
-          >
-            <ArrowBackIosNewIcon />
-          </Button>
-          <Button
-            sx={{
-              color: "#333333",
-              "&.MuiButtonBase-root:hover": {
-                bgcolor: "transparent",
-              },
-              ".MuiTouchRipple-child": {
-                backgroundColor: "white",
-              },
-            }}
-            onClick={() => {
-              setOffset(offset + 60);
-            }}
-          >
-            <ArrowForwardIosIcon />
-          </Button>
-        </div>
-      </Grid>
-    </div>
-  );
+	const fetchMangaCoverList = async () => {
+		console.log(state.listType);
+		state.listType === "RecentlyAdded"
+			? fetchRecentlyAdded(60, offset).then((data: Object[]) => {
+					setmangaDetails(data);
+			  })
+			: state.listType === "SearchResults"
+			? fetchMangaByName(state.title === undefined ? "" : state.title).then(
+					(data: Object[]) => {
+						setmangaDetails(data);
+					}
+			  )
+			: //Add New Page Logic Here
+			state.listType === "RecentlyUpdated"
+			? state.title !== undefined
+				? fetchMangaByName(state.title).then((data: Object[]) => {
+						setmangaDetails(data);
+				  })
+				: state.authorId !== undefined
+				? fetchMangaByAuthor(state.authorId, 60, offset).then(
+						(data: Object[]) => {
+							setmangaDetails(data);
+						}
+				  )
+				: state.tagId !== undefined
+				? fetchMangaByTag(state.tagId, 60, offset).then((data: Object[]) => {
+						setmangaDetails(data);
+				  })
+				: fetchRecentlyUpdated(60, offset).then((data: Object[]) => {
+						setmangaDetails(data);
+				  })
+			: fetchRecentlyAdded(60, offset).then((data: Object[]) => {
+					setmangaDetails(data);
+			  });
+	};
+
+	useEffect(() => {
+		fetchMangaCoverList();
+	}, [offset, state]);
+	return (
+		<div>
+			<Grid
+				container
+				direction='column'
+				justifyContent='space-evenly'
+				alignItems='center'
+			>
+				<Grid item sx={{ width: "100%" }}>
+					<Header />
+				</Grid>
+				<Grid item>
+					<Typography
+						sx={{
+							color: "white",
+							paddingBottom: "5px",
+						}}
+					>
+						{state.listType}
+					</Typography>
+				</Grid>
+				<Grid
+					container
+					direction='row'
+					justifyContent='center'
+					alignItems='center'
+					wrap='wrap'
+					spacing={1}
+					sx={{
+						overflow: "auto",
+						height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
+						justifyContent: "center",
+					}}
+				>
+					{mangaDetails.map((element: any) => (
+						<Grid item>
+							<CoverClickable
+								id={element["id"]}
+								title={element["attributes"].title["en"]}
+								coverId={
+									element["relationships"].find(
+										(i: any) => i.type === "cover_art"
+									).id
+								}
+							/>
+						</Grid>
+					))}
+				</Grid>
+				<div>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => (offset - 60 >= 0 ? setOffset(offset - 60) : null)}
+					>
+						<ArrowBackIosNewIcon />
+					</Button>
+					<Button
+						sx={{
+							color: "#333333",
+							"&.MuiButtonBase-root:hover": {
+								bgcolor: "transparent",
+							},
+							".MuiTouchRipple-child": {
+								backgroundColor: "white",
+							},
+						}}
+						onClick={() => {
+							setOffset(offset + 60);
+						}}
+					>
+						<ArrowForwardIosIcon />
+					</Button>
+				</div>
+			</Grid>
+		</div>
+	);
 };
 export default MangaCoverList;
