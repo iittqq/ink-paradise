@@ -1,7 +1,7 @@
 import "./App.css";
 import { Container } from "@mui/material";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Home from "./Pages/Home";
+import Home from "./Pages/Home/Home";
 import IndividualManga from "./Pages/IndividualManga";
 import Reader from "./Pages/Reader";
 import MangaCoverList from "./Pages/MangaCoverList";
