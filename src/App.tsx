@@ -2,7 +2,7 @@ import "./App.css";
 import { Container } from "@mui/material";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home/Home";
-import IndividualManga from "./Pages/IndividualManga";
+import IndividualManga from "./Pages/IndividualManga/IndividualManga";
 import Reader from "./Pages/Reader";
 import MangaCoverList from "./Pages/MangaCoverList";
 import Library from "./Pages/Library";
