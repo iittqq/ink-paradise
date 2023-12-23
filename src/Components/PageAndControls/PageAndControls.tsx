@@ -5,6 +5,7 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useNavigate } from "react-router-dom";
+import "./PageAndControls.css";
 
 type Props = {
 	chapters: any[];
@@ -102,100 +103,74 @@ const PageAndControls = (props: Props) => {
 
 	return (
 		<div>
-			<Grid
-				item
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<div style={{ position: "relative" }}>
-					<Button
-						sx={{
-							backgroundColor: "transparent",
-							height: "65vh",
-							width: "50%",
-							position: "absolute",
-							color: "white",
-							"&.MuiButtonBase-root:hover": {
-								backgroundColor: "transparent",
-							},
-						}}
-						onClick={() => handleNextChapterButton()}
-					></Button>
-
-					<img
-						style={{
-							width: "100%",
-							height: "65vh",
-							objectFit: "contain",
-						}}
-						src={pageBaseUrl + hash + "/" + pages[currentPage]}
-						alt=''
-					/>
-					<Button
-						sx={{
-							backgroundColor: "transparent",
-							color: "white",
-							height: "65vh",
-							width: "50%",
-							position: "absolute",
-							transform: "translate(-100%)",
-							"&.MuiButtonBase-root:hover": {
-								backgroundColor: "transparent",
-							},
-						}}
-						onClick={() => handlePreviousChapterButton()}
-					></Button>
-				</div>
-				<div
+			<div className='page' style={{ position: "relative" }}>
+				<img
 					style={{
 						width: "100%",
+						height: "65vh",
+						objectFit: "contain",
+					}}
+					src={pageBaseUrl + hash + "/" + pages[currentPage]}
+					alt=''
+				/>
+				<div
+					style={{
+						position: "absolute",
+						height: "100%",
+						width: "100%",
 						display: "flex",
-						justifyContent: "space-evenly",
-						alignItems: "center",
+						justifyContent: "space-between",
+						transform: "translateY(-100%)",
 					}}
 				>
 					<Button
-						sx={{ color: "white" }}
-						onClick={() => {
-							handleNextChapter();
-						}}
-					>
-						<KeyboardDoubleArrowLeftIcon />
-					</Button>
+						className='chapter-page-traversal'
+						onClick={() => handleNextChapterButton()}
+					></Button>
 					<Button
-						sx={{ color: "white" }}
-						onClick={() => {
-							handleNextChapterButton();
-						}}
-					>
-						<KeyboardArrowLeftIcon />
-					</Button>
-					<Button
-						sx={{ color: "white" }}
-						onClick={() => {
-							handlePreviousChapterButton();
-						}}
-					>
-						<KeyboardArrowRightIcon />
-					</Button>
-					<Button
-						sx={{ color: "white" }}
-						onClick={() => {
-							handlePreviousChapter();
-						}}
-					>
-						<KeyboardDoubleArrowRightIcon />
-					</Button>
+						className='chapter-page-traversal'
+						onClick={() => handlePreviousChapterButton()}
+					></Button>
 				</div>
+			</div>
+			<div className='centered'>
+				<Button
+					sx={{ color: "white" }}
+					onClick={() => {
+						handleNextChapter();
+					}}
+				>
+					<KeyboardDoubleArrowLeftIcon />
+				</Button>
+				<Button
+					sx={{ color: "white" }}
+					onClick={() => {
+						handleNextChapterButton();
+					}}
+				>
+					<KeyboardArrowLeftIcon />
+				</Button>
+				<Button
+					sx={{ color: "white" }}
+					onClick={() => {
+						handlePreviousChapterButton();
+					}}
+				>
+					<KeyboardArrowRightIcon />
+				</Button>
+				<Button
+					sx={{ color: "white" }}
+					onClick={() => {
+						handlePreviousChapter();
+					}}
+				>
+					<KeyboardDoubleArrowRightIcon />
+				</Button>
+			</div>
 
-				<Typography color='white'>
-					{currentPage + 1} / {pages.length}
-				</Typography>
-			</Grid>
+			<Typography color='white' align='center'>
+				{currentPage + 1} / {pages.length}
+			</Typography>
 		</div>
 	);
 };

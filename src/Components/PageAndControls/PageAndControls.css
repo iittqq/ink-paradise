@@ -1,0 +1,20 @@
+.centered {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.chapter-page-traversal {
+	background-color: transparent;
+	width: 50%;
+	height: 100%;
+	color: #ffffff;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+}
+
+.page {
+	position: relative;
+}

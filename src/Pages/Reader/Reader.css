@@ -1,0 +1,19 @@
+.header {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+.reader-page {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
