@@ -82,7 +82,7 @@ const Home = () => {
 	};
 
 	return (
-		<div style={{ minHeight: "100vh" }}>
+		<div>
 			<div className='header'>
 				<Header />
 			</div>

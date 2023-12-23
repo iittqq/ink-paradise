@@ -6,14 +6,14 @@ import IndividualManga from "./Pages/IndividualManga";
 import Reader from "./Pages/Reader";
 import MangaCoverList from "./Pages/MangaCoverList";
 import Library from "./Pages/Library";
-import Account from "./Pages/Account";
+import Account from "./Pages/Account/Account";
 import Login from "./Pages/Login";
 
 //#121212
 
 function App() {
 	return (
-		<div style={{ backgroundColor: "#121212", minHeight: "100vh" }}>
+		<div style={{ backgroundColor: "#121212", minHeight: "100dvh" }}>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />

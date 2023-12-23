@@ -1,0 +1,66 @@
+.user-image {
+	top: 0;
+	left: 0;
+	width: 250px;
+	height: 250px;
+}
+
+.user-details-section {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+.user-details {
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 250px;
+}
+
+.centered-content {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+.manga-cover {
+	width: 100px;
+	height: 150px;
+	border-radius: 6%;
+	filter: brightness(40%);
+}
+
+.manga-text {
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+}
+
+.category-text {
+	padding: 10px;
+}
+
+.category-buttons-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+}
+
+.category-button {
+	color: #ffffff;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	&.MuiTouchRipple-child {
+		background-color: "white";
+	}
+	text-transform: none;
+}
