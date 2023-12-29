@@ -13,13 +13,6 @@
 	align-items: center;
 }
 
-.header {
-	position: relative;
-	top: 0;
-	left: 0;
-	width: 100%;
-}
-
 .show-more-button {
 	color: #121212;
 	background-color: transparent;
@@ -28,6 +21,13 @@
 	}
 	width: 20px;
 	height: 20px;
+}
+
+.header {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
 }
 
 .footer {

@@ -16,6 +16,10 @@ const Footer = () => {
 		navigate("/login");
 	};
 
+	const handleClickLibrary = async () => {
+		navigate("/library");
+	};
+
 	return (
 		<div
 			style={{
@@ -46,6 +50,7 @@ const Footer = () => {
 						bgcolor: "transparent",
 					},
 				}}
+				onClick={() => handleClickLibrary()}
 			>
 				<BookIcon />
 			</Button>

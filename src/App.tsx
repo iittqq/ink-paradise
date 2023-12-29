@@ -4,10 +4,10 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import IndividualManga from "./Pages/IndividualManga/IndividualManga";
 import Reader from "./Pages/Reader/Reader";
-import MangaCoverList from "./Pages/MangaCoverList";
-import Library from "./Pages/Library";
+import MangaCoverList from "./Pages/MangaCoverList/MangaCoverList";
+import Library from "./Pages/Library/Library";
 import Account from "./Pages/Account/Account";
-import Login from "./Pages/Login";
+import Login from "./Pages/Login/Login";
 
 //#121212
 

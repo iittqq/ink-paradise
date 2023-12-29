@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-	Button,
-	Divider,
-	ListItemIcon,
-	ListItemText,
-	MenuItem,
-	MenuList,
-	Paper,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Button, Divider, Paper, TextField } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./Login.css";
 
-import { fetchAccountData } from "../api/MalApi";
+import { fetchAccountData } from "../../api/MalApi";
 
 const Login = () => {
 	const [username, setUsername] = useState<string>("");
@@ -29,28 +20,8 @@ const Login = () => {
 		});
 	};
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: state === null ? "center" : "space-between",
-				alignItems: "center",
-			}}
-		>
-			<Paper
-				sx={{
-					width: 300,
-					maxWidth: "100%",
-					backgroundColor: "#444444",
-					padding: "10px",
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "space-between",
-					alignItems: "center",
-				}}
-			>
+		<div className='box'>
+			<Paper className='box-content'>
 				<div
 					style={{
 						display: "flex",
@@ -61,9 +32,7 @@ const Login = () => {
 						height: "60px",
 					}}
 				>
-					<AccountBoxIcon
-						sx={{ height: "40px", width: "40px", color: "white" }}
-					/>
+					<AccountBoxIcon className='account-icon' />
 
 					<TextField
 						variant='outlined'
@@ -86,10 +55,10 @@ const Login = () => {
 						}}
 					/>
 				</div>
-				<Divider />
+				<Divider className='divider' />
 
 				<Button
-					sx={{ color: "white" }}
+					className='button'
 					onClick={() => {
 						handleLogin(username);
 					}}

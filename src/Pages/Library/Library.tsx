@@ -1,11 +1,12 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
 import { useEffect, useState } from "react";
-import Header from "../Components/Header";
+import Header from "../../Components/Header";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
-import Footer from "../Components/Footer";
+import Footer from "../../Components/Footer";
+import "./Library.css";
 //type Props = { malUserProfile: any };
 
 let options = new Map<number, string>();
@@ -17,25 +18,8 @@ const Library = () => {
 	useEffect(() => {}, []);
 
 	return (
-		<div
-			style={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-between",
-				alignItems: "center",
-				minHeight: "100vh",
-			}}
-		>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-between",
-					alignItems: "center",
-					color: "white",
-					width: "98%",
-				}}
-			>
+		<div>
+			<div className='library-header'>
 				<Typography padding={1} fontSize={20}>
 					Library
 				</Typography>
@@ -51,18 +35,10 @@ const Library = () => {
 					</Button>
 				</div>
 			</div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-evenly",
-					alignItems: "center",
-					color: "white",
-					width: "98%",
-				}}
-			></div>
-
-			<Footer />
+			<div></div>
+			<div className='footer'>
+				<Footer />
+			</div>
 		</div>
 	);
 };

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Grid, Typography, Button } from "@mui/material";
-import Header from "../Components/Header";
-import CoverClickable from "../Components/CoverClickable";
+import Header from "../../Components/Header";
+import CoverClickable from "../../Components/CoverClickable";
 import { useLocation } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import "./MangaCoverList.css";
 
 import {
 	fetchRecentlyAdded,
@@ -12,7 +13,7 @@ import {
 	fetchMangaByAuthor,
 	fetchMangaByTag,
 	fetchRecentlyUpdated,
-} from "../api/MangaDexApi";
+} from "../../api/MangaDexApi";
 
 const MangaCoverList = () => {
 	const { state } = useLocation();
@@ -118,7 +119,7 @@ const MangaCoverList = () => {
 	const fetchMangaCoverList = async () => {
 		console.log(state.listType);
 		state.listType === "RecentlyAdded"
-			? fetchRecentlyAdded(60, offset).then((data: Object[]) => {
+			? fetchRecentlyAdded(75, offset).then((data: Object[]) => {
 					setmangaDetails(data);
 			  })
 			: state.listType === "SearchResults"
@@ -134,19 +135,19 @@ const MangaCoverList = () => {
 						setmangaDetails(data);
 				  })
 				: state.authorId !== undefined
-				? fetchMangaByAuthor(state.authorId, 60, offset).then(
+				? fetchMangaByAuthor(state.authorId, 75, offset).then(
 						(data: Object[]) => {
 							setmangaDetails(data);
 						}
 				  )
 				: state.tagId !== undefined
-				? fetchMangaByTag(state.tagId, 60, offset).then((data: Object[]) => {
+				? fetchMangaByTag(state.tagId, 75, offset).then((data: Object[]) => {
 						setmangaDetails(data);
 				  })
-				: fetchRecentlyUpdated(60, offset).then((data: Object[]) => {
+				: fetchRecentlyUpdated(75, offset).then((data: Object[]) => {
 						setmangaDetails(data);
 				  })
-			: fetchRecentlyAdded(60, offset).then((data: Object[]) => {
+			: fetchRecentlyAdded(75, offset).then((data: Object[]) => {
 					setmangaDetails(data);
 			  });
 	};
@@ -155,26 +156,12 @@ const MangaCoverList = () => {
 		fetchMangaCoverList();
 	}, [offset, state]);
 	return (
-		<div>
-			<Grid
-				container
-				direction='column'
-				justifyContent='space-evenly'
-				alignItems='center'
-			>
-				<Grid item sx={{ width: "100%" }}>
-					<Header />
-				</Grid>
-				<Grid item>
-					<Typography
-						sx={{
-							color: "white",
-							paddingBottom: "5px",
-						}}
-					>
-						{state.listType}
-					</Typography>
-				</Grid>
+		<>
+			<div className='header'>
+				<Header />
+			</div>
+			<Typography className='title'>{state.listType}</Typography>
+			<div>
 				<Grid
 					container
 					direction='row'
@@ -182,11 +169,6 @@ const MangaCoverList = () => {
 					alignItems='center'
 					wrap='wrap'
 					spacing={1}
-					sx={{
-						overflow: "auto",
-						height: { sm: "70vh", md: "85vh", lg: "82vh", xl: "82vh" },
-						justifyContent: "center",
-					}}
 				>
 					{mangaDetails.map((element: any) => (
 						<Grid item>
@@ -202,40 +184,24 @@ const MangaCoverList = () => {
 						</Grid>
 					))}
 				</Grid>
-				<div>
-					<Button
-						sx={{
-							color: "#333333",
-							"&.MuiButtonBase-root:hover": {
-								bgcolor: "transparent",
-							},
-							".MuiTouchRipple-child": {
-								backgroundColor: "white",
-							},
-						}}
-						onClick={() => (offset - 60 >= 0 ? setOffset(offset - 60) : null)}
-					>
-						<ArrowBackIosNewIcon />
-					</Button>
-					<Button
-						sx={{
-							color: "#333333",
-							"&.MuiButtonBase-root:hover": {
-								bgcolor: "transparent",
-							},
-							".MuiTouchRipple-child": {
-								backgroundColor: "white",
-							},
-						}}
-						onClick={() => {
-							setOffset(offset + 60);
-						}}
-					>
-						<ArrowForwardIosIcon />
-					</Button>
-				</div>
-			</Grid>
-		</div>
+			</div>
+			<div className='nav-buttons'>
+				<Button
+					className='nav-button-styling'
+					onClick={() => (offset - 75 >= 0 ? setOffset(offset - 75) : null)}
+				>
+					<ArrowBackIosNewIcon />
+				</Button>
+				<Button
+					className='nav-button-styling'
+					onClick={() => {
+						setOffset(offset + 75);
+					}}
+				>
+					<ArrowForwardIosIcon />
+				</Button>
+			</div>
+		</>
 	);
 };
 export default MangaCoverList;
