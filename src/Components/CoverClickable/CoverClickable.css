@@ -1,0 +1,16 @@
+.text-box {
+	position: absolute;
+	bottom: -1px;
+	left: 0;
+	width: 80%;
+	height: 130px;
+	background-image: linear-gradient(
+		to top,
+		rgba(0, 0, 0, 1),
+		rgba(0, 0, 0, 0.05)
+	);
+	border-radius: 4%;
+	background-size: 100px 150px;
+	color: white;
+	padding: 10px;
+}

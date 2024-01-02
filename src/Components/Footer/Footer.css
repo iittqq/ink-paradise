@@ -1,0 +1,15 @@
+.container {
+	display: flex;
+	justify-content: space-evenly;
+	align-content: center;
+	flex-direction: row;
+	width: 100%;
+}
+
+.nav-buttons {
+	color: #ffffff !important;
+	background-color: transparent;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+}

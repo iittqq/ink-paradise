@@ -37,13 +37,13 @@
 	justify-content: space-evenly;
 	align-items: center;
 	flex-direction: row;
-	padding-bottom: 30px;
 	position: relative;
 	bottom: 0;
 }
 
 .page-header {
 	padding-bottom: 20px;
+	width: "100%";
 }
 
 .manga-controls {
@@ -55,4 +55,9 @@
 	height: 40dvh;
 	width: 50%;
 	margin: 10px;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.manga-chapter-list::-webkit-scrollbar {
+	display: none;
 }

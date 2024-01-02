@@ -3,6 +3,9 @@
 	position: absolute;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	& .MuiPaper-root {
+		background-color: #444444;
+	}
 }
 
 .box-content {
@@ -18,7 +21,7 @@
 .account-icon {
 	height: 40px;
 	width: 40px;
-	color: white;
+	color: #ffffff;
 }
 
 .divider {
@@ -29,7 +32,7 @@
 }
 
 .button {
-	color: white;
+	color: #ffffff !important;
 	margin-bottom: -10px;
 	text-transform: none;
 }

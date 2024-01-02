@@ -1,37 +1,34 @@
 import {
-	Grid,
-	Button,
 	Typography,
 	List,
 	ListItemButton,
 	ListItemText,
 	Collapse,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Header from "../../Components/Header";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import Header from "../../Components/Header/Header";
 
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
-import MangaChapterList from "../../Components/MangaChapterList";
+import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import "./Reader.css";
 
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
-import Footer from "../../Components/Footer";
+import Footer from "../../Components/Footer/Footer";
+import { MangaChapter, MangaFeed } from "../../interfaces/MangaDexInterfaces";
 
-const baseUrl = "https://api.mangadex.org";
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
 
 const Reader = () => {
 	const { state } = useLocation();
 	const [pages, setPages] = useState<string[]>([]);
 	const [hash, setHash] = useState<string>("");
-	const [chapters, setChapters] = useState<any[]>([]);
-	const [selectedLanguage, setSelectedLanguage] = useState("en");
-	const [currentPage, setCurrentPage] = useState(0);
+	const [chapters, setChapters] = useState<MangaFeed[]>([]);
+	const [selectedLanguage] = useState("en");
 	const [open, setOpen] = useState(false);
-	const [order, setOrder] = useState("desc");
-	const [scantalationGroups, setScantalationGroups] = useState<any[]>([]);
+	const [order] = useState("desc");
+	const [scantalationGroups] = useState<object[]>([]);
 
 	const handleOpenChapters = () => {
 		/** 
@@ -54,26 +51,16 @@ const Reader = () => {
 	};
 */
 	useEffect(() => {
-		fetchChapterData(state.chapterId).then((data) => {
-			console.log(
-				pageBaseUrl +
-					data["chapter"]["hash"] +
-					"/" +
-					data["chapter"]["data"][currentPage]
-			);
-			setPages(data["chapter"]["data"]);
-			setHash(data["chapter"]["hash"]);
-			console.log(data);
-			console.log(pages);
+		fetchChapterData(state.chapterId).then((data: MangaChapter) => {
+			setPages(data.chapter.data);
+			setHash(data.chapter.hash);
 		});
 
 		fetchMangaFeed(state.mangaId, 300, 0, order, selectedLanguage).then(
-			(data: Object[]) => {
+			(data: MangaFeed[]) => {
 				setChapters(data);
-				console.log(data);
-			}
+			},
 		);
-		console.log(pages);
 	}, [state]);
 
 	return (
@@ -84,25 +71,9 @@ const Reader = () => {
 			<div className='reader-page'>
 				<Typography color='white'>{state.mangaName}</Typography>
 				<Typography color='white'>{state.title}</Typography>
-				<List
-					sx={{
-						width: "100%",
-						height: "25px",
-						justifyContent: "center",
-						display: "flex",
-						alignItems: "center",
-						flexDirection: "column",
-					}}
-				>
+				<List className='reader-feed'>
 					<ListItemButton
-						sx={{
-							width: "100%",
-							color: "#121212",
-							backgroundColor: "transparent",
-							"&.MuiButtonBase-root:hover": {
-								bgcolor: "transparent",
-							},
-						}}
+						className='reader-feed-button'
 						onClick={() => handleOpenChapters()}
 					>
 						<ListItemText
@@ -118,7 +89,7 @@ const Reader = () => {
 							<ExpandMore sx={{ color: "white" }} />
 						)}
 					</ListItemButton>
-					<Collapse sx={{ width: "100%" }} in={open} timeout='auto'>
+					<Collapse className='reader-feed-collapse' in={open} timeout='auto'>
 						<MangaChapterList
 							mangaId={state.mangaId}
 							mangaFeed={chapters}

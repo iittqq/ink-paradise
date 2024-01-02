@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-	Container,
 	Grid,
 	Typography,
 	Button,
@@ -8,37 +7,36 @@ import {
 	ListItemButton,
 	ListItemText,
 	Collapse,
-	Box,
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
-import Header from "../../Components/Header";
-import Footer from "../../Components/Footer";
-import axios from "axios";
-import StandardButton from "../../Components/StandardButton";
+import Header from "../../Components/Header/Header";
+import Footer from "../../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
-import TrendingMangaSection from "../../Components/TrendingMangaSection";
-import HomepageSectionDisplay from "../../Components/HomepageSectionDisplay";
 import "./Home.css";
 
 import {
-	fetchMangaById,
 	fetchRecentlyUpdated,
 	fetchRecentlyAdded,
 	fetchMangaTags,
 } from "../../api/MangaDexApi";
 
-import { fetchTopManga } from "../../api/MalApi";
+import {
+	MangaTagsInterface,
+	Manga,
+	TopManga,
+	Relationship,
+} from "../../interfaces/MangaDexInterfaces";
 
-const baseUrlMangaDex = "https://api.mangadex.org";
-const baseUrlMal = "https://api.jikan.moe/v4";
+import { fetchTopManga } from "../../api/MalApi";
+import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 
 const Home = () => {
 	const [open, setOpen] = useState(false);
-	const [topMangaData, setTopMangaData] = useState<any[]>([]);
-	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<any[]>([]);
-	const [recentlyAddedManga, setRecentlyAddedManga] = useState<any[]>([]);
-	const [mangaTags, setMangaTags] = useState<any[]>([]);
-	let navigate = useNavigate();
+	const [topMangaData, setTopMangaData] = useState<TopManga[]>([]);
+	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
+	const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
+	const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+	const navigate = useNavigate();
 
 	const handleClickRecentlyUpdated = async () => {
 		navigate("/mangaCoverList", {
@@ -61,18 +59,19 @@ const Home = () => {
 	};
 
 	useEffect(() => {
-		fetchTopManga().then((data: any) => {
+		fetchTopManga().then((data: TopManga[]) => {
 			setTopMangaData(data);
 		});
-		fetchRecentlyUpdated(10, 0).then((data: Object[]) => {
+
+		fetchRecentlyUpdated(10, 0).then((data: Manga[]) => {
 			setRecentlyUpdatedManga(data);
 		});
 
-		fetchMangaTags().then((data: Object[]) => {
+		fetchMangaTags().then((data: MangaTagsInterface[]) => {
 			setMangaTags(data);
 		});
 
-		fetchRecentlyAdded(10, 0).then((data: Object[]) => {
+		fetchRecentlyAdded(10, 0).then((data: Manga[]) => {
 			setRecentlyAddedManga(data);
 		});
 	}, []);
@@ -89,13 +88,38 @@ const Home = () => {
 
 			<div className='manga-category-section'>
 				<div className='manga-column'>
-					<Typography textTransform='none' noWrap color={"white"}>
+					<Typography
+						className='manga-category-label'
+						textTransform='none'
+						noWrap
+						color={"white"}
+						fontSize={13}
+					>
 						Recently Added
 					</Typography>
-					<HomepageSectionDisplay
-						section='Recently Added'
-						mangaData={recentlyAddedManga}
-					/>
+					<Grid
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+						className='manga-entries'
+					>
+						{recentlyAddedManga.map((element: Manga) => (
+							<Grid item>
+								<MangaClickable
+									id={element.id}
+									title={element.attributes.title.en}
+									coverId={
+										element.relationships.find(
+											(i: Relationship) => i.type === "cover_art",
+										)?.id
+									}
+									updatedAt={element.attributes.updatedAt}
+								/>
+							</Grid>
+						))}
+					</Grid>
+
 					<Button className='show-more-button'>
 						<ExpandMore
 							sx={{ color: "#333333" }}
@@ -103,9 +127,29 @@ const Home = () => {
 						/>
 					</Button>
 				</div>
+
 				<div className='manga-column'>
 					<Typography color='white'>Trending Now</Typography>
-					<TrendingMangaSection mangaData={topMangaData} />
+					<Grid
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+						className='manga-entries'
+					>
+						{topMangaData.map((element: TopManga) => (
+							<Grid item>
+								<MangaClickable
+									id={element.mal_id}
+									title={element.title}
+									coverUrl={element.images.jpg.image_url}
+									rank={element.rank}
+									author={element.authors[0].name}
+								/>
+							</Grid>
+						))}
+					</Grid>
+
 					<Button className='show-more-button'>
 						<ExpandMore
 							sx={{ color: "#333333" }}
@@ -117,10 +161,28 @@ const Home = () => {
 					<Typography color='white' noWrap>
 						Recently Updated
 					</Typography>
-					<HomepageSectionDisplay
-						section='Recently Updated'
-						mangaData={recentlyUpdatedManga}
-					/>
+					<Grid
+						container
+						direction='row'
+						justifyContent='center'
+						alignItems='center'
+						className='manga-entries'
+					>
+						{recentlyUpdatedManga.map((element: Manga) => (
+							<Grid item>
+								<MangaClickable
+									id={element.id}
+									title={element.attributes.title.en}
+									coverId={
+										element.relationships.find(
+											(i: Relationship) => i.type === "cover_art",
+										)?.id
+									}
+									updatedAt={element.attributes.updatedAt}
+								/>
+							</Grid>
+						))}
+					</Grid>
 					<Button className='show-more-button'>
 						<ExpandMore
 							sx={{ color: "#333333" }}
@@ -157,15 +219,15 @@ const Home = () => {
 						spacing={0.5}
 						sx={{ paddingBottom: "40px" }}
 					>
-						{mangaTags.map((element: any) => (
+						{mangaTags.map((element: MangaTagsInterface) => (
 							<Grid item>
 								<Button
 									className='tag-button'
 									variant='contained'
-									onClick={() => handleClick(element["id"])}
+									onClick={() => handleClick(element.id)}
 								>
 									<Typography fontSize={10} textTransform='none'>
-										{element["attributes"].name["en"]}
+										{element.attributes.name.en}
 									</Typography>
 								</Button>
 							</Grid>

@@ -20,7 +20,7 @@
 }
 
 .nav-button-styling {
-	color: #333333;
+	color: #333333 !important;
 	&.MuiButtonBase-root:hover {
 		background-color: transparent;
 	}

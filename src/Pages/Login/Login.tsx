@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Divider, Paper, TextField } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 import { fetchAccountData } from "../../api/MalApi";
 
 const Login = () => {
 	const [username, setUsername] = useState<string>("");
-	const { state } = useLocation();
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleLogin = async (username: string) => {
 		fetchAccountData(username).then((data) => {
@@ -39,6 +38,12 @@ const Login = () => {
 						focused
 						label='Username'
 						size='small'
+						onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+							if (e.key === "Enter") {
+								handleLogin(username);
+								console.log(username);
+							}
+						}}
 						sx={{
 							input: { color: "white" },
 							"& label.Mui-focused": {

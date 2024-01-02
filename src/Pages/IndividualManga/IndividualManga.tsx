@@ -1,21 +1,28 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Grid, Button, Typography } from "@mui/material";
-import Footer from "../../Components/Footer";
-import Header from "../../Components/Header";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
-import MangaBanner from "../../Components/MangaBanner";
-import MangaTags from "../../Components/MangaTags";
-import MangaControls from "../../Components/MangaControls";
-import MangaChapterList from "../../Components/MangaChapterList";
+import { Button, Typography } from "@mui/material";
+import Footer from "../../Components/Footer/Footer";
+import Header from "../../Components/Header/Header";
+import MangaBanner from "../../Components/MangaBanner/MangaBanner";
+import MangaTags from "../../Components/MangaTags/MangaTags";
+import MangaControls from "../../Components/MangaControls/MangaControls";
+import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
+
+import {
+	Relationship,
+	Manga,
+	CoverFile,
+	MangaTagsInterface,
+	MangaFeed,
+} from "../../interfaces/MangaDexInterfaces";
 
 import {
 	fetchMangaByName,
 	fetchMangaCover,
 	fetchMangaFeed,
 	fetchMangaById,
-	fetchScantalationGroup,
 } from "../../api/MangaDexApi";
+
 import "./IndividualManga.css";
 
 const IndividualManga = () => {
@@ -25,30 +32,47 @@ const IndividualManga = () => {
 		useState<string>("");
 	const [mangaName, setMangaName] = useState("");
 	const [mangaDescription, setMangaDescription] = useState("");
-	const [mangaAltTitles, setMangaAltTitles] = useState<Object[]>([]);
+	const [mangaAltTitles, setMangaAltTitles] = useState<object[]>([]);
 	const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
 	const [mangaContentRating, setMangaContentRating] = useState("");
 	const [mangaRaw, setMangaRaw] = useState("");
-	const [mangaTags, setMangaTags] = useState<Object[]>([]);
-	const [mangaFeed, setMangaFeed] = useState<any[]>([]);
+	const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+	const [mangaFeed, setMangaFeed] = useState<MangaFeed[]>([]);
 	const [selectedLanguage, setSelectedLanguage] = useState("en");
 	const [currentOffset, setCurrentOffset] = useState(0);
 	const [currentOrder, setCurrentOrder] = useState("asc");
-	const [scantalationGroups, setScantalationGroups] = useState<any[]>([]);
+	const [scantalationGroups, setScantalationGroups] = useState<object[]>([]);
 
 	useEffect(() => {
 		if (state["title"] !== undefined) {
-			fetchMangaByName(state["title"]).then((data: any) => {
+			fetchMangaByName(state["title"]).then((data: Manga[]) => {
 				console.log(data);
-				setMangaId(data[0]["id"]);
+				setMangaId(data[0].id);
+				setMangaName(data[0].attributes.title.en);
+				setMangaDescription(data[0].attributes.description.en);
+				setMangaAltTitles(data[0].attributes.altTitles);
+				setMangaLanguages(data[0].attributes.availableTranslatedLanguages);
+				setMangaContentRating(data[0].attributes.contentRating);
+				setMangaRaw("");
+				setMangaTags(data[0].attributes.tags);
 
+				const coverArtRelationship = data[0].relationships.find(
+					(i: Relationship) => i.type === "cover_art",
+				);
+
+				if (coverArtRelationship) {
+					const coverArt = coverArtRelationship.id;
+					fetchMangaCover(coverArt).then((coverFile: CoverFile) => {
+						setMangaFromMalCoverFile(coverFile.attributes.fileName);
+					});
+				}
 				fetchMangaFeed(
-					data[0]["id"],
+					data[0].id,
 					50,
 					currentOffset,
 					currentOrder,
-					selectedLanguage
-				).then((data: any) => {
+					selectedLanguage,
+				).then((data: MangaFeed[]) => {
 					data.length === 0 ? setCurrentOffset(0) : setMangaFeed(data);
 
 					setScantalationGroups([]);
@@ -65,40 +89,19 @@ const IndividualManga = () => {
 						}); */
 					console.log(data);
 				});
-				console.log(mangaFeed);
-				fetchMangaCover(
-					data[0]["relationships"].find((i: any) => i.type === "cover_art").id
-				).then((coverFile) => {
-					setMangaFromMalCoverFile(coverFile["attributes"]["fileName"]);
-				});
-				setMangaName(data[0]["attributes"].title["en"]);
-				setMangaDescription(data[0]["attributes"].description["en"]);
-				setMangaAltTitles(data[0]["attributes"].altTitles);
-				setMangaLanguages(data[0]["attributes"].availableTranslatedLanguages);
-				setMangaContentRating(data[0]["attributes"].contentRating);
-
-				setMangaRaw(
-					data[0]["attributes"].links === null
-						? ""
-						: data[0]["attributes"].links["raw"]
-				);
-
-				setMangaTags(data[0]["attributes"].tags);
 			});
 			//fetchMangaByName();
 		} else {
-			fetchMangaById(state.id).then((data: any) => {
+			fetchMangaById(state.id).then((data: Manga) => {
 				console.log(data);
-				setMangaName(data["attributes"].title["en"]);
-				setMangaDescription(data["attributes"].description["en"]);
-				setMangaAltTitles(data["attributes"].altTitles);
-				setMangaLanguages(data["attributes"].availableTranslatedLanguages);
-				setMangaContentRating(data["attributes"].contentRating);
+				setMangaName(data.attributes.title.en);
+				setMangaDescription(data.attributes.description.en);
+				setMangaAltTitles(data.attributes.altTitles);
+				setMangaLanguages(data.attributes.availableTranslatedLanguages);
+				setMangaContentRating(data.attributes.contentRating);
 
 				setMangaRaw(
-					data["attributes"].links === null
-						? ""
-						: data["attributes"].links["raw"]
+					data["attributes"].links === null ? "" : data["attributes"].links.raw,
 				);
 
 				setMangaTags(data["attributes"].tags);
@@ -108,8 +111,8 @@ const IndividualManga = () => {
 				50,
 				currentOffset,
 				currentOrder,
-				selectedLanguage
-			).then((data: any) => {
+				selectedLanguage,
+			).then((data: MangaFeed[]) => {
 				data.length === 0 ? setCurrentOffset(0) : setMangaFeed(data);
 				/**
 					setScantalationGroups([]);
@@ -124,10 +127,8 @@ const IndividualManga = () => {
 						);
 					});
 				*/
-				console.log(data);
 			});
 		}
-		console.log(mangaFeed);
 	}, [state, selectedLanguage, currentOffset, currentOrder]);
 
 	return (
@@ -135,29 +136,25 @@ const IndividualManga = () => {
 			<div className='header'>
 				<Header />
 			</div>
-			<div className='page-header'>
-				<MangaBanner
-					title={state.title}
-					id={state.id}
-					coverFile={state.coverFile}
-					mangaFromMal={mangaId}
-					mangaFromMalCoverFile={mangaFromMalCoverFile}
-					mangaAltTitles={mangaAltTitles}
-					mangaDescription={mangaDescription}
-					mangaContentRating={mangaContentRating}
-					mangaName={mangaName}
-				/>
-			</div>
+
+			<MangaBanner
+				title={state.title}
+				id={state.id}
+				coverFile={state.coverFile}
+				mangaFromMal={mangaId}
+				mangaFromMalCoverFile={mangaFromMalCoverFile}
+				mangaAltTitles={mangaAltTitles}
+				mangaDescription={mangaDescription}
+				mangaContentRating={mangaContentRating}
+				mangaName={mangaName}
+			/>
+
 			<div>
 				<MangaTags mangaTags={mangaTags} />
 			</div>
 			<div className='centered-content'>
 				<Button className='raw-button' href={mangaRaw}>
-					<Typography
-						noWrap
-						color='#333333'
-						sx={{ fontSize: { xs: 9, sm: 10, lg: 10 } }}
-					>
+					<Typography noWrap color='#333333' sx={{ fontSize: 10 }}>
 						RAW
 					</Typography>
 				</Button>

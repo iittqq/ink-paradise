@@ -1,40 +1,44 @@
-import { Button, Card, CardMedia, Grid, Typography } from "@mui/material";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Footer from "../../Components/Footer";
-import { STATIC_EXECUTION_CONTEXT } from "styled-components/dist/constants";
+import { Button, Typography } from "@mui/material";
+
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import Footer from "../../Components/Footer/Footer";
+
+import {
+	MalFavorites,
+	UserMangaLogistics,
+	MalUpdates,
+	MangaStatus,
+} from "../../interfaces/MalInterfaces";
+
 import "./Account.css";
 
-import MangaCoverTitle from "../../Components/MangaCoverTitle";
-
-const baseUrlMangaDex = "https://api.mangadex.org";
-const baseUrlMal = "https://api.jikan.moe/v4";
+import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 
 const Account = () => {
 	const { state } = useLocation();
-	const [favorites, setFavorites] = useState<any[]>([]);
-	const [updates, setUpdates] = useState<any[]>([]);
-	const [userMangaData, setUserMangaData] = useState<any[]>([]);
+	const [favorites, setFavorites] = useState<MalFavorites[]>([]);
+	const [updates, setUpdates] = useState<MalUpdates[]>([]);
+	const [userMangaData, setUserMangaData] = useState<UserMangaLogistics[]>([]);
 	const [category, setCategory] = useState("All");
-	const [mangaStatus, setMangaStatus] = useState<any[]>([]);
+	const [mangaStatus, setMangaStatus] = useState<string[]>([]);
 
 	useEffect(() => {
-		console.log(state.account);
 		setUpdates(state.account["updates"]["manga"]);
 
 		setFavorites(state.account["favorites"]["manga"]);
-		setUserMangaData(state.account["statistics"]["manga"]);
 		setUserMangaData(
 			Object.keys(state.account["statistics"]["manga"]).map((key) => [
 				key,
 				state.account["statistics"]["manga"][key],
-			])
+			]),
 		);
 		setMangaStatus(
-			state.account["updates"]["manga"].map((current: any) => current.status)
+			state.account["updates"]["manga"].map(
+				(current: MangaStatus) => current.status,
+			),
 		);
-	}, []);
+	}, [state.account]);
 	return (
 		<div>
 			<div className='user-details-section'>
@@ -63,7 +67,7 @@ const Account = () => {
 						flexWrap: "wrap",
 					}}
 				>
-					{userMangaData.map((current) => (
+					{userMangaData.map((current: UserMangaLogistics) => (
 						<Typography color='white' sx={{ padding: "8px" }}>
 							{current[0]}: {current[1]} <br />
 						</Typography>
@@ -82,7 +86,7 @@ const Account = () => {
 				>
 					All
 				</Button>
-				{mangaStatus.map((current) => (
+				{mangaStatus.map((current: string) => (
 					<Button
 						className='category-button'
 						onClick={() => {
@@ -95,15 +99,15 @@ const Account = () => {
 			</div>
 
 			<div className='centered-content'>
-				{updates.map((current) =>
-					current["status"] === category || category === "All" ? (
+				{updates.map((current: MalUpdates) =>
+					current.status === category || category === "All" ? (
 						<>
-							<MangaCoverTitle
-								image={current["entry"]["images"]["jpg"]["large_image_url"]}
-								title={current["entry"]["title"]}
+							<MangaClickable
+								title={current.entry.title}
+								coverUrl={current.entry.images.jpg.large_image_url}
 							/>
 						</>
-					) : null
+					) : null,
 				)}
 			</div>
 
@@ -111,11 +115,11 @@ const Account = () => {
 				Favorites
 			</Typography>
 			<div className='centered-content'>
-				{favorites.map((current) => (
+				{favorites.map((current: MalFavorites) => (
 					<>
-						<MangaCoverTitle
-							image={current["images"]["jpg"]["large_image_url"]}
-							title={current["title"]}
+						<MangaClickable
+							coverUrl={current.images.jpg.large_image_url}
+							title={current.title}
 						/>
 					</>
 				))}

@@ -1,5 +1,6 @@
-import { Grid, Button, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+/* eslint-disable no-mixed-spaces-and-tabs */
+import { Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -7,9 +8,11 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { useNavigate } from "react-router-dom";
 import "./PageAndControls.css";
 
+import { MangaFeed } from "../../interfaces/MangaDexInterfaces";
+
 type Props = {
-	chapters: any[];
-	pages: any[];
+	chapters: MangaFeed[];
+	pages: string[];
 	pageBaseUrl: string;
 	hash: string;
 	currentChapter: string;
@@ -29,38 +32,39 @@ const PageAndControls = (props: Props) => {
 		mangaName,
 		offsetStart,
 	} = props;
-	let navigate = useNavigate();
+
+	const navigate = useNavigate();
 
 	const [currentPage, setCurrentPage] = useState(0);
 
 	const handleNextChapter = () => {
-		chapters.forEach((current, index) =>
-			current["attributes"]["chapter"] === currentChapter
+		chapters.forEach((current: MangaFeed, index: number) =>
+			current.attributes.chapter === currentChapter
 				? handleClick(
 						mangaId,
-						chapters[index - 1]["id"],
-						chapters[index - 1]["attributes"]["title"],
-						chapters[index - 1]["attributes"]["volume"],
-						chapters[index - 1]["attributes"]["chapter"],
-						mangaName
+						chapters[index - 1]?.id,
+						chapters[index - 1]?.attributes?.title,
+						chapters[index - 1]?.attributes?.volume,
+						chapters[index - 1]?.attributes?.chapter,
+						mangaName,
 				  )
-				: null
+				: null,
 		);
 	};
 
 	const handlePreviousChapter = () => {
-		chapters.forEach((current, index) =>
-			current["attributes"]["chapter"] === currentChapter
+		chapters.forEach((current: MangaFeed, index) =>
+			current.attributes.chapter === currentChapter
 				? handleClick(
 						mangaId,
-						chapters[index + 1]["id"],
-						chapters[index + 1]["attributes"]["title"],
-						chapters[index + 1]["attributes"]["volume"],
-						chapters[index + 1]["attributes"]["chapter"],
+						chapters[index + 1].id,
+						chapters[index + 1].attributes.title,
+						chapters[index + 1].attributes.volume,
+						chapters[index + 1].attributes.chapter,
 						mangaName,
-						chapters[index + 1]["attributes"]["pages"]
+						chapters[index + 1].attributes.pages,
 				  )
-				: null
+				: null,
 		);
 	};
 
@@ -81,7 +85,7 @@ const PageAndControls = (props: Props) => {
 		volume: string,
 		chapter: string,
 		mangaName: string,
-		startingPage?: number
+		startingPage?: number,
 	) => {
 		navigate("/reader", {
 			state: {
@@ -98,31 +102,17 @@ const PageAndControls = (props: Props) => {
 
 	useEffect(() => {
 		offsetStart === 0 ? setCurrentPage(0) : setCurrentPage(offsetStart - 1);
-		console.log(currentPage);
-	}, [props]);
+	}, [offsetStart]);
 
 	return (
 		<div>
-			<div className='page' style={{ position: "relative" }}>
+			<div className='page-container'>
 				<img
-					style={{
-						width: "100%",
-						height: "65vh",
-						objectFit: "contain",
-					}}
+					className='page'
 					src={pageBaseUrl + hash + "/" + pages[currentPage]}
 					alt=''
 				/>
-				<div
-					style={{
-						position: "absolute",
-						height: "100%",
-						width: "100%",
-						display: "flex",
-						justifyContent: "space-between",
-						transform: "translateY(-100%)",
-					}}
-				>
+				<div className='overlay-buttons'>
 					<Button
 						className='chapter-page-traversal'
 						onClick={() => handleNextChapterButton()}

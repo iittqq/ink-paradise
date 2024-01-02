@@ -1,5 +1,4 @@
 import "./App.css";
-import { Container } from "@mui/material";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import IndividualManga from "./Pages/IndividualManga/IndividualManga";
@@ -13,7 +12,7 @@ import Login from "./Pages/Login/Login";
 
 function App() {
 	return (
-		<div style={{ backgroundColor: "#121212", minHeight: "100dvh" }}>
+		<>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
@@ -25,7 +24,7 @@ function App() {
 					<Route path='/login' element={<Login />}></Route>
 				</Routes>
 			</BrowserRouter>
-		</div>
+		</>
 	);
 }
 

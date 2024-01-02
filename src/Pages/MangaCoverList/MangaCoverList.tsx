@@ -1,7 +1,8 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useState, useEffect } from "react";
 import { Grid, Typography, Button } from "@mui/material";
-import Header from "../../Components/Header";
-import CoverClickable from "../../Components/CoverClickable";
+import Header from "../../Components/Header/Header";
+import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { useLocation } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -15,146 +16,51 @@ import {
 	fetchRecentlyUpdated,
 } from "../../api/MangaDexApi";
 
+import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
+
 const MangaCoverList = () => {
 	const { state } = useLocation();
 	const [offset, setOffset] = useState<number>(0);
 	console.log(state.title);
 	console.log(state.tagId !== undefined);
 	console.log(state.listType);
-	const [mangaDetails, setmangaDetails] = useState<Object[]>([]);
+	const [mangaDetails, setmangaDetails] = useState<Manga[]>([]);
 
-	/**
-  const fetchMangaByRecentlyAdded = async () => {
-    //pageTitle = "Recently Added";
-    fetch(
-      `${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BcreatedAt%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setmangaDetails(data.data);
-
-        console.log(data.data);
-      });
-  };
-
-  const fetchMangaByTitle = async () => {
-    fetch(
-      `${baseUrl}/manga?limit=60&offset=${offset}&title=${
-        state.title === undefined ? "" : state.title
-      }&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setmangaDetails(data.data);
-
-        console.log(data.data);
-      });
-  };
-
-  const fetchMangaByAuthor = async () => {
-    fetch(
-      `${baseUrl}/manga?limit=60&offset=0&authors%5B%5D=${state.authorId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setmangaDetails(data.data);
-
-        console.log(data.data);
-      });
-  };
-
-  const fetchMangaByTag = async () => {
-    fetch(
-      `${baseUrl}/manga?limit=60&offset=0&includedTags%5B%5D=${state.tagId}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setmangaDetails(data.data);
-
-        console.log(data.data);
-      });
-  };
-
-  const fetchMangaByRecentlyUpdated = async () => {
-    fetch(
-      `${baseUrl}/manga?limit=60&offset=${offset}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5BlatestUploadedChapter%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setmangaDetails(data.data);
-
-        console.log(data.data);
-      });
-  };
-
-  const fetchMangaByName = async () => {
-    fetch(
-      `${baseUrl}/manga?limit=100&title=${state.id}&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&order%5Brelevance%5D=desc`
-    )
-      .then((response) => response.json())
-      .then((mangaBySearch) => {
-        setmangaDetails(mangaBySearch.data);
-        console.log(mangaBySearch.data);
-      });
-  };
-
-  const fetchMangaCoverList = async () => {
-    console.log(state.listType);
-    state.listType === "RecentlyAdded"
-      ? fetchMangaByRecentlyAdded()
-      : state.listType === "SearchResults"
-      ? fetchMangaByName()
-      : //Add New Page Logic Here
-      state.listType === "RecentlyUpdated"
-      ? state.title !== undefined
-        ? fetchMangaByTitle()
-        : state.authorId !== undefined
-        ? fetchMangaByAuthor()
-        : state.tagId !== undefined
-        ? fetchMangaByTag()
-        : fetchMangaByRecentlyUpdated()
-      : fetchMangaByRecentlyAdded();
-  }; */
-
-	const fetchMangaCoverList = async () => {
+	useEffect(() => {
 		console.log(state.listType);
 		state.listType === "RecentlyAdded"
-			? fetchRecentlyAdded(75, offset).then((data: Object[]) => {
+			? fetchRecentlyAdded(75, offset).then((data: Manga[]) => {
 					setmangaDetails(data);
 			  })
 			: state.listType === "SearchResults"
 			? fetchMangaByName(state.title === undefined ? "" : state.title).then(
-					(data: Object[]) => {
+					(data: Manga[]) => {
 						setmangaDetails(data);
-					}
+					},
 			  )
 			: //Add New Page Logic Here
 			state.listType === "RecentlyUpdated"
 			? state.title !== undefined
-				? fetchMangaByName(state.title).then((data: Object[]) => {
+				? fetchMangaByName(state.title).then((data: Manga[]) => {
 						setmangaDetails(data);
 				  })
 				: state.authorId !== undefined
 				? fetchMangaByAuthor(state.authorId, 75, offset).then(
-						(data: Object[]) => {
+						(data: Manga[]) => {
 							setmangaDetails(data);
-						}
+						},
 				  )
 				: state.tagId !== undefined
-				? fetchMangaByTag(state.tagId, 75, offset).then((data: Object[]) => {
+				? fetchMangaByTag(state.tagId, 75, offset).then((data: Manga[]) => {
 						setmangaDetails(data);
 				  })
-				: fetchRecentlyUpdated(75, offset).then((data: Object[]) => {
+				: fetchRecentlyUpdated(75, offset).then((data: Manga[]) => {
 						setmangaDetails(data);
 				  })
-			: fetchRecentlyAdded(75, offset).then((data: Object[]) => {
+			: fetchRecentlyAdded(75, offset).then((data: Manga[]) => {
 					setmangaDetails(data);
 			  });
-	};
-
-	useEffect(() => {
-		fetchMangaCoverList();
-	}, [offset, state]);
+	}, []);
 	return (
 		<>
 			<div className='header'>
@@ -170,15 +76,15 @@ const MangaCoverList = () => {
 					wrap='wrap'
 					spacing={1}
 				>
-					{mangaDetails.map((element: any) => (
+					{mangaDetails.map((element: Manga) => (
 						<Grid item>
-							<CoverClickable
+							<MangaClickable
 								id={element["id"]}
 								title={element["attributes"].title["en"]}
 								coverId={
 									element["relationships"].find(
-										(i: any) => i.type === "cover_art"
-									).id
+										(i: Relationship) => i.type === "cover_art",
+									)?.id
 								}
 							/>
 						</Grid>

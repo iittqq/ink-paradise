@@ -1,20 +1,13 @@
 import { Button, Typography } from "@mui/material";
-import React from "react";
-import { useEffect, useState } from "react";
-import Header from "../../Components/Header";
+import { useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
-import Footer from "../../Components/Footer";
+import Footer from "../../Components/Footer/Footer";
 import "./Library.css";
 //type Props = { malUserProfile: any };
 
-let options = new Map<number, string>();
-
 const Library = () => {
-	const [category, setCategory] = useState("all");
-	const [open, setOpen] = useState(false);
-
 	useEffect(() => {}, []);
 
 	return (
