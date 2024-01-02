@@ -1,0 +1,19 @@
+.tag-button {
+	background-color: #191919;
+	width: 120px;
+	height: 20px;
+	text-align: center;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff !important;
+	}
+}
+
+.tag-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}

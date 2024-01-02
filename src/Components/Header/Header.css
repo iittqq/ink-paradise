@@ -1,0 +1,41 @@
+.input-field {
+	input {
+		color: white;
+	}
+	& label.Mui-focused {
+		color: white;
+	}
+	& .MuiOutlinedInput-root {
+		&.Mui-focused fieldset {
+			border-color: white;
+		}
+	}
+}
+
+.search-section {
+	position: relative;
+	right: 0px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.container-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 50px;
+	padding: 10px;
+}
+
+.search-button {
+	color: #ffffff !important;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: white;
+	}
+}
