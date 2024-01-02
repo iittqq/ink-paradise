@@ -1,40 +1,30 @@
 import "./App.css";
-import { Container } from "@mui/material";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Home from "./Pages/Home";
-import IndividualManga from "./Pages/IndividualManga";
-import RecentlyAdded from "./Pages/RecentlyAdded";
-import SearchResults from "./Pages/SearchResults";
-import ListOfMangaPage from "./Pages/ListOfMangaPage";
-import Reader from "./Pages/Reader";
+import Home from "./Pages/Home/Home";
+import IndividualManga from "./Pages/IndividualManga/IndividualManga";
+import Reader from "./Pages/Reader/Reader";
+import MangaCoverList from "./Pages/MangaCoverList/MangaCoverList";
+import Library from "./Pages/Library/Library";
+import Account from "./Pages/Account/Account";
+import Login from "./Pages/Login/Login";
 
 //#121212
 
 function App() {
 	return (
-		<Container
-			disableGutters
-			sx={{
-				backgroundColor: "#121212",
-				minWidth: "100%",
-				minHeight: "100vh",
-				overflow: "hidden",
-			}}
-		>
+		<>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
 					<Route path='/individualView' element={<IndividualManga />}></Route>
-					<Route path='/recentlyAdded' element={<RecentlyAdded />}></Route>
-					<Route path='/results' element={<SearchResults />}></Route>
-					<Route
-						path='/mangaList'
-						element={<ListOfMangaPage title='Recently Updated' />}
-					></Route>
+					<Route path='/mangaCoverList' element={<MangaCoverList />}></Route>
 					<Route path='/reader' element={<Reader />}></Route>
+					<Route path='/library' element={<Library />}></Route>
+					<Route path='/account' element={<Account />}></Route>
+					<Route path='/login' element={<Login />}></Route>
 				</Routes>
 			</BrowserRouter>
-		</Container>
+		</>
 	);
 }
 

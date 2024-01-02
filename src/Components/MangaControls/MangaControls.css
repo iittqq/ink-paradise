@@ -1,0 +1,71 @@
+.asc-desc-button {
+	color: #333333 !important;
+	height: 20px;
+	width: 150px;
+	background-color: #191919 !important;
+	position: relative;
+	left: 50;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff !important;
+	}
+}
+
+.arrow-button {
+	color: #333333 !important;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff !important;
+	}
+}
+
+.language-button {
+	background-color: #191919 !important;
+	width: 20px;
+	height: 20px;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff !important;
+	}
+}
+
+.translator-button {
+	background-color: #191919 !important;
+	width: 55px;
+	height: 45px;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff !important;
+	}
+}
+
+.controls {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.list-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.list-button {
+	width: 150px;
+	color: #121212;
+	background-color: transparent;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+}

@@ -1,0 +1,69 @@
+.cover-image {
+	width: 30%;
+	padding-right: 10px;
+	@media screen and (min-width: 1200px) {
+		width: 10%;
+	}
+}
+
+.banner-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+}
+
+.manga-details {
+	width: 60%;
+}
+
+.alt-name-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-end;
+}
+
+.manga-name {
+	padding-right: 20px;
+	color: #ffffff;
+}
+
+.manga-alt-name {
+	padding-right: 5px;
+	color: #ffffff;
+}
+
+.description {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	color: white;
+}
+
+.show-button {
+	background-color: transparent !important;
+	position: absolute !important;
+	right: 50px;
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: white;
+	}
+}
+
+.content-rating-button {
+	background-color: #191919;
+	width: 120px;
+	height: 20px;
+	text-align: center;
+
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+	.MuiTouchRipple-child {
+		background-color: #ffffff;
+	}
+}

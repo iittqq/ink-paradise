@@ -1,0 +1,38 @@
+.box {
+	top: 50%;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	& .MuiPaper-root {
+		background-color: #444444;
+	}
+}
+
+.box-content {
+	width: 300px;
+	background-color: #444444;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.account-icon {
+	height: 40px;
+	width: 40px;
+	color: #ffffff;
+}
+
+.divider {
+	background-color: rgb(18, 18, 18);
+	width: 320px;
+	height: 1px;
+	border-bottom-width: 1;
+}
+
+.button {
+	color: #ffffff !important;
+	margin-bottom: -10px;
+	text-transform: none;
+}
