@@ -17,7 +17,7 @@ import {
 } from "../../interfaces/MangaDexInterfaces";
 
 import {
-	fetchMangaByName,
+	fetchMangaByTitle,
 	fetchMangaCover,
 	fetchMangaFeed,
 	fetchMangaById,
@@ -45,7 +45,7 @@ const IndividualManga = () => {
 
 	useEffect(() => {
 		if (state["title"] !== undefined) {
-			fetchMangaByName(state["title"]).then((data: Manga[]) => {
+			fetchMangaByTitle(state["title"]).then((data: Manga[]) => {
 				console.log(data);
 				setMangaId(data[0].id);
 				setMangaName(data[0].attributes.title.en);

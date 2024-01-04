@@ -11,16 +11,6 @@ import {
 	MangaFeed,
 } from "../interfaces/MangaDexInterfaces";
 
-async function fetchMangaById(mangaId: string): Promise<Manga> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga/${mangaId}`);
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
-}
-
 async function fetchRecentlyUpdated(
 	limit: number,
 	offset: number,
@@ -69,7 +59,17 @@ async function fetchMangaTags(): Promise<MangaTagsInterface[]> {
 	}
 }
 
-async function fetchMangaByName(title: string): Promise<Manga[]> {
+async function fetchMangaById(mangaId: string): Promise<Manga> {
+	try {
+		const response = await axios.get(`${BASE_URL}/manga/${mangaId}`);
+		return response.data["data"];
+	} catch (error) {
+		console.error("Error fetching manga:", error);
+		throw error;
+	}
+}
+
+async function fetchMangaByTitle(title: string): Promise<Manga[]> {
 	try {
 		const response = await axios.get(`${BASE_URL}/manga`, {
 			params: {
@@ -78,6 +78,26 @@ async function fetchMangaByName(title: string): Promise<Manga[]> {
 			},
 		});
 		return response.data["data"];
+	} catch (error) {
+		console.error("Error fetching manga:", error);
+		throw error;
+	}
+}
+
+async function fetchMangaByTag(
+	tagId: string,
+	limit: number,
+	offset: number,
+): Promise<Manga[]> {
+	try {
+		const response = await axios.get(`${BASE_URL}/manga`, {
+			params: {
+				limit: limit,
+				offset: offset,
+				includedTags: [tagId],
+			},
+		});
+		return response["data"]["data"];
 	} catch (error) {
 		console.error("Error fetching manga:", error);
 		throw error;
@@ -151,26 +171,6 @@ async function fetchMangaByAuthor(
 	}
 }
 
-async function fetchMangaByTag(
-	tagId: string,
-	limit: number,
-	offset: number,
-): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				limit: limit,
-				offset: offset,
-				includedTags: [tagId],
-			},
-		});
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
-}
-
 async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
 	try {
 		const response = await axios.get(`${BASE_URL}/at-home/server/${chapterId}`);
@@ -205,7 +205,7 @@ export {
 	fetchRecentlyUpdated,
 	fetchRecentlyAdded,
 	fetchMangaTags,
-	fetchMangaByName,
+	fetchMangaByTitle,
 	fetchMangaCover,
 	fetchMangaFeed,
 	fetchScantalationGroup,
