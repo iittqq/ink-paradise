@@ -10,7 +10,7 @@ import "./MangaCoverList.css";
 
 import {
 	fetchRecentlyAdded,
-	fetchMangaByName,
+	fetchMangaByTitle,
 	fetchMangaByAuthor,
 	fetchMangaByTag,
 	fetchRecentlyUpdated,
@@ -33,7 +33,7 @@ const MangaCoverList = () => {
 					setmangaDetails(data);
 			  })
 			: state.listType === "SearchResults"
-			? fetchMangaByName(state.title === undefined ? "" : state.title).then(
+			? fetchMangaByTitle(state.title === undefined ? "" : state.title).then(
 					(data: Manga[]) => {
 						setmangaDetails(data);
 					},
@@ -41,7 +41,7 @@ const MangaCoverList = () => {
 			: //Add New Page Logic Here
 			state.listType === "RecentlyUpdated"
 			? state.title !== undefined
-				? fetchMangaByName(state.title).then((data: Manga[]) => {
+				? fetchMangaByTitle(state.title).then((data: Manga[]) => {
 						setmangaDetails(data);
 				  })
 				: state.authorId !== undefined
