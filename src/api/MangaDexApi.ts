@@ -1,216 +1,212 @@
 import axios from "axios";
 
-const BASE_URL = "https://api.mangadex.org";
-const BACKEND_URL = "http://localhost:8080";
+const BASE_URL = "http://localhost:8080";
 
 import {
-	Manga,
-	CoverFile,
-	MangaTagsInterface,
-	MangaChapter,
-	MangaFeed,
+  Manga,
+  CoverFile,
+  MangaTagsInterface,
+  MangaChapter,
+  MangaFeed,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
-	limit: number,
-	offset: number,
+  limit: number,
+  offset: number
 ): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				limit: limit,
-				offset: offset,
-			},
-		});
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/recently-updated`, {
+      params: {
+        limit: limit,
+        offset: offset,
+      },
+    });
+    return response.data["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchRecentlyAdded(
-	limit: number,
-	offset: number,
+  limit: number,
+  offset: number
 ): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				limit: limit,
-				offset: offset,
-				order: { createdAt: "desc" },
-			},
-		});
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/recently-added`, {
+      params: {
+        limit: limit,
+        offset: offset,
+      },
+    });
+    return response.data["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaTags(): Promise<MangaTagsInterface[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga/tag`);
-		console.log(response.data["data"]);
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/tags`);
+    console.log(response.data["data"]);
+    return response.data["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaById(mangaId: string): Promise<Manga> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga/${mangaId}`);
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-id`, {
+      params: {
+        mangaId: mangaId,
+      },
+    });
+    return response.data["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaByTitle(title: string): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				title: title,
-				order: { relevance: "desc" },
-			},
-		});
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-title`, {
+      params: {
+        title: title,
+        order: { relevance: "desc" },
+      },
+    });
+    return response.data["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaByTag(
-	tagId: string,
-	limit: number,
-	offset: number,
+  tagId: string,
+  limit: number,
+  offset: number
 ): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				limit: limit,
-				offset: offset,
-				includedTags: [tagId],
-			},
-		});
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-tag`, {
+      params: {
+        limit: limit,
+        offset: offset,
+        includedTags: [tagId],
+      },
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaCover(coverId: string): Promise<CoverFile> {
-	try {
-		const response = await axios.get(`${BASE_URL}/cover/${coverId}`);
-		console.log(response["data"]["data"]);
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-cover`, {
+      params: {
+        coverId: coverId,
+      },
+    });
+    console.log(response["data"]["data"]);
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchMangaFeed(
-	mangaId: string,
-	limit: number,
-	offset: number,
-	order: string,
-	language: string,
+  mangaId: string,
+  limit: number,
+  offset: number,
+  order: string,
+  language: string
 ): Promise<MangaFeed[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga/${mangaId}/feed`, {
-			params: {
-				limit: limit,
-				offset: offset,
-				order: { chapter: order },
-				translatedLanguage: [language],
-			},
-		});
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-feed`, {
+      params: {
+        mangaId: mangaId,
+        limit: limit,
+        offset: offset,
+        order: { chapter: order },
+        translatedLanguage: [language],
+      },
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchScantalationGroup(
-	groupId: string,
+  groupId: string
 ): Promise<object[] | undefined> {
-	try {
-		const response = await axios.get(`${BASE_URL}/group/${groupId}`);
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		//throw error;
-	}
-	return undefined;
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/scanlation-group`, {
+      params: {
+        groupId: groupId,
+      },
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    //throw error;
+  }
+  return undefined;
 }
 
 async function fetchMangaByAuthor(
-	authorName: string,
-	limit: number,
-	offset: number,
+  authorName: string,
+  limit: number,
+  offset: number
 ): Promise<Manga[]> {
-	try {
-		const response = await axios.get(`${BASE_URL}/manga`, {
-			params: {
-				limit: limit,
-				offset: offset,
-				authors: [authorName],
-			},
-		});
-		return response["data"]["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-author`, {
+      params: {
+        limit: limit,
+        offset: offset,
+        authors: [authorName],
+      },
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
-	try {
-		const response = await axios.get(`${BASE_URL}/at-home/server/${chapterId}`);
-		console.log(response["data"]);
-		return response["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
-}
-
-async function fetchTestBackend(limit: number): Promise<object[]> {
-	try {
-		const response = await axios.get(
-			`${BACKEND_URL}/mangaDex/recentlyUpdated`,
-			{
-				params: {
-					limit: limit,
-				},
-			},
-		);
-		console.log(response.data["data"]);
-		return response.data["data"];
-	} catch (error) {
-		console.error("Error fetching manga:", error);
-		throw error;
-	}
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/chapter-data`, {
+      params: {
+        chapterId: chapterId,
+      },
+    });
+    console.log(response["data"]);
+    return response["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
 }
 
 export {
-	fetchMangaById,
-	fetchRecentlyUpdated,
-	fetchRecentlyAdded,
-	fetchMangaTags,
-	fetchMangaByTitle,
-	fetchMangaCover,
-	fetchMangaFeed,
-	fetchScantalationGroup,
-	fetchMangaByAuthor,
-	fetchMangaByTag,
-	fetchChapterData,
-	fetchTestBackend,
+  fetchMangaById,
+  fetchRecentlyUpdated,
+  fetchRecentlyAdded,
+  fetchMangaTags,
+  fetchMangaByTitle,
+  fetchMangaCover,
+  fetchMangaFeed,
+  fetchScantalationGroup,
+  fetchMangaByAuthor,
+  fetchMangaByTag,
+  fetchChapterData,
 };
