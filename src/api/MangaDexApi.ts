@@ -61,7 +61,7 @@ async function fetchMangaById(mangaId: string): Promise<Manga> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-id`, {
       params: {
-        mangaId: mangaId,
+        id: mangaId,
       },
     });
     return response.data["data"];
@@ -75,8 +75,8 @@ async function fetchMangaByTitle(title: string): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-title`, {
       params: {
+        limit: 10,
         title: title,
-        order: { relevance: "desc" },
       },
     });
     return response.data["data"];
@@ -110,7 +110,7 @@ async function fetchMangaCover(coverId: string): Promise<CoverFile> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-cover`, {
       params: {
-        coverId: coverId,
+        id: coverId,
       },
     });
     console.log(response["data"]["data"]);
@@ -131,11 +131,11 @@ async function fetchMangaFeed(
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-feed`, {
       params: {
-        mangaId: mangaId,
+        id: mangaId,
         limit: limit,
         offset: offset,
-        order: { chapter: order },
-        translatedLanguage: [language],
+        order: order,
+        translatedLanguage: language,
       },
     });
     return response["data"]["data"];
@@ -151,7 +151,7 @@ async function fetchScantalationGroup(
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/scanlation-group`, {
       params: {
-        groupId: groupId,
+        id: groupId,
       },
     });
     return response["data"]["data"];
@@ -172,7 +172,7 @@ async function fetchMangaByAuthor(
       params: {
         limit: limit,
         offset: offset,
-        authors: [authorName],
+        authors: authorName,
       },
     });
     return response["data"]["data"];
@@ -186,7 +186,7 @@ async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/chapter-data`, {
       params: {
-        chapterId: chapterId,
+        id: chapterId,
       },
     });
     console.log(response["data"]);
