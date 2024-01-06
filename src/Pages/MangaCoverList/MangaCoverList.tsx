@@ -60,7 +60,7 @@ const MangaCoverList = () => {
 			: fetchRecentlyAdded(75, offset).then((data: Manga[]) => {
 					setmangaDetails(data);
 			  });
-	}, []);
+	}, [state]);
 	return (
 		<>
 			<div className='header'>

@@ -16,7 +16,7 @@ const Header = () => {
 		searchInput === ""
 			? null
 			: navigate("/mangaCoverList", {
-					state: { listType: "SearchResults", id: searchInput },
+					state: { listType: "SearchResults", title: searchInput },
 			  });
 
 	return (
