@@ -39,16 +39,20 @@ const Home = () => {
 	const navigate = useNavigate();
 
 	const handleClickRecentlyUpdated = async () => {
-		navigate("/mangaCoverList", {
-			state: { listType: "RecentlyUpdated" },
+		fetchRecentlyUpdated(75, 0).then((data: Manga[]) => {
+			navigate("/mangaCoverList", {
+				state: { listType: "RecentlyUpdated", manga: data },
+			});
 		});
 	};
 
 	const handleClickTrendingNow = async () => {};
 
 	const handleClickMangaCoverListRA = async () => {
-		navigate("/mangaCoverList", {
-			state: { listType: "RecentlyAdded" },
+		fetchRecentlyAdded(75, 0).then((data: Manga[]) => {
+			navigate("/mangaCoverList", {
+				state: { listType: "RecentlyAdded", manga: data },
+			});
 		});
 	};
 	const handleClick = async (tagId: string) => {
