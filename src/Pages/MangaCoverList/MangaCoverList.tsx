@@ -8,58 +8,15 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./MangaCoverList.css";
 
-import {
-	fetchRecentlyAdded,
-	fetchMangaByTitle,
-	fetchMangaByAuthor,
-	fetchMangaByTag,
-	fetchRecentlyUpdated,
-} from "../../api/MangaDexApi";
-
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 
 const MangaCoverList = () => {
 	const { state } = useLocation();
 	const [offset, setOffset] = useState<number>(0);
-	console.log(state.title);
-	console.log(state.tagId !== undefined);
-	console.log(state.listType);
-	const [mangaDetails, setmangaDetails] = useState<Manga[]>([]);
+	const [mangaDetails, setMangaDetails] = useState<Manga[]>([]);
 
 	useEffect(() => {
-		console.log(state.listType);
-		state.listType === "RecentlyAdded"
-			? fetchRecentlyAdded(75, offset).then((data: Manga[]) => {
-					setmangaDetails(data);
-			  })
-			: state.listType === "SearchResults"
-			? fetchMangaByTitle(state.title === undefined ? "" : state.title).then(
-					(data: Manga[]) => {
-						setmangaDetails(data);
-					},
-			  )
-			: //Add New Page Logic Here
-			state.listType === "RecentlyUpdated"
-			? state.title !== undefined
-				? fetchMangaByTitle(state.title).then((data: Manga[]) => {
-						setmangaDetails(data);
-				  })
-				: state.authorId !== undefined
-				? fetchMangaByAuthor(state.authorId, 75, offset).then(
-						(data: Manga[]) => {
-							setmangaDetails(data);
-						},
-				  )
-				: state.tagId !== undefined
-				? fetchMangaByTag(state.tagId, 75, offset).then((data: Manga[]) => {
-						setmangaDetails(data);
-				  })
-				: fetchRecentlyUpdated(75, offset).then((data: Manga[]) => {
-						setmangaDetails(data);
-				  })
-			: fetchRecentlyAdded(75, offset).then((data: Manga[]) => {
-					setmangaDetails(data);
-			  });
+		setMangaDetails(state.manga);
 	}, [state]);
 	return (
 		<>

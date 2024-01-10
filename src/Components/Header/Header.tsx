@@ -4,6 +4,8 @@ import { TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
+import { fetchMangaByTitle } from "../../api/MangaDexApi";
+import { Manga } from "../../interfaces/MangaDexInterfaces";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -15,8 +17,10 @@ const Header = () => {
 	const handleClick = async () =>
 		searchInput === ""
 			? null
-			: navigate("/mangaCoverList", {
-					state: { listType: "SearchResults", title: searchInput },
+			: fetchMangaByTitle(searchInput).then((data: Manga[]) => {
+					navigate("/mangaCoverList", {
+						state: { listType: "SearchResults", manga: data },
+					});
 			  });
 
 	return (
