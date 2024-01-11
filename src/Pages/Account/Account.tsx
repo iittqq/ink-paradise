@@ -24,19 +24,17 @@ const Account = () => {
 	const [mangaStatus, setMangaStatus] = useState<string[]>([]);
 
 	useEffect(() => {
-		setUpdates(state.account["updates"]["manga"]);
+		setUpdates(state.account.updates.manga);
 
-		setFavorites(state.account["favorites"]["manga"]);
+		setFavorites(state.account.favorites.manga);
 		setUserMangaData(
-			Object.keys(state.account["statistics"]["manga"]).map((key) => [
+			Object.keys(state.account.statistics.manga).map((key) => [
 				key,
-				state.account["statistics"]["manga"][key],
+				state.account.statistics.manga[key],
 			]),
 		);
 		setMangaStatus(
-			state.account["updates"]["manga"].map(
-				(current: MangaStatus) => current.status,
-			),
+			state.account.updates.manga.map((current: MangaStatus) => current.status),
 		);
 	}, [state.account]);
 	return (
@@ -44,20 +42,20 @@ const Account = () => {
 			<div className='user-details-section'>
 				<img
 					className='user-image'
-					src={state.account["images"]["jpg"]["image_url"]}
+					src={state.account.images.jpg.image_url}
 					alt='profile'
 				></img>
 
 				<Typography color='white' className='user-details'>
-					{state.account["username"]} <br /> <br />
+					{state.account.username} <br /> <br />
 					About:&nbsp;
-					{state.account["about"]}
+					{state.account.about}
 					<br />
 					Gender:&nbsp;
-					{state.account["gender"]}
+					{state.account.gender}
 					<br />
 					Birthday:&nbsp;
-					{state.account["birthday"]}
+					{state.account.birthday}
 					<br />
 				</Typography>
 
