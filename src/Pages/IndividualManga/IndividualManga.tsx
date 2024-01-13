@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
-import Footer from "../../Components/Footer/Footer";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaTags from "../../Components/MangaTags/MangaTags";
@@ -183,10 +182,6 @@ const IndividualManga = () => {
 						scantalationGroups={scantalationGroups}
 					/>
 				</div>
-			</div>
-
-			<div className='footer'>
-				<Footer />
 			</div>
 		</div>
 	);

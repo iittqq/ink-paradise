@@ -11,7 +11,7 @@ import Account from "./Pages/Account/Account";
 
 function App() {
 	return (
-		<>
+		<div className='page-details'>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
@@ -22,7 +22,7 @@ function App() {
 					<Route path='/account' element={<Account />}></Route>
 				</Routes>
 			</BrowserRouter>
-		</>
+		</div>
 	);
 }
 

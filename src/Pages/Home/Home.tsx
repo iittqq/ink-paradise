@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
-import Footer from "../../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
@@ -85,10 +84,8 @@ const Home = () => {
 	};
 
 	return (
-		<div>
-			<div className='header'>
-				<Header />
-			</div>
+		<div className='home-page-container'>
+			<Header />
 
 			<div className='manga-category-section'>
 				<div className='manga-column'>
@@ -239,10 +236,6 @@ const Home = () => {
 					</Grid>
 				</Collapse>
 			</List>
-
-			<div className='footer'>
-				<Footer />
-			</div>
 		</div>
 	);
 };

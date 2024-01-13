@@ -1,8 +1,17 @@
+.user-page-container {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
 .user-image {
 	top: 0;
 	left: 0;
 	width: 250px;
 	height: 250px;
+	@media screen and (max-width: 600px) {
+		width: 150px;
+		height: 150px;
+	}
 }
 
 .user-details-section {
@@ -22,12 +31,6 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
 }
 
 .manga-cover {

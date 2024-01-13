@@ -2,7 +2,6 @@ import { Button, Typography } from "@mui/material";
 
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Footer from "../../Components/Footer/Footer";
 
 import {
 	MalFavorites,
@@ -38,7 +37,7 @@ const Account = () => {
 		);
 	}, [state.account]);
 	return (
-		<div>
+		<div className='user-page-container'>
 			<div className='user-details-section'>
 				<img
 					className='user-image'
@@ -121,9 +120,6 @@ const Account = () => {
 						/>
 					</>
 				))}
-			</div>
-			<div className='footer'>
-				<Footer />
 			</div>
 		</div>
 	);
