@@ -1,34 +1,11 @@
-.input-field {
-	width: 300px;
-	@media screen and (max-width: 800px) {
-		width: 150px;
-	}
-
-	input {
-		color: white;
-	}
-	& label.Mui-focused {
-		color: white;
-	}
-	& .MuiOutlinedInput-root {
-		&.Mui-focused fieldset {
-			border-color: white;
-		}
-	}
-}
-.buttons-container {
+.container-header {
 	display: flex;
-	justify-content: space-evenly;
-	align-content: center;
 	flex-direction: row;
-}
-
-.nav-buttons {
-	color: #ffffff !important;
-	background-color: transparent;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
+	justify-content: space-between;
+	align-items: center;
+	min-height: 50px;
+	position: relative;
+	top: 0;
 }
 
 .search-section {
@@ -41,58 +18,65 @@
 	width: 60dvw;
 }
 
-.container-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	min-height: 50px;
-	position: relative;
-	top: 0;
-}
-
-.search-button {
-	color: #000000 !important;
-	background-color: #ffffff !important;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: white;
-	}
-}
-
-.box {
-	top: 50%;
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	& .MuiPaper-root {
-		background-color: #444444;
-	}
-}
-
-.box-content {
+.input-field {
 	width: 300px;
-	background-color: #444444;
-	padding: 10px;
+
+	@media screen and (max-width: 800px) {
+		width: 150px;
+	}
+
+	input {
+		color: white;
+	}
+
+	& label.Mui-focused {
+		color: white;
+	}
+
+	& .MuiOutlinedInput-root {
+		&.Mui-focused fieldset {
+			border-color: white;
+		}
+	}
+}
+
+.account-login {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: space-evenly;
 	align-items: center;
+	width: 300px;
+	height: 150px;
+	background-color: #1f1f1f;
 }
 
-.account-icon {
-	height: 40px;
-	width: 40px;
+.logo-field-login {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+}
+
+.login-logo {
+	&.MuiSvgIcon-root {
+		height: 40px;
+		width: 40px;
+	}
 	color: #ffffff;
 }
 
-.divider {
-	background-color: rgb(18, 18, 18);
-	width: 320px;
-	height: 1px;
-	border-bottom-width: 1;
+.header-buttons {
+	color: #000000 !important;
+	background-color: #ffffff !important;
+
+	&.MuiButtonBase-root:hover {
+		background-color: transparent;
+	}
+
+	.MuiTouchRipple-child {
+		background-color: white;
+	}
 }
 
 .account-details-submit-button {
@@ -100,63 +84,4 @@
 	background-color: #444444 !important;
 	margin-bottom: -10px;
 	text-transform: none;
-}
-.top-section-form {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	width: 90%;
-	height: 60px;
-}
-
-.more-options-container {
-	background-color: #121212;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
-	width: 100%;
-	height: 150px;
-}
-
-.login-dialog-box {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	align-items: center;
-	width: 100%;
-	height: 150px;
-	background-color: #1f1f1f;
-}
-
-.tags-list {
-	width: 100%;
-	justify-content: center;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-}
-
-.tags-list-button {
-	width: 100px;
-	color: #121212;
-	background-color: transparent;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-}
-
-.tag-button {
-	background-color: #191919 !important;
-	width: 120px;
-	height: 30px;
-
-	text-align: center;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: white;
-	}
 }

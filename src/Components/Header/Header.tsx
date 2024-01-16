@@ -1,6 +1,15 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { useState } from "react";
-import { TextField, Typography, Button, Divider, Popper } from "@mui/material";
+import {
+	TextField,
+	Typography,
+	Button,
+	Divider,
+	Popper,
+	Menu,
+	MenuItem,
+	Popover,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
@@ -14,12 +23,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const Header = () => {
 	const navigate = useNavigate();
-	//const [open, setOpen] = useState(false);
-	const [searchInput, setSearchInput] = useState("");
-	const [loginOpen, setLoginOpen] = useState<boolean>(false);
-	const [moreOpti0nsOpen, setMoreOptionsOpen] = useState<boolean>(false);
 
+	const [searchInput, setSearchInput] = useState("");
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [username, setUsername] = useState<string>("");
+	const [anchorElLogin, setAnchorElLogin] = useState<null | HTMLElement>(null);
+	const [openLogin, setOpenLogin] = useState<boolean>(false);
 
 	const handleLogin = async (username: string) => {
 		fetchAccountData(username).then((data) => {
@@ -29,13 +38,20 @@ const Header = () => {
 			});
 		});
 	};
-
-	const handleClickAccount = () => {
-		setLoginOpen(true);
+	const loginOpen = Boolean(anchorElLogin);
+	const handleClickAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorElLogin(event.currentTarget);
 	};
 
-	const handleClickMoreOptions = () => {
-		setMoreOptionsOpen(true);
+	const open = Boolean(anchorEl);
+	const handleClickMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+	const handleCloseLogin = () => {
+		setAnchorElLogin(null);
 	};
 
 	const handleClickLibrary = async () => {
@@ -79,72 +95,80 @@ const Header = () => {
 					}}
 				/>
 
-				<Button onClick={handleClickMoreOptions} sx={{ color: "white" }}>
+				<Button
+					onClick={open === true ? handleClose : handleClickMenuOpen}
+					className='header-buttons'
+				>
 					<MoreVertIcon />
-
-					<Popper open={moreOpti0nsOpen}>
-						<div className='more-options-container'>
-							<Button
-								className='nav-buttons'
-								onClick={() => handleClickLibrary()}
-							>
-								<BookIcon />
-							</Button>
-							<Button className='nav-buttons'>
-								<WhatsHotIcon />
-							</Button>
-							<Button className='nav-buttons' onClick={handleClickAccount}>
-								<AccountBoxIcon />
-							</Button>
-							<Popper open={loginOpen}>
-								<div className='login-dialog-box'>
-									<div className='top-section-form'>
-										<AccountBoxIcon className='account-icon' />
-
-										<TextField
-											variant='outlined'
-											focused
-											label='Username'
-											size='small'
-											onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-												if (e.key === "Enter") {
-													handleLogin(username);
-													console.log(username);
-												}
-											}}
-											sx={{
-												input: { color: "white" },
-												"& label.Mui-focused": {
-													color: "white",
-												},
-												"& .MuiOutlinedInput-root ": {
-													"&.Mui-focused fieldset": {
-														borderColor: "white",
-													},
-												},
-											}}
-											onChange={(event) => {
-												setUsername(event.target.value);
-											}}
-										/>
-									</div>
-									<Divider className='divider' />
-
-									<Button
-										className='account-details-submit-button'
-										onClick={() => {
-											handleLogin(username);
-										}}
-									>
-										Login
-									</Button>
-								</div>
-							</Popper>
-						</div>
-					</Popper>
+					<Menu
+						id='header-menu'
+						anchorEl={anchorEl}
+						open={open}
+						onClose={handleClose}
+						anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+					>
+						<MenuItem onClick={() => handleClickLibrary()}>
+							<BookIcon />
+						</MenuItem>
+						<MenuItem>
+							<WhatsHotIcon />
+						</MenuItem>
+					</Menu>
+				</Button>
+				<Button onClick={handleClickAccount} className='header-buttons'>
+					<AccountBoxIcon />
 				</Button>
 
-				<Button className='search-button' onClick={() => handleClick()}>
+				<Popover
+					id='login-menu'
+					anchorEl={anchorElLogin}
+					open={loginOpen}
+					onClose={handleCloseLogin}
+					anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+				>
+					<div className='account-login'>
+						<div className='logo-field-login'>
+							<AccountBoxIcon className='login-logo' />
+
+							<TextField
+								variant='outlined'
+								focused
+								label='Username'
+								size='small'
+								onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+									if (e.key === "Enter") {
+										handleLogin(username);
+									}
+								}}
+								sx={{
+									input: { color: "white" },
+									"& label.Mui-focused": {
+										color: "white",
+									},
+									"& .MuiOutlinedInput-root ": {
+										"&.Mui-focused fieldset": {
+											borderColor: "white",
+										},
+									},
+								}}
+								onChange={(event) => {
+									setUsername(event.target.value);
+								}}
+							/>
+						</div>
+
+						<Button
+							className='account-details-submit-button'
+							onClick={() => {
+								handleLogin(username);
+							}}
+						>
+							Login
+						</Button>
+					</div>
+				</Popover>
+
+				<Button className='header-buttons' onClick={() => handleClick()}>
 					<KeyboardArrowRightIcon />
 				</Button>
 			</div>
