@@ -4,8 +4,6 @@ import {
 	TextField,
 	Typography,
 	Button,
-	Divider,
-	Popper,
 	Menu,
 	MenuItem,
 	Popover,
@@ -28,7 +26,6 @@ const Header = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [username, setUsername] = useState<string>("");
 	const [anchorElLogin, setAnchorElLogin] = useState<null | HTMLElement>(null);
-	const [openLogin, setOpenLogin] = useState<boolean>(false);
 
 	const handleLogin = async (username: string) => {
 		fetchAccountData(username).then((data) => {
