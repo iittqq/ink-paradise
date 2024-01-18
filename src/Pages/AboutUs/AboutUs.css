@@ -1,0 +1,22 @@
+.creator {
+}
+.about-us-page {
+  width: 70%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: top;
+  align-items: normal;
+  color: #ffffff !important;
+  padding-left: 25px;
+}
+
+.creators-display {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: top;
+  color: #ffffff !important;
+  padding-left: 40px;
+}
