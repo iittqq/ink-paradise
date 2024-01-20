@@ -1,5 +1,4 @@
 import { Button, Card, Typography } from "@mui/material";
-import React from "react";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PasswordIcon from "@mui/icons-material/Password";
 
@@ -9,7 +8,7 @@ const Login = () => {
 	return (
 		<div className='login-page'>
 			<Card className='login-card' elevation={5}>
-				<Typography>Login</Typography>
+				<Typography className='login-header'>Login</Typography>
 				<div>
 					<Typography className='login-text-field-headers'>Email</Typography>
 					<div className='login-icon-field-container'>
@@ -18,7 +17,7 @@ const Login = () => {
 						<input
 							type='text'
 							className='login-input-fields'
-							placeholder='Username'
+							placeholder='Email'
 						/>
 					</div>
 				</div>
@@ -32,10 +31,13 @@ const Login = () => {
 							placeholder='Password'
 						/>
 					</div>
+					<Button className='forgot-password-button'>
+						<Typography textTransform='none' fontSize={12}>
+							Forgot Password?
+						</Typography>
+					</Button>
 				</div>
-				<Button>
-					<Typography>Forgot?</Typography>
-				</Button>
+
 				<Button variant='contained' className='login-button'>
 					Login
 				</Button>
