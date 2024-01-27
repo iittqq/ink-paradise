@@ -3,8 +3,17 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
+import { fetchAccountData, createAccount } from "../../api/Account";
+import { Account } from "../../interfaces/AccountInterfaces";
+import { useState } from "react";
 
 const Login = () => {
+	const [account, setAccount] = useState({
+		email: "test",
+		password: "test",
+		username: "test",
+		contentFilter: 1,
+	});
 	return (
 		<div className='login-page'>
 			<Card className='login-card' elevation={5}>
@@ -40,6 +49,25 @@ const Login = () => {
 
 				<Button variant='contained' className='login-button'>
 					Login
+				</Button>
+
+				<Button
+					onClick={() => {
+						console.log(account);
+						createAccount(account);
+					}}
+				>
+					fast create
+				</Button>
+				<Button
+					className='register-button'
+					onClick={() => {
+						fetchAccountData();
+					}}
+				>
+					<Typography textTransform='none' className='register-text'>
+						Register
+					</Typography>
 				</Button>
 			</Card>
 		</div>
