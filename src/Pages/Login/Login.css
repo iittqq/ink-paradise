@@ -15,13 +15,15 @@
 	align-items: center;
 }
 
-.login-header {
+.login-header,
+.register-header {
 	font-size: 30px !important;
 	color: #879ebf !important;
 	font-family: "Figtree" !important;
 }
 
-.login-input-fields {
+.login-input-fields,
+.register-input-fields {
 	width: 250px;
 	height: 30px;
 	padding: 0px;
@@ -41,20 +43,27 @@ input.login-input-fields:focus {
 	outline: none;
 }
 
-.login-text-field-headers {
+input.register-input-fields:focus {
+	outline: none;
+}
+
+.login-text-field-headers,
+.register-text-field-headers {
 	padding-bottom: 10px;
 	color: #879ebf !important;
 	font-family: "Figtree" !important;
 }
 
-.login-field-icons {
+.login-field-icons,
+.register-field-icons {
 	width: 40px !important;
 	height: 32px !important;
 	background-color: #333333;
 	color: #ffffff !important;
 }
 
-.login-icon-field-container {
+.login-icon-field-container,
+.register-icon-field-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
@@ -68,21 +77,36 @@ input.login-input-fields:focus {
 	font-family: "Figtree" !important;
 }
 
-.login-button {
+.login-button,
+.register-button {
 	width: 80%;
 	border-radius: 25px !important;
 	font-family: "Figtree" !important;
 	background-color: #3f51b5 !important;
-}
+	color: #ffffff !important;
 
-.register-button {
 	&.MuiButtonBase-root:hover {
 		background-color: transparent;
 	}
-
 }
 
-.register-text {
-	color: #879ebf !important;
+
+
+
+
+.content-filter-selection-box {
+	width: 290px;
+
+	padding: 0px;
+	background-color: #333333;
 	font-family: "Figtree" !important;
+}
+
+.content-filter-dropdown {
+	color: #ffffff !important;
+	padding-left: 10px;
+}
+
+.register-section {
+	padding-bottom: 10px;
 }
