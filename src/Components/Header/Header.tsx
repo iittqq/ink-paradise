@@ -18,8 +18,13 @@ import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Account } from "../../interfaces/AccountInterfaces";
+type Props = {
+	malAccount?: Account;
+};
 
-const Header = () => {
+const Header = (props: Props) => {
+	const { malAccount } = props;
 	const navigate = useNavigate();
 
 	const [searchInput, setSearchInput] = useState("");
@@ -37,7 +42,15 @@ const Header = () => {
 	};
 	const loginOpen = Boolean(anchorElLogin);
 	const handleClickAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorElLogin(event.currentTarget);
+		if (malAccount) {
+			fetchAccountData(malAccount.username).then((data) => {
+				navigate("/account", {
+					state: { account: data },
+				});
+			});
+		} else {
+			setAnchorElLogin(event.currentTarget);
+		}
 	};
 
 	const open = Boolean(anchorEl);

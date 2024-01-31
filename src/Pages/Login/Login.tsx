@@ -2,8 +2,6 @@ import {
 	Button,
 	Card,
 	FormControl,
-	InputLabel,
-	Menu,
 	MenuItem,
 	Select,
 	SelectChangeEvent,
@@ -13,9 +11,9 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createAccount, fetchAccountData } from "../../api/Account";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 
 const Login = () => {
@@ -54,16 +52,36 @@ const Login = () => {
 		console.log(email, password, malUsername, contentFilter);
 		fetchAccountData().then((response) => {
 			response.forEach((element: Account) => {
-				console.log(element.email, element.password);
 				if (element.email === email && element.password === password) {
 					console.log("Login Successful");
-					console.log(element);
+					navigate("/", {
+						state: { malAccount: element },
+					});
 				} else {
 					setEmail("");
 					setPassword("");
 				}
 			});
 		});
+	};
+
+	const handleRegister = async () => {
+		if (password === confirmPassword) {
+			createAccount({
+				email: email,
+				username: malUsername,
+				password: password,
+				contentFilter: contentFilter,
+			}).then((response) => {
+				navigate("/", {
+					state: { malAccount: response },
+				});
+			});
+		} else {
+			setPassword("");
+			setConfirmPassword("");
+			console.log("Passwords do not match");
+		}
 	};
 	const navigate = useNavigate();
 
@@ -91,7 +109,7 @@ const Login = () => {
 						</div>
 						<div className='register-section'>
 							<Typography className='register-text-field-headers'>
-								Mal Username (Optional)
+								MAL Username (Optional)
 							</Typography>
 							<div className='register-icon-field-container'>
 								<PersonOutlineIcon className='register-field-icons' />
@@ -99,7 +117,7 @@ const Login = () => {
 								<input
 									type='text'
 									className='register-input-fields'
-									placeholder='Mal Username'
+									placeholder='My Anime List Username'
 									value={malUsername}
 									onChange={handleMalUsernameChange}
 								/>
@@ -137,7 +155,7 @@ const Login = () => {
 						</div>
 						<div className='register-section'>
 							<Typography className='register-text-field-headers'>
-								Content Setting
+								Content Filter
 							</Typography>
 
 							<div className='content-filter-selection-box'>
@@ -163,22 +181,7 @@ const Login = () => {
 						variant='contained'
 						className='register-button'
 						onClick={() => {
-							if (password === confirmPassword) {
-								createAccount({
-									email: email,
-									username: malUsername,
-									password: password,
-									contentFilter: contentFilter,
-								});
-
-								navigate("/", {
-									state: {},
-								});
-							} else {
-								setPassword("");
-								setConfirmPassword("");
-								console.log("Passwords do not match");
-							}
+							handleRegister();
 						}}
 					>
 						Register
@@ -202,13 +205,16 @@ const Login = () => {
 						</div>
 					</div>
 					<div>
-						<Typography className='login-text-field-headers'>
+						<Typography
+							fontFamily='Figtree'
+							className='login-text-field-headers'
+						>
 							Password
 						</Typography>
 						<div className='login-icon-field-container'>
 							<PasswordIcon className='login-field-icons' />
 							<input
-								type='text'
+								type='password'
 								className='login-input-fields'
 								placeholder='Password'
 								value={password}
@@ -216,7 +222,11 @@ const Login = () => {
 							/>
 						</div>
 						<Button className='forgot-password-button'>
-							<Typography textTransform='none' fontSize={12}>
+							<Typography
+								textTransform='none'
+								fontSize={12}
+								fontFamily='Figtree'
+							>
 								Forgot Password?
 							</Typography>
 						</Button>
@@ -229,7 +239,9 @@ const Login = () => {
 							handleLogin();
 						}}
 					>
-						Login
+						<Typography fontFamily='Figtree' textTransform='none'>
+							Login
+						</Typography>
 					</Button>
 
 					<Button
@@ -240,7 +252,9 @@ const Login = () => {
 							setPassword("");
 						}}
 					>
-						<Typography textTransform='none'>Register</Typography>
+						<Typography fontFamily='Figtree' textTransform='none'>
+							Register
+						</Typography>
 					</Button>
 				</Card>
 			)}

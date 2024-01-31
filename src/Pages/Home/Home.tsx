@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 import {
@@ -36,7 +36,7 @@ const Home = () => {
 	const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
 	const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
 	const navigate = useNavigate();
-
+	const { state } = useLocation();
 	const handleClickRecentlyUpdated = async () => {
 		fetchRecentlyUpdated(75, 0).then((data: Manga[]) => {
 			navigate("/mangaCoverList", {
@@ -55,7 +55,6 @@ const Home = () => {
 		});
 	};
 	const handleClick = async (tagId: string) => {
-		console.log(tagId);
 		navigate("mangaList", {
 			state: { tagId: tagId },
 		});
@@ -77,6 +76,7 @@ const Home = () => {
 		fetchRecentlyAdded(10, 0).then((data: Manga[]) => {
 			setRecentlyAddedManga(data);
 		});
+		console.log(state.malAccount);
 	}, []);
 
 	const handleOpenTags = () => {
@@ -85,7 +85,7 @@ const Home = () => {
 
 	return (
 		<div className='home-page-container'>
-			<Header />
+			<Header malAccount={state.malAccount ? state.malAccount : null} />
 
 			<div className='manga-category-section'>
 				<div className='manga-column'>
