@@ -5,9 +5,10 @@ const BASE_URL = "http://localhost:8080";
 import { TopManga } from "../interfaces/MalInterfaces";
 
 async function fetchAccountData(username: string): Promise<object[]> {
+	console.log(username);
 	try {
 		const response = await axios.get(
-			`${BASE_URL}/my-anime-list/fetch-account-data`,
+			`${BASE_URL}/my-anime-list/fetch-account-data?`,
 			{
 				params: {
 					username: username,

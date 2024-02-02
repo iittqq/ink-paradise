@@ -76,7 +76,6 @@ const Home = () => {
 		fetchRecentlyAdded(10, 0).then((data: Manga[]) => {
 			setRecentlyAddedManga(data);
 		});
-		console.log(state.malAccount);
 	}, []);
 
 	const handleOpenTags = () => {
@@ -85,7 +84,13 @@ const Home = () => {
 
 	return (
 		<div className='home-page-container'>
-			<Header malAccount={state.malAccount ? state.malAccount : null} />
+			<Header
+				malAccount={
+					state.malAccount.username
+						? state.malAccount.username
+						: state.malAccount
+				}
+			/>
 
 			<div className='manga-category-section'>
 				<div className='manga-column'>

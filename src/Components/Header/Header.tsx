@@ -18,9 +18,9 @@ import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Account } from "../../interfaces/AccountInterfaces";
+
 type Props = {
-	malAccount?: Account;
+	malAccount?: string;
 };
 
 const Header = (props: Props) => {
@@ -42,8 +42,9 @@ const Header = (props: Props) => {
 	};
 	const loginOpen = Boolean(anchorElLogin);
 	const handleClickAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+		console.log(malAccount);
 		if (malAccount) {
-			fetchAccountData(malAccount.username).then((data) => {
+			fetchAccountData(malAccount).then((data) => {
 				navigate("/account", {
 					state: { account: data },
 				});

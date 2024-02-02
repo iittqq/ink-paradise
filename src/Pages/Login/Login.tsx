@@ -50,12 +50,13 @@ const Login = () => {
 
 	const handleLogin = async () => {
 		console.log(email, password, malUsername, contentFilter);
+
 		fetchAccountData().then((response) => {
 			response.forEach((element: Account) => {
 				if (element.email === email && element.password === password) {
 					console.log("Login Successful");
 					navigate("/", {
-						state: { malAccount: element },
+						state: { malAccount: element.username },
 					});
 				} else {
 					setEmail("");
@@ -66,6 +67,7 @@ const Login = () => {
 	};
 
 	const handleRegister = async () => {
+		console.log(malUsername);
 		if (password === confirmPassword) {
 			createAccount({
 				email: email,
@@ -73,8 +75,13 @@ const Login = () => {
 				password: password,
 				contentFilter: contentFilter,
 			}).then((response) => {
+				console.log(response);
 				navigate("/", {
-					state: { malAccount: response },
+					state: {
+						malAccount: {
+							username: malUsername,
+						},
+					},
 				});
 			});
 		} else {
