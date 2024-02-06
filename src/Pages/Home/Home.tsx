@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 import {
@@ -35,8 +35,9 @@ const Home = () => {
   const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
   const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+
   const navigate = useNavigate();
-  const { state } = useLocation();
+
   const handleClickRecentlyUpdated = async () => {
     fetchRecentlyUpdated(75, 0).then((data: Manga[]) => {
       navigate("/mangaCoverList", {
@@ -84,10 +85,7 @@ const Home = () => {
 
   return (
     <div className="home-page-container">
-      <Header
-        malAccount={state.malAccount ? state.malAccount : undefined}
-        account={state.account ? state.account : undefined}
-      />
+      <Header />
 
       <div className="manga-category-section">
         <div className="manga-column">

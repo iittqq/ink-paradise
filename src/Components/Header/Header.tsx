@@ -10,31 +10,24 @@ import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Account } from "../../interfaces/AccountInterfaces";
+import { MalAccount } from "../../interfaces/MalInterfaces";
 
-type Props = {
-  malAccount?: string;
-  account?: Account;
-};
-
-const Header = (props: Props) => {
-  const { malAccount, account } = props;
+const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  console.log(malAccount);
-  console.log(account);
 
   const handleClickAccount = () => {
-    console.log(malAccount);
-    if (malAccount) {
-      fetchAccountData(malAccount).then((data) => {
-        navigate("/account", {
-          state: { malAccount: data, account: account },
-        });
-      });
-    } else {
+    if (localStorage.getItem("malAccount") === null) {
       navigate("/login");
+    } else {
+      fetchAccountData(localStorage.getItem("malAccount")!).then(
+        (data: MalAccount) => {
+          navigate("/account", {
+            state: { malAccount: data },
+          });
+        },
+      );
     }
   };
 
@@ -51,7 +44,7 @@ const Header = (props: Props) => {
   };
 
   const handleClickLogo = async () => {
-    navigate("/", { state: { malAccount: malAccount } });
+    navigate("/");
   };
 
   const handleClick = async () =>
@@ -107,7 +100,12 @@ const Header = (props: Props) => {
             </MenuItem>
           </Menu>
         </Button>
-        <Button onClick={handleClickAccount} className="header-buttons">
+        <Button
+          onClick={() => {
+            handleClickAccount();
+          }}
+          className="header-buttons"
+        >
           <AccountBoxIcon />
         </Button>
 

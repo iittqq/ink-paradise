@@ -12,9 +12,8 @@ import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, fetchAccountData } from "../../api/Account";
+import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
-import { Account } from "../../interfaces/AccountInterfaces";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -50,20 +49,15 @@ const Login = () => {
 
   const handleLogin = async () => {
     console.log(email, password, malUsername, contentFilter);
-
-    fetchAccountData().then((response) => {
-      response.forEach((element: Account) => {
-        if (element.email === email && element.password === password) {
-          console.log("Login Successful");
-          console.log(element);
-          navigate("/", {
-            state: { malAccount: element.username, account: element },
-          });
-        } else {
-          setEmail("");
-          setPassword("");
-        }
-      });
+    login({ email, password }).then((response) => {
+      console.log(response);
+      if (response !== null) {
+        localStorage.setItem("malAccount", response.username);
+        localStorage.setItem("account", JSON.stringify(response));
+        navigate("/");
+      } else {
+        console.log("Invalid login");
+      }
     });
   };
 
@@ -77,12 +71,9 @@ const Login = () => {
         contentFilter: contentFilter,
       }).then((response) => {
         console.log(response);
-        navigate("/", {
-          state: {
-            account: response,
-            malAccount: response.username,
-          },
-        });
+        localStorage.setItem("account", JSON.stringify(response));
+        localStorage.setItem("malAccount", response.username);
+        navigate("/");
       });
     } else {
       setPassword("");

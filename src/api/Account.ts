@@ -26,4 +26,19 @@ async function createAccount(account: object): Promise<Account> {
   }
 }
 
-export { fetchAccountData, createAccount };
+async function login(accountDetails: object): Promise<Account> {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/v1/accounts/login`, {
+      params: {
+        account: JSON.stringify(accountDetails),
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+export { fetchAccountData, createAccount, login };
