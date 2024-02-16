@@ -14,6 +14,7 @@ import "./Login.css";
 import { useState } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
+import { Account } from "../../interfaces/AccountInterfaces";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -69,9 +70,9 @@ const Login = () => {
         username: malUsername,
         password: password,
         contentFilter: contentFilter,
-      }).then((response) => {
+      }).then((response: Account) => {
         console.log(response);
-        localStorage.setItem("account", JSON.stringify(response));
+        localStorage.setItem("userId", response.id);
         localStorage.setItem("malAccount", response.username);
         navigate("/");
       });

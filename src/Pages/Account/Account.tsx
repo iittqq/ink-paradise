@@ -16,6 +16,8 @@ const Account = () => {
   const [userMangaData, setUserMangaData] = useState<UserMangaLogistics[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
+  const [newFolderDescription, setNewFolderDescription] = useState<string>("");
+
   console.log(state.account);
   const searchFolders = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -23,13 +25,20 @@ const Account = () => {
       console.log(event.currentTarget.value);
     }
   };
-  const handleCreateFolder = () => {
-    addMangaFolder({
-      userId: state.account.id,
-      folderName: newFolderName,
-    }).then((response) => {
-      console.log(response);
-    });
+
+  const handleCreateFolder = async () => {
+    console.log(newFolderName);
+    console.log(newFolderDescription);
+    console.log(localStorage.getItem("userId"));
+    if (newFolderName !== "") {
+      console.log("yes");
+      addMangaFolder({
+        userId: localStorage.getItem("userId"),
+        folderName: newFolderName,
+      }).then((response) => {
+        console.log(response);
+      });
+    }
   };
   useEffect(() => {
     setUserMangaData(
@@ -82,17 +91,23 @@ const Account = () => {
             <SearchIcon />
           </Button>
         </div>
-        <Button className="add-folder-button">
-          <AddIcon />
-        </Button>
+        <div className="create-folder-container">
+          <div className="create-folder-fields">
+            <Typography>Name</Typography>{" "}
+            <input onChange={(e) => setNewFolderName(e.target.value)} />
+            <Typography>Description</Typography>
+            <input onChange={(e) => setNewFolderDescription(e.target.value)} />
+          </div>
+          <Button
+            className="add-folder-button"
+            onClick={() => handleCreateFolder()}
+          >
+            <AddIcon />
+          </Button>
+        </div>
       </div>
       <div className="personal-folders">
-        <Button
-          className="folder"
-          onClick={() => {
-            handleCreateFolder();
-          }}
-        >
+        <Button className="folder">
           <Typography>Folder</Typography>
         </Button>
       </div>

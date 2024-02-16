@@ -1,136 +1,157 @@
 .user-page-container {
-	scrollbar-width: none;
-	-ms-overflow-style: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .user-image {
-	top: 0;
-	left: 0;
-	width: 250px;
-	height: 250px;
-	@media screen and (max-width: 600px) {
-		width: 150px;
-		height: 150px;
-	}
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+  @media screen and (max-width: 600px) {
+    width: 150px;
+    height: 150px;
+  }
 }
 
 .user-details-section {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: space-between;
-	padding-top: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 50px;
 }
 
 .image-details-section {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 .user-details {
-	padding-left: 10px;
-	padding-right: 10px;
-	height: 250px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 250px;
 }
 
 .centered-content {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .manga-cover {
-	width: 100px;
-	height: 150px;
-	border-radius: 6%;
-	filter: brightness(40%);
+  width: 100px;
+  height: 150px;
+  border-radius: 6%;
+  filter: brightness(40%);
 }
 
 .manga-text {
-	position: absolute;
-	bottom: 10px;
-	width: 100%;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
 }
 
 .category-text {
-	padding: 10px;
+  padding: 10px;
 }
 
 .category-buttons-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
 }
 
 .category-button {
-	color: #ffffff;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	&.MuiTouchRipple-child {
-		background-color: "white";
-	}
-	text-transform: none;
+  color: #ffffff;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  &.MuiTouchRipple-child {
+    background-color: "white";
+  }
+  text-transform: none;
 }
 
 .personal-folders {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	align-items: center;
-	flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .folder-section-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
 }
 
 .folder-search-bar {
-	width: 250px;
-	height: 30px;
-	background-color: #333333;
-	input:focus {
-		border: 1px solid #333333;
-		outline: none;
-	}
-	border: 1px solid #333333;
-	box-shadow: none;
+  width: 250px;
+  height: 30px;
+  background-color: #333333;
+  input:focus {
+    border: 1px solid #333333;
+    outline: none;
+  }
+  border: 1px solid #333333;
+  box-shadow: none;
 }
 
 input.folder-search-bar:focus {
-	outline: none;
+  outline: none;
 }
 
 .user-stats {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-evenly;
-	align-items: center;
-	flex-wrap: wrap;
-	max-height: 250px;
-	overflow-y: scroll;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  max-height: 250px;
+  overflow-y: scroll;
 }
 
 .search-button {
-	width: 30px;
-	height: 30px;
-	left: 20px;
-	color: #ffffff !important;
+  width: 30px;
+  height: 30px;
+  left: 20px;
+  color: #ffffff !important;
 }
 
 .add-folder-button {
-	width: 30px;
-	height: 30px;
-	color: #ffffff !important;
+  width: 30px;
+  height: 30px;
+  color: #ffffff !important;
 }
 
 .folder {
-	height: 100px;
-	width: 200px;
+  height: 100px;
+  width: 200px;
+}
+
+.create-folder-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.create-folder-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.field-name-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 300px;
 }

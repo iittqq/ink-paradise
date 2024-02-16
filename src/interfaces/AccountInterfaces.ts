@@ -1,6 +1,7 @@
 export interface Account {
-	email: string;
-	password: string;
-	username: string;
-	contentFilter: number;
+  id: string;
+  email: string;
+  password: string;
+  username: string;
+  contentFilter: number;
 }
