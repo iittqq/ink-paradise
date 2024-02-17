@@ -1,0 +1,97 @@
+.overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  top: 0;
+  position: absolute;
+  width: 300px;
+  height: 320px;
+  border-radius: 3;
+  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.05));
+}
+
+.infoBar {
+  background-color: #121212;
+}
+
+.button {
+  background-color: transparent;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #121212;
+  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-text {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  margin-bottom: 30px;
+  font-size: medium;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.rank-text {
+}
+
+.carousel-selector {
+  overflow: hidden;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.inner {
+  display: flex;
+  justify-content: flex-start;
+  white-space: nowrap;
+  transition: transform 0.3s;
+  align-items: center;
+  width: 100%;
+}
+
+.carousel-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  max-height: 300px;
+  background-color: #121212;
+  width: 260px;
+  max-width: 260px;
+  min-width: 260px;
+  color: white;
+}
+
+.indicators {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-image {
+  height: 100%;
+}
+
+.carousel-text {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  width: 35px;
+}
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
