@@ -69,7 +69,7 @@
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
-  &.MuiTouchRipple-child {
+  .MuiTouchRipple-child {
     background-color: "white";
   }
   text-transform: none;
@@ -89,6 +89,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .folder-search-bar {
@@ -133,6 +134,13 @@ input.folder-search-bar:focus {
 .folder {
   height: 100px;
   width: 200px;
+  background-color: #222222 !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
 }
 
 .create-folder-fields {

@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Grid } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -8,8 +8,9 @@ import Header from "../../Components/Header/Header";
 
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 
-import { addMangaFolder } from "../../api/MangaFolder";
+import { addMangaFolder, getMangaFolders } from "../../api/MangaFolder";
 import "./Account.css";
+import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 
 const Account = () => {
   const { state } = useLocation();
@@ -17,8 +18,8 @@ const Account = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
-
-  console.log(state.account);
+  const [folders, setFolders] = useState<MangaFolder[]>([]);
+  console.log(state.malAccount);
   const searchFolders = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       setSearchTerm(event.currentTarget.value);
@@ -47,6 +48,17 @@ const Account = () => {
         state.malAccount.statistics.manga[key],
       ]),
     );
+    getMangaFolders().then((response) => {
+      console.log(response);
+      console.log(localStorage.getItem("userId"));
+      response.forEach((folder) => {
+        const userId = JSON.parse(localStorage.getItem("userId"));
+        if (folder.userId === userId) {
+          setFolders((prev) => [...prev, folder]);
+        }
+        console.log(folder);
+      });
+    });
   }, [state.malAccount]);
   return (
     <div className="user-page-container">
@@ -107,9 +119,27 @@ const Account = () => {
         </div>
       </div>
       <div className="personal-folders">
-        <Button className="folder">
-          <Typography>Folder</Typography>
-        </Button>
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          direction="row"
+          spacing={2}
+        >
+          {folders.map((folder) => (
+            <Grid item>
+              <Button className="folder">
+                <Typography
+                  textTransform={"none"}
+                  color={"#ffffff"}
+                  fontFamily={"Figtree"}
+                >
+                  {folder.folderName}
+                </Typography>
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
       </div>
     </div>
   );
