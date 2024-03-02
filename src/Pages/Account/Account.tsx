@@ -19,6 +19,7 @@ const Account = () => {
   const [newFolderName, setNewFolderName] = useState<string>("");
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
   const [folders, setFolders] = useState<MangaFolder[]>([]);
+  const [newFolder, setNewFolder] = useState<boolean>(false);
   console.log(state.malAccount);
   const searchFolders = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -26,22 +27,22 @@ const Account = () => {
       console.log(event.currentTarget.value);
     }
   };
-
   const handleCreateFolder = async () => {
     console.log(newFolderName);
     console.log(newFolderDescription);
     console.log(localStorage.getItem("userId"));
     if (newFolderName !== "") {
       console.log("yes");
+      setNewFolder(!newFolder);
       addMangaFolder({
         userId: localStorage.getItem("userId"),
         folderName: newFolderName,
-      }).then((response) => {
-        console.log(response);
       });
     }
+    setNewFolder(!newFolder);
   };
   useEffect(() => {
+    console.log(newFolder);
     setUserMangaData(
       Object.keys(state.malAccount.statistics.manga).map((key) => [
         key,
@@ -51,15 +52,15 @@ const Account = () => {
     getMangaFolders().then((response) => {
       console.log(response);
       console.log(localStorage.getItem("userId"));
-      response.forEach((folder) => {
-        const userId = JSON.parse(localStorage.getItem("userId"));
-        if (folder.userId === userId) {
-          setFolders((prev) => [...prev, folder]);
-        }
-        console.log(folder);
-      });
+      setFolders(
+        response.filter(
+          (folder) =>
+            folder.userId === JSON.parse(localStorage.getItem("userId")),
+        ),
+      );
+      console.log(folders);
     });
-  }, [state.malAccount]);
+  }, [state.malAccount, newFolder]);
   return (
     <div className="user-page-container">
       <Header />
