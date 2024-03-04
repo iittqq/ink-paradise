@@ -11,6 +11,11 @@ import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 import { addMangaFolder, getMangaFolders } from "../../api/MangaFolder";
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
+import {
+  addMangaFolderEntry,
+  getMangaFolderEntries,
+} from "../../api/MangaFolderEntry";
+import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 
 const Account = () => {
   const { state } = useLocation();
@@ -20,6 +25,13 @@ const Account = () => {
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
   const [folders, setFolders] = useState<MangaFolder[]>([]);
   const [newFolder, setNewFolder] = useState<boolean>(false);
+  const [selectedFolder, setSelectedFolder] = useState<MangaFolder | null>(
+    null,
+  );
+  const [selectedFolderEntries, setSelectedFolderEntries] = useState<
+    MangaFolderEntry[] | null
+  >(null);
+
   console.log(state.malAccount);
   const searchFolders = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -42,6 +54,9 @@ const Account = () => {
     setNewFolder(!newFolder);
   };
   useEffect(() => {
+    addMangaFolderEntry({ folderId: 2, mangaId: 1 });
+    addMangaFolderEntry({ folderId: 1, mangaId: 2 });
+    addMangaFolderEntry({ folderId: 2, mangaId: 3 });
     console.log(newFolder);
     setUserMangaData(
       Object.keys(state.malAccount.statistics.manga).map((key) => [
@@ -58,9 +73,17 @@ const Account = () => {
             folder.userId === JSON.parse(localStorage.getItem("userId")),
         ),
       );
-      console.log(folders);
     });
   }, [state.malAccount, newFolder]);
+
+  const handleFolderClick = (folder: MangaFolder) => {
+    setSelectedFolder(folder);
+    getMangaFolderEntries().then((response) => {
+      setSelectedFolderEntries(
+        response.filter((entry) => entry.folderId === folder.folderId),
+      );
+    });
+  };
   return (
     <div className="user-page-container">
       <Header />
@@ -127,19 +150,30 @@ const Account = () => {
           direction="row"
           spacing={2}
         >
-          {folders.map((folder) => (
-            <Grid item>
-              <Button className="folder">
-                <Typography
-                  textTransform={"none"}
-                  color={"#ffffff"}
-                  fontFamily={"Figtree"}
-                >
-                  {folder.folderName}
-                </Typography>
-              </Button>
-            </Grid>
-          ))}
+          {selectedFolder === null
+            ? folders.map((folder) => (
+                <Grid item>
+                  <Button
+                    className="folder"
+                    onClick={() => {
+                      handleFolderClick(folder);
+                    }}
+                  >
+                    <Typography
+                      textTransform={"none"}
+                      color={"#ffffff"}
+                      fontFamily={"Figtree"}
+                    >
+                      {folder.folderName}
+                    </Typography>
+                  </Button>
+                </Grid>
+              ))
+            : selectedFolderEntries?.map((entry) => (
+                <Grid item>
+                  <Button>{entry.mangaId}</Button>
+                </Grid>
+              ))}
         </Grid>
       </div>
     </div>
