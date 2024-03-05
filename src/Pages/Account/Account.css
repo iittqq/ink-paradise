@@ -108,6 +108,13 @@ input.folder-search-bar:focus {
   outline: none;
 }
 
+.back-button {
+  color: #ffffff !important;
+  background-color: #333333 !important;
+  margin: 0px 0px 0px 20px !important;
+  height: 30px;
+}
+
 .user-stats {
   display: flex;
   flex-direction: row;

@@ -33,11 +33,26 @@ const Account = () => {
   >(null);
 
   console.log(state.malAccount);
-  const searchFolders = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      setSearchTerm(event.currentTarget.value);
-      console.log(event.currentTarget.value);
-    }
+  const searchFolders = async () => {
+    getMangaFolders().then((response) => {
+      setFolders(
+        response.filter(
+          (folder) =>
+            folder.folderName.includes(searchTerm) &&
+            folder.userId === JSON.parse(localStorage.getItem("userId")),
+        ),
+      );
+    });
+  };
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleInputKeyboard = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    setSearchTerm(event.target.value);
   };
   const handleCreateFolder = async () => {
     console.log(newFolderName);
@@ -49,21 +64,13 @@ const Account = () => {
       addMangaFolder({
         userId: localStorage.getItem("userId"),
         folderName: newFolderName,
+        folderDescription: newFolderDescription,
       });
     }
     setNewFolder(!newFolder);
   };
-  useEffect(() => {
-    addMangaFolderEntry({ folderId: 2, mangaId: 1 });
-    addMangaFolderEntry({ folderId: 1, mangaId: 2 });
-    addMangaFolderEntry({ folderId: 2, mangaId: 3 });
-    console.log(newFolder);
-    setUserMangaData(
-      Object.keys(state.malAccount.statistics.manga).map((key) => [
-        key,
-        state.malAccount.statistics.manga[key],
-      ]),
-    );
+
+  const fetchFolders = async () => {
     getMangaFolders().then((response) => {
       console.log(response);
       console.log(localStorage.getItem("userId"));
@@ -74,6 +81,16 @@ const Account = () => {
         ),
       );
     });
+  };
+  useEffect(() => {
+    console.log(newFolder);
+    setUserMangaData(
+      Object.keys(state.malAccount.statistics.manga).map((key) => [
+        key,
+        state.malAccount.statistics.manga[key],
+      ]),
+    );
+    fetchFolders();
   }, [state.malAccount, newFolder]);
 
   const handleFolderClick = (folder: MangaFolder) => {
@@ -121,11 +138,33 @@ const Account = () => {
           <input
             type="search"
             className="folder-search-bar"
-            onKeyDown={searchFolders}
+            onChange={(event) => {
+              handleInput(event);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                searchFolders();
+              }
+            }}
           />
-          <Button className="search-button">
+          <Button
+            className="search-button"
+            onClick={() => {
+              searchFolders();
+            }}
+          >
             <SearchIcon />
           </Button>
+          {selectedFolder !== null ? (
+            <Button
+              className="back-button"
+              onClick={() => {
+                setSelectedFolder(null);
+              }}
+            >
+              Back
+            </Button>
+          ) : null}
         </div>
         <div className="create-folder-container">
           <div className="create-folder-fields">
@@ -159,13 +198,23 @@ const Account = () => {
                       handleFolderClick(folder);
                     }}
                   >
-                    <Typography
-                      textTransform={"none"}
-                      color={"#ffffff"}
-                      fontFamily={"Figtree"}
-                    >
-                      {folder.folderName}
-                    </Typography>
+                    <div>
+                      <Typography
+                        textTransform={"none"}
+                        color={"#ffffff"}
+                        fontFamily={"Figtree"}
+                      >
+                        {folder.folderName} <br />
+                      </Typography>
+                      <Typography
+                        textTransform={"none"}
+                        color={"#ffffff"}
+                        fontSize={"12px"}
+                        fontFamily={"Figtree"}
+                      >
+                        {folder.folderDescription}
+                      </Typography>
+                    </div>
                   </Button>
                 </Grid>
               ))
