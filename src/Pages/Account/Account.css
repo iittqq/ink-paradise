@@ -113,6 +113,12 @@ input.folder-search-bar:focus {
   background-color: #333333 !important;
   margin: 0px 0px 0px 20px !important;
   height: 30px;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
 }
 
 .user-stats {
@@ -130,12 +136,24 @@ input.folder-search-bar:focus {
   height: 30px;
   left: 20px;
   color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
 }
 
 .add-folder-button {
   width: 30px;
   height: 30px;
   color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
 }
 
 .folder {
