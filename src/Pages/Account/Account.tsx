@@ -16,6 +16,7 @@ import {
   getMangaFolderEntries,
 } from "../../api/MangaFolderEntry";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
+import { fetchMangaById, fetchMangaCover } from "../../api/MangaDexApi";
 
 const Account = () => {
   const { state } = useLocation();
@@ -32,7 +33,8 @@ const Account = () => {
     MangaFolderEntry[] | null
   >(null);
 
-  console.log(state.malAccount);
+  const [folderMangaData, setFolderMangaData] = useState<Manga[]>([]);
+
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
       setFolders(
@@ -55,9 +57,6 @@ const Account = () => {
     setSearchTerm(event.target.value);
   };
   const handleCreateFolder = async () => {
-    console.log(newFolderName);
-    console.log(newFolderDescription);
-    console.log(localStorage.getItem("userId"));
     if (newFolderName !== "") {
       console.log("yes");
       setNewFolder(!newFolder);
@@ -72,8 +71,6 @@ const Account = () => {
 
   const fetchFolders = async () => {
     getMangaFolders().then((response) => {
-      console.log(response);
-      console.log(localStorage.getItem("userId"));
       setFolders(
         response.filter(
           (folder) =>
@@ -82,8 +79,8 @@ const Account = () => {
       );
     });
   };
+
   useEffect(() => {
-    console.log(newFolder);
     setUserMangaData(
       Object.keys(state.malAccount.statistics.manga).map((key) => [
         key,
@@ -95,11 +92,20 @@ const Account = () => {
 
   const handleFolderClick = (folder: MangaFolder) => {
     setSelectedFolder(folder);
+
     getMangaFolderEntries().then((response) => {
       setSelectedFolderEntries(
         response.filter((entry) => entry.folderId === folder.folderId),
       );
+      response
+        .filter((entry) => entry.folderId === folder.folderId)
+        .map((entry) => {
+          fetchMangaById(entry.mangaId).then((data) => {
+            console.log(data);
+          });
+        });
     });
+    console.log(folderMangaData);
   };
   return (
     <div className="user-page-container">

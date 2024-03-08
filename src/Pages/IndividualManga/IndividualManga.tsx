@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Grid,
+} from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaTags from "../../Components/MangaTags/MangaTags";
@@ -25,6 +32,8 @@ import {
 import "./IndividualManga.css";
 import { addMangaFolderEntry } from "../../api/MangaFolderEntry";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
+import { getMangaFolders } from "../../api/MangaFolder";
+import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 
 const IndividualManga = () => {
   const { state } = useLocation();
@@ -43,12 +52,21 @@ const IndividualManga = () => {
   const [currentOffset, setCurrentOffset] = useState(0);
   const [currentOrder, setCurrentOrder] = useState("asc");
   const [scantalationGroups, setScantalationGroups] = useState<object[]>([]);
-  const [chosenMangaFolderId, setChosenMangaFolderId] =
-    useState<MangaFolderEntry>();
+  const [folders, setFolders] = useState<MangaFolder[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedValue, setSelectedValue] = useState<MangaFolder>();
 
-  const handleAddToFolder = () => {
-    if (chosenMangaFolderId !== undefined) {
-      addMangaFolderEntry(chosenMangaFolderId).then((data) => {
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value: string) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+  const handleAddToFolder = (folderId: number, mangaId: string) => {
+    if (folderId !== undefined) {
+      addMangaFolderEntry({ folderId, mangaId }).then((data) => {
         console.log(data);
       });
     } else {
@@ -57,6 +75,15 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
+    getMangaFolders().then((response) => {
+      console.log(response);
+      setFolders(
+        response.filter(
+          (folder) =>
+            folder.userId === JSON.parse(localStorage.getItem("userId")),
+        ),
+      );
+    });
     if (state["title"] !== undefined) {
       fetchMangaByTitle(state["title"]).then((data: Manga[]) => {
         console.log(data);
@@ -174,11 +201,38 @@ const IndividualManga = () => {
           className="folder-add-button"
           disableFocusRipple
           onClick={() => {
-            handleAddToFolder();
+            handleClickOpen();
           }}
         >
           <AddIcon />
         </Button>
+        <Dialog open={open} onClose={handleClose} id="folder-dialog">
+          <DialogTitle>Select Folder</DialogTitle>
+          <DialogActions>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {folders.map((current: MangaFolder) => (
+                <Grid item>
+                  <Button
+                    className="folder-button"
+                    onClick={() => {
+                      handleAddToFolder(
+                        current.folderId,
+                        state.id === undefined ? mangaId : state.id,
+                      );
+                    }}
+                  >
+                    {current.folderName}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+          </DialogActions>
+        </Dialog>
       </div>
       <div className="controls-chapters-section">
         <div className="manga-controls">
