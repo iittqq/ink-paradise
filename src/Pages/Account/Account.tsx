@@ -6,17 +6,15 @@ import AddIcon from "@mui/icons-material/Add";
 
 import Header from "../../Components/Header/Header";
 
+import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 
 import { addMangaFolder, getMangaFolders } from "../../api/MangaFolder";
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-import {
-  addMangaFolderEntry,
-  getMangaFolderEntries,
-} from "../../api/MangaFolderEntry";
-import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
-import { fetchMangaById, fetchMangaCover } from "../../api/MangaDexApi";
+import { getMangaFolderEntries } from "../../api/MangaFolderEntry";
+import { fetchMangaById } from "../../api/MangaDexApi";
+import { Relationship, Manga } from "../../interfaces/MangaDexInterfaces";
 
 const Account = () => {
   const { state } = useLocation();
@@ -29,11 +27,8 @@ const Account = () => {
   const [selectedFolder, setSelectedFolder] = useState<MangaFolder | null>(
     null,
   );
-  const [selectedFolderEntries, setSelectedFolderEntries] = useState<
-    MangaFolderEntry[] | null
-  >(null);
 
-  const [folderMangaData, setFolderMangaData] = useState<Manga[]>([]);
+  const [folderMangaData, setFolderMangaData] = useState<Manga[] | null>(null);
 
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
@@ -51,11 +46,6 @@ const Account = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleInputKeyboard = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    setSearchTerm(event.target.value);
-  };
   const handleCreateFolder = async () => {
     if (newFolderName !== "") {
       console.log("yes");
@@ -90,22 +80,23 @@ const Account = () => {
     fetchFolders();
   }, [state.malAccount, newFolder]);
 
-  const handleFolderClick = (folder: MangaFolder) => {
+  const handleFolderClick = async (folder: MangaFolder) => {
     setSelectedFolder(folder);
 
     getMangaFolderEntries().then((response) => {
-      setSelectedFolderEntries(
-        response.filter((entry) => entry.folderId === folder.folderId),
-      );
-      response
+      const promises = response
         .filter((entry) => entry.folderId === folder.folderId)
         .map((entry) => {
-          fetchMangaById(entry.mangaId).then((data) => {
-            console.log(data);
-          });
+          return fetchMangaById(entry.mangaId);
         });
+
+      Promise.all(promises)
+        .then((data) => {
+          console.log(data);
+          setFolderMangaData(data);
+        })
+        .catch((error) => console.log(error));
     });
-    console.log(folderMangaData);
   };
   return (
     <div className="user-page-container">
@@ -224,9 +215,18 @@ const Account = () => {
                   </Button>
                 </Grid>
               ))
-            : selectedFolderEntries?.map((entry) => (
+            : folderMangaData?.map((element: Manga) => (
                 <Grid item>
-                  <Button>{entry.mangaId}</Button>
+                  <MangaClickable
+                    id={element.id}
+                    title={element.attributes.title.en}
+                    coverId={
+                      element.relationships.find(
+                        (i: Relationship) => i.type === "cover_art",
+                      )?.id
+                    }
+                    updatedAt={element.attributes.updatedAt}
+                  ></MangaClickable>
                 </Grid>
               ))}
         </Grid>
