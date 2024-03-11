@@ -12,7 +12,7 @@ import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, login } from "../../api/Account";
+import { createAccount, fetchAccountData } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 
@@ -50,12 +50,17 @@ const Login = () => {
 
   const handleLogin = async () => {
     console.log(email, password, malUsername, contentFilter);
-    login({ email, password }).then((response) => {
+    fetchAccountData().then((response: Account[]) => {
       console.log(response);
       if (response !== null) {
-        localStorage.setItem("malAccount", response.username);
-        localStorage.setItem("account", JSON.stringify(response));
-        navigate("/");
+        response.map((account: Account) => {
+          console.log(account);
+          if (account.email === email && account.password === password) {
+            localStorage.setItem("malAccount", account.username);
+            localStorage.setItem("account", JSON.stringify(account));
+            navigate("/");
+          }
+        });
       } else {
         console.log("Invalid login");
       }
@@ -262,4 +267,3 @@ const Login = () => {
 };
 
 export default Login;
-

@@ -172,6 +172,9 @@ const Account = () => {
               placeholder="New Folder Name"
               className="folder-inputs"
               onChange={(e) => setNewFolderName(e.target.value)}
+              onKeyDown={(e) => {
+                e.key === "Enter" ? handleCreateFolder() : null;
+              }}
             />
             <Typography>Description</Typography>
             <input
@@ -226,6 +229,7 @@ const Account = () => {
                         color={"#ffffff"}
                         fontSize={"12px"}
                         fontFamily={"Figtree"}
+                        className="folder-description"
                       >
                         {folder.folderDescription}
                       </Typography>
