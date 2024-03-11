@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { TextField, Typography, Button, Menu, MenuItem } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
@@ -16,6 +25,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleClickAccount = () => {
     if (localStorage.getItem("malAccount") === null) {
@@ -29,14 +39,6 @@ const Header = () => {
         },
       );
     }
-  };
-
-  const open = Boolean(anchorEl);
-  const handleClickMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   const handleClickLibrary = async () => {
@@ -79,27 +81,36 @@ const Header = () => {
             setSearchInput(event.target.value);
           }}
         />
-
         <Button
-          onClick={open === true ? handleClose : handleClickMenuOpen}
+          onClick={() => {
+            setOpen(true);
+          }}
           className="header-buttons"
         >
           <MoreVertIcon />
-          <Menu
-            id="header-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          >
-            <MenuItem onClick={() => handleClickLibrary()}>
-              <BookIcon />
-            </MenuItem>
-            <MenuItem>
-              <WhatsHotIcon />
-            </MenuItem>
-          </Menu>
         </Button>
+        <Dialog
+          open={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+          id="nav-dialog"
+        >
+          <DialogTitle>Destination</DialogTitle>
+          <DialogActions>
+            <Button
+              className="folder-button"
+              onClick={() => {
+                handleClickLibrary();
+              }}
+            >
+              <BookIcon />
+            </Button>
+            <Button className="folder-button">
+              <WhatsHotIcon />
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Button
           onClick={() => {
             handleClickAccount();
@@ -108,7 +119,6 @@ const Header = () => {
         >
           <AccountBoxIcon />
         </Button>
-
         <Button className="header-buttons" onClick={() => handleClick()}>
           <KeyboardArrowRightIcon />
         </Button>

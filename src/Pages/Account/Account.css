@@ -20,6 +20,9 @@
   align-items: flex-start;
   justify-content: space-between;
   padding-top: 50px;
+  @media screen and (max-width: 600px) {
+    height: 200px;
+  }
 }
 
 .image-details-section {
@@ -27,11 +30,13 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+  height: 100%;
 }
 .user-details {
   padding-left: 10px;
   padding-right: 10px;
-  height: 250px;
+  max-height: 250px;
+  height: 100%;
 }
 
 .centered-content {
@@ -92,20 +97,21 @@
   padding-bottom: 20px;
 }
 
-.folder-search-bar {
-  width: 250px;
-  height: 30px;
-  background-color: #333333;
-  input:focus {
-    border: 1px solid #333333;
-    outline: none;
-  }
-  border: 1px solid #333333;
-  box-shadow: none;
+input[type="search"].folder-search-bar:focus {
+  border: 1px solid #ffffff;
 }
 
-input.folder-search-bar:focus {
-  outline: none;
+.folder-inputs,
+.folder-search-bar {
+  all: unset;
+  font-family: "Figtree";
+  border: 1px solid #333333;
+  padding: 5px;
+  max-width: 25dvw;
+}
+
+input[type="text"].folder-inputs:focus {
+  border: 1px solid #ffffff;
 }
 
 .back-button {
@@ -121,14 +127,23 @@ input.folder-search-bar:focus {
   }
 }
 
+.current-folder-header {
+  font-size: 20px;
+  font-family: "Figtree";
+  padding-bottom: 10px;
+}
+
 .user-stats {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  max-width: 50dvw;
+  min-width: 20vw;
   max-height: 250px;
-  overflow-y: scroll;
+  height: 100%;
+  overflow: auto;
 }
 
 .search-button {

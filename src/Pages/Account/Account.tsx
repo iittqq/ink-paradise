@@ -134,6 +134,7 @@ const Account = () => {
         <div>
           <input
             type="search"
+            placeholder="Search Folders"
             className="folder-search-bar"
             onChange={(event) => {
               handleInput(event);
@@ -165,10 +166,20 @@ const Account = () => {
         </div>
         <div className="create-folder-container">
           <div className="create-folder-fields">
-            <Typography>Name</Typography>{" "}
-            <input onChange={(e) => setNewFolderName(e.target.value)} />
+            <Typography>Name</Typography>
+            <input
+              type="text"
+              placeholder="New Folder Name"
+              className="folder-inputs"
+              onChange={(e) => setNewFolderName(e.target.value)}
+            />
             <Typography>Description</Typography>
-            <input onChange={(e) => setNewFolderDescription(e.target.value)} />
+            <input
+              type="text"
+              placeholder="New Folder Description"
+              className="folder-inputs"
+              onChange={(e) => setNewFolderDescription(e.target.value)}
+            />
           </div>
           <Button
             className="add-folder-button"
@@ -179,6 +190,13 @@ const Account = () => {
         </div>
       </div>
       <div className="personal-folders">
+        <div>
+          {selectedFolder !== null ? (
+            <div className="current-folder-header">
+              {selectedFolder.folderName}
+            </div>
+          ) : null}
+        </div>
         <Grid
           container
           justifyContent="center"
