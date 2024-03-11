@@ -127,6 +127,7 @@ input[type="text"].folder-inputs:focus {
   background-color: #333333 !important;
   margin: 0px 0px 0px 20px !important;
   height: 30px;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }

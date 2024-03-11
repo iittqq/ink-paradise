@@ -1,4 +1,4 @@
-import { Button, Typography, Grid } from "@mui/material";
+import { Button, Typography, Grid, CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -29,6 +29,7 @@ const Account = () => {
   );
 
   const [folderMangaData, setFolderMangaData] = useState<Manga[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
@@ -47,6 +48,7 @@ const Account = () => {
   };
 
   const handleCreateFolder = async () => {
+    document.getElementById("folderName").value = "";
     if (newFolderName !== "") {
       console.log("yes");
       setNewFolder(!newFolder);
@@ -82,7 +84,7 @@ const Account = () => {
 
   const handleFolderClick = async (folder: MangaFolder) => {
     setSelectedFolder(folder);
-
+    setLoading(true);
     getMangaFolderEntries().then((response) => {
       const promises = response
         .filter((entry) => entry.folderId === folder.folderId)
@@ -94,6 +96,7 @@ const Account = () => {
         .then((data) => {
           console.log(data);
           setFolderMangaData(data);
+          setLoading(false);
         })
         .catch((error) => console.log(error));
     });
@@ -160,23 +163,28 @@ const Account = () => {
                 setSelectedFolder(null);
               }}
             >
-              Back
+              <Typography fontFamily={"Figtree"} textTransform={"none"}>
+                Back
+              </Typography>
             </Button>
           ) : null}
         </div>
         <div className="create-folder-container">
           <div className="create-folder-fields">
-            <Typography>Name</Typography>
+            <Typography fontFamily={"Figtree"}>Name</Typography>
             <input
               type="text"
+              id="folderName"
               placeholder="New Folder Name"
               className="folder-inputs"
               onChange={(e) => setNewFolderName(e.target.value)}
               onKeyDown={(e) => {
-                e.key === "Enter" ? handleCreateFolder() : null;
+                if (e.key === "Enter") {
+                  handleCreateFolder();
+                }
               }}
             />
-            <Typography>Description</Typography>
+            <Typography fontFamily={"Figtree"}>Description</Typography>
             <input
               type="text"
               placeholder="New Folder Description"
@@ -206,51 +214,62 @@ const Account = () => {
           alignItems="center"
           direction="row"
           spacing={2}
+          className="folder-grid"
         >
-          {selectedFolder === null
-            ? folders.map((folder) => (
-                <Grid item>
-                  <Button
-                    className="folder"
-                    onClick={() => {
-                      handleFolderClick(folder);
-                    }}
-                  >
-                    <div>
-                      <Typography
-                        textTransform={"none"}
-                        color={"#ffffff"}
-                        fontFamily={"Figtree"}
-                      >
-                        {folder.folderName} <br />
-                      </Typography>
-                      <Typography
-                        textTransform={"none"}
-                        color={"#ffffff"}
-                        fontSize={"12px"}
-                        fontFamily={"Figtree"}
-                        className="folder-description"
-                      >
-                        {folder.folderDescription}
-                      </Typography>
-                    </div>
-                  </Button>
-                </Grid>
-              ))
-            : folderMangaData?.map((element: Manga) => (
-                <Grid item>
-                  <MangaClickable
-                    id={element.id}
-                    title={element.attributes.title.en}
-                    coverId={
-                      element.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.id
-                    }
-                    updatedAt={element.attributes.updatedAt}
-                  ></MangaClickable>
-                </Grid>
-              ))}
+          {loading ? (
+            <Grid item>
+              <CircularProgress size={25} sx={{ color: "#ffffff" }} />
+            </Grid>
+          ) : selectedFolder === null ? (
+            folders.map((folder) => (
+              <Grid item>
+                <Button
+                  className="folder"
+                  onClick={() => {
+                    handleFolderClick(folder);
+                  }}
+                >
+                  <div>
+                    <Typography
+                      textTransform={"none"}
+                      color={"#ffffff"}
+                      fontFamily={"Figtree"}
+                    >
+                      {folder.folderName} <br />
+                    </Typography>
+                    <Typography
+                      textTransform={"none"}
+                      color={"#ffffff"}
+                      fontSize={"12px"}
+                      fontFamily={"Figtree"}
+                      className="folder-description"
+                    >
+                      {folder.folderDescription}
+                    </Typography>
+                  </div>
+                </Button>
+              </Grid>
+            ))
+          ) : folderMangaData?.length === 0 ? (
+            <Grid item>
+              <Typography fontFamily={"Figtree"}>Empty...</Typography>
+            </Grid>
+          ) : (
+            folderMangaData?.map((element: Manga) => (
+              <Grid item key={element.id}>
+                <MangaClickable
+                  id={element.id}
+                  title={element.attributes.title.en}
+                  coverId={
+                    element.relationships.find(
+                      (i: Relationship) => i.type === "cover_art",
+                    )?.id
+                  }
+                  updatedAt={element.attributes.updatedAt}
+                ></MangaClickable>
+              </Grid>
+            ))
+          )}
         </Grid>
       </div>
     </div>

@@ -30,7 +30,10 @@ import {
 } from "../../api/MangaDexApi";
 
 import "./IndividualManga.css";
-import { addMangaFolderEntry } from "../../api/MangaFolderEntry";
+import {
+  addMangaFolderEntry,
+  getMangaFolderEntries,
+} from "../../api/MangaFolderEntry";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
@@ -54,20 +57,33 @@ const IndividualManga = () => {
   const [scantalationGroups, setScantalationGroups] = useState<object[]>([]);
   const [folders, setFolders] = useState<MangaFolder[]>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedValue, setSelectedValue] = useState<MangaFolder>();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
-    setSelectedValue(value);
   };
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
-      addMangaFolderEntry({ folderId, mangaId }).then((data) => {
-        console.log(data);
+      getMangaFolderEntries().then((response) => {
+        let exists = false;
+        response.map((current: MangaFolderEntry) => {
+          console.log(current);
+          console.log(folderId);
+          console.log(mangaId);
+          if (current.folderId === folderId && current.mangaId === mangaId) {
+            exists = true;
+          }
+        });
+        if (!exists) {
+          addMangaFolderEntry({ folderId, mangaId }).then((data) => {
+            console.log(data);
+          });
+        } else {
+          console.log("entry already exists");
+        }
       });
     } else {
       console.log("no folder chosen");
