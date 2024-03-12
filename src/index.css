@@ -1,12 +1,12 @@
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-	scrollbar-width: none;
-	::-webkit-scrollbar {
-		display: none;
-	}
-	color-scheme: dark;
-	color: #ffffff;
-	background-color: #121212;
-	font-synthesis: none;
-	text-rendering: optimizeLegibility;
+  font-family: Figtree !important;
+  scrollbar-width: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  color-scheme: dark;
+  color: #ffffff;
+  background-color: #121212;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }

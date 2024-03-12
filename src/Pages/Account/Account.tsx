@@ -9,7 +9,11 @@ import Header from "../../Components/Header/Header";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 
-import { addMangaFolder, getMangaFolders } from "../../api/MangaFolder";
+import {
+  addMangaFolder,
+  deleteMangaFolder,
+  getMangaFolders,
+} from "../../api/MangaFolder";
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import { getMangaFolderEntries } from "../../api/MangaFolderEntry";
@@ -31,6 +35,17 @@ const Account = () => {
   const [folderMangaData, setFolderMangaData] = useState<Manga[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const handleDeleteFolder = async () => {
+    if (selectedFolder !== null) {
+      deleteMangaFolder(selectedFolder?.folderId).then((response) => {
+        setNewFolder(!newFolder);
+        setSelectedFolder(null);
+        console.log(response);
+      });
+    } else {
+      console.log("no selected folder");
+    }
+  };
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
       setFolders(
@@ -134,7 +149,7 @@ const Account = () => {
         </div>
       </div>
       <div className="folder-section-header">
-        <div>
+        <div className="header-options-left">
           <input
             type="search"
             placeholder="Search Folders"
@@ -157,16 +172,24 @@ const Account = () => {
             <SearchIcon />
           </Button>
           {selectedFolder !== null ? (
-            <Button
-              className="back-button"
-              onClick={() => {
-                setSelectedFolder(null);
-              }}
-            >
-              <Typography fontFamily={"Figtree"} textTransform={"none"}>
+            <div>
+              <Button
+                className="back-button"
+                onClick={() => {
+                  setSelectedFolder(null);
+                }}
+              >
                 Back
-              </Typography>
-            </Button>
+              </Button>
+              <Button
+                className="back-button"
+                onClick={() => {
+                  handleDeleteFolder();
+                }}
+              >
+                Delete
+              </Button>
+            </div>
           ) : null}
         </div>
         <div className="create-folder-container">

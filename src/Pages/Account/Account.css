@@ -97,6 +97,13 @@
   padding-bottom: 20px;
 }
 
+.header-options-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 input[type="search"].folder-search-bar:focus {
   border: 1px solid #ffffff;
 }
@@ -127,6 +134,8 @@ input[type="text"].folder-inputs:focus {
   background-color: #333333 !important;
   margin: 0px 0px 0px 20px !important;
   height: 30px;
+  font-family: "Figtree" !important;
+  text-transform: none !important;
 
   &.MuiButtonBase-root:hover {
     background-color: transparent;
