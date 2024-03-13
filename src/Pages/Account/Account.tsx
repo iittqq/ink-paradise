@@ -1,4 +1,11 @@
-import { Button, Typography, Grid, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Grid,
+  CircularProgress,
+  Switch,
+  FormControlLabel,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,9 +23,13 @@ import {
 } from "../../api/MangaFolder";
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-import { getMangaFolderEntries } from "../../api/MangaFolderEntry";
+import {
+  getMangaFolderEntries,
+  deleteMangaFolderEntry,
+} from "../../api/MangaFolderEntry";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Relationship, Manga } from "../../interfaces/MangaDexInterfaces";
+import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 
 const Account = () => {
   const { state } = useLocation();
@@ -31,10 +42,41 @@ const Account = () => {
   const [selectedFolder, setSelectedFolder] = useState<MangaFolder | null>(
     null,
   );
-
+  const [databaseMangaEntries, setDatabaseMangaEntries] = useState<
+    MangaFolderEntry[] | null
+  >(null);
+  const [checked, setChecked] = useState<boolean>(false);
   const [folderMangaData, setFolderMangaData] = useState<Manga[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [mangaEntriesToDelete, setMangaEntriesToDelete] = useState<string[]>(
+    [],
+  );
 
+  const handleDeleteMangaEntries = async () => {
+    console.log(mangaEntriesToDelete);
+    console.log(databaseMangaEntries);
+    mangaEntriesToDelete.forEach((mangaToDelete) => {
+      if (databaseMangaEntries !== null) {
+        databaseMangaEntries
+          .filter((dataBaseEntry) => dataBaseEntry.mangaId === mangaToDelete)
+          .map((entry) => {
+            deleteMangaFolderEntry(entry.uniqueId).then((response) => {
+              console.log(response);
+              if (selectedFolder !== null) {
+                handleFolderClick(selectedFolder);
+              }
+            });
+          });
+      }
+    });
+  };
+  const toggleMangaEntriesDelete = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setChecked(event.target.checked);
+    setMangaEntriesToDelete([]);
+    console.log(folderMangaData);
+  };
   const handleDeleteFolder = async () => {
     if (selectedFolder !== null) {
       deleteMangaFolder(selectedFolder?.folderId).then((response) => {
@@ -101,6 +143,9 @@ const Account = () => {
     setSelectedFolder(folder);
     setLoading(true);
     getMangaFolderEntries().then((response) => {
+      setDatabaseMangaEntries(
+        response.filter((entry) => entry.folderId === folder.folderId),
+      );
       const promises = response
         .filter((entry) => entry.folderId === folder.folderId)
         .map((entry) => {
@@ -172,7 +217,7 @@ const Account = () => {
             <SearchIcon />
           </Button>
           {selectedFolder !== null ? (
-            <div>
+            <div className="folder-options">
               <Button
                 className="back-button"
                 onClick={() => {
@@ -184,11 +229,25 @@ const Account = () => {
               <Button
                 className="back-button"
                 onClick={() => {
-                  handleDeleteFolder();
+                  if (checked) {
+                    handleDeleteMangaEntries();
+                  } else {
+                    handleDeleteFolder();
+                  }
                 }}
               >
                 Delete
               </Button>
+              <FormControlLabel
+                className="edit-folders"
+                control={
+                  <Switch
+                    checked={checked}
+                    onChange={toggleMangaEntriesDelete}
+                  />
+                }
+                label="Select"
+              />
             </div>
           ) : null}
         </div>
@@ -279,17 +338,46 @@ const Account = () => {
             </Grid>
           ) : (
             folderMangaData?.map((element: Manga) => (
-              <Grid item key={element.id}>
-                <MangaClickable
-                  id={element.id}
-                  title={element.attributes.title.en}
-                  coverId={
-                    element.relationships.find(
-                      (i: Relationship) => i.type === "cover_art",
-                    )?.id
-                  }
-                  updatedAt={element.attributes.updatedAt}
-                ></MangaClickable>
+              <Grid item>
+                <Button
+                  className="manga-entry-overlay-button"
+                  onClick={() => {
+                    if (checked) {
+                      if (mangaEntriesToDelete.includes(element.id)) {
+                        setMangaEntriesToDelete(
+                          mangaEntriesToDelete.filter(
+                            (id) => id !== element.id,
+                          ),
+                        );
+                      } else {
+                        setMangaEntriesToDelete([
+                          ...mangaEntriesToDelete,
+                          element.id,
+                        ]);
+                      }
+                    }
+                  }}
+                  sx={{
+                    //border: mangaEntriesToDelete.includes(element.id)
+                    //? "2px solid #ffffff"
+                    //: "none",
+                    opacity: mangaEntriesToDelete.includes(element.id)
+                      ? 0.2
+                      : 1,
+                  }}
+                >
+                  <MangaClickable
+                    id={element.id}
+                    title={element.attributes.title.en}
+                    coverId={
+                      element.relationships.find(
+                        (i: Relationship) => i.type === "cover_art",
+                      )?.id
+                    }
+                    updatedAt={element.attributes.updatedAt}
+                    disabled={checked}
+                  />
+                </Button>
               </Grid>
             ))
           )}

@@ -29,4 +29,16 @@ async function addMangaFolderEntry(
   }
 }
 
-export { addMangaFolderEntry, getMangaFolderEntries };
+async function deleteMangaFolderEntry(id: number): Promise<MangaFolderEntry> {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/v1/manga_folder_entries/delete/${id}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export { addMangaFolderEntry, getMangaFolderEntries, deleteMangaFolderEntry };

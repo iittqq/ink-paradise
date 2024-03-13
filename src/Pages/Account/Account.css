@@ -100,10 +100,25 @@
 .header-options-left {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
 
+.folder-options {
+  width: 400px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
+  color: #ff7597 !important;
+}
+.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked
+  + .MuiSwitch-track {
+  background-color: #ffffff !important;
+}
 input[type="search"].folder-search-bar:focus {
   border: 1px solid #ffffff;
 }
@@ -220,4 +235,16 @@ input[type="text"].folder-inputs:focus {
   align-items: center;
   justify-content: flex-start;
   width: 300px;
+}
+.css-j204z7-MuiFormControlLabel-root {
+  margin: 0px 0px 0px 0px !important;
+}
+.manga-entry-overlay-button {
+  background-color: transparent !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #121212 !important;
+  }
 }
