@@ -112,6 +112,7 @@ const Home2 = () => {
           <HotMangaCarousel>
             {topMangaData
               .sort((a: any, b: any) => a.rank - b.rank)
+              .slice(0, 10)
               .map((currentManga: TopManga) => (
                 <CarouselItem
                   id={currentManga.mal_id}

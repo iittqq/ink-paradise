@@ -33,19 +33,31 @@
   transform: rotate(180deg);
   margin-bottom: 30px;
   font-size: medium;
+  font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
+  @media screen and (max-width: 600px) {
+    visibility: hidden;
+    font-size: 0px;
+  }
 }
 
 .rank-text {
+  @media screen and (max-width: 600px) {
+  }
 }
 
 .carousel-selector {
   overflow: hidden;
-  width: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  @media screen and (min-width: 600px) {
+    width: 70%;
+  }
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
 }
 
 .inner {
@@ -61,22 +73,52 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
-  max-height: 300px;
   background-color: #121212;
-  width: 260px;
-  max-width: 260px;
-  min-width: 260px;
   color: white;
+  @media screen and (min-width: 600px) {
+    height: 300px;
+    max-height: 300px;
+    width: 265px;
+    max-width: 265px;
+    min-width: 265px;
+  }
+  @media screen and (max-width: 600px) {
+    height: 150px;
+    max-height: 150px;
+    width: 132.7px;
+    max-width: 132.7px;
+    min-width: 132.7px;
+    overflow-y: hidden;
+  }
 }
 
 .indicators {
+  @media screen and (max-width: 600px) {
+    visibility: hidden;
+  }
   display: flex;
   justify-content: center;
 }
 
+.carousel-image-div {
+  @media screen and (max-width: 600px) {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    right: 20px;
+    z-index: 1;
+  }
+}
+
 .carousel-image {
-  height: 100%;
+  @media screen and (min-width: 600px) {
+    height: 320px;
+    width: 180px;
+  }
+  @media screen and (max-width: 600px) {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .carousel-text {
@@ -87,6 +129,15 @@
   height: 100%;
   overflow: hidden;
   width: 35px;
+  @media screen and (max-width: 600px) {
+    position: relative;
+    justify-content: flex-end;
+    height: 25px;
+    width: 25px;
+    bottom: 65px;
+    z-index: 2;
+    background-color: #121212;
+  }
 }
 
 .carousel {

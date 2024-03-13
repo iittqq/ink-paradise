@@ -28,11 +28,11 @@ async function fetchTopManga(): Promise<TopManga[]> {
       `${BASE_URL}/my-anime-list/fetch-top-manga`,
       {
         params: {
-          limit: 10,
+          limit: 11,
         },
       }
     );
-
+    console.log(response.data["data"]);
     return response.data["data"];
   } catch (error) {
     console.error("Error fetching manga:", error);

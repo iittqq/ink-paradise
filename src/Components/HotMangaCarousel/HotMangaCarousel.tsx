@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { TopManga } from "../../interfaces/MangaDexInterfaces";
 
-import { Card, CardMedia, Grid, Typography } from "@mui/material";
+import { Card, CardMedia, Container, Grid, Typography } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
@@ -54,20 +54,22 @@ export const CarouselItem = (props: CarouselItemProps) => {
     >
       <div className="carousel-text">
         <div className="title-text">
-          {props.title.length > 28
-            ? `${props.title.substring(0, 28)}...`
+          {props.title.length > 26
+            ? `${props.title.substring(0, 26)}...`
             : props.title}
         </div>
         <Typography
           color="#ebe814"
+          sx={{ fontSize: { md: 23, lg: 23 } }}
           fontWeight="600"
-          variant="h6"
           className="rank-Text"
         >
-          {props.rank != "10" ? `0${props.rank}` : props.rank}
+          {props.rank < "10" ? `0${props.rank}` : props.rank}
         </Typography>
       </div>
-      <img className="carousel-image" src={props.image}></img>
+      <div className="carousel-image-div">
+        <img className="carousel-image" src={props.image}></img>
+      </div>
     </div>
   );
 };
@@ -110,14 +112,22 @@ const HotMangaCarousel = (props: Props) => {
         ></KeyboardArrowLeftIcon>
       </div>
       <div className="carousel-selector">
-        <div
+        <Container
+          disableGutters
+          maxWidth={false}
           className="inner"
-          style={{ transform: `translateX(-${activeIndex * 20}%)` }}
+          sx={{
+            overflow: { xs: "scroll", lg: "visible" },
+            transform: {
+              xs: "none",
+              lg: `translateX(-${activeIndex * 20.1}%)`,
+            },
+          }} /**`translateX(-${activeIndex * 19.5}%)` */
         >
           {React.Children.map(props.children, (child: any, index: number) => {
             return React.cloneElement(child);
           })}
-        </div>
+        </Container>
       </div>
       <div className="indicators">
         <KeyboardArrowRightIcon
