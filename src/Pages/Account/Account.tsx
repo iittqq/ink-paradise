@@ -24,8 +24,8 @@ import {
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import {
-  getMangaFolderEntries,
   deleteMangaFolderEntry,
+  findMangaFolderEntryById,
 } from "../../api/MangaFolderEntry";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Relationship, Manga } from "../../interfaces/MangaDexInterfaces";
@@ -69,6 +69,7 @@ const Account = () => {
           });
       }
     });
+    setChecked(false);
   };
   const toggleMangaEntriesDelete = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -119,6 +120,7 @@ const Account = () => {
   };
 
   const fetchFolders = async () => {
+    console.log(localStorage.getItem("userId"));
     getMangaFolders().then((response) => {
       setFolders(
         response.filter(
@@ -142,24 +144,21 @@ const Account = () => {
   const handleFolderClick = async (folder: MangaFolder) => {
     setSelectedFolder(folder);
     setLoading(true);
-    getMangaFolderEntries().then((response) => {
-      setDatabaseMangaEntries(
-        response.filter((entry) => entry.folderId === folder.folderId),
-      );
-      const promises = response
-        .filter((entry) => entry.folderId === folder.folderId)
-        .map((entry) => {
+    findMangaFolderEntryById(folder.folderId).then(
+      (response: MangaFolderEntry[]) => {
+        setDatabaseMangaEntries(response);
+        console.log(response);
+        const promises = response.map((entry: MangaFolderEntry) => {
           return fetchMangaById(entry.mangaId);
         });
-
-      Promise.all(promises)
-        .then((data) => {
-          console.log(data);
-          setFolderMangaData(data);
-          setLoading(false);
-        })
-        .catch((error) => console.log(error));
-    });
+        Promise.all(promises)
+          .then((data) => {
+            setFolderMangaData(data);
+            setLoading(false);
+          })
+          .catch((error) => console.log(error));
+      },
+    );
   };
   return (
     <div className="user-page-container">

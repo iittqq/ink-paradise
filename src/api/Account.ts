@@ -26,12 +26,11 @@ async function createAccount(account: object): Promise<Account> {
   }
 }
 
-async function login(accountDetails: object): Promise<Account> {
+async function login(email: string, password: string): Promise<Account> {
   try {
-    const response = await axios.get(`${BASE_URL}/api/v1/accounts/login`, {
-      params: {
-        account: JSON.stringify(accountDetails),
-      },
+    const response = await axios.post(`${BASE_URL}/api/v1/accounts/login`, {
+      email: email,
+      password: password,
     });
     console.log(response.data);
     return response.data;
