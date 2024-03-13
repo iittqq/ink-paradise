@@ -31,12 +31,14 @@
   align-items: flex-start;
   justify-content: space-between;
   height: 100%;
+  width: 100%;
 }
 .user-details {
   padding-left: 10px;
   padding-right: 10px;
   max-height: 250px;
   height: 100%;
+  width: 100%;
 }
 
 .centered-content {
@@ -105,7 +107,6 @@
 }
 
 .folder-options {
-  width: 400px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -137,7 +138,8 @@ input[type="search"].folder-search-bar:focus {
   font-family: "Figtree";
   border: 1px solid #333333;
   padding: 5px;
-  max-width: 25dvw;
+  width: 100%;
+  margin: 10px 0px 10px 0px;
 }
 
 input[type="text"].folder-inputs:focus {
@@ -160,23 +162,97 @@ input[type="text"].folder-inputs:focus {
   }
 }
 
+.delete-folder-button {
+  color: #ffffff !important;
+  background-color: #333333 !important;
+  height: 30px;
+  font-family: "Figtree" !important;
+  margin: 0px 20px 0px 0px !important;
+
+  text-transform: none !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+.folder-modification-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
 .current-folder-header {
   font-size: 20px;
   font-family: "Figtree";
   padding-bottom: 10px;
 }
 
-.user-stats {
+.info-open-button {
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+#info-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper,
+#folder-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  background-color: #121212 !important;
+  width: 30dvw;
+  @media screen and (max-width: 1000px) {
+    width: 90dvw;
+  }
+  @media screen and (min-width: 1000px) and (max-width: 1500px) {
+    width: 60dvw;
+  }
+}
+
+#info-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  text-align: center;
+}
+
+#info-dialog .css-knqc4i-MuiDialogActions-root {
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  max-width: 50dvw;
-  min-width: 20vw;
-  max-height: 250px;
-  height: 100%;
-  overflow: auto;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#info-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  text-transform: none;
+}
+
+#folder-dialog {
+  text-align: center;
+}
+
+#folder-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  color: #ffffff !important;
+
+  font-family: "Figtree" !important;
+}
+
+#folder-dialog .css-knqc4i-MuiDialogActions-root {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#folder-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  text-transform: none;
 }
 
 .search-button {
@@ -221,6 +297,19 @@ input[type="text"].folder-inputs:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.create-button {
+  margin-top: 10px !important;
+  background-color: #222222 !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
 }
 .create-folder-container {
   display: flex;

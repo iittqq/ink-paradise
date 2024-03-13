@@ -15,14 +15,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 60dvw;
-  @media screen and (max-width: 600px) {
-    width: 70vw;
-  }
 }
 
 .input-field {
   width: 300px;
+  margin-right: 6px !important;
 
   @media screen and (max-width: 800px) {
     width: 150px;

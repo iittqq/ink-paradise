@@ -3,8 +3,6 @@ import {
   TextField,
   Typography,
   Button,
-  Menu,
-  MenuItem,
   Dialog,
   DialogTitle,
   DialogActions,
@@ -24,7 +22,6 @@ import { MalAccount } from "../../interfaces/MalInterfaces";
 const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<boolean>(false);
 
   const handleClickAccount = () => {
@@ -109,16 +106,17 @@ const Header = () => {
             <Button className="folder-button">
               <WhatsHotIcon />
             </Button>
+            <Button
+              onClick={() => {
+                handleClickAccount();
+              }}
+              className="header-buttons"
+            >
+              <AccountBoxIcon />
+            </Button>{" "}
           </DialogActions>
         </Dialog>
-        <Button
-          onClick={() => {
-            handleClickAccount();
-          }}
-          className="header-buttons"
-        >
-          <AccountBoxIcon />
-        </Button>
+
         <Button className="header-buttons" onClick={() => handleClick()}>
           <KeyboardArrowRightIcon />
         </Button>

@@ -5,6 +5,8 @@ import {
   CircularProgress,
   Switch,
   FormControlLabel,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -15,7 +17,7 @@ import Header from "../../Components/Header/Header";
 
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
-
+import InfoIcon from "@mui/icons-material/Info";
 import {
   addMangaFolder,
   deleteMangaFolder,
@@ -26,6 +28,7 @@ import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import {
   deleteMangaFolderEntry,
   findMangaFolderEntryById,
+  deleteMangaFoldersByFolderId,
 } from "../../api/MangaFolderEntry";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Relationship, Manga } from "../../interfaces/MangaDexInterfaces";
@@ -51,7 +54,8 @@ const Account = () => {
   const [mangaEntriesToDelete, setMangaEntriesToDelete] = useState<string[]>(
     [],
   );
-
+  const [openInfo, setOpenInfo] = useState<boolean>(false);
+  const [openAddFolder, setOpenAddFolder] = useState<boolean>(false);
   const handleDeleteMangaEntries = async () => {
     console.log(mangaEntriesToDelete);
     console.log(databaseMangaEntries);
@@ -59,7 +63,7 @@ const Account = () => {
       if (databaseMangaEntries !== null) {
         databaseMangaEntries
           .filter((dataBaseEntry) => dataBaseEntry.mangaId === mangaToDelete)
-          .map((entry) => {
+          .map((entry: MangaFolderEntry) => {
             deleteMangaFolderEntry(entry.uniqueId).then((response) => {
               console.log(response);
               if (selectedFolder !== null) {
@@ -85,6 +89,7 @@ const Account = () => {
         setSelectedFolder(null);
         console.log(response);
       });
+      deleteMangaFoldersByFolderId(selectedFolder.folderId);
     } else {
       console.log("no selected folder");
     }
@@ -107,16 +112,18 @@ const Account = () => {
 
   const handleCreateFolder = async () => {
     document.getElementById("folderName").value = "";
+    setNewFolderName("");
+    document.getElementById("folderDescription").value = "";
+    setNewFolderDescription("");
     if (newFolderName !== "") {
       console.log("yes");
-      setNewFolder(!newFolder);
       addMangaFolder({
         userId: localStorage.getItem("userId"),
         folderName: newFolderName,
         folderDescription: newFolderDescription,
       });
+      setNewFolder(!newFolder);
     }
-    setNewFolder(!newFolder);
   };
 
   const fetchFolders = async () => {
@@ -160,6 +167,7 @@ const Account = () => {
       },
     );
   };
+
   return (
     <div className="user-page-container">
       <Header />
@@ -184,12 +192,38 @@ const Account = () => {
             <br />
           </Typography>
         </div>
-        <div className="user-stats">
-          {userMangaData.map((current: UserMangaLogistics) => (
-            <Typography color="white" sx={{ padding: "8px" }}>
-              {current[0]}: {current[1]} <br />
-            </Typography>
-          ))}
+        <div>
+          <Button
+            className="info-open-button"
+            onClick={() => {
+              setOpenInfo(true);
+            }}
+          >
+            <InfoIcon />
+          </Button>
+          <Dialog
+            id="info-dialog"
+            open={openInfo}
+            onClose={() => {
+              setOpenInfo(false);
+            }}
+          >
+            <DialogTitle>Stats</DialogTitle>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {userMangaData.map((current: UserMangaLogistics) => (
+                <Grid item>
+                  <Typography color="white" sx={{ padding: "8px" }}>
+                    {current[0]}: {current[1]} <br />
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </Dialog>
         </div>
       </div>
       <div className="folder-section-header">
@@ -221,12 +255,20 @@ const Account = () => {
                 className="back-button"
                 onClick={() => {
                   setSelectedFolder(null);
+                  setMangaEntriesToDelete([]);
+                  setChecked(false);
                 }}
               >
                 Back
               </Button>
+            </div>
+          ) : null}
+        </div>
+        <div className="create-folder-container">
+          {selectedFolder !== null ? (
+            <div className="folder-modification-buttons">
               <Button
-                className="back-button"
+                className="delete-folder-button"
                 onClick={() => {
                   if (checked) {
                     handleDeleteMangaEntries();
@@ -235,7 +277,7 @@ const Account = () => {
                   }
                 }}
               >
-                Delete
+                {checked ? "Delete Manga" : "Delete Folder"}
               </Button>
               <FormControlLabel
                 className="edit-folders"
@@ -249,36 +291,63 @@ const Account = () => {
               />
             </div>
           ) : null}
-        </div>
-        <div className="create-folder-container">
-          <div className="create-folder-fields">
-            <Typography fontFamily={"Figtree"}>Name</Typography>
-            <input
-              type="text"
-              id="folderName"
-              placeholder="New Folder Name"
-              className="folder-inputs"
-              onChange={(e) => setNewFolderName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleCreateFolder();
-                }
-              }}
-            />
-            <Typography fontFamily={"Figtree"}>Description</Typography>
-            <input
-              type="text"
-              placeholder="New Folder Description"
-              className="folder-inputs"
-              onChange={(e) => setNewFolderDescription(e.target.value)}
-            />
-          </div>
           <Button
             className="add-folder-button"
-            onClick={() => handleCreateFolder()}
+            onClick={() => {
+              setOpenAddFolder(true);
+            }}
           >
             <AddIcon />
           </Button>
+          <Dialog
+            id="folder-dialog"
+            open={openAddFolder}
+            onClose={() => {
+              setOpenAddFolder(false);
+            }}
+          >
+            <DialogTitle>Create Folder</DialogTitle>
+            <div className="create-folder-fields">
+              <Typography fontFamily={"Figtree"}>Name</Typography>
+              <input
+                type="text"
+                id="folderName"
+                placeholder="New Folder Name"
+                className="folder-inputs"
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleCreateFolder();
+                  }
+                }}
+              />
+              <Typography fontFamily={"Figtree"}>Description</Typography>
+              <input
+                type="text"
+                id="folderDescription"
+                placeholder="New Folder Description"
+                className="folder-inputs"
+                onChange={(e) => setNewFolderDescription(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (newFolderName !== "") {
+                      handleCreateFolder();
+                    } else {
+                      console.log("no name");
+                    }
+                  }
+                }}
+              />
+              <Button
+                className="create-button"
+                onClick={() => {
+                  handleCreateFolder();
+                }}
+              >
+                Create
+              </Button>
+            </div>
+          </Dialog>
         </div>
       </div>
       <div className="personal-folders">
