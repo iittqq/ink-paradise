@@ -12,7 +12,7 @@ import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, fetchAccountData, login } from "../../api/Account";
+import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 
@@ -23,6 +23,7 @@ const Login = () => {
   const [malUsername, setMalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [attemptedLogin, setAttemptedLogin] = useState(false);
 
   const handleChangeContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
@@ -54,9 +55,13 @@ const Login = () => {
       if (typeof response !== "string") {
         localStorage.setItem("malAccount", response.username);
         localStorage.setItem("account", JSON.stringify(response));
+        setAttemptedLogin(false);
         navigate("/");
       } else {
         console.log("Invalid login");
+        setEmail("");
+        setPassword("");
+        setAttemptedLogin(true);
       }
     });
   };
@@ -219,6 +224,11 @@ const Login = () => {
                 onChange={handlePasswordChange}
               />
             </div>
+            {attemptedLogin === true ? (
+              <Typography className="incorrect-login-message">
+                Invalid Credentials. Retry
+              </Typography>
+            ) : null}
             <Button className="forgot-password-button">
               <Typography
                 textTransform="none"

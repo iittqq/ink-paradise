@@ -57,7 +57,7 @@ const Header = () => {
 
   return (
     <div className="container-header">
-      <Button onClick={() => handleClickLogo()}>
+      <Button onClick={() => handleClickLogo()} className="logo-header-icon">
         <Typography textTransform="none" color="white">
           Ink Paradise
         </Typography>

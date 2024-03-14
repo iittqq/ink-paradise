@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogActions,
   Grid,
+  Alert,
 } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
@@ -57,6 +58,7 @@ const IndividualManga = () => {
   const [scantalationGroups, setScantalationGroups] = useState<object[]>([]);
   const [folders, setFolders] = useState<MangaFolder[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,6 +66,7 @@ const IndividualManga = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setMangaExistsError(false);
   };
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
@@ -81,8 +84,10 @@ const IndividualManga = () => {
           addMangaFolderEntry({ folderId, mangaId }).then((data) => {
             console.log(data);
           });
+          setMangaExistsError(false);
         } else {
           console.log("entry already exists");
+          setMangaExistsError(true);
         }
       });
     } else {
@@ -248,6 +253,11 @@ const IndividualManga = () => {
               ))}
             </Grid>
           </DialogActions>
+          {mangaExistsError === true ? (
+            <Alert variant="outlined" severity="error">
+              Manga already exists in the folder
+            </Alert>
+          ) : null}
         </Dialog>
       </div>
       <div className="controls-chapters-section">

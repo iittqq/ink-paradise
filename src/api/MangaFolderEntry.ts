@@ -2,7 +2,10 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
 
-import { MangaFolderEntry } from "../interfaces/MangaFolderEntriesInterfaces";
+import {
+  MangaFolderEntry,
+  MangaIdFolderId,
+} from "../interfaces/MangaFolderEntriesInterfaces";
 
 async function getMangaFolderEntries(): Promise<MangaFolderEntry[]> {
   try {
@@ -55,7 +58,7 @@ async function findMangaFolderEntryById(
   }
 }
 
-async function deleteMangaFoldersByFolderId(
+async function deleteMangaFolderEntriesByFolderId(
   id: number,
 ): Promise<MangaFolderEntry> {
   try {
@@ -69,10 +72,26 @@ async function deleteMangaFoldersByFolderId(
   }
 }
 
+async function deleteMangaFolderEntriesByMangaId(
+  manga_id: string,
+  folder_id: number,
+): Promise<MangaFolderEntry> {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/v1/manga_folder_entries/delete_by_manga_id/${folder_id}/${manga_id}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export {
   addMangaFolderEntry,
   getMangaFolderEntries,
   deleteMangaFolderEntry,
   findMangaFolderEntryById,
-  deleteMangaFoldersByFolderId,
+  deleteMangaFolderEntriesByFolderId,
+  deleteMangaFolderEntriesByMangaId,
 };

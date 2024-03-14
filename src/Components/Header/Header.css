@@ -1,3 +1,9 @@
+.logo-header-icon {
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .container-header {
   display: flex;
   flex-direction: row;
@@ -96,6 +102,7 @@
 #nav-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
   color: #ffffff !important;
   font-family: "Figtree" !important;
+  text-align: center !important;
 }
 
 #nav-dialog .css-knqc4i-MuiDialogActions-root {

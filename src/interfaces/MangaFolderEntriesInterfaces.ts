@@ -3,3 +3,8 @@ export interface MangaFolderEntry {
   folderId: number;
   mangaId: string;
 }
+
+export interface MangaIdFolderId {
+  folder_id: number;
+  manga_id: string;
+}
