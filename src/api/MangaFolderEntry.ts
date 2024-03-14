@@ -2,10 +2,7 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
 
-import {
-  MangaFolderEntry,
-  MangaIdFolderId,
-} from "../interfaces/MangaFolderEntriesInterfaces";
+import { MangaFolderEntry } from "../interfaces/MangaFolderEntriesInterfaces";
 
 async function getMangaFolderEntries(): Promise<MangaFolderEntry[]> {
   try {
@@ -32,10 +29,12 @@ async function addMangaFolderEntry(
   }
 }
 
-async function deleteMangaFolderEntry(id: number): Promise<MangaFolderEntry> {
+async function deleteMangaFolderEntry(
+  uniqueId: number,
+): Promise<MangaFolderEntry> {
   try {
     const response = await axios.delete(
-      `${BASE_URL}/api/v1/manga_folder_entries/delete/${id}`,
+      `${BASE_URL}/api/v1/manga_folder_entries/delete/${uniqueId}`,
     );
     return response.data;
   } catch (error) {
@@ -45,11 +44,11 @@ async function deleteMangaFolderEntry(id: number): Promise<MangaFolderEntry> {
 }
 
 async function findMangaFolderEntryById(
-  id: number,
+  folderId: number,
 ): Promise<MangaFolderEntry[]> {
   try {
     const response = await axios.get(
-      `${BASE_URL}/api/v1/manga_folder_entries/find_by_folder_id/${id}`,
+      `${BASE_URL}/api/v1/manga_folder_entries/find_by_folder_id/${folderId}`,
     );
     return response.data;
   } catch (error) {
@@ -59,11 +58,11 @@ async function findMangaFolderEntryById(
 }
 
 async function deleteMangaFolderEntriesByFolderId(
-  id: number,
+  folderId: number,
 ): Promise<MangaFolderEntry> {
   try {
     const response = await axios.delete(
-      `${BASE_URL}/api/v1/manga_folder_entries/delete_by_folder_id/${id}`,
+      `${BASE_URL}/api/v1/manga_folder_entries/delete_by_folder_id/${folderId}`,
     );
     return response.data;
   } catch (error) {
@@ -73,12 +72,12 @@ async function deleteMangaFolderEntriesByFolderId(
 }
 
 async function deleteMangaFolderEntriesByMangaId(
-  manga_id: string,
-  folder_id: number,
+  mangaId: string,
+  folderId: number,
 ): Promise<MangaFolderEntry> {
   try {
     const response = await axios.delete(
-      `${BASE_URL}/api/v1/manga_folder_entries/delete_by_manga_id/${folder_id}/${manga_id}`,
+      `${BASE_URL}/api/v1/manga_folder_entries/delete_by_manga_id_and_folder_id/${mangaId}/${folderId}`,
     );
     return response.data;
   } catch (error) {

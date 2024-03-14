@@ -170,9 +170,6 @@ input[type="text"].folder-inputs:focus {
 
   text-transform: none !important;
 
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }

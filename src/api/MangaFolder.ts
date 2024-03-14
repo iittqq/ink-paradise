@@ -26,10 +26,10 @@ async function getMangaFolders(): Promise<MangaFolder[]> {
   }
 }
 
-async function deleteMangaFolder(id: number): Promise<MangaFolder> {
+async function deleteMangaFolder(folderId: number): Promise<MangaFolder> {
   try {
     const response = await axios.delete(
-      `${BASE_URL}/api/v1/manga_folders/delete/${id}`,
+      `${BASE_URL}/api/v1/manga_folders/delete/${folderId}`,
     );
     return response.data;
   } catch (error) {

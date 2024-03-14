@@ -26,7 +26,6 @@ import {
 import "./Account.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import {
-  deleteMangaFolderEntry,
   findMangaFolderEntryById,
   deleteMangaFolderEntriesByFolderId,
   deleteMangaFolderEntriesByMangaId,
@@ -74,16 +73,6 @@ const Account = () => {
 
           handleFolderClick(selectedFolder);
         });
-        /**
-      if (databaseMangaEntries !== null) {
-        databaseMangaEntries
-          .filter((dataBaseEntry) => dataBaseEntry.mangaId === mangaToDelete)
-          .map((entry: MangaFolderEntry) => {
-            deleteMangaFolderEntry(entry.uniqueId).then((response) => {
-              console.log(response);
-            });
-          });
-      }*/
       });
     }
     setChecked(false);
@@ -281,7 +270,12 @@ const Account = () => {
           <div className="folder-modification-buttons">
             <Button
               className="delete-folder-button"
-              sx={{ backgroundColor: checked ? "#ff7597" : "#333333" }}
+              sx={{
+                backgroundColor: checked ? "#ff7597" : "#333333",
+                "&.MuiButtonBase-root:hover": {
+                  backgroundColor: checked ? "#ff7597" : "#333333",
+                },
+              }}
               onClick={() => {
                 if (checked && selectedFolder !== null) {
                   handleDeleteMangaEntries();
@@ -314,6 +308,7 @@ const Account = () => {
             open={openAddFolder}
             onClose={() => {
               setOpenAddFolder(false);
+              setNewFolder(!newFolder);
             }}
           >
             <DialogTitle>Create Folder</DialogTitle>
