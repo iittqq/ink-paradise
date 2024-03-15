@@ -124,14 +124,6 @@ input[type="search"].folder-search-bar:focus {
   border: 1px solid #ffffff;
 }
 
-.folder-description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .folder-inputs,
 .folder-search-bar {
   all: unset;
@@ -276,18 +268,6 @@ input[type="text"].folder-inputs:focus {
   }
 }
 
-.folder {
-  height: 100px;
-  width: 200px;
-  background-color: #222222 !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #ffffff !important;
-  }
-}
-
 .create-folder-fields {
   display: flex;
   flex-direction: column;
@@ -323,13 +303,4 @@ input[type="text"].folder-inputs:focus {
 }
 .css-j204z7-MuiFormControlLabel-root {
   margin: 0px 0px 0px 0px !important;
-}
-.manga-entry-overlay-button {
-  background-color: transparent !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #121212 !important;
-  }
 }

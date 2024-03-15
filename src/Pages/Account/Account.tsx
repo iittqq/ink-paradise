@@ -15,6 +15,8 @@ import AddIcon from "@mui/icons-material/Add";
 
 import Header from "../../Components/Header/Header";
 
+import FolderGrid from "../../Components/FolderGrid/FolderGrid";
+
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 import InfoIcon from "@mui/icons-material/Info";
@@ -71,7 +73,7 @@ const Account = () => {
         ).then((response) => {
           console.log(response);
 
-          handleFolderClick(selectedFolder);
+          handleFindingFolderEntriesById(selectedFolder.folderId);
         });
       });
     }
@@ -141,24 +143,49 @@ const Account = () => {
     });
   };
 
+  const handleFindingFolderEntriesById = async (folderId: number) => {
+    findMangaFolderEntryById(folderId).then((response: MangaFolderEntry[]) => {
+      setDatabaseMangaEntries(response);
+      console.log(response);
+      const promises = response.map((entry: MangaFolderEntry) => {
+        return fetchMangaById(entry.mangaId);
+      });
+      Promise.all(promises)
+        .then((data) => {
+          setFolderMangaData(data);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error));
+    });
+  };
+
   const handleFolderClick = async (folder: MangaFolder) => {
-    setSelectedFolder(folder);
-    setLoading(true);
-    findMangaFolderEntryById(folder.folderId).then(
-      (response: MangaFolderEntry[]) => {
-        setDatabaseMangaEntries(response);
-        console.log(response);
-        const promises = response.map((entry: MangaFolderEntry) => {
-          return fetchMangaById(entry.mangaId);
-        });
-        Promise.all(promises)
-          .then((data) => {
-            setFolderMangaData(data);
-            setLoading(false);
-          })
-          .catch((error) => console.log(error));
-      },
-    );
+    if (checked) {
+      if (mangaFoldersToDelete.includes(folder.folderId)) {
+        setMangaFoldersToDelete(
+          mangaFoldersToDelete.filter((id) => id !== folder.folderId),
+        );
+      } else {
+        setMangaFoldersToDelete([...mangaFoldersToDelete, folder.folderId]);
+      }
+    } else {
+      setSelectedFolder(folder);
+      setLoading(true);
+      handleFindingFolderEntriesById(folder.folderId);
+    }
+  };
+
+  const handleMangaEntryClick = async (manga: Manga) => {
+    if (checked) {
+      if (mangaEntriesToDelete.includes(manga.id)) {
+        setMangaEntriesToDelete(
+          mangaEntriesToDelete.filter((id) => id !== manga.id),
+        );
+      } else {
+        console.log(manga);
+        setMangaEntriesToDelete([...mangaEntriesToDelete, manga.id]);
+      }
+    }
   };
   useEffect(() => {
     setUserMangaData(
@@ -363,122 +390,17 @@ const Account = () => {
             </div>
           ) : null}
         </div>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          direction="row"
-          spacing={2}
-          className="folder-grid"
-        >
-          {loading ? (
-            <Grid item>
-              <CircularProgress size={25} sx={{ color: "#ffffff" }} />
-            </Grid>
-          ) : selectedFolder === null ? (
-            folders.map((folder) => (
-              <Grid item>
-                <Button
-                  className="folder"
-                  onClick={() => {
-                    if (checked) {
-                      if (mangaFoldersToDelete.includes(folder.folderId)) {
-                        setMangaFoldersToDelete(
-                          mangaFoldersToDelete.filter(
-                            (id) => id !== folder.folderId,
-                          ),
-                        );
-                      } else {
-                        setMangaFoldersToDelete([
-                          ...mangaFoldersToDelete,
-                          folder.folderId,
-                        ]);
-                      }
-                    } else {
-                      handleFolderClick(folder);
-                    }
-                  }}
-                  sx={{
-                    //border: mangaEntriesToDelete.includes(element.id)
-                    //? "2px solid #ffffff"
-                    //: "none",
-                    opacity: mangaFoldersToDelete.includes(folder.folderId)
-                      ? 0.2
-                      : 1,
-                  }}
-                >
-                  <div>
-                    <Typography
-                      textTransform={"none"}
-                      color={"#ffffff"}
-                      fontFamily={"Figtree"}
-                    >
-                      {folder.folderName} <br />
-                    </Typography>
-                    <Typography
-                      textTransform={"none"}
-                      color={"#ffffff"}
-                      fontSize={"12px"}
-                      fontFamily={"Figtree"}
-                      className="folder-description"
-                    >
-                      {folder.folderDescription}
-                    </Typography>
-                  </div>
-                </Button>
-              </Grid>
-            ))
-          ) : folderMangaData?.length === 0 ? (
-            <Grid item>
-              <Typography fontFamily={"Figtree"}>Empty...</Typography>
-            </Grid>
-          ) : (
-            folderMangaData?.map((element: Manga) => (
-              <Grid item>
-                <Button
-                  className="manga-entry-overlay-button"
-                  onClick={() => {
-                    if (checked) {
-                      if (mangaEntriesToDelete.includes(element.id)) {
-                        setMangaEntriesToDelete(
-                          mangaEntriesToDelete.filter(
-                            (id) => id !== element.id,
-                          ),
-                        );
-                      } else {
-                        console.log(element);
-                        setMangaEntriesToDelete([
-                          ...mangaEntriesToDelete,
-                          element.id,
-                        ]);
-                      }
-                    }
-                  }}
-                  sx={{
-                    //border: mangaEntriesToDelete.includes(element.id)
-                    //? "2px solid #ffffff"
-                    //: "none",
-                    opacity: mangaEntriesToDelete.includes(element.id)
-                      ? 0.2
-                      : 1,
-                  }}
-                >
-                  <MangaClickable
-                    id={element.id}
-                    title={element.attributes.title.en}
-                    coverId={
-                      element.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.id
-                    }
-                    updatedAt={element.attributes.updatedAt}
-                    disabled={checked}
-                  />
-                </Button>
-              </Grid>
-            ))
-          )}
-        </Grid>
+        <FolderGrid
+          folderClick={handleFolderClick}
+          mangaEntryClick={handleMangaEntryClick}
+          loading={loading}
+          selectedFolder={selectedFolder}
+          checked={checked}
+          folders={folders}
+          mangaFoldersToDelete={mangaFoldersToDelete}
+          folderMangaData={folderMangaData}
+          mangaEntriesToDelete={mangaEntriesToDelete}
+        />
       </div>
     </div>
   );
