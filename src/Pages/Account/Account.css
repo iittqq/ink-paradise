@@ -90,13 +90,6 @@
   flex-wrap: wrap;
 }
 
-.header-options-left {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
 .css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
   color: #ff7597 !important;
 }

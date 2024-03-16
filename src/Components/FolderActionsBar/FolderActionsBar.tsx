@@ -122,7 +122,7 @@ const FolderActionsBar = (props: Props) => {
             handleClickAddFolderButton();
           }}
         >
-          <AddIcon />
+          <AddIcon sx={{ height: "30px", width: "30px" }} />
         </Button>
         <Dialog
           id="folder-dialog"

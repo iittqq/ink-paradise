@@ -3,7 +3,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  -top: 20px;
+  top: 20px;
   padding-bottom: 20px;
 }
 
@@ -13,7 +13,8 @@
   font-family: "Figtree";
   border: 1px solid #333333;
   padding: 5px;
-  width: 100%;
+  width: 80%;
+
   margin: 10px 0px 10px 0px;
 }
 
@@ -26,9 +27,9 @@ input[type="text"].folder-inputs:focus {
 }
 
 .search-button {
-  width: 30px;
-  height: 30px;
-  left: 20px;
+  max-width: 50px !important;
+  min-width: 30px !important;
+
   color: #ffffff !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
@@ -36,6 +37,16 @@ input[type="text"].folder-inputs:focus {
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
+}
+.header-options-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  @media screen and (max-width: 600px) {
+    justify-content: flex-start;
+    width: 50%;
+  }
+  align-items: center;
 }
 
 .folder-options {
@@ -79,17 +90,22 @@ input[type="text"].folder-inputs:focus {
   color: #ffffff !important;
   height: 30px;
   font-family: "Figtree" !important;
-  margin: 0px 20px 0px 0px !important;
 
   text-transform: none !important;
 
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
+  @media screen and (max-width: 600px) {
+    min-width: 80px !important;
+    font-size: 10px !important;
+  }
 }
 
 .add-folder-button {
-  width: 30px;
+  max-width: 50px !important;
+  min-width: 30px !important;
+
   height: 30px;
   color: #ffffff !important;
   &.MuiButtonBase-root:hover {
