@@ -1,23 +1,8 @@
-import {
-  Button,
-  Typography,
-  Grid,
-  CircularProgress,
-  Switch,
-  FormControlLabel,
-  Dialog,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Typography, Grid, Dialog, DialogTitle } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-
 import Header from "../../Components/Header/Header";
-
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
-
-import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 import InfoIcon from "@mui/icons-material/Info";
 import {
@@ -33,8 +18,9 @@ import {
   deleteMangaFolderEntriesByMangaId,
 } from "../../api/MangaFolderEntry";
 import { fetchMangaById } from "../../api/MangaDexApi";
-import { Relationship, Manga } from "../../interfaces/MangaDexInterfaces";
+import { Manga } from "../../interfaces/MangaDexInterfaces";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
+import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar";
 
 const Account = () => {
   const { state } = useLocation();
@@ -47,9 +33,6 @@ const Account = () => {
   const [selectedFolder, setSelectedFolder] = useState<MangaFolder | null>(
     null,
   );
-  const [databaseMangaEntries, setDatabaseMangaEntries] = useState<
-    MangaFolderEntry[] | null
-  >(null);
   const [checked, setChecked] = useState<boolean>(false);
   const [folderMangaData, setFolderMangaData] = useState<Manga[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,36 +46,35 @@ const Account = () => {
   );
 
   const handleDeleteMangaEntries = async () => {
-    console.log(mangaEntriesToDelete);
-    console.log(databaseMangaEntries);
     if (selectedFolder !== null) {
       mangaEntriesToDelete.forEach((mangaToDelete) => {
-        deleteMangaFolderEntriesByMangaId(
-          mangaToDelete,
-          selectedFolder?.folderId,
-        ).then((response) => {
-          console.log(response);
-
-          handleFindingFolderEntriesById(selectedFolder.folderId);
-        });
+        if (selectedFolder.folderId !== undefined) {
+          deleteMangaFolderEntriesByMangaId(
+            mangaToDelete,
+            selectedFolder.folderId,
+          ).then(() => {
+            if (selectedFolder.folderId !== undefined) {
+              handleFindingFolderEntriesById(selectedFolder.folderId);
+            }
+          });
+        }
       });
     }
     setChecked(false);
   };
+
   const toggleMangaEntriesDelete = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setChecked(event.target.checked);
     setMangaEntriesToDelete([]);
     setMangaFoldersToDelete([]);
-    console.log(folderMangaData);
   };
 
   const handleDeleteMangaFolders = async () => {
     mangaFoldersToDelete.forEach((folderToDelete: number) => {
-      deleteMangaFolder(folderToDelete).then((response) => {
+      deleteMangaFolder(folderToDelete).then(() => {
         setNewFolder(!newFolder);
-        console.log(response);
       });
       deleteMangaFolderEntriesByFolderId(folderToDelete);
     });
@@ -101,13 +83,16 @@ const Account = () => {
 
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
-      setFolders(
-        response.filter(
-          (folder) =>
-            folder.folderName.includes(searchTerm) &&
-            folder.userId === JSON.parse(localStorage.getItem("userId")),
-        ),
-      );
+      const userId = localStorage.getItem("userId");
+      if (userId !== null) {
+        setFolders(
+          response.filter(
+            (folder) =>
+              folder.folderName.includes(searchTerm) &&
+              folder.userId === Number(userId),
+          ),
+        );
+      }
     });
   };
 
@@ -116,37 +101,37 @@ const Account = () => {
   };
 
   const handleCreateFolder = async () => {
-    document.getElementById("folderName").value = "";
+    (document.getElementById("folderName") as HTMLInputElement).value = "";
     setNewFolderName("");
-    document.getElementById("folderDescription").value = "";
+    (document.getElementById("folderDescription") as HTMLInputElement).value =
+      "";
     setNewFolderDescription("");
     if (newFolderName !== "") {
-      console.log("yes");
-      addMangaFolder({
-        userId: localStorage.getItem("userId"),
-        folderName: newFolderName,
-        folderDescription: newFolderDescription,
-      });
-      setNewFolder(!newFolder);
+      const userId = localStorage.getItem("userId");
+      if (userId !== null) {
+        addMangaFolder({
+          userId: Number(userId),
+          folderName: newFolderName,
+          folderDescription: newFolderDescription,
+        });
+        setNewFolder(!newFolder);
+      }
     }
   };
 
   const fetchFolders = async () => {
-    console.log(localStorage.getItem("userId"));
+    const userId = localStorage.getItem("userId");
     getMangaFolders().then((response) => {
-      setFolders(
-        response.filter(
-          (folder) =>
-            folder.userId === JSON.parse(localStorage.getItem("userId")),
-        ),
-      );
+      if (userId !== null) {
+        setFolders(
+          response.filter((folder) => folder.userId === JSON.parse(userId)),
+        );
+      }
     });
   };
 
   const handleFindingFolderEntriesById = async (folderId: number) => {
     findMangaFolderEntryById(folderId).then((response: MangaFolderEntry[]) => {
-      setDatabaseMangaEntries(response);
-      console.log(response);
       const promises = response.map((entry: MangaFolderEntry) => {
         return fetchMangaById(entry.mangaId);
       });
@@ -160,7 +145,7 @@ const Account = () => {
   };
 
   const handleFolderClick = async (folder: MangaFolder) => {
-    if (checked) {
+    if (checked && folder.folderId !== undefined) {
       if (mangaFoldersToDelete.includes(folder.folderId)) {
         setMangaFoldersToDelete(
           mangaFoldersToDelete.filter((id) => id !== folder.folderId),
@@ -171,7 +156,9 @@ const Account = () => {
     } else {
       setSelectedFolder(folder);
       setLoading(true);
-      handleFindingFolderEntriesById(folder.folderId);
+      if (folder.folderId !== undefined) {
+        handleFindingFolderEntriesById(folder.folderId);
+      }
     }
   };
 
@@ -187,6 +174,34 @@ const Account = () => {
       }
     }
   };
+
+  const handleClickBack = () => {
+    setSelectedFolder(null);
+    setMangaEntriesToDelete([]);
+    setChecked(false);
+  };
+
+  const handleFolderDialogClose = () => {
+    setOpenAddFolder(false);
+    setNewFolder(!newFolder);
+  };
+
+  const handleClickAddFolderButton = () => {
+    setOpenAddFolder(true);
+  };
+
+  const handleFolderNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNewFolderName(event.target.value);
+  };
+
+  const handleFolderDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNewFolderDescription(event.target.value);
+  };
+
   useEffect(() => {
     setUserMangaData(
       Object.keys(state.malAccount.statistics.manga).map((key) => [
@@ -255,133 +270,23 @@ const Account = () => {
           </Dialog>
         </div>
       </div>
-      <div className="folder-section-header">
-        <div className="header-options-left">
-          <input
-            type="search"
-            placeholder="Search Folders"
-            className="folder-search-bar"
-            onChange={(event) => {
-              handleInput(event);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                searchFolders();
-              }
-            }}
-          />
-          <Button
-            className="search-button"
-            onClick={() => {
-              searchFolders();
-            }}
-          >
-            <SearchIcon />
-          </Button>
-          {selectedFolder !== null ? (
-            <div className="folder-options">
-              <Button
-                className="back-button"
-                onClick={() => {
-                  setSelectedFolder(null);
-                  setMangaEntriesToDelete([]);
-                  setChecked(false);
-                }}
-              >
-                Back
-              </Button>
-            </div>
-          ) : null}
-        </div>
-        <div className="create-folder-container">
-          <div className="folder-modification-buttons">
-            <Button
-              className="delete-folder-button"
-              sx={{
-                backgroundColor: checked ? "#ff7597" : "#333333",
-                "&.MuiButtonBase-root:hover": {
-                  backgroundColor: checked ? "#ff7597" : "#333333",
-                },
-              }}
-              onClick={() => {
-                if (checked && selectedFolder !== null) {
-                  handleDeleteMangaEntries();
-                } else {
-                  handleDeleteMangaFolders();
-                }
-              }}
-            >
-              {selectedFolder !== null ? "Delete Manga" : "Delete Folder"}
-            </Button>
-            <FormControlLabel
-              className="edit-folders"
-              control={
-                <Switch checked={checked} onChange={toggleMangaEntriesDelete} />
-              }
-              label="Select"
-            />
-          </div>
-
-          <Button
-            className="add-folder-button"
-            onClick={() => {
-              setOpenAddFolder(true);
-            }}
-          >
-            <AddIcon />
-          </Button>
-          <Dialog
-            id="folder-dialog"
-            open={openAddFolder}
-            onClose={() => {
-              setOpenAddFolder(false);
-              setNewFolder(!newFolder);
-            }}
-          >
-            <DialogTitle>Create Folder</DialogTitle>
-            <div className="create-folder-fields">
-              <Typography fontFamily={"Figtree"}>Name</Typography>
-              <input
-                type="text"
-                id="folderName"
-                placeholder="New Folder Name"
-                className="folder-inputs"
-                onChange={(e) => setNewFolderName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleCreateFolder();
-                  }
-                }}
-              />
-              <Typography fontFamily={"Figtree"}>Description</Typography>
-              <input
-                type="text"
-                id="folderDescription"
-                placeholder="New Folder Description"
-                className="folder-inputs"
-                onChange={(e) => setNewFolderDescription(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (newFolderName !== "") {
-                      handleCreateFolder();
-                    } else {
-                      console.log("no name");
-                    }
-                  }
-                }}
-              />
-              <Button
-                className="create-button"
-                onClick={() => {
-                  handleCreateFolder();
-                }}
-              >
-                Create
-              </Button>
-            </div>
-          </Dialog>
-        </div>
-      </div>
+      <FolderActionsBar
+        handleInput={handleInput}
+        searchFolders={searchFolders}
+        handleClickBack={handleClickBack}
+        handleDeleteMangaEntries={handleDeleteMangaEntries}
+        handleDeleteMangaFolders={handleDeleteMangaFolders}
+        checked={checked}
+        toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+        handleClickAddFolderButton={handleClickAddFolderButton}
+        handleFolderDialogClose={handleFolderDialogClose}
+        handleCreateFolder={handleCreateFolder}
+        openAddFolder={openAddFolder}
+        selectedFolder={selectedFolder}
+        newFolderName={newFolderName}
+        handleFolderNameChange={handleFolderNameChange}
+        handleFolderDescriptionChange={handleFolderDescriptionChange}
+      />
       <div className="personal-folders">
         <div>
           {selectedFolder !== null ? (
