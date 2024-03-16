@@ -1,4 +1,6 @@
 export interface MalFavorites {
+  mal_id: number;
+  type: string;
   images: { jpg: { large_image_url: string } };
   title: string;
 }

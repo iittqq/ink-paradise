@@ -1,35 +1,37 @@
-import { Button, Typography } from "@mui/material";
-import { useEffect } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import ListIcon from "@mui/icons-material/List";
+import { useEffect, useState } from "react";
+
+import Header from "../../Components/Header/Header";
+import { MalAccount } from "../../interfaces/MalInterfaces";
 
 import "./Library.css";
-//type Props = { malUserProfile: any };
+
+import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
+import LibraryContents from "../../Components/LibraryContents/LibraryContents";
+import { fetchAccountData } from "../../api/MalApi";
 
 const Library = () => {
-	useEffect(() => {}, []);
+  const [malUserProfile, setMalUserProfile] = useState<MalAccount | null>(null);
+  useEffect(() => {
+    const accountName = localStorage.getItem("malAccount");
+    if (accountName !== null) {
+      fetchAccountData(accountName).then((data: MalAccount) => {
+        setMalUserProfile(data);
+      });
+    }
+  }, []);
 
-	return (
-		<div>
-			<div className='library-header'>
-				<Typography padding={1} fontSize={20}>
-					Library
-				</Typography>
-				<div>
-					<Button sx={{ color: "white" }}>
-						<SearchIcon />
-					</Button>
-					<Button sx={{ color: "white" }}>
-						<FilterListIcon />
-					</Button>
-					<Button sx={{ color: "white" }}>
-						<ListIcon />
-					</Button>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div>
+      <div>
+        <Header />
+      </div>
+      <LibraryHeader />
+
+      {malUserProfile !== null ? (
+        <LibraryContents libraryManga={malUserProfile.favorites.manga} />
+      ) : null}
+    </div>
+  );
 };
 
 export default Library;
