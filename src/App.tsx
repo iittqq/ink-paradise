@@ -12,7 +12,7 @@ import Login from "./Pages/Login/Login";
 
 function App() {
 	return (
-		<>
+		<div className='page-details'>
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<Home />} />
@@ -24,7 +24,7 @@ function App() {
 					<Route path='/login' element={<Login />}></Route>
 				</Routes>
 			</BrowserRouter>
-		</>
+		</div>
 	);
 }
 

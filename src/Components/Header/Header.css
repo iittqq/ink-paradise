@@ -1,41 +1,125 @@
-.input-field {
-	input {
-		color: white;
-	}
-	& label.Mui-focused {
-		color: white;
-	}
-	& .MuiOutlinedInput-root {
-		&.Mui-focused fieldset {
-			border-color: white;
-		}
-	}
-}
-
-.search-section {
-	position: relative;
-	right: 0px;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+.logo-header-icon {
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
 
 .container-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	min-height: 50px;
-	padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  top: 0;
 }
 
-.search-button {
-	color: #ffffff !important;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: white;
-	}
+.search-section {
+  position: relative;
+  right: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-field {
+  width: 300px;
+  margin-right: 6px !important;
+
+  @media screen and (max-width: 800px) {
+    width: 150px;
+  }
+
+  input {
+    color: white;
+  }
+
+  & label.Mui-focused {
+    color: white;
+  }
+
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: white;
+    }
+  }
+}
+
+.account-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 300px;
+  height: 150px;
+  background-color: #1f1f1f;
+}
+
+.logo-field-login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.login-logo {
+  &.MuiSvgIcon-root {
+    height: 40px;
+    width: 40px;
+  }
+  color: #ffffff;
+}
+
+.header-buttons {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  @media screen and (max-width: 600px) {
+    min-width: 30px !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: white;
+  }
+}
+
+.account-details-submit-button {
+  color: #ffffff !important;
+  background-color: #444444 !important;
+  margin-bottom: -10px;
+  text-transform: none;
+}
+
+#nav-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  background-color: #121212 !important;
+  max-width: 80dvw;
+}
+
+#nav-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  text-align: center !important;
+}
+
+#nav-dialog .css-knqc4i-MuiDialogActions-root {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#nav-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  text-transform: none;
+}
+
+.folder-button {
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }

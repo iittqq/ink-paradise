@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
-import Footer from "../../Components/Footer/Footer";
+
 import "./Library.css";
 //type Props = { malUserProfile: any };
 
@@ -27,10 +27,6 @@ const Library = () => {
 						<ListIcon />
 					</Button>
 				</div>
-			</div>
-			<div></div>
-			<div className='footer'>
-				<Footer />
 			</div>
 		</div>
 	);

@@ -15,7 +15,7 @@ import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList
 import "./Reader.css";
 
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
-import Footer from "../../Components/Footer/Footer";
+
 import { MangaChapter, MangaFeed } from "../../interfaces/MangaDexInterfaces";
 
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
@@ -119,10 +119,6 @@ const Reader = () => {
 					}
 				/>
 			)}
-
-			<div className='footer'>
-				<Footer />
-			</div>
 		</div>
 	);
 };
