@@ -1,8 +1,8 @@
 import { Grid } from "@mui/material";
-import { MalFavorites } from "../../interfaces/MalInterfaces";
+import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./LibraryContents.css";
-type Props = { libraryManga: MalFavorites[] };
+type Props = { libraryManga: Manga[] };
 
 const LibraryContents = (props: Props) => {
   const { libraryManga } = props;
@@ -14,13 +14,17 @@ const LibraryContents = (props: Props) => {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        {libraryManga.map((manga: MalFavorites) => (
+        {libraryManga.map((manga: Manga) => (
           <Grid item>
             <MangaClickable
-              title={manga.title}
-              coverUrl={manga.images.jpg.large_image_url}
-              rank={String(1)}
-              id={String(manga.mal_id)}
+              id={manga.id}
+              title={manga.attributes.title.en}
+              coverId={
+                manga.relationships.find(
+                  (i: Relationship) => i.type === "cover_art",
+                )?.id
+              }
+              updatedAt={manga.attributes.updatedAt}
             />
           </Grid>
         ))}

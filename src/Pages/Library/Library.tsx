@@ -2,20 +2,24 @@ import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header/Header";
 import { MalAccount } from "../../interfaces/MalInterfaces";
-
+import { CircularProgress } from "@mui/material";
 import "./Library.css";
-
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
-import { fetchAccountData } from "../../api/MalApi";
+import { fetchAccountData, generateLibrary } from "../../api/MalApi";
+import { Manga } from "../../interfaces/MangaDexInterfaces";
 
 const Library = () => {
-  const [malUserProfile, setMalUserProfile] = useState<MalAccount | null>(null);
+  const [library, setLibrary] = useState<Manga[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const accountName = localStorage.getItem("malAccount");
     if (accountName !== null) {
       fetchAccountData(accountName).then((data: MalAccount) => {
-        setMalUserProfile(data);
+        generateLibrary(data.favorites.manga).then((library: Manga[]) => {
+          setLibrary(library);
+          setLoading(false);
+        });
       });
     }
   }, []);
@@ -26,10 +30,13 @@ const Library = () => {
         <Header />
       </div>
       <LibraryHeader />
-
-      {malUserProfile !== null ? (
-        <LibraryContents libraryManga={malUserProfile.favorites.manga} />
-      ) : null}
+      {loading === true ? (
+        <div className="loading-indicator-container">
+          <CircularProgress size={25} sx={{ color: "#ffffff" }} />
+        </div>
+      ) : (
+        <LibraryContents libraryManga={library} />
+      )}
     </div>
   );
 };
