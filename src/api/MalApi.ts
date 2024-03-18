@@ -58,7 +58,7 @@ async function generateLibrary(malFavorites: MalFavorites[]): Promise<Manga[]> {
             );
 
             if (
-              duplicates.length > 5 &&
+              duplicates.length > splitLibraryEntryTitle.length / 2 &&
               !manga.attributes.title.en.split(" ").includes("Colored)") &&
               library.length < malFavorites.length
             ) {
