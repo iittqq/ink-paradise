@@ -6,10 +6,10 @@ import ListIcon from "@mui/icons-material/List";
 
 import "./LibraryHeader.css";
 
-type Props = {};
+type Props = { handleLibraryOrderChange: (order: object) => void };
 
 const LibraryHeader = (props: Props) => {
-  const {} = props;
+  const { handleLibraryOrderChange } = props;
 
   const handleInput = (event: any) => {};
   return (
@@ -37,7 +37,12 @@ const LibraryHeader = (props: Props) => {
         <Button className="library-header-button">
           <FilterListIcon />
         </Button>
-        <Button className="library-header-button">
+        <Button
+          className="library-header-button"
+          onClick={() => {
+            handleLibraryOrderChange({ title: "asc" });
+          }}
+        >
           <ListIcon />
         </Button>
       </div>

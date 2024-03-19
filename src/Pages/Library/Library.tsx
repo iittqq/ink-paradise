@@ -12,6 +12,15 @@ import { Manga } from "../../interfaces/MangaDexInterfaces";
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
+  const [order, setOrder] = useState<object>({
+    metric: "title",
+    direction: "asc",
+  });
+
+  const handleLibraryOrderChange = (order: object) => {
+    setOrder(order);
+  };
+
   useEffect(() => {
     const accountName = localStorage.getItem("malAccount");
     if (accountName !== null) {
@@ -22,14 +31,14 @@ const Library = () => {
         });
       });
     }
-  }, []);
+  }, [order]);
 
   return (
     <div>
       <div>
         <Header />
       </div>
-      <LibraryHeader />
+      <LibraryHeader handleLibraryOrderChange={handleLibraryOrderChange} />
       {loading === true ? (
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />

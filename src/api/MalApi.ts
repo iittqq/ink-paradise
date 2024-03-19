@@ -45,7 +45,7 @@ async function generateLibrary(malFavorites: MalFavorites[]): Promise<Manga[]> {
   const library: Manga[] = [];
   try {
     for (const element of malFavorites) {
-      const response = await fetchMangaByTitle(element.title);
+      const response = await fetchMangaByTitle(element.title, 5);
       response.forEach((manga: Manga) => {
         if (manga.attributes.title.en === element.title) {
           library.push(manga);

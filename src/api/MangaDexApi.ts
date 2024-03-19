@@ -71,11 +71,14 @@ async function fetchMangaById(mangaId: string): Promise<Manga> {
   }
 }
 
-async function fetchMangaByTitle(title: string): Promise<Manga[]> {
+async function fetchMangaByTitle(
+  title: string,
+  limit: number,
+): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-title`, {
       params: {
-        limit: 10,
+        limit: limit,
         title: title,
       },
     });
