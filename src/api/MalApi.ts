@@ -41,7 +41,10 @@ async function fetchTopManga(): Promise<TopManga[]> {
   }
 }
 
-async function generateLibrary(malFavorites: MalFavorites[]): Promise<Manga[]> {
+async function generateLibrary(
+  malFavorites: MalFavorites[],
+  ascending: boolean,
+): Promise<Manga[]> {
   const library: Manga[] = [];
   try {
     for (const element of malFavorites) {
@@ -68,7 +71,16 @@ async function generateLibrary(malFavorites: MalFavorites[]): Promise<Manga[]> {
         }
       });
     }
-    return library;
+    if (ascending) {
+      return library.sort((a, b) =>
+        a.attributes.title.en.localeCompare(b.attributes.title.en),
+      );
+    } else {
+      return library.sort(
+        (a, b) =>
+          -1 * a.attributes.title.en.localeCompare(b.attributes.title.en),
+      );
+    }
   } catch (error) {
     console.log(error);
     throw error;

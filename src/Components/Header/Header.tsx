@@ -49,7 +49,7 @@ const Header = () => {
   const handleClick = async () =>
     searchInput === ""
       ? null
-      : fetchMangaByTitle(searchInput).then((data: Manga[]) => {
+      : fetchMangaByTitle(searchInput, 10).then((data: Manga[]) => {
           navigate("/mangaCoverList", {
             state: { listType: "SearchResults", manga: data },
           });

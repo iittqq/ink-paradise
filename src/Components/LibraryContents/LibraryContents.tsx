@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./LibraryContents.css";
@@ -8,6 +8,9 @@ const LibraryContents = (props: Props) => {
   const { libraryManga } = props;
   return (
     <div>
+      <div className="library-contents-header">
+        <Typography>Favorites</Typography>
+      </div>
       <Grid
         container
         direction={"row"}

@@ -143,6 +143,9 @@
   color: #ffffff !important;
   font-family: "Figtree" !important;
   text-transform: none;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent !important;
+  }
 }
 
 #folder-dialog {
@@ -166,6 +169,9 @@
   color: #ffffff !important;
   font-family: "Figtree" !important;
   text-transform: none;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent !important;
+  }
 }
 
 .field-name-input {

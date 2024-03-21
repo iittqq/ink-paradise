@@ -1,4 +1,5 @@
-import { Typography, Button } from "@mui/material";
+import { useState } from "react";
+import { Typography, Button, Dialog, DialogTitle } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -6,12 +7,26 @@ import ListIcon from "@mui/icons-material/List";
 
 import "./LibraryHeader.css";
 
-type Props = { handleLibraryOrderChange: (order: object) => void };
+type Props = {
+  searchFavorites: (searchValue: string) => void;
+  handleAscendingChange: () => void;
+  handleContentFilter: (selection: string) => void;
+};
 
 const LibraryHeader = (props: Props) => {
-  const { handleLibraryOrderChange } = props;
+  const { searchFavorites, handleAscendingChange, handleContentFilter } = props;
+  const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
+  const [searchBarValue, setSearchBarValue] = useState<string>("");
 
-  const handleInput = (event: any) => {};
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchBarValue(event.target.value);
+  };
+
+  const handleEnter = () => {
+    console.log(searchBarValue);
+    searchFavorites(searchBarValue);
+  };
+
   return (
     <div className="library-header">
       <Typography padding={1} fontSize={20}>
@@ -27,6 +42,7 @@ const LibraryHeader = (props: Props) => {
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              handleEnter();
             }
           }}
         />
@@ -34,17 +50,61 @@ const LibraryHeader = (props: Props) => {
         <Button className="library-header-button">
           <SearchIcon />
         </Button>
-        <Button className="library-header-button">
+        <Button
+          className="library-header-button"
+          onClick={() => {
+            handleAscendingChange();
+          }}
+        >
           <FilterListIcon />
         </Button>
         <Button
           className="library-header-button"
           onClick={() => {
-            handleLibraryOrderChange({ title: "asc" });
+            setOpenFilterDialog(true);
           }}
         >
           <ListIcon />
         </Button>
+        <Dialog
+          id="folder-dialog"
+          open={openFilterDialog}
+          onClose={() => {
+            setOpenFilterDialog(false);
+          }}
+        >
+          <DialogTitle>Filter</DialogTitle>
+          <div>
+            <Button
+              onClick={() => {
+                handleContentFilter("dropped");
+              }}
+            >
+              Dropped
+            </Button>
+            <Button
+              onClick={() => {
+                handleContentFilter("on-hold");
+              }}
+            >
+              On-Hold
+            </Button>
+            <Button
+              onClick={() => {
+                handleContentFilter("completed");
+              }}
+            >
+              Completed
+            </Button>
+            <Button
+              onClick={() => {
+                handleContentFilter("reading");
+              }}
+            >
+              Reading
+            </Button>
+          </div>
+        </Dialog>
       </div>
     </div>
   );
