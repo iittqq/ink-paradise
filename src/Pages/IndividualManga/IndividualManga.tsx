@@ -106,7 +106,7 @@ const IndividualManga = () => {
       );
     });
     if (state["title"] !== undefined) {
-      fetchMangaByTitle(state["title"]).then((data: Manga[]) => {
+      fetchMangaByTitle(state["title"], 10).then((data: Manga[]) => {
         console.log(data);
         setMangaId(data[0].id);
         setMangaName(data[0].attributes.title.en);
