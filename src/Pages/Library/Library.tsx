@@ -8,6 +8,9 @@ import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
 import { fetchAccountData, generateLibrary } from "../../api/MalApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
+import { getReadingByUserId } from "../../api/Reading";
+import { fetchMangaById } from "../../api/MangaDexApi";
+import { Reading } from "../../interfaces/ReadingInterfaces";
 
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
@@ -32,14 +35,24 @@ const Library = () => {
     setContentFilter(selection);
   };
   useEffect(() => {
+    const userId = localStorage.getItem("userId") as number | null;
+    if (userId !== null) {
+      getReadingByUserId(userId).then((data: Reading[]) => {
+        data.forEach((data: Reading) => {
+          fetchMangaById(data.mangaId).then((library: Manga) => {
+            setLibrary((oldLibrary) => [...oldLibrary, library]);
+            setLoading(false);
+          });
+        });
+      });
+    }
     const accountName = localStorage.getItem("malAccount");
     if (accountName !== null) {
       if (filter === null) {
         fetchAccountData(accountName).then((data: MalAccount) => {
           generateLibrary(data.favorites.manga, ascending).then(
             (library: Manga[]) => {
-              setLibrary(library);
-              setLoading(false);
+              setLibrary((oldLibrary) => [...oldLibrary, ...library]);
             },
           );
         });
@@ -52,7 +65,6 @@ const Library = () => {
                   manga.attributes.title.en.toLowerCase().includes(filter),
                 ),
               );
-              setLoading(false);
             },
           );
         });

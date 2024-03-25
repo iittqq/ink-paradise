@@ -61,9 +61,12 @@ const FolderGrid = (props: Props) => {
                 //border: mangaEntriesToDelete.includes(element.id)
                 //? "2px solid #ffffff"
                 //: "none",
-                opacity: mangaFoldersToDelete.includes(folder.folderId)
-                  ? 0.2
-                  : 1,
+                opacity:
+                  folder.folderId !== undefined
+                    ? mangaFoldersToDelete.includes(folder.folderId)
+                      ? 0.2
+                      : 1
+                    : null,
               }}
             >
               <div>

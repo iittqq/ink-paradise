@@ -65,6 +65,7 @@ const Reader = () => {
         if (reading.mangaId === state.mangaId) {
           updateReading({
             id: reading.id,
+            userId: reading.userId,
             mangaId: reading.mangaId,
             chapter: state.chapter,
           });
@@ -73,12 +74,17 @@ const Reader = () => {
       });
       if (readingExists === false) {
         console.log(state.mangaId, state.chapterNumber);
-        addReading({
-          mangaId: state.mangaId,
-          chapter: state.chapterNumber,
-        }).then((data) => {
-          console.log(data);
-        });
+        const userId = localStorage.getItem("userId") as number | null;
+        console.log(userId);
+        if (userId !== null) {
+          addReading({
+            userId: userId,
+            mangaId: state.mangaId,
+            chapter: state.chapterNumber,
+          }).then((data) => {
+            console.log(data);
+          });
+        }
       }
     });
 

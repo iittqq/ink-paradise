@@ -14,7 +14,20 @@ async function getReading(): Promise<Reading[]> {
   }
 }
 
+async function getReadingByUserId(userId: number): Promise<Reading[]> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/reading/find_by_user_id/${userId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 async function addReading(reading: {
+  userId: number;
   mangaId: string;
   chapter: number;
 }): Promise<Reading> {
@@ -56,4 +69,10 @@ async function deleteReading(uniqueId: number): Promise<Reading> {
   }
 }
 
-export { getReading, addReading, updateReading, deleteReading };
+export {
+  getReading,
+  addReading,
+  updateReading,
+  deleteReading,
+  getReadingByUserId,
+};
