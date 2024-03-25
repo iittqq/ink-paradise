@@ -1,38 +1,121 @@
-.box {
-	top: 50%;
-	position: absolute;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	& .MuiPaper-root {
-		background-color: #444444;
-	}
+.login-page {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.box-content {
-	width: 300px;
-	background-color: #444444;
-	padding: 10px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
+.login-card {
+  width: 35dvh;
+  height: 50dvh;
+  background-color: #222222 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
-.account-icon {
-	height: 40px;
-	width: 40px;
-	color: #ffffff;
+.login-header,
+.register-header {
+  font-size: 30px !important;
+  color: #879ebf !important;
+  font-family: "Figtree" !important;
 }
 
-.divider {
-	background-color: rgb(18, 18, 18);
-	width: 320px;
-	height: 1px;
-	border-bottom-width: 1;
+.login-input-fields,
+.register-input-fields {
+  width: 250px;
+  height: 30px;
+  padding: 0px;
+  background-color: #333333;
+  font-family: "Figtree" !important;
+
+  input:focus {
+    border: 1px solid #333333;
+    outline: none;
+  }
+
+  border: 1px solid #333333;
+  box-shadow: none;
 }
 
-.button {
-	color: #ffffff !important;
-	margin-bottom: -10px;
-	text-transform: none;
+input.login-input-fields:focus {
+  outline: none;
 }
+
+input.register-input-fields:focus {
+  outline: none;
+}
+
+.login-text-field-headers,
+.register-text-field-headers {
+  padding-bottom: 10px;
+  color: #879ebf !important;
+  font-family: "Figtree" !important;
+}
+
+.login-field-icons,
+.register-field-icons {
+  width: 40px !important;
+  height: 32px !important;
+  background-color: #333333;
+  color: #ffffff !important;
+}
+
+.login-icon-field-container,
+.register-icon-field-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  max-height: 32px;
+}
+
+.incorrect-login-message {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 12px !important;
+  width: 50%;
+  float: left;
+  padding-top: 8px;
+}
+
+.forgot-password-button {
+  float: right;
+  color: #3f51b5 !important;
+  font-family: "Figtree" !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.login-button,
+.register-button {
+  width: 80%;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  background-color: #3f51b5 !important;
+  color: #ffffff !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.content-filter-selection-box {
+  width: 290px;
+
+  padding: 0px;
+  background-color: #333333;
+  font-family: "Figtree" !important;
+}
+
+.content-filter-dropdown {
+  color: #ffffff !important;
+  padding-left: 10px;
+}
+
+.register-section {
+  padding-bottom: 10px;
+}
+

@@ -16,6 +16,7 @@ type Props = {
   rank?: string;
   coverUrl?: string;
   author?: string;
+  disabled?: boolean;
 };
 
 const baseUrl = "https://api.mangadex.org/";
@@ -24,7 +25,8 @@ const MangaClickable = (props: Props) => {
   const [coverFile, setCoverFile] = useState("");
   //const [showDetails, setShowDetails] = useState(false);
 
-  const { id, title, coverId, updatedAt, rank, coverUrl, author } = props;
+  const { id, title, coverId, updatedAt, rank, coverUrl, author, disabled } =
+    props;
 
   function handleClick() {
     navigate("/individualView", {
@@ -47,6 +49,7 @@ const MangaClickable = (props: Props) => {
     <>
       <Button
         className="button"
+        disabled={disabled && disabled != undefined ? true : false}
         onClick={() => {
           handleClick();
         }}

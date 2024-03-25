@@ -1,3 +1,7 @@
+.home-page-container {
+	min-height: 100dvh;
+}
+
 .manga-category-section {
 	display: flex;
 	flex-direction: row;
@@ -41,12 +45,6 @@
 	position: relative;
 	top: 0;
 	left: 0;
-	width: 100%;
-}
-
-.footer {
-	position: fixed;
-	bottom: 0;
 	width: 100%;
 }
 
