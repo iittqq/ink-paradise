@@ -54,15 +54,14 @@ export const CarouselItem = (props: CarouselItemProps) => {
     >
       <div className="carousel-text">
         <div className="title-text">
-          {props.title.length > 26
-            ? `${props.title.substring(0, 26)}...`
+          {props.title.length > 24
+            ? `${props.title.substring(0, 24)}...`
             : props.title}
         </div>
         <Typography
           color="#ebe814"
           sx={{ fontSize: { md: 23, lg: 23 } }}
           fontWeight="600"
-          className="rank-Text"
         >
           {props.rank < "10" ? `0${props.rank}` : props.rank}
         </Typography>
@@ -84,7 +83,7 @@ const HotMangaCarousel = (props: Props) => {
   function updateIndex(newIndex: number): void {
     if (newIndex < 0) {
       newIndex = 5;
-    } else if (newIndex + 4 >= React.Children.count(props.children)) {
+    } else if (newIndex + 7 >= React.Children.count(props.children)) {
       newIndex = 0;
     }
     setActiveIndex(newIndex);
@@ -102,9 +101,21 @@ const HotMangaCarousel = (props: Props) => {
         <KeyboardArrowLeftIcon
           sx={{
             color: "white",
-            width: "50px",
+            width: {
+              xs: "0px",
+              sm: "0px",
+              md: "50px",
+              lg: "50px",
+              xl: "50px",
+            },
             height: "50px",
-            marginRight: "50px",
+            marginRight: {
+              xs: "0px",
+              sm: "0px",
+              md: "50px",
+              lg: "50px",
+              xl: "50px",
+            },
           }}
           onClick={() => {
             updateIndex(activeIndex - 1);
@@ -117,12 +128,21 @@ const HotMangaCarousel = (props: Props) => {
           maxWidth={false}
           className="inner"
           sx={{
-            overflow: { xs: "scroll", lg: "visible" },
+            overflow: {
+              xs: "scroll",
+              sm: "scroll",
+              md: "visible",
+              lg: "visible",
+              xl: "visible",
+            },
             transform: {
               xs: "none",
-              lg: `translateX(-${activeIndex * 20.1}%)`,
+              sm: `translateX(-${activeIndex * 43}%)`,
+              md: `translateX(-${activeIndex * 43}%)`,
+              lg: `translateX(-${activeIndex * 20}%)`,
+              xl: `translateX(-${activeIndex * 27}%)`,
             },
-          }} /**`translateX(-${activeIndex * 19.5}%)` */
+          }}
         >
           {React.Children.map(props.children, (child: any, index: number) => {
             return React.cloneElement(child);
