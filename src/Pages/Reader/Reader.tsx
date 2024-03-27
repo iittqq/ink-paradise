@@ -14,7 +14,11 @@ import PageAndControls from "../../Components/PageAndControls/PageAndControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import "./Reader.css";
 
-import { getReading, updateReading, addReading } from "../../api/Reading";
+import {
+  updateReading,
+  addReading,
+  getReadingByUserId,
+} from "../../api/Reading";
 
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
 
@@ -31,7 +35,6 @@ const Reader = () => {
   const [open, setOpen] = useState(false);
   const [order] = useState("desc");
   const [scantalationGroups] = useState<object[]>([]);
-  const [readingExists, setReadingExists] = useState(false);
 
   const handleOpenChapters = () => {
     /** 
@@ -59,41 +62,47 @@ const Reader = () => {
       setHash(data.chapter.hash);
     });
     console.log(state);
-    getReading().then((data) => {
-      console.log(data);
-      data.forEach((reading) => {
-        if (reading.mangaId === state.mangaId) {
-          updateReading({
-            id: reading.id,
-            userId: reading.userId,
-            mangaId: reading.mangaId,
-            chapter: state.chapter,
-          });
-          setReadingExists(true);
+    const userId = localStorage.getItem("userId") as number | null;
+    let readingExists = false;
+    if (userId !== null) {
+      getReadingByUserId(userId).then((data) => {
+        console.log(data);
+        data.forEach((reading) => {
+          if (reading.mangaId === state.mangaId) {
+            updateReading({
+              id: reading.id,
+              userId: reading.userId,
+              mangaId: reading.mangaId,
+              chapter: state.chapter,
+              mangaName: reading.mangaName,
+            });
+            readingExists = true;
+          }
+        });
+        if (readingExists === false) {
+          console.log(state.mangaId, state.chapterNumber);
+          const userId = localStorage.getItem("userId") as number | null;
+          console.log(userId);
+          if (userId !== null) {
+            addReading({
+              userId: userId,
+              mangaId: state.mangaId,
+              chapter: state.chapterNumber,
+              mangaName: state.mangaName,
+            }).then((data) => {
+              console.log(data);
+            });
+          }
         }
       });
-      if (readingExists === false) {
-        console.log(state.mangaId, state.chapterNumber);
-        const userId = localStorage.getItem("userId") as number | null;
-        console.log(userId);
-        if (userId !== null) {
-          addReading({
-            userId: userId,
-            mangaId: state.mangaId,
-            chapter: state.chapterNumber,
-          }).then((data) => {
-            console.log(data);
-          });
-        }
-      }
-    });
+    }
 
     fetchMangaFeed(state.mangaId, 300, 0, order, selectedLanguage).then(
       (data: MangaFeed[]) => {
         setChapters(data);
       },
     );
-  }, [state]);
+  }, [state, order, selectedLanguage]);
 
   return (
     <div className="reader-page">

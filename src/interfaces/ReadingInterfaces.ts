@@ -3,4 +3,5 @@ export interface Reading {
   userId: number;
   mangaId: string;
   chapter: number;
+  mangaName: string;
 }

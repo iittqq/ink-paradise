@@ -8,7 +8,11 @@ import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
 import { fetchAccountData, generateLibrary } from "../../api/MalApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { getReadingByUserId } from "../../api/Reading";
+import {
+  getReadingByUserId,
+  addReading,
+  getReadingByMangaName,
+} from "../../api/Reading";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 
@@ -16,15 +20,47 @@ const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string | null>(null);
   const [contentFilter, setContentFilter] = useState<string>("favorites");
+  const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
+
   const searchFavorites = async (searchValue: string) => {
-    if (searchValue !== "") {
-      setFilter(searchValue);
-      console.log(library);
-    } else {
-      setFilter(null);
+    setLibrary([]);
+    if (searchValue === "") {
+      setLoadLibrary(!loadLibrary);
+      return;
     }
+    setLoading(true);
+    const userId = localStorage.getItem("userId") as number | null;
+    if (userId !== null) {
+      getReadingByMangaName(userId, searchValue).then(
+        (filteredReading: Reading[]) => {
+          console.log(filteredReading);
+          const promises = filteredReading.map((readingEntry: Reading) => {
+            return fetchMangaById(readingEntry.mangaId);
+          });
+          Promise.all(promises).then((data) => {
+            setLibrary(data);
+            setLoading(false);
+          });
+        },
+      );
+    }
+  };
+
+  const handleFetchingLibrary = async (userId: number) => {
+    setLoading(true);
+    getReadingByUserId(userId).then((data: Reading[]) => {
+      const promises = data.map((data: Reading) => {
+        return fetchMangaById(data.mangaId);
+      });
+
+      Promise.all(promises)
+        .then((data) => {
+          setLibrary(data);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error));
+    });
   };
 
   const handleAscendingChange = () => {
@@ -35,42 +71,38 @@ const Library = () => {
     setContentFilter(selection);
   };
   useEffect(() => {
+    setLoading(true);
     const userId = localStorage.getItem("userId") as number | null;
     if (userId !== null) {
-      getReadingByUserId(userId).then((data: Reading[]) => {
-        data.forEach((data: Reading) => {
-          fetchMangaById(data.mangaId).then((library: Manga) => {
-            setLibrary((oldLibrary) => [...oldLibrary, library]);
-            setLoading(false);
-          });
-        });
-      });
-    }
-    const accountName = localStorage.getItem("malAccount");
-    if (accountName !== null) {
-      if (filter === null) {
+      const accountName = localStorage.getItem("malAccount");
+      if (accountName !== null) {
         fetchAccountData(accountName).then((data: MalAccount) => {
           generateLibrary(data.favorites.manga, ascending).then(
             (library: Manga[]) => {
-              setLibrary((oldLibrary) => [...oldLibrary, ...library]);
+              library.forEach((manga: Manga) => {
+                getReadingByUserId(userId).then((reading: Reading[]) => {
+                  console.log(!JSON.stringify(reading).includes(manga.id));
+                  if (
+                    userId !== null &&
+                    !JSON.stringify(reading).includes(manga.id)
+                  ) {
+                    addReading({
+                      userId: userId,
+                      mangaId: manga.id,
+                      chapter: 1,
+                      mangaName: manga.attributes.title.en,
+                    });
+                  }
+                });
+              });
             },
           );
         });
-      } else {
-        fetchAccountData(accountName).then((data: MalAccount) => {
-          generateLibrary(data.favorites.manga, ascending).then(
-            (library: Manga[]) => {
-              setLibrary(
-                library.filter((manga: Manga) =>
-                  manga.attributes.title.en.toLowerCase().includes(filter),
-                ),
-              );
-            },
-          );
-        });
+
+        handleFetchingLibrary(userId);
       }
     }
-  }, [filter, ascending]);
+  }, [ascending, loadLibrary]);
 
   return (
     <div>
