@@ -1,11 +1,21 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./LibraryContents.css";
-type Props = { libraryManga: Manga[] };
+type Props = {
+  libraryManga: Manga[];
+  handleLibraryEntryClick: (manga: Manga) => void;
+  checked: boolean;
+  libraryEntriesToDelete: string[];
+};
 
 const LibraryContents = (props: Props) => {
-  const { libraryManga } = props;
+  const {
+    libraryManga,
+    handleLibraryEntryClick,
+    checked,
+    libraryEntriesToDelete,
+  } = props;
   return (
     <div>
       <div className="library-contents-header">
@@ -19,16 +29,30 @@ const LibraryContents = (props: Props) => {
       >
         {libraryManga.map((manga: Manga) => (
           <Grid item>
-            <MangaClickable
-              id={manga.id}
-              title={manga.attributes.title.en}
-              coverId={
-                manga.relationships.find(
-                  (i: Relationship) => i.type === "cover_art",
-                )?.id
-              }
-              updatedAt={manga.attributes.updatedAt}
-            />
+            <Button
+              className="manga-entry-overlay-button"
+              onClick={() => {
+                handleLibraryEntryClick(manga);
+              }}
+              sx={{
+                //border: mangaEntriesToDelete.includes(element.id)
+                //? "2px solid #ffffff"
+                //: "none",
+                opacity: libraryEntriesToDelete.includes(manga.id) ? 0.2 : 1,
+              }}
+            >
+              <MangaClickable
+                id={manga.id}
+                title={manga.attributes.title.en}
+                coverId={
+                  manga.relationships.find(
+                    (i: Relationship) => i.type === "cover_art",
+                  )?.id
+                }
+                updatedAt={manga.attributes.updatedAt}
+                disabled={checked}
+              />
+            </Button>
           </Grid>
         ))}
       </Grid>

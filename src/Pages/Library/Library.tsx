@@ -12,6 +12,7 @@ import {
   getReadingByUserId,
   addReading,
   getReadingByMangaName,
+  deleteReadingByMangaIdAndUserId,
 } from "../../api/Reading";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
@@ -22,6 +23,10 @@ const Library = () => {
   const [ascending, setAscending] = useState<boolean>(true);
   const [contentFilter, setContentFilter] = useState<string>("favorites");
   const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(false);
+  const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
+    string[]
+  >([]);
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -70,6 +75,38 @@ const Library = () => {
   const handleContentFilter = (selection: string) => {
     setContentFilter(selection);
   };
+
+  const toggleLibraryEntries = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    setLibraryEntriesToDelete([]);
+  };
+
+  const handleLibraryEntryClick = async (manga: Manga) => {
+    if (checked) {
+      if (libraryEntriesToDelete.includes(manga.id)) {
+        setLibraryEntriesToDelete(
+          libraryEntriesToDelete.filter((id) => id !== manga.id),
+        );
+      } else {
+        console.log(manga);
+        setLibraryEntriesToDelete([...libraryEntriesToDelete, manga.id]);
+      }
+    }
+  };
+
+  const handleDeleteLibraryEntries = async () => {
+    setChecked(false);
+    const userId = localStorage.getItem("userId") as number | null;
+    if (userId !== null) {
+      libraryEntriesToDelete.forEach((id) => {
+        deleteReadingByMangaIdAndUserId(id, userId).then(() => {
+          setLibraryEntriesToDelete([]);
+          handleFetchingLibrary(userId);
+        });
+      });
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     const userId = localStorage.getItem("userId") as number | null;
@@ -113,13 +150,21 @@ const Library = () => {
         searchFavorites={searchFavorites}
         handleAscendingChange={handleAscendingChange}
         handleContentFilter={handleContentFilter}
+        checked={checked}
+        toggleLibraryEntries={toggleLibraryEntries}
+        handleDeleteLibraryEntries={handleDeleteLibraryEntries}
       />
       {loading === true ? (
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
       ) : (
-        <LibraryContents libraryManga={library} />
+        <LibraryContents
+          libraryManga={library}
+          handleLibraryEntryClick={handleLibraryEntryClick}
+          checked={checked}
+          libraryEntriesToDelete={libraryEntriesToDelete}
+        />
       )}
     </div>
   );

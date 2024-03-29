@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Typography, Button, Dialog, DialogTitle } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -11,10 +18,20 @@ type Props = {
   searchFavorites: (searchValue: string) => void;
   handleAscendingChange: () => void;
   handleContentFilter: (selection: string) => void;
+  checked: boolean;
+  toggleLibraryEntries: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleDeleteLibraryEntries: () => void;
 };
 
 const LibraryHeader = (props: Props) => {
-  const { searchFavorites, handleAscendingChange, handleContentFilter } = props;
+  const {
+    searchFavorites,
+    handleAscendingChange,
+    handleContentFilter,
+    checked,
+    toggleLibraryEntries,
+    handleDeleteLibraryEntries,
+  } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
 
@@ -46,6 +63,28 @@ const LibraryHeader = (props: Props) => {
             }
           }}
         />
+        <div className="folder-modification-buttons">
+          <Button
+            className="delete-folder-button"
+            sx={{
+              backgroundColor: checked ? "#ff7597" : "#333333",
+              "&.MuiButtonBase-root:hover": {
+                backgroundColor: checked ? "#ff7597" : "#333333",
+              },
+            }}
+            onClick={() => {
+              handleDeleteLibraryEntries();
+            }}
+          >
+            Delete
+          </Button>
+          <FormControlLabel
+            control={
+              <Switch checked={checked} onChange={toggleLibraryEntries} />
+            }
+            label=""
+          />
+        </div>
 
         <Button className="library-header-button">
           <SearchIcon />
