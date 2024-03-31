@@ -34,6 +34,7 @@ export interface Manga {
     updatedAt: string;
   };
   relationships: { id: string; type: string }[];
+  status?: string;
 }
 
 export interface MangaChapter {

@@ -6,6 +6,7 @@ import {
   MalAccount,
   MalFavorites,
   TopManga,
+  MalUpdates,
 } from "../interfaces/MalInterfaces";
 import { Manga } from "../interfaces/MangaDexInterfaces";
 
@@ -42,45 +43,57 @@ async function fetchTopManga(): Promise<TopManga[]> {
 }
 
 async function generateLibrary(
-  malFavorites: MalFavorites[],
-  ascending: boolean,
+  malFavorites: MalFavorites[] | undefined,
+  malUpdates: MalUpdates[] | undefined,
 ): Promise<Manga[]> {
   const library: Manga[] = [];
-  try {
-    for (const element of malFavorites) {
-      const response = await fetchMangaByTitle(element.title, 5);
-      response.forEach((manga: Manga) => {
-        if (manga.attributes.title.en === element.title) {
-          library.push(manga);
-        } else {
-          manga.attributes.altTitles.forEach((altTitle: object) => {
-            const splitAltTitle = Object.values(altTitle)[0].split(" ");
-            const splitLibraryEntryTitle = element.title.split(" ");
-            const duplicates = splitAltTitle.filter((value: string) =>
-              splitLibraryEntryTitle.includes(value),
-            );
 
-            if (
-              duplicates.length > splitLibraryEntryTitle.length / 2 &&
-              !manga.attributes.title.en.split(" ").includes("Colored)") &&
-              library.length < malFavorites.length
-            ) {
-              library.push(manga);
-            }
-          });
-        }
-      });
+  try {
+    if (malFavorites !== undefined) {
+      for (const element of malFavorites) {
+        const response = await fetchMangaByTitle(element.title, 5);
+        response.forEach((manga: Manga) => {
+          if (manga.attributes.title.en === element.title) {
+            library.push(manga);
+          } else {
+            manga.attributes.altTitles.forEach((altTitle: object) => {
+              const splitAltTitle = Object.values(altTitle)[0].split(" ");
+              const splitLibraryEntryTitle = element.title.split(" ");
+              const duplicates = splitAltTitle.filter((value: string) =>
+                splitLibraryEntryTitle.includes(value),
+              );
+
+              if (
+                duplicates.length > splitLibraryEntryTitle.length / 2 &&
+                !manga.attributes.title.en.split(" ").includes("Colored)") &&
+                library.length < malFavorites.length
+              ) {
+                library.push(manga);
+              }
+            });
+          }
+        });
+      }
+    } else if (malUpdates !== undefined) {
+      for (const element of malUpdates) {
+        const response: Manga[] = await fetchMangaByTitle(
+          element.entry.title,
+          5,
+        );
+        response.forEach((manga: Manga) => {
+          if (
+            manga.attributes.title.en === element.entry.title &&
+            library.find(
+              (obj) => obj.attributes.title.en === manga.attributes.title.en,
+            ) === undefined
+          ) {
+            Object.defineProperty(manga, "status", { value: element.status });
+            library.push(manga);
+          }
+        });
+      }
     }
-    if (ascending) {
-      return library.sort((a, b) =>
-        a.attributes.title.en.localeCompare(b.attributes.title.en),
-      );
-    } else {
-      return library.sort(
-        (a, b) =>
-          -1 * a.attributes.title.en.localeCompare(b.attributes.title.en),
-      );
-    }
+    return library;
   } catch (error) {
     console.log(error);
     throw error;

@@ -12,7 +12,6 @@ export interface UserMangaLogistics {
 }
 
 export interface MalUpdates {
-  title: string;
   status: string;
   entry: { title: string; images: { jpg: { large_image_url: string } } };
 }

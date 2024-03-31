@@ -21,12 +21,15 @@ const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
-  const [contentFilter, setContentFilter] = useState<string>("favorites");
+  const [contentFilter, setContentFilter] = useState<string>("Favorites");
   const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
     string[]
   >([]);
+  const [filteredUpdateEntries, setFilteredUpdateEntries] = useState<Manga[]>(
+    [],
+  );
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -52,7 +55,7 @@ const Library = () => {
     }
   };
 
-  const handleFetchingLibrary = async (userId: number) => {
+  const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
     getReadingByUserId(userId).then((data: Reading[]) => {
       const promises = data.map((data: Reading) => {
@@ -61,7 +64,21 @@ const Library = () => {
 
       Promise.all(promises)
         .then((data) => {
-          setLibrary(data);
+          if (ascending) {
+            setLibrary(
+              data.sort((a, b) =>
+                a.attributes.title.en.localeCompare(b.attributes.title.en),
+              ),
+            );
+          } else {
+            setLibrary(
+              data.sort(
+                (a, b) =>
+                  -1 *
+                  a.attributes.title.en.localeCompare(b.attributes.title.en),
+              ),
+            );
+          }
           setLoading(false);
         })
         .catch((error) => console.log(error));
@@ -101,7 +118,7 @@ const Library = () => {
       libraryEntriesToDelete.forEach((id) => {
         deleteReadingByMangaIdAndUserId(id, userId).then(() => {
           setLibraryEntriesToDelete([]);
-          handleFetchingLibrary(userId);
+          handleFetchingLibrary(userId, ascending);
         });
       });
     }
@@ -114,7 +131,7 @@ const Library = () => {
       const accountName = localStorage.getItem("malAccount");
       if (accountName !== null) {
         fetchAccountData(accountName).then((data: MalAccount) => {
-          generateLibrary(data.favorites.manga, ascending).then(
+          generateLibrary(data.favorites.manga, undefined).then(
             (library: Manga[]) => {
               library.forEach((manga: Manga) => {
                 getReadingByUserId(userId).then((reading: Reading[]) => {
@@ -136,10 +153,25 @@ const Library = () => {
           );
         });
 
-        handleFetchingLibrary(userId);
+        handleFetchingLibrary(userId, ascending);
       }
     }
-  }, [ascending, loadLibrary]);
+
+    const accountName = localStorage.getItem("malAccount");
+    if (accountName !== null) {
+      fetchAccountData(accountName).then((data: MalAccount) => {
+        generateLibrary(undefined, data.updates.manga).then(
+          (library: Manga[]) => {
+            console.log(library);
+            setFilteredUpdateEntries(
+              library.filter((manga) => manga.status === contentFilter),
+            );
+          },
+        );
+      });
+    }
+    setLoading(false);
+  }, [loadLibrary, ascending, contentFilter]);
 
   return (
     <div>
@@ -158,9 +190,18 @@ const Library = () => {
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
+      ) : contentFilter === "Favorites" ? (
+        <LibraryContents
+          header={contentFilter}
+          libraryManga={library}
+          handleLibraryEntryClick={handleLibraryEntryClick}
+          checked={checked}
+          libraryEntriesToDelete={libraryEntriesToDelete}
+        />
       ) : (
         <LibraryContents
-          libraryManga={library}
+          header={contentFilter}
+          libraryManga={filteredUpdateEntries}
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}

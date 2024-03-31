@@ -3,6 +3,7 @@ import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./LibraryContents.css";
 type Props = {
+  header: string;
   libraryManga: Manga[];
   handleLibraryEntryClick: (manga: Manga) => void;
   checked: boolean;
@@ -11,6 +12,7 @@ type Props = {
 
 const LibraryContents = (props: Props) => {
   const {
+    header,
     libraryManga,
     handleLibraryEntryClick,
     checked,
@@ -19,7 +21,7 @@ const LibraryContents = (props: Props) => {
   return (
     <div>
       <div className="library-contents-header">
-        <Typography>Favorites</Typography>
+        <Typography>{header === "Dropped -" ? "Dropped" : header}</Typography>
       </div>
       <Grid
         container

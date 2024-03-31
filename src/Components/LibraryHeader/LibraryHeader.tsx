@@ -116,28 +116,35 @@ const LibraryHeader = (props: Props) => {
           <div>
             <Button
               onClick={() => {
-                handleContentFilter("dropped");
+                handleContentFilter("Favorites");
+              }}
+            >
+              Favorites
+            </Button>
+            <Button
+              onClick={() => {
+                handleContentFilter("Dropped -");
               }}
             >
               Dropped
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("on-hold");
+                handleContentFilter("On-Hold");
               }}
             >
               On-Hold
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("completed");
+                handleContentFilter("Completed");
               }}
             >
               Completed
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("reading");
+                handleContentFilter("Reading");
               }}
             >
               Reading
