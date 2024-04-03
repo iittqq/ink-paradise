@@ -7,14 +7,25 @@
   padding-bottom: 20px;
 }
 
-.folder-inputs,
 .folder-search-bar {
+  all: unset;
+  font-family: "Figtree";
+  border: 1px solid #333333;
+  margin: 0px 10px 0px 0px;
+  padding: 1px;
+  height: 30px;
+  width: 50%;
+  @media screen and (min-width: 600px) {
+    margin: 0px 0px 0px 0px;
+  }
+}
+
+.folder-inputs {
   all: unset;
   font-family: "Figtree";
   border: 1px solid #333333;
   padding: 5px;
   width: 80%;
-
   margin: 10px 0px 10px 0px;
 }
 
@@ -41,10 +52,9 @@ input[type="text"].folder-inputs:focus {
 .header-options-left {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   @media screen and (max-width: 600px) {
     justify-content: flex-start;
-    width: 50%;
   }
   align-items: center;
 }
@@ -58,12 +68,9 @@ input[type="text"].folder-inputs:focus {
 
 .back-button {
   color: #ffffff !important;
-  background-color: #333333 !important;
-  margin: 0px 0px 0px 20px !important;
-  height: 30px;
-  font-family: "Figtree" !important;
-  text-transform: none !important;
-
+  background-color: #121212 !important;
+  max-width: 50px !important;
+  min-width: 30px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -79,26 +86,15 @@ input[type="text"].folder-inputs:focus {
   align-items: center;
 }
 
-.folder-modification-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
 .delete-folder-button {
   color: #ffffff !important;
-  height: 30px;
-  font-family: "Figtree" !important;
-
-  text-transform: none !important;
-
+  max-width: 50px !important;
+  min-width: 30px !important;
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
-  @media screen and (max-width: 600px) {
-    min-width: 80px !important;
-    font-size: 10px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
   }
 }
 

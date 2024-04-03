@@ -1,13 +1,9 @@
-import {
-  Button,
-  FormControlLabel,
-  Switch,
-  Typography,
-  Dialog,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Typography, Dialog, DialogTitle } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import "./FolderActionsBar.css";
 
@@ -18,9 +14,7 @@ type Props = {
   handleDeleteMangaEntries: () => void;
   handleDeleteMangaFolders: () => void;
   checked: boolean;
-  toggleMangaEntriesDelete: (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  toggleMangaEntriesDelete: (value: boolean) => void;
   handleClickAddFolderButton: () => void;
   handleFolderDialogClose: () => void;
   handleCreateFolder: () => void;
@@ -54,6 +48,18 @@ const FolderActionsBar = (props: Props) => {
   return (
     <div className="folder-section-header">
       <div className="header-options-left">
+        {selectedFolder !== null ? (
+          <div className="folder-options">
+            <Button
+              className="back-button"
+              onClick={() => {
+                handleClickBack();
+              }}
+            >
+              <ArrowBackIcon />
+            </Button>
+          </div>
+        ) : null}
         <input
           type="search"
           placeholder="Search Folders"
@@ -75,47 +81,38 @@ const FolderActionsBar = (props: Props) => {
         >
           <SearchIcon />
         </Button>
-        {selectedFolder !== null ? (
-          <div className="folder-options">
-            <Button
-              className="back-button"
-              onClick={() => {
-                handleClickBack();
-              }}
-            >
-              Back
-            </Button>
-          </div>
-        ) : null}
       </div>
       <div className="create-folder-container">
-        <div className="folder-modification-buttons">
+        {checked ? (
           <Button
             className="delete-folder-button"
             sx={{
-              backgroundColor: checked ? "#ff7597" : "#333333",
-              "&.MuiButtonBase-root:hover": {
-                backgroundColor: checked ? "#ff7597" : "#333333",
-              },
+              backgroundColor: "#ff7597",
             }}
             onClick={() => {
-              if (checked && selectedFolder !== null) {
+              toggleMangaEntriesDelete(false);
+              if (selectedFolder !== null) {
                 handleDeleteMangaEntries();
               } else {
                 handleDeleteMangaFolders();
               }
             }}
           >
-            {selectedFolder !== null ? "Delete Manga" : "Delete Folder"}
+            <ClearIcon />{" "}
           </Button>
-          <FormControlLabel
-            control={
-              <Switch checked={checked} onChange={toggleMangaEntriesDelete} />
-            }
-            label="Select"
-          />
-        </div>
-
+        ) : (
+          <Button
+            className="delete-folder-button"
+            sx={{
+              backgroundColor: "none",
+            }}
+            onClick={() => {
+              toggleMangaEntriesDelete(true);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
         <Button
           className="add-folder-button"
           onClick={() => {

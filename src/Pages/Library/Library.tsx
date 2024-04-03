@@ -21,7 +21,7 @@ const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
-  const [contentFilter, setContentFilter] = useState<string>("Favorites");
+  const [contentFilter, setContentFilter] = useState<string>("Reading");
   const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
@@ -30,6 +30,7 @@ const Library = () => {
   const [filteredUpdateEntries, setFilteredUpdateEntries] = useState<Manga[]>(
     [],
   );
+  const [favoriteMangas, setFavoriteMangas] = useState<Manga[]>([]);
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -93,8 +94,8 @@ const Library = () => {
     setContentFilter(selection);
   };
 
-  const toggleLibraryEntries = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+  const toggleLibraryEntries = (value: boolean) => {
+    setChecked(value);
     setLibraryEntriesToDelete([]);
   };
 
@@ -168,6 +169,11 @@ const Library = () => {
             );
           },
         );
+        generateLibrary(data.favorites.manga, undefined).then(
+          (library: Manga[]) => {
+            setFavoriteMangas(library);
+          },
+        );
       });
     }
     setLoading(false);
@@ -190,10 +196,18 @@ const Library = () => {
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
-      ) : contentFilter === "Favorites" ? (
+      ) : contentFilter === "Reading" ? (
         <LibraryContents
           header={contentFilter}
           libraryManga={library}
+          handleLibraryEntryClick={handleLibraryEntryClick}
+          checked={checked}
+          libraryEntriesToDelete={libraryEntriesToDelete}
+        />
+      ) : contentFilter === "Favorites" ? (
+        <LibraryContents
+          header={contentFilter}
+          libraryManga={favoriteMangas}
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}

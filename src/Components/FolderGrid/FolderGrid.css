@@ -31,4 +31,8 @@
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
+
+  @media screen and (max-width: 600px) {
+    width: 170px;
+  }
 }

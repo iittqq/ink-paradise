@@ -1,16 +1,11 @@
 import { useState } from "react";
-import {
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import { Typography, Button, Dialog, DialogTitle } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import "./LibraryHeader.css";
 
@@ -19,7 +14,7 @@ type Props = {
   handleAscendingChange: () => void;
   handleContentFilter: (selection: string) => void;
   checked: boolean;
-  toggleLibraryEntries: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleLibraryEntries: (value: boolean) => void;
   handleDeleteLibraryEntries: () => void;
 };
 
@@ -63,32 +58,35 @@ const LibraryHeader = (props: Props) => {
             }
           }}
         />
-        <div className="folder-modification-buttons">
-          <Button
-            className="delete-folder-button"
-            sx={{
-              backgroundColor: checked ? "#ff7597" : "#333333",
-              "&.MuiButtonBase-root:hover": {
-                backgroundColor: checked ? "#ff7597" : "#333333",
-              },
-            }}
-            onClick={() => {
-              handleDeleteLibraryEntries();
-            }}
-          >
-            Delete
-          </Button>
-          <FormControlLabel
-            control={
-              <Switch checked={checked} onChange={toggleLibraryEntries} />
-            }
-            label=""
-          />
-        </div>
-
         <Button className="library-header-button">
           <SearchIcon />
         </Button>
+        {checked ? (
+          <Button
+            className="library-header-button"
+            sx={{
+              backgroundColor: "#ff7597",
+            }}
+            onClick={() => {
+              handleDeleteLibraryEntries();
+              toggleLibraryEntries(false);
+            }}
+          >
+            <ClearIcon />
+          </Button>
+        ) : (
+          <Button
+            className="library-header-button"
+            sx={{
+              backgroundColor: "none",
+            }}
+            onClick={() => {
+              toggleLibraryEntries(true);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
         <Button
           className="library-header-button"
           onClick={() => {

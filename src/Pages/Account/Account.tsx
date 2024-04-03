@@ -63,10 +63,8 @@ const Account = () => {
     setChecked(false);
   };
 
-  const toggleMangaEntriesDelete = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setChecked(event.target.checked);
+  const toggleMangaEntriesDelete = (value: boolean) => {
+    setChecked(value);
     setMangaEntriesToDelete([]);
     setMangaFoldersToDelete([]);
   };
@@ -222,21 +220,21 @@ const Account = () => {
             src={state.malAccount.images.jpg.image_url}
             alt="profile"
           ></img>
-
-          <Typography color="white" className="user-details">
-            {state.malAccount.username} <br /> <br />
-            About:&nbsp;
-            {state.malAccount.about}
-            <br />
-            Gender:&nbsp;
-            {state.malAccount.gender}
-            <br />
-            Birthday:&nbsp;
-            {state.malAccount.birthday}
-            <br />
-          </Typography>
         </div>
-        <div>
+        <Typography color="white" className="user-details">
+          {state.malAccount.username} <br /> <br />
+          About:&nbsp;
+          {state.malAccount.about}
+          <br />
+          Gender:&nbsp;
+          {state.malAccount.gender}
+          <br />
+          Birthday:&nbsp;
+          {state.malAccount.birthday}
+          <br />
+        </Typography>
+
+        <div className="info-button-container">
           <Button
             className="info-open-button"
             onClick={() => {
