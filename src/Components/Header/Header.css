@@ -118,6 +118,20 @@
   text-transform: none;
 }
 
+.header-nav-dialog-columns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 0px 0px 0px !important;
+}
+
+.header-nav-label {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 12px !important;
+}
+
 .folder-button {
   &.MuiButtonBase-root:hover {
     background-color: transparent;

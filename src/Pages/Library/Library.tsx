@@ -10,7 +10,6 @@ import { fetchAccountData, generateLibrary } from "../../api/MalApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import {
   getReadingByUserId,
-  addReading,
   getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
 } from "../../api/Reading";
@@ -132,24 +131,17 @@ const Library = () => {
       const accountName = localStorage.getItem("malAccount");
       if (accountName !== null) {
         fetchAccountData(accountName).then((data: MalAccount) => {
+          generateLibrary(undefined, data.updates.manga).then(
+            (library: Manga[]) => {
+              console.log(library);
+              setFilteredUpdateEntries(
+                library.filter((manga) => manga.status === contentFilter),
+              );
+            },
+          );
           generateLibrary(data.favorites.manga, undefined).then(
             (library: Manga[]) => {
-              library.forEach((manga: Manga) => {
-                getReadingByUserId(userId).then((reading: Reading[]) => {
-                  console.log(!JSON.stringify(reading).includes(manga.id));
-                  if (
-                    userId !== null &&
-                    !JSON.stringify(reading).includes(manga.id)
-                  ) {
-                    addReading({
-                      userId: userId,
-                      mangaId: manga.id,
-                      chapter: 1,
-                      mangaName: manga.attributes.title.en,
-                    });
-                  }
-                });
-              });
+              setFavoriteMangas(library);
             },
           );
         });
@@ -158,24 +150,6 @@ const Library = () => {
       }
     }
 
-    const accountName = localStorage.getItem("malAccount");
-    if (accountName !== null) {
-      fetchAccountData(accountName).then((data: MalAccount) => {
-        generateLibrary(undefined, data.updates.manga).then(
-          (library: Manga[]) => {
-            console.log(library);
-            setFilteredUpdateEntries(
-              library.filter((manga) => manga.status === contentFilter),
-            );
-          },
-        );
-        generateLibrary(data.favorites.manga, undefined).then(
-          (library: Manga[]) => {
-            setFavoriteMangas(library);
-          },
-        );
-      });
-    }
     setLoading(false);
   }, [loadLibrary, ascending, contentFilter]);
 

@@ -12,7 +12,7 @@
   font-family: "Figtree";
   border: 1px solid #333333;
   margin: 0px 10px 0px 0px;
-  padding: 1px;
+  padding: 1px 1px 1px 5px;
   height: 30px;
   width: 50%;
   @media screen and (min-width: 600px) {

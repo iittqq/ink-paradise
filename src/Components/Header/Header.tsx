@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  DialogContentText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -95,25 +96,40 @@ const Header = () => {
         >
           <DialogTitle>Destination</DialogTitle>
           <DialogActions>
-            <Button
-              className="folder-button"
-              onClick={() => {
-                handleClickLibrary();
-              }}
-            >
-              <BookIcon />
-            </Button>
-            <Button className="folder-button">
-              <WhatsHotIcon />
-            </Button>
-            <Button
-              onClick={() => {
-                handleClickAccount();
-              }}
-              className="header-buttons"
-            >
-              <AccountBoxIcon />
-            </Button>{" "}
+            <div className="header-nav-dialog-columns">
+              <Button
+                className="folder-button"
+                onClick={() => {
+                  handleClickLibrary();
+                }}
+              >
+                <BookIcon />
+              </Button>
+              <DialogContentText>
+                <Typography className="header-nav-label">Library</Typography>
+              </DialogContentText>
+            </div>
+            <div className="header-nav-dialog-columns">
+              <Button className="folder-button">
+                <WhatsHotIcon />
+              </Button>
+              <DialogContentText>
+                <Typography className="header-nav-label">Hot</Typography>
+              </DialogContentText>
+            </div>
+            <div className="header-nav-dialog-columns">
+              <Button
+                onClick={() => {
+                  handleClickAccount();
+                }}
+                className="folder-button"
+              >
+                <AccountBoxIcon />
+              </Button>
+              <DialogContentText>
+                <Typography className="header-nav-label">Account</Typography>
+              </DialogContentText>
+            </div>
           </DialogActions>
         </Dialog>
 
