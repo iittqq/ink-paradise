@@ -25,8 +25,9 @@
 .login-input-fields,
 .register-input-fields {
   width: 250px;
-  height: 30px;
-  padding: 0px;
+  border-radius: 25px !important;
+  height: 20px;
+  padding: 5px;
   background-color: #333333;
   font-family: "Figtree" !important;
 
@@ -58,7 +59,6 @@ input.register-input-fields:focus {
 .register-field-icons {
   width: 40px !important;
   height: 32px !important;
-  background-color: #333333;
   color: #ffffff !important;
 }
 
@@ -104,7 +104,7 @@ input.register-input-fields:focus {
 
 .content-filter-selection-box {
   width: 290px;
-
+  border-radius: 25px !important;
   padding: 0px;
   background-color: #333333;
   font-family: "Figtree" !important;
@@ -113,8 +113,17 @@ input.register-input-fields:focus {
 .content-filter-dropdown {
   color: #ffffff !important;
   padding-left: 10px;
+  font-family: "Figtree" !important;
 }
 
 .register-section {
   padding-bottom: 10px;
+}
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+}
+.css-6hp17o-MuiList-root-MuiMenu-list {
+  background-color: #333333 !important;
 }

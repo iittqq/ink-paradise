@@ -26,17 +26,10 @@
 .library-search-bar {
   all: unset;
   font-family: "Figtree";
-  border: 1px solid #333333;
+  border: 2px solid #ffffff;
   padding: 5px;
+  border-radius: 25px !important;
   width: 80%;
-  margin: 0px 20px 0px 10px;
-  @media screen and (max-width: 600px) {
-    margin: 0px 10px 0px 0px;
-  }
-}
-
-input[type="search"].library-search-bar:focus {
-  border: 1px solid #ffffff;
 }
 
 .delete-library-entry-button {

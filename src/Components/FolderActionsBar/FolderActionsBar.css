@@ -12,9 +12,11 @@
   font-family: "Figtree";
   border: 1px solid #333333;
   margin: 0px 10px 0px 0px;
-  padding: 1px 1px 1px 5px;
-  height: 30px;
+  padding: 0px 5px 0px 5px;
+  height: 25px;
   width: 50%;
+  border-radius: 25px !important;
+  outline: 2px solid #ffffff;
   @media screen and (min-width: 600px) {
     margin: 0px 0px 0px 0px;
   }
@@ -23,18 +25,11 @@
 .folder-inputs {
   all: unset;
   font-family: "Figtree";
-  border: 1px solid #333333;
   padding: 5px;
+  border: 2px solid #ffffff;
   width: 80%;
   margin: 10px 0px 10px 0px;
-}
-
-input[type="search"].folder-search-bar:focus {
-  border: 1px solid #ffffff;
-}
-
-input[type="text"].folder-inputs:focus {
-  border: 1px solid #ffffff;
+  border-radius: 25px !important;
 }
 
 .search-button {
