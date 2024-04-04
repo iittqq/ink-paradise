@@ -82,6 +82,7 @@ const Account = () => {
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
       const userId = localStorage.getItem("userId");
+      console.log(searchTerm);
       if (userId !== null) {
         setFolders(
           response.filter(
@@ -92,6 +93,7 @@ const Account = () => {
         );
       }
     });
+    setSearchTerm("");
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {

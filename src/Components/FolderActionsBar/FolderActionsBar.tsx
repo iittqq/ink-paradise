@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Typography, Dialog, DialogTitle } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
@@ -45,6 +46,8 @@ const FolderActionsBar = (props: Props) => {
     handleFolderNameChange,
     handleFolderDescriptionChange,
   } = props;
+  const [searching, setSearching] = useState(false);
+
   return (
     <div className="folder-section-header">
       <div className="header-options-left">
@@ -60,27 +63,42 @@ const FolderActionsBar = (props: Props) => {
             </Button>
           </div>
         ) : null}
-        <input
-          type="search"
-          placeholder="Search Folders"
-          className="folder-search-bar"
-          onChange={(event) => {
-            handleInput(event);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              searchFolders();
-            }
-          }}
-        />
-        <Button
-          className="search-button"
-          onClick={() => {
-            searchFolders();
-          }}
-        >
-          <SearchIcon />
-        </Button>
+        {searching ? (
+          <div>
+            <input
+              type="search"
+              placeholder="Search Folders"
+              className="folder-search-bar"
+              onChange={(event) => {
+                handleInput(event);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchFolders();
+                  setSearching(!searching);
+                }
+              }}
+            />
+            <Button
+              className="search-button"
+              onClick={() => {
+                searchFolders();
+                setSearching(!searching);
+              }}
+            >
+              <SearchIcon />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            className="search-button"
+            onClick={() => {
+              setSearching(!searching);
+            }}
+          >
+            <SearchIcon />
+          </Button>
+        )}
       </div>
       <div className="create-folder-container">
         {checked ? (

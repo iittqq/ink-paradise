@@ -29,6 +29,7 @@ const LibraryHeader = (props: Props) => {
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
+  const [searching, setSearching] = useState(false);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchBarValue(event.target.value);
@@ -37,6 +38,11 @@ const LibraryHeader = (props: Props) => {
   const handleEnter = () => {
     console.log(searchBarValue);
     searchFavorites(searchBarValue);
+    setSearchBarValue("");
+  };
+
+  const handleClickSearchIcon = async () => {
+    setSearching(!searching);
   };
 
   return (
@@ -45,22 +51,42 @@ const LibraryHeader = (props: Props) => {
         Library
       </Typography>
       <div className="library-header-options">
-        <input
-          type="search"
-          placeholder="Search Library"
-          className="library-search-bar"
-          onChange={(event) => {
-            handleInput(event);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleEnter();
-            }
-          }}
-        />
-        <Button className="library-header-button">
-          <SearchIcon />
-        </Button>
+        {searching ? (
+          <div className="library-input-section">
+            <input
+              type="search"
+              placeholder="Search Library"
+              className="library-search-bar"
+              onChange={(event) => {
+                handleInput(event);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleEnter();
+                  handleClickSearchIcon();
+                }
+              }}
+            />
+            <Button
+              className="library-header-button"
+              onClick={() => {
+                handleEnter();
+                handleClickSearchIcon();
+              }}
+            >
+              <SearchIcon />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            className="library-header-button"
+            onClick={() => {
+              handleClickSearchIcon();
+            }}
+          >
+            <SearchIcon />
+          </Button>
+        )}
         {checked ? (
           <Button
             className="library-header-button"

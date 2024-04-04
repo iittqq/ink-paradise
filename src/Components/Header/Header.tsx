@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContentText,
-} from "@mui/material";
+import { TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
@@ -17,13 +9,15 @@ import { fetchAccountData } from "../../api/MalApi";
 import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { MalAccount } from "../../interfaces/MalInterfaces";
+import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [searching, setSearching] = useState(false);
 
   const handleClickAccount = () => {
     if (localStorage.getItem("malAccount") === null) {
@@ -37,6 +31,10 @@ const Header = () => {
         },
       );
     }
+  };
+
+  const handleClickSearchIcon = async () => {
+    setSearching(!searching);
   };
 
   const handleClickLibrary = async () => {
@@ -58,84 +56,79 @@ const Header = () => {
 
   return (
     <div className="container-header">
-      <Button onClick={() => handleClickLogo()} className="logo-header-icon">
-        <Typography textTransform="none" color="white">
-          Ink Paradise
-        </Typography>
-      </Button>
-
       <div className="search-section">
-        <TextField
-          variant="outlined"
-          focused
-          size="small"
-          className="input-field"
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter") {
-              handleClick();
-            }
-          }}
-          onChange={(event) => {
-            setSearchInput(event.target.value);
-          }}
-        />
-        <Button
-          onClick={() => {
-            setOpen(true);
-          }}
-          className="header-buttons"
-        >
-          <MoreVertIcon />
+        <Button onClick={() => handleClickLogo()} className="logo-header-icon">
+          <HomeIcon sx={{ width: "80%", height: "80%" }} />
         </Button>
-        <Dialog
-          open={open}
-          onClose={() => {
-            setOpen(false);
-          }}
-          id="nav-dialog"
-        >
-          <DialogTitle>Destination</DialogTitle>
-          <DialogActions>
-            <div className="header-nav-dialog-columns">
+        <div>
+          {searching ? (
+            <div>
               <Button
-                className="folder-button"
+                className="header-buttons"
+                onClick={() => handleClickSearchIcon()}
+              >
+                <ArrowBackIcon />
+              </Button>
+              <TextField
+                variant="outlined"
+                focused
+                size="small"
+                className="input-field"
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    handleClick();
+                  }
+                }}
+                onChange={(event) => {
+                  setSearchInput(event.target.value);
+                }}
+              />
+              <Button className="header-buttons" onClick={() => handleClick()}>
+                <KeyboardArrowRightIcon />
+              </Button>{" "}
+            </div>
+          ) : (
+            <div>
+              <Button
+                className="header-buttons"
+                onClick={() => handleClickSearchIcon()}
+              >
+                <div className="header-nav-dialog-columns">
+                  <SearchIcon />
+                  <Typography className="header-nav-label">Search</Typography>
+                </div>
+              </Button>
+              <Button
+                className="header-buttons"
                 onClick={() => {
                   handleClickLibrary();
                 }}
               >
-                <BookIcon />
+                <div className="header-nav-dialog-columns">
+                  <BookIcon />
+                  <Typography className="header-nav-label">Library</Typography>
+                </div>
               </Button>
-              <DialogContentText>
-                <Typography className="header-nav-label">Library</Typography>
-              </DialogContentText>
-            </div>
-            <div className="header-nav-dialog-columns">
-              <Button className="folder-button">
-                <WhatsHotIcon />
+              <Button className="header-buttons">
+                <div className="header-nav-dialog-columns">
+                  <WhatsHotIcon />
+                  <Typography className="header-nav-label">Hot</Typography>
+                </div>
               </Button>
-              <DialogContentText>
-                <Typography className="header-nav-label">Hot</Typography>
-              </DialogContentText>
-            </div>
-            <div className="header-nav-dialog-columns">
               <Button
                 onClick={() => {
                   handleClickAccount();
                 }}
-                className="folder-button"
+                className="header-buttons"
               >
-                <AccountBoxIcon />
+                <div className="header-nav-dialog-columns">
+                  <AccountBoxIcon />
+                  <Typography className="header-nav-label">Account</Typography>
+                </div>
               </Button>
-              <DialogContentText>
-                <Typography className="header-nav-label">Account</Typography>
-              </DialogContentText>
             </div>
-          </DialogActions>
-        </Dialog>
-
-        <Button className="header-buttons" onClick={() => handleClick()}>
-          <KeyboardArrowRightIcon />
-        </Button>
+          )}
+        </div>
       </div>
     </div>
   );

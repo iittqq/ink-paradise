@@ -1,4 +1,7 @@
 .logo-header-icon {
+  color: #ffffff !important;
+  height: 40px !important;
+  padding: 0px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -21,16 +24,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .input-field {
-  width: 300px;
-  margin-right: 6px !important;
-
-  @media screen and (max-width: 800px) {
-    width: 150px;
-  }
-
+  font-family: "Figtree" !important;
   input {
     color: white;
   }
@@ -75,6 +73,9 @@
 .header-buttons {
   color: #ffffff !important;
   background-color: transparent !important;
+  padding: 0px !important;
+  height: 40px !important;
+  margin: 0px 5px 0px 5px !important;
   @media screen and (max-width: 600px) {
     min-width: 30px !important;
   }
@@ -123,17 +124,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0px 0px 0px 0px !important;
+  height: 40px;
 }
 
 .header-nav-label {
   color: #ffffff !important;
   font-family: "Figtree" !important;
   font-size: 12px !important;
-}
-
-.folder-button {
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
+  text-transform: none !important;
 }

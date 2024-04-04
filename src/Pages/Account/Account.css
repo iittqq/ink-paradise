@@ -37,6 +37,11 @@
   padding-right: 10px;
   overflow-y: scroll;
   height: 250px;
+  font-family: "Figtree" !important;
+  scrollbar-width: none;
+  -webkit-scrollbar {
+    display: none;
+  }
   @media screen and (max-width: 600px) {
     height: 150px;
   }

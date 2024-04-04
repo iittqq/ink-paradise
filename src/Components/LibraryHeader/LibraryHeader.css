@@ -52,3 +52,10 @@ input[type="search"].library-search-bar:focus {
   justify-content: space-evenly;
   align-items: center;
 }
+
+.library-input-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
