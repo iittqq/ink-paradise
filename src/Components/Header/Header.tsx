@@ -71,7 +71,9 @@ const Header = () => {
               </Button>
               <TextField
                 variant="outlined"
+                id="header-search-input"
                 focused
+                type="search"
                 size="small"
                 className="input-field"
                 placeholder="Search Manga"
