@@ -39,9 +39,9 @@
 .input-field {
   border-radius: 25px !important;
   font-family: "Figtree" !important;
-
   input {
     color: white;
+    text-align: center;
   }
 
   & .MuiOutlinedInput-root {
@@ -106,30 +106,6 @@
   color: #ffffff !important;
   background-color: #444444 !important;
   margin-bottom: -10px;
-  text-transform: none;
-}
-
-#nav-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
-  background-color: #121212 !important;
-  max-width: 80dvw;
-}
-
-#nav-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  text-align: center !important;
-}
-
-#nav-dialog .css-knqc4i-MuiDialogActions-root {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-#nav-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
   text-transform: none;
 }
 

@@ -5,7 +5,7 @@ import {
   Typography,
   Dialog,
   DialogTitle,
-  DialogActions,
+  DialogContent,
   Grid,
   Alert,
 } from "@mui/material";
@@ -229,8 +229,10 @@ const IndividualManga = () => {
           <AddIcon />
         </Button>
         <Dialog open={open} onClose={handleClose} id="folder-dialog">
-          <DialogTitle>Select Folder</DialogTitle>
-          <DialogActions>
+          <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>
+            Select Folder
+          </DialogTitle>
+          <DialogContent>
             <Grid
               container
               direction="row"
@@ -255,7 +257,7 @@ const IndividualManga = () => {
                 </Grid>
               ))}
             </Grid>
-          </DialogActions>
+          </DialogContent>
           {mangaExistsError === true ? (
             <Alert variant="outlined" severity="error">
               Manga already exists in the folder

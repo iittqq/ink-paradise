@@ -96,14 +96,6 @@
   flex-wrap: wrap;
 }
 
-.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
-  color: #ff7597 !important;
-}
-.css-5ryogn-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked
-  + .MuiSwitch-track {
-  background-color: #ffffff !important;
-}
-
 .current-folder-header {
   font-size: 20px;
   font-family: "Figtree";
@@ -128,66 +120,6 @@
   }
 }
 
-#info-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper,
-#folder-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
-  background-color: #121212 !important;
-  width: 30dvw;
-  @media screen and (max-width: 1000px) {
-    width: 90dvw;
-  }
-  @media screen and (min-width: 1000px) and (max-width: 1500px) {
-    width: 60dvw;
-  }
-}
-
-#info-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  text-align: center;
-}
-
-#info-dialog .css-knqc4i-MuiDialogActions-root {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-#info-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  text-transform: none;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent !important;
-  }
-}
-
-#folder-dialog {
-  text-align: center;
-}
-
-#folder-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
-  color: #ffffff !important;
-
-  font-family: "Figtree" !important;
-}
-
-#folder-dialog .css-knqc4i-MuiDialogActions-root {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-#folder-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  text-transform: none;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent !important;
-  }
-}
-
 .field-name-input {
   display: flex;
   flex-direction: row;
@@ -197,4 +129,8 @@
 }
 .css-j204z7-MuiFormControlLabel-root {
   margin: 0px 0px 0px 0px !important;
+}
+
+#info-dialog .MuiPaper-root {
+  background-color: #121212 !important;
 }

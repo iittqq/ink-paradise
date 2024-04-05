@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Button, Typography, Dialog, DialogTitle } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -140,14 +146,22 @@ const FolderActionsBar = (props: Props) => {
           <AddIcon sx={{ height: "30px", width: "30px" }} />
         </Button>
         <Dialog
-          id="folder-dialog"
+          id="create-folder-dialog"
           open={openAddFolder}
           onClose={() => {
             handleFolderDialogClose();
           }}
         >
-          <DialogTitle>Create Folder</DialogTitle>
-          <div className="create-folder-fields">
+          <DialogTitle
+            sx={{
+              color: "#ffffff",
+              textAlign: "center",
+              fontFamily: "Figtree",
+            }}
+          >
+            Create Folder
+          </DialogTitle>
+          <DialogContent>
             <Typography fontFamily={"Figtree"}>Name</Typography>
             <input
               type="text"
@@ -186,7 +200,7 @@ const FolderActionsBar = (props: Props) => {
             >
               Create
             </Button>
-          </div>
+          </DialogContent>
         </Dialog>
       </div>
     </div>

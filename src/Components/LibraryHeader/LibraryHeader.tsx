@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Typography, Button, Dialog, DialogTitle } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -130,18 +136,32 @@ const LibraryHeader = (props: Props) => {
           <ListIcon />
         </Button>
         <Dialog
-          id="folder-dialog"
+          id="filter-dialog"
           open={openFilterDialog}
           onClose={() => {
             setOpenFilterDialog(false);
           }}
         >
-          <DialogTitle>Filter</DialogTitle>
-          <div>
+          <DialogTitle
+            sx={{
+              backgroundColor: "#121212",
+              color: "#ffffff",
+              textAlign: "center",
+              fontFamily: "Figtree",
+            }}
+          >
+            Filter
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              backgroundColor: "#121212",
+            }}
+          >
             <Button
               onClick={() => {
                 handleContentFilter("Favorites");
               }}
+              className="filter-button"
             >
               Favorites
             </Button>
@@ -149,6 +169,7 @@ const LibraryHeader = (props: Props) => {
               onClick={() => {
                 handleContentFilter("Dropped -");
               }}
+              className="filter-button"
             >
               Dropped
             </Button>
@@ -156,6 +177,7 @@ const LibraryHeader = (props: Props) => {
               onClick={() => {
                 handleContentFilter("On-Hold");
               }}
+              className="filter-button"
             >
               On-Hold
             </Button>
@@ -163,6 +185,7 @@ const LibraryHeader = (props: Props) => {
               onClick={() => {
                 handleContentFilter("Completed");
               }}
+              className="filter-button"
             >
               Completed
             </Button>
@@ -170,10 +193,11 @@ const LibraryHeader = (props: Props) => {
               onClick={() => {
                 handleContentFilter("Reading");
               }}
+              className="filter-button"
             >
               Reading
             </Button>
-          </div>
+          </DialogContent>
         </Dialog>
       </div>
     </div>

@@ -1,10 +1,18 @@
-import { Button, Typography, Grid, Dialog, DialogTitle } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
 import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
 import InfoIcon from "@mui/icons-material/Info";
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   addMangaFolder,
   deleteMangaFolder,
@@ -25,6 +33,7 @@ import { Account } from "../../interfaces/AccountInterfaces";
 
 const AccountPage = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [userMangaData, setUserMangaData] = useState<UserMangaLogistics[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
@@ -241,6 +250,16 @@ const AccountPage = () => {
         <div className="info-button-container">
           <Button
             className="info-open-button"
+            sx={{ marginRight: "10px" }}
+            onClick={() => {
+              window.localStorage.clear();
+              navigate("/");
+            }}
+          >
+            <LogoutIcon />
+          </Button>
+          <Button
+            className="info-open-button"
             onClick={() => {
               setOpenInfo(true);
             }}
@@ -254,21 +273,31 @@ const AccountPage = () => {
               setOpenInfo(false);
             }}
           >
-            <DialogTitle>Stats</DialogTitle>
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                color: "#ffffff",
+                fontFamily: "Figtree",
+              }}
             >
-              {userMangaData.map((current: UserMangaLogistics) => (
-                <Grid item>
-                  <Typography color="white" sx={{ padding: "8px" }}>
-                    {current[0]}: {current[1]} <br />
-                  </Typography>
-                </Grid>
-              ))}
-            </Grid>
+              Stats
+            </DialogTitle>
+            <DialogContent>
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {userMangaData.map((current: UserMangaLogistics) => (
+                  <Grid item>
+                    <Typography color="white" sx={{ padding: "8px" }}>
+                      {current[0]}: {current[1]} <br />
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </DialogContent>
           </Dialog>
         </div>
       </div>
