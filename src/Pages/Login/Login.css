@@ -24,20 +24,13 @@
 
 .login-input-fields,
 .register-input-fields {
-  width: 250px;
+  width: 95%;
   border-radius: 25px !important;
+  //border: 2px solid #ffffff !important;
   height: 20px;
   padding: 5px;
   background-color: #333333;
   font-family: "Figtree" !important;
-
-  input:focus {
-    border: 1px solid #333333;
-    outline: none;
-  }
-
-  border: 1px solid #333333;
-  box-shadow: none;
 }
 
 input.login-input-fields:focus {
@@ -81,7 +74,8 @@ input.register-input-fields:focus {
 }
 
 .forgot-password-button {
-  float: right;
+  position: relative !important;
+  float: right !important;
   color: #3f51b5 !important;
   font-family: "Figtree" !important;
   &.MuiButtonBase-root:hover {
@@ -100,6 +94,10 @@ input.register-input-fields:focus {
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+}
+
+.login-section-container {
+  width: 80%;
 }
 
 .content-filter-selection-box {

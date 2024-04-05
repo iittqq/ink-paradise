@@ -10,7 +10,7 @@ import {
   deleteMangaFolder,
   getMangaFolders,
 } from "../../api/MangaFolder";
-import "./Account.css";
+import "./AccountPage.css";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import {
   findMangaFolderEntryById,
@@ -21,8 +21,9 @@ import { fetchMangaById } from "../../api/MangaDexApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar";
+import { Account } from "../../interfaces/AccountInterfaces";
 
-const Account = () => {
+const AccountPage = () => {
   const { state } = useLocation();
   const [userMangaData, setUserMangaData] = useState<UserMangaLogistics[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -44,6 +45,7 @@ const Account = () => {
   const [mangaFoldersToDelete, setMangaFoldersToDelete] = useState<number[]>(
     [],
   );
+  const [accountData, setAccountData] = useState<Account | null>(null);
 
   const handleDeleteMangaEntries = async () => {
     if (selectedFolder !== null) {
@@ -81,14 +83,13 @@ const Account = () => {
 
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
-      const userId = localStorage.getItem("userId");
       console.log(searchTerm);
-      if (userId !== null) {
+      if (accountData !== null) {
         setFolders(
           response.filter(
             (folder) =>
               folder.folderName.includes(searchTerm) &&
-              folder.userId === Number(userId),
+              folder.userId === Number(accountData.id),
           ),
         );
       }
@@ -107,27 +108,15 @@ const Account = () => {
       "";
     setNewFolderDescription("");
     if (newFolderName !== "") {
-      const userId = localStorage.getItem("userId");
-      if (userId !== null) {
+      if (accountData !== null) {
         addMangaFolder({
-          userId: Number(userId),
+          userId: accountData.id,
           folderName: newFolderName,
           folderDescription: newFolderDescription,
         });
         setNewFolder(!newFolder);
       }
     }
-  };
-
-  const fetchFolders = async () => {
-    const userId = localStorage.getItem("userId");
-    getMangaFolders().then((response) => {
-      if (userId !== null) {
-        setFolders(
-          response.filter((folder) => folder.userId === JSON.parse(userId)),
-        );
-      }
-    });
   };
 
   const handleFindingFolderEntriesById = async (folderId: number) => {
@@ -203,13 +192,26 @@ const Account = () => {
   };
 
   useEffect(() => {
+    const accountString = window.localStorage.getItem("account") as
+      | string
+      | null;
+    let account: Account | null = null;
+    if (accountString !== null) {
+      setAccountData(JSON.parse(accountString));
+      account = JSON.parse(accountString) as Account | null;
+    }
     setUserMangaData(
       Object.keys(state.malAccount.statistics.manga).map((key) => [
         key,
         state.malAccount.statistics.manga[key],
       ]),
     );
-    fetchFolders();
+
+    if (account !== null) {
+      getMangaFolders().then((response) => {
+        setFolders(response.filter((folder) => folder.userId === account!.id));
+      });
+    }
   }, [state.malAccount, newFolder]);
 
   return (
@@ -311,4 +313,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default AccountPage;

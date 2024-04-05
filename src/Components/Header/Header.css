@@ -27,22 +27,35 @@
   width: 100%;
 }
 
+.css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
+  &:focus {
+    border: 2px solid #ffffff;
+  }
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  color: white;
+}
+
 .input-field {
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+
   input {
     color: white;
   }
 
-  & label.Mui-focused {
-    color: white;
-  }
-
   & .MuiOutlinedInput-root {
-    border-radius: 25px !important;
-    font-family: "Figtree" !important;
     &.Mui-focused fieldset {
-      border-color: white;
+      border: none;
     }
   }
+}
+
+.search-functionality-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .account-login {
@@ -75,7 +88,7 @@
   color: #ffffff !important;
   background-color: transparent !important;
   padding: 0px !important;
-  height: 40px !important;
+  height: 50px !important;
   margin: 0px 5px 0px 5px !important;
   @media screen and (max-width: 600px) {
     min-width: 30px !important;

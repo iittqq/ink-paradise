@@ -62,7 +62,7 @@ const Header = () => {
         </Button>
         <div>
           {searching ? (
-            <div>
+            <div className="search-functionality-container">
               <Button
                 className="header-buttons"
                 onClick={() => handleClickSearchIcon()}
@@ -74,6 +74,7 @@ const Header = () => {
                 focused
                 size="small"
                 className="input-field"
+                placeholder="Search Manga"
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Enter") {
                     handleClick();

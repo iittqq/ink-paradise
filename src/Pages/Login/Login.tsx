@@ -7,8 +7,6 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PasswordIcon from "@mui/icons-material/Password";
 
 import "./Login.css";
 import { useState } from "react";
@@ -53,8 +51,7 @@ const Login = () => {
     console.log(email, password, malUsername, contentFilter);
     login(email, password).then((response: Account | string) => {
       if (typeof response !== "string") {
-        localStorage.setItem("malAccount", response.username);
-        localStorage.setItem("account", JSON.stringify(response));
+        window.localStorage.setItem("account", JSON.stringify(response));
         setAttemptedLogin(false);
         navigate("/");
       } else {
@@ -76,8 +73,7 @@ const Login = () => {
         contentFilter: contentFilter,
       }).then((response: Account) => {
         console.log(response);
-        localStorage.setItem("userId", response.id);
-        localStorage.setItem("malAccount", response.username);
+        window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
       });
     } else {
@@ -99,8 +95,6 @@ const Login = () => {
                 Email
               </Typography>
               <div className="register-icon-field-container">
-                <PersonOutlineIcon className="register-field-icons" />
-
                 <input
                   type="text"
                   className="register-input-fields"
@@ -115,8 +109,6 @@ const Login = () => {
                 MAL Username (Optional)
               </Typography>
               <div className="register-icon-field-container">
-                <PersonOutlineIcon className="register-field-icons" />
-
                 <input
                   type="text"
                   className="register-input-fields"
@@ -131,7 +123,6 @@ const Login = () => {
                 Password
               </Typography>
               <div className="register-icon-field-container">
-                <PasswordIcon className="register-field-icons" />
                 <input
                   type="password"
                   className="register-input-fields"
@@ -146,7 +137,6 @@ const Login = () => {
                 Confirm Password
               </Typography>
               <div className="register-icon-field-container">
-                <PasswordIcon className="register-field-icons" />
                 <input
                   type="password"
                   className="register-input-fields"
@@ -193,37 +183,30 @@ const Login = () => {
       ) : (
         <Card className="login-card" elevation={5}>
           <Typography className="login-header">Login</Typography>
-          <div>
+          <div className="login-section-container">
             <Typography className="login-text-field-headers">Email</Typography>
-            <div className="login-icon-field-container">
-              <PersonOutlineIcon className="login-field-icons" />
-
-              <input
-                type="text"
-                className="login-input-fields"
-                placeholder="Email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
+            <input
+              type="text"
+              className="login-input-fields"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
           </div>
-          <div>
+          <div className="login-section-container">
             <Typography
               fontFamily="Figtree"
               className="login-text-field-headers"
             >
               Password
             </Typography>
-            <div className="login-icon-field-container">
-              <PasswordIcon className="login-field-icons" />
-              <input
-                type="password"
-                className="login-input-fields"
-                placeholder="Password"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </div>
+            <input
+              type="password"
+              className="login-input-fields"
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
             {attemptedLogin === true ? (
               <Typography className="incorrect-login-message">
                 Invalid Credentials. Retry

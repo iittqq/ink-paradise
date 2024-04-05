@@ -15,6 +15,7 @@ import {
 } from "../../api/Reading";
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
+import { Account } from "../../interfaces/AccountInterfaces";
 
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
@@ -30,6 +31,7 @@ const Library = () => {
     [],
   );
   const [favoriteMangas, setFavoriteMangas] = useState<Manga[]>([]);
+  const [accountData, setAccountData] = useState<Account | null>(null);
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -38,9 +40,8 @@ const Library = () => {
       return;
     }
     setLoading(true);
-    const userId = localStorage.getItem("userId") as number | null;
-    if (userId !== null) {
-      getReadingByMangaName(userId, searchValue).then(
+    if (accountData !== null) {
+      getReadingByMangaName(accountData.id, searchValue).then(
         (filteredReading: Reading[]) => {
           console.log(filteredReading);
           const promises = filteredReading.map((readingEntry: Reading) => {
@@ -57,6 +58,7 @@ const Library = () => {
 
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
+
     getReadingByUserId(userId).then((data: Reading[]) => {
       const promises = data.map((data: Reading) => {
         return fetchMangaById(data.mangaId);
@@ -113,41 +115,44 @@ const Library = () => {
 
   const handleDeleteLibraryEntries = async () => {
     setChecked(false);
-    const userId = localStorage.getItem("userId") as number | null;
-    if (userId !== null) {
+    if (accountData !== null) {
       libraryEntriesToDelete.forEach((id) => {
-        deleteReadingByMangaIdAndUserId(id, userId).then(() => {
+        deleteReadingByMangaIdAndUserId(id, accountData.id).then(() => {
           setLibraryEntriesToDelete([]);
-          handleFetchingLibrary(userId, ascending);
+          handleFetchingLibrary(accountData.id, ascending);
         });
       });
     }
   };
 
   useEffect(() => {
-    setLoading(true);
-    const userId = localStorage.getItem("userId") as number | null;
-    if (userId !== null) {
-      const accountName = localStorage.getItem("malAccount");
-      if (accountName !== null) {
-        fetchAccountData(accountName).then((data: MalAccount) => {
-          generateLibrary(undefined, data.updates.manga).then(
-            (library: Manga[]) => {
-              console.log(library);
-              setFilteredUpdateEntries(
-                library.filter((manga) => manga.status === contentFilter),
-              );
-            },
-          );
-          generateLibrary(data.favorites.manga, undefined).then(
-            (library: Manga[]) => {
-              setFavoriteMangas(library);
-            },
-          );
-        });
+    const accountString = window.localStorage.getItem("account") as
+      | string
+      | null;
+    let account: Account | null = null;
+    if (accountString !== null) {
+      setAccountData(JSON.parse(accountString));
+      account = JSON.parse(accountString) as Account | null;
+    }
+    console.log(account);
 
-        handleFetchingLibrary(userId, ascending);
-      }
+    setLoading(true);
+    if (account !== null) {
+      handleFetchingLibrary(account.id, ascending);
+      fetchAccountData(account.username).then((data: MalAccount) => {
+        generateLibrary(undefined, data.updates.manga).then(
+          (malLibrary: Manga[]) => {
+            setFilteredUpdateEntries(
+              malLibrary.filter((manga) => manga.status === contentFilter),
+            );
+          },
+        );
+        generateLibrary(data.favorites.manga, undefined).then(
+          (malLibrary: Manga[]) => {
+            setFavoriteMangas(malLibrary);
+          },
+        );
+      });
     }
 
     setLoading(false);
@@ -173,7 +178,10 @@ const Library = () => {
       ) : contentFilter === "Reading" ? (
         <LibraryContents
           header={contentFilter}
-          libraryManga={library}
+          libraryManga={[
+            ...library,
+            ...filteredUpdateEntries.filter((manga) => library.includes(manga)),
+          ]}
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}

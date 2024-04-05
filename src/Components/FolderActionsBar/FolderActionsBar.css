@@ -3,22 +3,22 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  top: 20px;
-  padding-bottom: 20px;
+  margin-top: 20px;
 }
 
 .folder-search-bar {
   all: unset;
   font-family: "Figtree";
-  border: 1px solid #333333;
   margin: 0px 10px 0px 0px;
   padding: 0px 5px 0px 5px;
   height: 25px;
   width: 50%;
   border-radius: 25px !important;
-  outline: 2px solid #ffffff;
   @media screen and (min-width: 600px) {
     margin: 0px 0px 0px 0px;
+  }
+  &:focus {
+    border: 2px solid #ffffff;
   }
 }
 
