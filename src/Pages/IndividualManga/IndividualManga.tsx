@@ -96,16 +96,16 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
-    getMangaFolders().then((response) => {
-      console.log(response);
-      setFolders(
-        response.filter(
-          (folder) =>
-            folder.userId ===
-            JSON.parse(window.localStorage.getItem("account")).id,
-        ),
-      );
-    });
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (accountData !== null) {
+      getMangaFolders().then((response) => {
+        console.log(response);
+        setFolders(
+          response.filter((folder) => folder.userId === accountData.id),
+        );
+      });
+    }
     if (state["title"] !== undefined) {
       fetchMangaByTitle(state["title"], 10).then((data: Manga[]) => {
         console.log(data);
@@ -242,10 +242,12 @@ const IndividualManga = () => {
                   <Button
                     className="folder-button"
                     onClick={() => {
-                      handleAddToFolder(
-                        current.folderId,
-                        state.id === undefined ? mangaId : state.id,
-                      );
+                      if (current.folderId !== undefined) {
+                        handleAddToFolder(
+                          current.folderId,
+                          state.id === undefined ? mangaId : state.id,
+                        );
+                      }
                     }}
                   >
                     {current.folderName}

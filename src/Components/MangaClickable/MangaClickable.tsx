@@ -19,7 +19,6 @@ type Props = {
   disabled?: boolean;
 };
 
-const baseUrl = "https://api.mangadex.org/";
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
   const [coverFile, setCoverFile] = useState("");
