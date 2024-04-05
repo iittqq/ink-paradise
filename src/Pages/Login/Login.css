@@ -109,8 +109,11 @@ input.register-input-fields:focus {
 
 .content-filter-dropdown {
   color: #ffffff !important;
-  padding-left: 10px;
+  margin-left: 10px;
   font-family: "Figtree" !important;
+  &. MuiList-root {
+    background-color: #333333 !important;
+  }
 }
 
 .register-section {
