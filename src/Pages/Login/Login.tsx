@@ -154,17 +154,34 @@ const Login = () => {
               <div className="content-filter-selection-box">
                 <FormControl fullWidth>
                   <Select
+                    id="content-filter-select"
                     className="content-filter-dropdown"
                     value={contentFilter}
                     label="Content Filter"
                     variant="standard"
                     disableUnderline={true}
                     onChange={handleChangeContentFilter}
+                    sx={{
+                      "& .MuiSvgIcon-root": {
+                        color: "white",
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: { style: { backgroundColor: "#333333" } },
+                    }}
                   >
-                    <MenuItem value={1}>Safe</MenuItem>
-                    <MenuItem value={2}>Suggestive</MenuItem>
-                    <MenuItem value={3}>Explicit</MenuItem>
-                    <MenuItem value={4}>Pornographic</MenuItem>
+                    <MenuItem className="register-menu-item" value={1}>
+                      Safe
+                    </MenuItem>
+                    <MenuItem className="register-menu-item" value={2}>
+                      Suggestive
+                    </MenuItem>
+                    <MenuItem className="register-menu-item" value={3}>
+                      Explicit
+                    </MenuItem>
+                    <MenuItem className="register-menu-item" value={4}>
+                      Pornographic
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </div>

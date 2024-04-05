@@ -105,25 +105,26 @@ input.register-input-fields:focus {
   padding: 0px;
   background-color: #333333;
   font-family: "Figtree" !important;
+  border: 1px solid #75747a !important;
 }
 
 .content-filter-dropdown {
   color: #ffffff !important;
   margin-left: 10px;
   font-family: "Figtree" !important;
-  &. MuiList-root {
-    background-color: #333333 !important;
-  }
+}
+
+#content-filter-select {
+  background-color: #333333 !important;
+  border-radius: 25px !important;
+  color: #ffffff !important;
 }
 
 .register-section {
   padding-bottom: 10px;
 }
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
-  background-color: #333333 !important;
+
+.register-menu-item {
   color: #ffffff !important;
   font-family: "Figtree" !important;
-}
-.css-6hp17o-MuiList-root-MuiMenu-list {
-  background-color: #333333 !important;
 }
