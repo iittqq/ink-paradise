@@ -20,16 +20,16 @@ const Header = () => {
   const [searching, setSearching] = useState(false);
 
   const handleClickAccount = () => {
-    if (localStorage.getItem("malAccount") === null) {
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (accountData === null) {
       navigate("/login");
     } else {
-      fetchAccountData(localStorage.getItem("malAccount")!).then(
-        (data: MalAccount) => {
-          navigate("/account", {
-            state: { malAccount: data },
-          });
-        },
-      );
+      fetchAccountData(accountData.username).then((data: MalAccount) => {
+        navigate("/account", {
+          state: { malAccount: data },
+        });
+      });
     }
   };
 
