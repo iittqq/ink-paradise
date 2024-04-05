@@ -101,7 +101,8 @@ const IndividualManga = () => {
       setFolders(
         response.filter(
           (folder) =>
-            folder.userId === JSON.parse(localStorage.getItem("userId")),
+            folder.userId ===
+            JSON.parse(window.localStorage.getItem("account")).id,
         ),
       );
     });
