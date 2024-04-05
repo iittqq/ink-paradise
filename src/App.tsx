@@ -5,7 +5,7 @@ import IndividualManga from "./Pages/IndividualManga/IndividualManga";
 import Reader from "./Pages/Reader/Reader";
 import MangaCoverList from "./Pages/MangaCoverList/MangaCoverList";
 import Library from "./Pages/Library/Library";
-import AccountPage from "./Pages/Account/AccountPage";
+import AccountPage from "./Pages/AccountPage/AccountPage";
 import Login from "./Pages/Login/Login";
 
 //#121212
