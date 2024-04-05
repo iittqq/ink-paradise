@@ -22,6 +22,7 @@ import {
 
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
 
+import { Account } from "../../interfaces/AccountInterfaces";
 import { MangaChapter, MangaFeed } from "../../interfaces/MangaDexInterfaces";
 
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
@@ -62,10 +63,14 @@ const Reader = () => {
       setHash(data.chapter.hash);
     });
     console.log(state);
-    const userId = localStorage.getItem("userId") as number | null;
+    const account = window.localStorage.getItem("account") as string | null;
+    let accountData: Account | null = null;
+    if (account !== null) {
+      accountData = JSON.parse(account);
+    }
     let readingExists = false;
-    if (userId !== null) {
-      getReadingByUserId(userId).then((data) => {
+    if (accountData !== null) {
+      getReadingByUserId(accountData.id).then((data) => {
         console.log(data);
         data.forEach((reading) => {
           if (reading.mangaId === state.mangaId) {
@@ -81,11 +86,17 @@ const Reader = () => {
         });
         if (readingExists === false) {
           console.log(state.mangaId, state.chapterNumber);
-          const userId = localStorage.getItem("userId") as number | null;
-          console.log(userId);
-          if (userId !== null) {
+          const account = window.localStorage.getItem("account") as
+            | string
+            | null;
+          let accountData: Account | null = null;
+          if (account !== null) {
+            accountData = JSON.parse(account);
+          }
+
+          if (accountData !== null) {
             addReading({
-              userId: userId,
+              userId: accountData.id,
               mangaId: state.mangaId,
               chapter: state.chapterNumber,
               mangaName: state.mangaName,
