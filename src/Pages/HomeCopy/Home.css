@@ -97,3 +97,12 @@
 .carousel-block {
   width: 100dvw;
 }
+
+.tags {
+  display: flex;
+  justify-content: center;
+  align-self: flex-end;
+  width: 50%;
+  height: 500px;
+  margin-left: auto;
+}

@@ -9,7 +9,7 @@ async function fetchAccountData(username: string): Promise<MalAccount> {
   try {
     const response = await axios.get(
       `${BASE_URL}/my-anime-list/fetch-account-data`,
-      { params: { username: username } },
+      { params: { username: username } }
     );
     return response.data["data"];
   } catch (error) {
@@ -24,19 +24,11 @@ async function fetchTopManga(): Promise<TopManga[]> {
       `${BASE_URL}/my-anime-list/fetch-top-manga`,
       {
         params: {
-<<<<<<< HEAD
           limit: 11,
         },
       }
     );
-    console.log(response.data["data"]);
-=======
-          limit: 10,
-        },
-      },
-    );
 
->>>>>>> bc47c265211e3563ec554f977e7758342542ff54
     return response.data["data"];
   } catch (error) {
     console.error("Error fetching manga:", error);

@@ -7,13 +7,6 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
-  Grid,
-  Typography,
-  Button,
-  List,
-  ListItemButton,
-  ListItemText,
-  Collapse,
 } from "@mui/material";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
@@ -24,16 +17,9 @@ import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
   fetchMangaTags,
-  fetchRecentlyUpdated,
-  fetchRecentlyAdded,
-  fetchMangaTags,
 } from "../../api/MangaDexApi";
 
 import {
-  MangaTagsInterface,
-  Manga,
-  TopManga,
-  Relationship,
   MangaTagsInterface,
   Manga,
   TopManga,
@@ -51,12 +37,6 @@ const Home = () => {
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
 
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [topMangaData, setTopMangaData] = useState<TopManga[]>([]);
-  const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
-  const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
-  const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
-  const navigate = useNavigate();
 
   const handleClickRecentlyUpdated = async () => {
     fetchRecentlyUpdated(75, 0).then((data: Manga[]) => {
@@ -65,13 +45,7 @@ const Home = () => {
       });
     });
   };
-  const handleClickRecentlyUpdated = async () => {
-    navigate("/mangaCoverList", {
-      state: { listType: "RecentlyUpdated" },
-    });
-  };
 
-  const handleClickTrendingNow = async () => {};
   const handleClickTrendingNow = async () => {};
 
   const handleClickMangaCoverListRA = async () => {
@@ -82,19 +56,6 @@ const Home = () => {
     });
   };
   const handleClick = async (tagId: string) => {
-    navigate("mangaList", {
-      state: { tagId: tagId },
-    });
-  };
-  const handleClickMangaCoverListRA = async () => {
-    fetchRecentlyAdded(75, 0).then((data: Manga[]) => {
-      navigate("/mangaCoverList", {
-        state: { listType: "RecentlyAdded", manga: data },
-      });
-    });
-  };
-  const handleClick = async (tagId: string) => {
-    console.log(tagId);
     navigate("mangaList", {
       state: { tagId: tagId },
     });
@@ -132,9 +93,6 @@ const Home = () => {
     });
   }, []);
 
-  const handleOpenTags = () => {
-    setOpen(!open);
-  };
   const handleOpenTags = () => {
     setOpen(!open);
   };
@@ -444,9 +402,7 @@ const Home = () => {
           </Grid>
         </Collapse>
       </List>
-      <div className="footer">
-        <Footer />
-      </div>
+      <div className="footer"></div>
     </div>
   );
 };

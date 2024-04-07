@@ -36,6 +36,7 @@ import HotMangaCarousel, {
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import React from "react";
+import MangaTags from "../../Components/MangaTagsCopy/MangaTags";
 
 const Home2 = () => {
   const [open, setOpen] = useState(false);
@@ -125,8 +126,16 @@ const Home2 = () => {
           </HotMangaCarousel>
         </div>
       </div>
+      <div className="tags">
+        <MangaTags mangaTags={mangaTags}></MangaTags>
+      </div>
+    </div>
+  );
+};
 
-      <List className="tags-list">
+export default Home2;
+/** 
+<List className="tags-list">
         <ListItemButton
           className="tags-list-button"
           onClick={() => handleOpenTags()}
@@ -168,9 +177,4 @@ const Home2 = () => {
             ))}
           </Grid>
         </Collapse>
-      </List>
-    </div>
-  );
-};
-
-export default Home2;
+      </List>*/
