@@ -55,6 +55,7 @@ const AccountPage = () => {
     [],
   );
   const [accountData, setAccountData] = useState<Account | null>(null);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const handleDeleteMangaEntries = async () => {
     if (selectedFolder !== null) {
@@ -72,6 +73,7 @@ const AccountPage = () => {
       });
     }
     setChecked(false);
+    setSelectAll(false);
   };
 
   const toggleMangaEntriesDelete = (value: boolean) => {
@@ -161,7 +163,7 @@ const AccountPage = () => {
   };
 
   const handleMangaEntryClick = async (manga: Manga) => {
-    if (checked) {
+    if (checked || selectAll) {
       if (mangaEntriesToDelete.includes(manga.id)) {
         setMangaEntriesToDelete(
           mangaEntriesToDelete.filter((id) => id !== manga.id),
@@ -169,6 +171,10 @@ const AccountPage = () => {
       } else {
         console.log(manga);
         setMangaEntriesToDelete([...mangaEntriesToDelete, manga.id]);
+      }
+      if (selectAll) {
+        setSelectAll(false);
+        setChecked(true);
       }
     }
   };
@@ -198,6 +204,17 @@ const AccountPage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewFolderDescription(event.target.value);
+  };
+
+  const toggleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (selectAll) {
+      setMangaEntriesToDelete([]);
+    } else {
+      if (folderMangaData !== null) {
+        setMangaEntriesToDelete(folderMangaData.map((manga) => manga.id));
+      }
+    }
   };
 
   useEffect(() => {
@@ -317,6 +334,8 @@ const AccountPage = () => {
         newFolderName={newFolderName}
         handleFolderNameChange={handleFolderNameChange}
         handleFolderDescriptionChange={handleFolderDescriptionChange}
+        selectAll={selectAll}
+        toggleSelectAll={toggleSelectAll}
       />
       <div className="personal-folders">
         <div>
@@ -336,6 +355,7 @@ const AccountPage = () => {
           mangaFoldersToDelete={mangaFoldersToDelete}
           folderMangaData={folderMangaData}
           mangaEntriesToDelete={mangaEntriesToDelete}
+          selectAll={selectAll}
         />
       </div>
     </div>

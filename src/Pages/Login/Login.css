@@ -33,11 +33,11 @@
 }
 
 input.login-input-fields:focus {
-  outline: none;
+  outline: 2px solid #ffffff;
 }
 
 input.register-input-fields:focus {
-  outline: none;
+  outline: 2px solid #ffffff;
 }
 
 .login-text-field-headers,

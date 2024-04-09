@@ -15,6 +15,7 @@ type Props = {
   mangaFoldersToDelete: number[];
   folderMangaData: Manga[] | null;
   mangaEntriesToDelete: string[];
+  selectAll: boolean;
 };
 
 const FolderGrid = (props: Props) => {
@@ -28,6 +29,7 @@ const FolderGrid = (props: Props) => {
     mangaFoldersToDelete,
     folderMangaData,
     mangaEntriesToDelete,
+    selectAll,
   } = props;
   const handleFolderClick = (folder: MangaFolder) => {
     folderClick(folder);
@@ -112,7 +114,7 @@ const FolderGrid = (props: Props) => {
                   )?.id
                 }
                 updatedAt={element.attributes.updatedAt}
-                disabled={checked}
+                disabled={checked || selectAll}
               />
             </Button>
           </Grid>

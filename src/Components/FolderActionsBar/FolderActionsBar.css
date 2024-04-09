@@ -87,29 +87,17 @@ input[type="text"]:focus {
   align-items: center;
 }
 
-.delete-folder-button {
+.folder-header-button {
   color: #ffffff !important;
   max-width: 50px !important;
   min-width: 30px !important;
-  .MuiTouchRipple-child {
-    background-color: #ffffff !important;
-  }
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-}
-
-.add-folder-button {
-  max-width: 50px !important;
-  min-width: 30px !important;
-
   height: 30px;
-  color: #ffffff !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
+  margin: 0px 2px 0px 2px !important;
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
   }
 }
 

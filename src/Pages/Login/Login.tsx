@@ -96,7 +96,7 @@ const Login = () => {
               </Typography>
               <div className="register-icon-field-container">
                 <input
-                  type="text"
+                  type="email"
                   className="register-input-fields"
                   placeholder="Email"
                   value={email}
@@ -110,7 +110,7 @@ const Login = () => {
               </Typography>
               <div className="register-icon-field-container">
                 <input
-                  type="text"
+                  type="username"
                   className="register-input-fields"
                   placeholder="My Anime List Username"
                   value={malUsername}
@@ -203,7 +203,7 @@ const Login = () => {
           <div className="login-section-container">
             <Typography className="login-text-field-headers">Email</Typography>
             <input
-              type="text"
+              type="email"
               className="login-input-fields"
               placeholder="Email"
               value={email}

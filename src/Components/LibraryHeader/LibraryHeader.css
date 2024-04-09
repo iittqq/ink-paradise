@@ -11,6 +11,7 @@
   padding: 3px 4px !important;
   max-width: 60px !important;
   min-width: 40px !important;
+  margin: 0px 2px 0px 2px !important;
   &:hover {
     background-color: transparent !important;
   }

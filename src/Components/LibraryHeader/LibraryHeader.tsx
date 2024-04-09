@@ -12,6 +12,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import "./LibraryHeader.css";
 
@@ -22,6 +24,8 @@ type Props = {
   checked: boolean;
   toggleLibraryEntries: (value: boolean) => void;
   handleDeleteLibraryEntries: () => void;
+  toggleSelectAll: () => void;
+  selectAll: boolean;
 };
 
 const LibraryHeader = (props: Props) => {
@@ -32,6 +36,8 @@ const LibraryHeader = (props: Props) => {
     checked,
     toggleLibraryEntries,
     handleDeleteLibraryEntries,
+    toggleSelectAll,
+    selectAll,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
@@ -93,7 +99,29 @@ const LibraryHeader = (props: Props) => {
             <SearchIcon />
           </Button>
         )}
-        {checked ? (
+        {selectAll ? (
+          <Button
+            className="library-header-button"
+            sx={{
+              backgroundColor: "#ff7597",
+            }}
+            onClick={() => {
+              toggleSelectAll();
+            }}
+          >
+            <CheckBoxIcon />{" "}
+          </Button>
+        ) : (
+          <Button
+            className="library-header-button"
+            onClick={() => {
+              toggleSelectAll();
+            }}
+          >
+            <CheckBoxOutlineBlankIcon />
+          </Button>
+        )}
+        {checked || selectAll ? (
           <Button
             className="library-header-button"
             sx={{
@@ -167,7 +195,7 @@ const LibraryHeader = (props: Props) => {
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("Dropped -");
+                handleContentFilter("Dropped");
               }}
               className="filter-button"
             >

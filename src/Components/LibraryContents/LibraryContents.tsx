@@ -8,6 +8,7 @@ type Props = {
   handleLibraryEntryClick: (manga: Manga) => void;
   checked: boolean;
   libraryEntriesToDelete: string[];
+  selectAll: boolean;
 };
 
 const LibraryContents = (props: Props) => {
@@ -17,11 +18,12 @@ const LibraryContents = (props: Props) => {
     handleLibraryEntryClick,
     checked,
     libraryEntriesToDelete,
+    selectAll,
   } = props;
   return (
     <div>
       <div className="library-contents-header">
-        <Typography>{header === "Dropped -" ? "Dropped" : header}</Typography>
+        <Typography>{header}</Typography>
       </div>
       <Grid
         container
@@ -37,9 +39,6 @@ const LibraryContents = (props: Props) => {
                 handleLibraryEntryClick(manga);
               }}
               sx={{
-                //border: mangaEntriesToDelete.includes(element.id)
-                //? "2px solid #ffffff"
-                //: "none",
                 opacity: libraryEntriesToDelete.includes(manga.id) ? 0.2 : 1,
               }}
             >
@@ -52,7 +51,7 @@ const LibraryContents = (props: Props) => {
                   )?.id
                 }
                 updatedAt={manga.attributes.updatedAt}
-                disabled={checked}
+                disabled={checked || selectAll}
               />
             </Button>
           </Grid>

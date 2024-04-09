@@ -11,6 +11,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import "./FolderActionsBar.css";
 
@@ -32,6 +34,8 @@ type Props = {
   handleFolderDescriptionChange: (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => void;
+  selectAll: boolean;
+  toggleSelectAll: () => void;
 };
 
 const FolderActionsBar = (props: Props) => {
@@ -51,6 +55,8 @@ const FolderActionsBar = (props: Props) => {
     newFolderName,
     handleFolderNameChange,
     handleFolderDescriptionChange,
+    selectAll,
+    toggleSelectAll,
   } = props;
   const [searching, setSearching] = useState(false);
 
@@ -107,9 +113,33 @@ const FolderActionsBar = (props: Props) => {
         )}
       </div>
       <div className="create-folder-container">
-        {checked ? (
+        {selectedFolder !== null ? (
+          selectAll ? (
+            <Button
+              className="folder-header-button"
+              sx={{
+                backgroundColor: "#ff7597",
+              }}
+              onClick={() => {
+                toggleSelectAll();
+              }}
+            >
+              <CheckBoxIcon />
+            </Button>
+          ) : (
+            <Button
+              className="folder-header-button"
+              onClick={() => {
+                toggleSelectAll();
+              }}
+            >
+              <CheckBoxOutlineBlankIcon />
+            </Button>
+          )
+        ) : null}
+        {checked || selectAll ? (
           <Button
-            className="delete-folder-button"
+            className="folder-header-button"
             sx={{
               backgroundColor: "#ff7597",
             }}
@@ -126,7 +156,7 @@ const FolderActionsBar = (props: Props) => {
           </Button>
         ) : (
           <Button
-            className="delete-folder-button"
+            className="folder-header-button"
             sx={{
               backgroundColor: "none",
             }}
@@ -138,7 +168,7 @@ const FolderActionsBar = (props: Props) => {
           </Button>
         )}
         <Button
-          className="add-folder-button"
+          className="folder-header-button"
           onClick={() => {
             handleClickAddFolderButton();
           }}

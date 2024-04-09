@@ -32,6 +32,7 @@ const Library = () => {
   );
   const [favoriteMangas, setFavoriteMangas] = useState<Manga[]>([]);
   const [accountData, setAccountData] = useState<Account | null>(null);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -100,8 +101,17 @@ const Library = () => {
     setLibraryEntriesToDelete([]);
   };
 
+  const toggleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (selectAll) {
+      setLibraryEntriesToDelete([]);
+    } else {
+      setLibraryEntriesToDelete(library.map((manga) => manga.id));
+    }
+  };
+
   const handleLibraryEntryClick = async (manga: Manga) => {
-    if (checked) {
+    if (checked || selectAll) {
       if (libraryEntriesToDelete.includes(manga.id)) {
         setLibraryEntriesToDelete(
           libraryEntriesToDelete.filter((id) => id !== manga.id),
@@ -109,6 +119,10 @@ const Library = () => {
       } else {
         console.log(manga);
         setLibraryEntriesToDelete([...libraryEntriesToDelete, manga.id]);
+      }
+      if (selectAll) {
+        setSelectAll(false);
+        setChecked(true);
       }
     }
   };
@@ -143,7 +157,9 @@ const Library = () => {
         generateLibrary(undefined, data.updates.manga).then(
           (malLibrary: Manga[]) => {
             setFilteredUpdateEntries(
-              malLibrary.filter((manga) => manga.status === contentFilter),
+              malLibrary.filter(
+                (manga) => manga.status?.split(" ")[0] === contentFilter,
+              ),
             );
           },
         );
@@ -170,22 +186,38 @@ const Library = () => {
         checked={checked}
         toggleLibraryEntries={toggleLibraryEntries}
         handleDeleteLibraryEntries={handleDeleteLibraryEntries}
+        toggleSelectAll={toggleSelectAll}
+        selectAll={selectAll}
       />
       {loading === true ? (
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
       ) : contentFilter === "Reading" ? (
-        <LibraryContents
-          header={contentFilter}
-          libraryManga={[
-            ...library,
-            ...filteredUpdateEntries.filter((manga) => library.includes(manga)),
-          ]}
-          handleLibraryEntryClick={handleLibraryEntryClick}
-          checked={checked}
-          libraryEntriesToDelete={libraryEntriesToDelete}
-        />
+        library.length === 0 ? (
+          <LibraryContents
+            header={contentFilter}
+            libraryManga={filteredUpdateEntries}
+            handleLibraryEntryClick={handleLibraryEntryClick}
+            checked={checked}
+            libraryEntriesToDelete={libraryEntriesToDelete}
+            selectAll={selectAll}
+          />
+        ) : (
+          <LibraryContents
+            header={contentFilter}
+            libraryManga={[
+              ...library,
+              ...filteredUpdateEntries.filter((manga) =>
+                library.includes(manga),
+              ),
+            ]}
+            handleLibraryEntryClick={handleLibraryEntryClick}
+            checked={checked}
+            libraryEntriesToDelete={libraryEntriesToDelete}
+            selectAll={selectAll}
+          />
+        )
       ) : contentFilter === "Favorites" ? (
         <LibraryContents
           header={contentFilter}
@@ -193,6 +225,7 @@ const Library = () => {
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}
+          selectAll={selectAll}
         />
       ) : (
         <LibraryContents
@@ -201,6 +234,7 @@ const Library = () => {
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}
+          selectAll={selectAll}
         />
       )}
     </div>

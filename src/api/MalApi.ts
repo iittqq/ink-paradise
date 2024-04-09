@@ -80,14 +80,31 @@ async function generateLibrary(
           element.entry.title,
           5,
         );
+        console.log(response);
         response.forEach((manga: Manga) => {
+          console.log(
+            manga.attributes.title.en
+              .toLowerCase()
+              .indexOf(element.entry.title.toLowerCase()) > -1 &&
+              manga.attributes.title.en.split(" ").length ===
+                element.entry.title.split(" ").length &&
+              library.find(
+                (obj) => obj.attributes.title.en === manga.attributes.title.en,
+              ) === undefined,
+          );
           if (
-            manga.attributes.title.en === element.entry.title &&
+            manga.attributes.title.en
+              .toLowerCase()
+              .indexOf(element.entry.title.toLowerCase()) > -1 &&
+            manga.attributes.title.en.split(" ").length ===
+              element.entry.title.split(" ").length &&
             library.find(
               (obj) => obj.attributes.title.en === manga.attributes.title.en,
             ) === undefined
           ) {
-            Object.defineProperty(manga, "status", { value: element.status });
+            Object.defineProperty(manga, "status", {
+              value: element.status.split(" ")[0],
+            });
             library.push(manga);
           }
         });
