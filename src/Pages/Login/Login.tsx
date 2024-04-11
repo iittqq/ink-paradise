@@ -9,10 +9,11 @@ import {
 } from "@mui/material";
 
 import "./Login.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
+import { authorizeMal } from "../../api/MalApi";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -23,6 +24,11 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [attemptedLogin, setAttemptedLogin] = useState(false);
 
+  useEffect(() => {
+    authorizeMal().then((response) => {
+      console.log(response);
+    });
+  }, []);
   const handleChangeContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
   };

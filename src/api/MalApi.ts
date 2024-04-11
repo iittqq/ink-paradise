@@ -10,6 +10,31 @@ import {
 } from "../interfaces/MalInterfaces";
 import { Manga } from "../interfaces/MangaDexInterfaces";
 
+async function authorizeMal(): Promise<void> {
+  try {
+    console.log("Authorizing MAL...");
+    const response = await axios
+      .get(
+        `${BASE_URL}/proxy/myanimelist?url=https://myanimelist.net/v1/oauth2/authorize`,
+        {
+          withCredentials: true,
+        },
+      )
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          window.location.href = response.data.authorizationUrl;
+        } else {
+          console.error("Failed to authorize: ", response.statusText);
+        }
+      });
+    console.log(response);
+  } catch (error) {
+    console.error("Error authorizing MAL:", error);
+    throw error;
+  }
+}
+
 async function fetchAccountData(username: string): Promise<MalAccount> {
   console.log(username);
   try {
@@ -117,4 +142,4 @@ async function generateLibrary(
   }
 }
 
-export { fetchAccountData, fetchTopManga, generateLibrary };
+export { fetchAccountData, fetchTopManga, generateLibrary, authorizeMal };
