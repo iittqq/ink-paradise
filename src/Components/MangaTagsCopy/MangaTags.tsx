@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
 import "./MangaTags.css";
 import { useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type Props = { mangaTags: MangaTagsInterface[] };
 const MangaTags = (props: Props) => {
@@ -29,19 +30,12 @@ const MangaTags = (props: Props) => {
   return (
     <div className="tags-container">
       <div className="tags-title">
-        <Button
+        <MenuIcon
           onClick={() => {
             setOpen(true);
           }}
           className="tags-button"
-        >
-          <Typography
-            color="white"
-            sx={{ textTransform: "none", fontSize: { xs: 12, sm: 14, lg: 16 } }}
-          >
-            Tags
-          </Typography>
-        </Button>
+        ></MenuIcon>
       </div>
       <div className="tags-list">
         <Dialog

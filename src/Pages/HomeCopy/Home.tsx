@@ -126,7 +126,7 @@ const Home2 = () => {
           </HotMangaCarousel>
         </div>
       </div>
-      <div className="tags">
+      <div className="categories-display">
         <MangaTags mangaTags={mangaTags}></MangaTags>
       </div>
     </div>
