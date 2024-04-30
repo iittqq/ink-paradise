@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header/Header";
-import { MalAccount } from "../../interfaces/MalInterfaces";
 import { CircularProgress } from "@mui/material";
 import "./Library.css";
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
-import { fetchAccountData, generateLibrary } from "../../api/MalApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import {
   getReadingByUserId,
@@ -153,22 +151,6 @@ const Library = () => {
     setLoading(true);
     if (account !== null) {
       handleFetchingLibrary(account.id, ascending);
-      fetchAccountData(account.username).then((data: MalAccount) => {
-        generateLibrary(undefined, data.updates.manga).then(
-          (malLibrary: Manga[]) => {
-            setFilteredUpdateEntries(
-              malLibrary.filter(
-                (manga) => manga.status?.split(" ")[0] === contentFilter,
-              ),
-            );
-          },
-        );
-        generateLibrary(data.favorites.manga, undefined).then(
-          (malLibrary: Manga[]) => {
-            setFavoriteMangas(malLibrary);
-          },
-        );
-      });
     }
 
     setLoading(false);

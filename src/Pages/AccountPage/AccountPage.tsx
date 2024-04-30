@@ -5,6 +5,10 @@ import {
   DialogTitle,
   DialogContent,
   Grid,
+  FormControl,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -55,19 +59,57 @@ const AccountPage = () => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [newProfilePicture, setNewProfilePicture] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+  const [newProfilePicture, setNewProfilePicture] = useState<Uint8Array>();
+  const [headerImage, setHeaderImage] = useState<Uint8Array>();
+  const [newContentFilter, setNewContentFilter] = useState<string>("");
 
-  const hanandleDescriptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setDescription(event.target.value);
+  const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
+    setNewContentFilter(event.target.value as string);
+    console.log(event.target.value);
+  };
+  const handleEditAccountInfo = () => {
+    console.log(newProfilePicture);
+    console.log(headerImage);
+  };
+  const handleBioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBio(event.target.value);
   };
 
-  const hanandleUsernameChange = (
+  const processImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const image = event.target.files![0];
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(image);
+      reader.onload = (event) => {
+        resolve(event.target?.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const handleHeaderImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
+    console.log(event);
+    processImage(event).then((image) => {
+      const bytes = new Uint8Array(image as ArrayBuffer);
+      setHeaderImage(bytes);
+    });
+  };
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
+  };
+  const handleProfilePictureChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    console.log(event);
+    processImage(event).then((image) => {
+      const bytes = new Uint8Array(image as ArrayBuffer);
+      setNewProfilePicture(bytes);
+    });
   };
 
   const handleDeleteMangaEntries = async () => {
@@ -230,14 +272,6 @@ const AccountPage = () => {
     }
   };
 
-  const handleProfilePictureChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setNewProfilePicture(URL.createObjectURL(event.target.files![0]));
-    console.log(URL.createObjectURL(event.target.files![0]));
-    console.log(event.target.files![0]);
-  };
-
   useEffect(() => {
     const accountString = window.localStorage.getItem("account") as
       | string
@@ -314,52 +348,99 @@ const AccountPage = () => {
                     className="edit-info-fields"
                     placeholder="Username"
                     value={username}
-                    onChange={hanandleUsernameChange}
+                    onChange={handleUsernameChange}
                   />
                 </div>
                 <div className="edit-info-fields-container">
                   <Typography color="white" fontFamily="Figtree">
-                    Description
+                    Bio
                   </Typography>
                   <input
                     type="description"
                     className="edit-info-fields"
                     placeholder="Description"
-                    value={description}
-                    onChange={hanandleDescriptionChange}
+                    value={bio}
+                    onChange={handleBioChange}
                   />
                 </div>
                 <div className="edit-info-fields-container">
                   <Typography color="white" fontFamily="Figtree">
                     Profile Picture
                   </Typography>
-                  <label htmlFor="file-upload" className="custom-file-upload">
-                    <i className="fa fa-cloud-upload"></i> Upload
+                  <label
+                    htmlFor="profile-picture-file-upload"
+                    className="custom-file-upload"
+                  >
+                    <i></i> Upload
                   </label>
                   <input
-                    id="file-upload"
+                    id="profile-picture-file-upload"
                     type="file"
                     onChange={handleProfilePictureChange}
                   />{" "}
                 </div>
                 <div className="edit-info-fields-container">
                   <Typography color="white" fontFamily="Figtree">
-                    Content Filter
+                    Header Picture
                   </Typography>
-                  <select className="content-filter-edit-dropdown">
-                    <option value="all" className="dropdown-options">
-                      All
-                    </option>
-                    <option value="mature" className="dropdown-options">
-                      Mature
-                    </option>
-                    <option value="explicit" className="dropdown-options">
-                      Explicit
-                    </option>
-                  </select>
+                  <label
+                    htmlFor="header-picture-file-upload"
+                    className="custom-file-upload"
+                  >
+                    <i></i> Upload
+                  </label>
+                  <input
+                    id="header-picture-file-upload"
+                    type="file"
+                    onChange={handleHeaderImageChange}
+                  />{" "}
                 </div>
                 <div className="edit-info-fields-container">
-                  <Button className="save-new-info-button">Save Changes</Button>
+                  <Typography color="white" fontFamily="Figtree">
+                    Content Filter
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Select
+                      id="edit-content-filter-select"
+                      className="edit-content-filter-dropdown"
+                      value={newContentFilter}
+                      label="Content Filter"
+                      variant="standard"
+                      disableUnderline={true}
+                      onChange={handleChangeNewContentFilter}
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          color: "white",
+                        },
+                      }}
+                      MenuProps={{
+                        PaperProps: { style: { backgroundColor: "#333333" } },
+                      }}
+                    >
+                      <MenuItem className="edit-content-menu-item" value={1}>
+                        Safe
+                      </MenuItem>
+                      <MenuItem className="edit-content-menu-item" value={2}>
+                        Suggestive
+                      </MenuItem>
+                      <MenuItem className="edit-content-menu-item" value={3}>
+                        Explicit
+                      </MenuItem>
+                      <MenuItem className="edit-content-menu-item" value={4}>
+                        Pornographic
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div className="edit-info-fields-container">
+                  <Button
+                    className="save-new-info-button"
+                    onClick={() => {
+                      handleEditAccountInfo();
+                    }}
+                  >
+                    Save Changes
+                  </Button>
                 </div>
               </Grid>
             </DialogContent>

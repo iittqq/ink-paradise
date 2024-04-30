@@ -85,16 +85,7 @@ input[type="file"] {
     background-color: transparent;
   }
 }
-.content-filter-edit-dropdown {
-  width: 100%;
-  background-color: #333333;
-  color: #ffffff;
-  font-family: "Figtree";
-  border-radius: 25px !important;
-  min-height: 32px !important;
-  padding: 5px !important;
-  margin: 5px 0px 5px 0px !important;
-}
+
 .user-details {
   padding-left: 10px;
   padding-right: 10px;
@@ -196,4 +187,23 @@ input[type="file"] {
 
 #info-dialog .MuiPaper-root {
   background-color: #121212 !important;
+}
+
+.edit-content-filter-dropdown {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  width: 100%;
+  margin: 5px 0px 5px 0px !important;
+}
+
+#edit-content-filter-select {
+  background-color: #333333 !important;
+  border-radius: 25px !important;
+  color: #ffffff !important;
+  padding-left: 10px;
+}
+
+.edit-content-menu-item {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
 }

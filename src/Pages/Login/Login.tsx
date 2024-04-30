@@ -15,16 +15,17 @@ import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 
 const Login = () => {
-  const [visible, setVisible] = useState(false);
-  const [contentFilter, setContentFilter] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [attemptedLogin, setAttemptedLogin] = useState(false);
-  const [username, setUsername] = useState("");
+  const [visible, setVisible] = useState<boolean>(false);
+  const [contentFilter, setContentFilter] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
 
   const handleChangeContentFilter = (event: SelectChangeEvent) => {
-    setContentFilter(event.target.value as string);
+    setContentFilter(event.target.value);
+    console.log(event.target.value);
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
