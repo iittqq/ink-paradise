@@ -40,6 +40,20 @@ input.register-input-fields:focus {
   outline: 2px solid #ffffff;
 }
 
+.mal-login-button {
+  width: 100%;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  height: 34px;
+  border: 1px solid #75747a !important;
+  background-color: #333333 !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .login-text-field-headers,
 .register-text-field-headers {
   padding-bottom: 10px;

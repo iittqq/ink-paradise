@@ -9,38 +9,26 @@ import {
 } from "@mui/material";
 
 import "./Login.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
-import { authorizeMal } from "../../api/MalApi";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
   const [contentFilter, setContentFilter] = useState("");
   const [email, setEmail] = useState("");
-  const [malUsername, setMalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [attemptedLogin, setAttemptedLogin] = useState(false);
+  const [username, setUsername] = useState("");
 
-  useEffect(() => {
-    authorizeMal().then((response) => {
-      console.log(response);
-    });
-  }, []);
   const handleChangeContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-  };
-
-  const handleMalUsernameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setMalUsername(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +41,12 @@ const Login = () => {
     setConfirmPassword(event.target.value);
   };
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
   const handleLogin = async () => {
-    console.log(email, password, malUsername, contentFilter);
+    console.log(email, password, username, contentFilter);
     login(email, password).then((response: Account | string) => {
       if (typeof response !== "string") {
         window.localStorage.setItem("account", JSON.stringify(response));
@@ -70,11 +62,11 @@ const Login = () => {
   };
 
   const handleRegister = async () => {
-    console.log(malUsername);
+    console.log(username);
     if (password === confirmPassword) {
       createAccount({
         email: email,
-        username: malUsername,
+        username: username,
         password: password,
         contentFilter: contentFilter,
       }).then((response: Account) => {
@@ -112,15 +104,15 @@ const Login = () => {
             </div>
             <div className="register-section">
               <Typography className="register-text-field-headers">
-                MAL Username (Optional)
+                Username
               </Typography>
               <div className="register-icon-field-container">
                 <input
                   type="username"
                   className="register-input-fields"
-                  placeholder="My Anime List Username"
-                  value={malUsername}
-                  onChange={handleMalUsernameChange}
+                  placeholder="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
               </div>
             </div>

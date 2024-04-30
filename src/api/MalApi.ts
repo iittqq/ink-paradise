@@ -1,6 +1,9 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080";
+const CLIENT_ID = "72c74d46602942c61ca27bddf864efb5";
+const CLIENT_SECRET =
+  "69287dba56f23f70541fc43b264f6aeaeed0864fa4a0975fed5b0229843d0f3c";
 import { fetchMangaByTitle } from "./MangaDexApi";
 import {
   MalAccount,
@@ -14,16 +17,18 @@ async function authorizeMal(): Promise<void> {
   try {
     console.log("Authorizing MAL...");
     const response = await axios
-      .get(
-        `${BASE_URL}/proxy/myanimelist?url=https://myanimelist.net/v1/oauth2/authorize`,
-        {
-          withCredentials: true,
-        },
-      )
+      .get(`${BASE_URL}/oauth/authorize`, {
+        withCredentials: true,
+      })
       .then((response) => {
         console.log(response);
         if (response.status === 200) {
-          window.location.href = response.data.authorizationUrl;
+          window.localStorage.setItem(
+            "codeVerifier",
+            response.data.codeVerifier,
+          );
+          console.log(response.data.codeVerifier);
+          window.location.href = response.data.url;
         } else {
           console.error("Failed to authorize: ", response.statusText);
         }
@@ -31,6 +36,32 @@ async function authorizeMal(): Promise<void> {
     console.log(response);
   } catch (error) {
     console.error("Error authorizing MAL:", error);
+    throw error;
+  }
+}
+
+async function fetchMalData(code: string): Promise<void> {
+  try {
+    const requestBody = new URLSearchParams();
+    requestBody.append("client_id", CLIENT_ID);
+    requestBody.append("client_secret", CLIENT_SECRET);
+    requestBody.append("code", code);
+    const codeVerifier = window.localStorage.getItem("codeVerifier");
+    console.log(codeVerifier);
+    if (codeVerifier !== null) {
+      requestBody.append("code_verifier", codeVerifier);
+    }
+    requestBody.append("grant_type", "authorization_code");
+    requestBody.append("redirect_uri", "http://localhost:5173/");
+    console.log("Fetching MAL data...");
+    const response = await axios
+      .post(`https://myanimelist.net/v1/oauth2/token`, requestBody)
+      .then((response) => {
+        console.log(response);
+      });
+    console.log(response);
+  } catch (error) {
+    console.error("Error fetching MAL data:", error);
     throw error;
   }
 }
@@ -142,4 +173,10 @@ async function generateLibrary(
   }
 }
 
-export { fetchAccountData, fetchTopManga, generateLibrary, authorizeMal };
+export {
+  fetchAccountData,
+  fetchTopManga,
+  generateLibrary,
+  authorizeMal,
+  fetchMalData,
+};

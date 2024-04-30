@@ -1,18 +1,17 @@
 import {
   Button,
   Typography,
-  Grid,
   Dialog,
   DialogTitle,
   DialogContent,
+  Grid,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
-import { UserMangaLogistics } from "../../interfaces/MalInterfaces";
-import InfoIcon from "@mui/icons-material/Info";
 import LogoutIcon from "@mui/icons-material/Logout";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   addMangaFolder,
   deleteMangaFolder,
@@ -34,7 +33,6 @@ import { Account } from "../../interfaces/AccountInterfaces";
 const AccountPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [userMangaData, setUserMangaData] = useState<UserMangaLogistics[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
@@ -49,13 +47,28 @@ const AccountPage = () => {
   const [mangaEntriesToDelete, setMangaEntriesToDelete] = useState<string[]>(
     [],
   );
-  const [openInfo, setOpenInfo] = useState<boolean>(false);
   const [openAddFolder, setOpenAddFolder] = useState<boolean>(false);
   const [mangaFoldersToDelete, setMangaFoldersToDelete] = useState<number[]>(
     [],
   );
   const [accountData, setAccountData] = useState<Account | null>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [newProfilePicture, setNewProfilePicture] = useState<string>("");
+
+  const hanandleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setDescription(event.target.value);
+  };
+
+  const hanandleUsernameChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setUsername(event.target.value);
+  };
 
   const handleDeleteMangaEntries = async () => {
     if (selectedFolder !== null) {
@@ -217,6 +230,14 @@ const AccountPage = () => {
     }
   };
 
+  const handleProfilePictureChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNewProfilePicture(URL.createObjectURL(event.target.files![0]));
+    console.log(URL.createObjectURL(event.target.files![0]));
+    console.log(event.target.files![0]);
+  };
+
   useEffect(() => {
     const accountString = window.localStorage.getItem("account") as
       | string
@@ -225,13 +246,8 @@ const AccountPage = () => {
     if (accountString !== null) {
       setAccountData(JSON.parse(accountString));
       account = JSON.parse(accountString) as Account | null;
+      console.log(account);
     }
-    setUserMangaData(
-      Object.keys(state.malAccount.statistics.manga).map((key) => [
-        key,
-        state.malAccount.statistics.manga[key],
-      ]),
-    );
 
     if (account !== null) {
       getMangaFolders().then((response) => {
@@ -245,26 +261,109 @@ const AccountPage = () => {
       <Header />
       <div className="user-details-section">
         <div className="image-details-section">
+          {/**
           <img
             className="user-image"
-            src={state.malAccount.images.jpg.image_url}
+            src={}
             alt="profile"
-          ></img>
+          ></img>*/}
         </div>
         <Typography color="white" className="user-details">
-          {state.malAccount.username} <br /> <br />
-          About:&nbsp;
-          {state.malAccount.about}
-          <br />
-          Gender:&nbsp;
-          {state.malAccount.gender}
-          <br />
-          Birthday:&nbsp;
-          {state.malAccount.birthday}
-          <br />
+          {accountData?.username}
         </Typography>
 
         <div className="info-button-container">
+          <Button
+            className="info-open-button"
+            sx={{ marginRight: "10px" }}
+            onClick={() => {
+              setOpenEdit(true);
+            }}
+          >
+            <EditIcon />
+          </Button>
+          <Dialog
+            id="info-dialog"
+            open={openEdit}
+            onClose={() => {
+              setOpenEdit(false);
+            }}
+          >
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                color: "#ffffff",
+                fontFamily: "Figtree",
+              }}
+            >
+              Account Information
+            </DialogTitle>
+            <DialogContent>
+              <Grid
+                container
+                direction="column"
+                justifyContent="space-evenly"
+                alignItems="center"
+              >
+                <div className="edit-info-fields-container">
+                  <Typography color="white" fontFamily="Figtree">
+                    Username
+                  </Typography>
+                  <input
+                    type="username"
+                    className="edit-info-fields"
+                    placeholder="Username"
+                    value={username}
+                    onChange={hanandleUsernameChange}
+                  />
+                </div>
+                <div className="edit-info-fields-container">
+                  <Typography color="white" fontFamily="Figtree">
+                    Description
+                  </Typography>
+                  <input
+                    type="description"
+                    className="edit-info-fields"
+                    placeholder="Description"
+                    value={description}
+                    onChange={hanandleDescriptionChange}
+                  />
+                </div>
+                <div className="edit-info-fields-container">
+                  <Typography color="white" fontFamily="Figtree">
+                    Profile Picture
+                  </Typography>
+                  <label htmlFor="file-upload" className="custom-file-upload">
+                    <i className="fa fa-cloud-upload"></i> Upload
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    onChange={handleProfilePictureChange}
+                  />{" "}
+                </div>
+                <div className="edit-info-fields-container">
+                  <Typography color="white" fontFamily="Figtree">
+                    Content Filter
+                  </Typography>
+                  <select className="content-filter-edit-dropdown">
+                    <option value="all" className="dropdown-options">
+                      All
+                    </option>
+                    <option value="mature" className="dropdown-options">
+                      Mature
+                    </option>
+                    <option value="explicit" className="dropdown-options">
+                      Explicit
+                    </option>
+                  </select>
+                </div>
+                <div className="edit-info-fields-container">
+                  <Button className="save-new-info-button">Save Changes</Button>
+                </div>
+              </Grid>
+            </DialogContent>
+          </Dialog>
           <Button
             className="info-open-button"
             sx={{ marginRight: "10px" }}
@@ -275,47 +374,6 @@ const AccountPage = () => {
           >
             <LogoutIcon />
           </Button>
-          <Button
-            className="info-open-button"
-            onClick={() => {
-              setOpenInfo(true);
-            }}
-          >
-            <InfoIcon />
-          </Button>
-          <Dialog
-            id="info-dialog"
-            open={openInfo}
-            onClose={() => {
-              setOpenInfo(false);
-            }}
-          >
-            <DialogTitle
-              sx={{
-                textAlign: "center",
-                color: "#ffffff",
-                fontFamily: "Figtree",
-              }}
-            >
-              Stats
-            </DialogTitle>
-            <DialogContent>
-              <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-              >
-                {userMangaData.map((current: UserMangaLogistics) => (
-                  <Grid item>
-                    <Typography color="white" sx={{ padding: "8px" }}>
-                      {current[0]}: {current[1]} <br />
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
       <FolderActionsBar

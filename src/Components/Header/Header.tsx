@@ -5,11 +5,9 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
 import { fetchMangaByTitle } from "../../api/MangaDexApi";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { fetchAccountData } from "../../api/MalApi";
 import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import { MalAccount } from "../../interfaces/MalInterfaces";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -25,10 +23,8 @@ const Header = () => {
     if (accountData === null) {
       navigate("/login");
     } else {
-      fetchAccountData(accountData.username).then((data: MalAccount) => {
-        navigate("/account", {
-          state: { malAccount: data },
-        });
+      navigate("/account", {
+        state: { account: account },
       });
     }
   };

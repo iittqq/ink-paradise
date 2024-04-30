@@ -12,7 +12,7 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-
+import { useSearchParams } from "react-router-dom";
 import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
@@ -26,7 +26,7 @@ import {
   Relationship,
 } from "../../interfaces/MangaDexInterfaces";
 
-import { fetchTopManga } from "../../api/MalApi";
+import { fetchTopManga, fetchMalData } from "../../api/MalApi";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 
 const Home = () => {
@@ -35,7 +35,7 @@ const Home = () => {
   const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
   const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const handleClickRecentlyUpdated = async () => {
@@ -77,6 +77,14 @@ const Home = () => {
     fetchRecentlyAdded(10, 0).then((data: Manga[]) => {
       setRecentlyAddedManga(data);
     });
+
+    const malCode = searchParams.get("code");
+
+    if (malCode !== null) {
+      fetchMalData(malCode).then((data: any) => {
+        console.log(data);
+      });
+    }
   }, []);
 
   const handleOpenTags = () => {
