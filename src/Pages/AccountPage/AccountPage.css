@@ -207,3 +207,21 @@ input[type="file"] {
   color: #ffffff !important;
   font-family: "Figtree" !important;
 }
+
+.edit-bio-field {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  outline: none;
+  background-color: #333333 !important;
+}
+
+.edit-birthday-field {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  background-color: #333333 !important;
+  outline: none !important;
+  :focus {
+    border: none !important;
+    border: none !important;
+  }
+}

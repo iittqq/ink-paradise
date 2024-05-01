@@ -33,6 +33,16 @@ import { Manga } from "../../interfaces/MangaDexInterfaces";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar";
 import { Account } from "../../interfaces/AccountInterfaces";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs, { Dayjs } from "dayjs";
+
+import {
+  fetchAccountDetails,
+  updateAccountDetails,
+  createAccountDetails,
+} from "../../api/AccountDetails";
 
 const AccountPage = () => {
   const { state } = useLocation();
@@ -60,19 +70,71 @@ const AccountPage = () => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
-  const [newProfilePicture, setNewProfilePicture] = useState<Uint8Array>();
+  const [profileImage, setProfileImage] = useState<Uint8Array>();
   const [headerImage, setHeaderImage] = useState<Uint8Array>();
   const [newContentFilter, setNewContentFilter] = useState<string>("");
+  const [birthday, setBirthday] = useState<Dayjs | null>(dayjs());
+  const [accountExists, setAccountExists] = useState<boolean>(false);
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setNewContentFilter(event.target.value as string);
-    console.log(event.target.value);
   };
   const handleEditAccountInfo = () => {
-    console.log(newProfilePicture);
+    console.log(accountData?.id);
+    console.log(username);
+    console.log(bio);
+    console.log(profileImage);
     console.log(headerImage);
+    console.log(newContentFilter);
+    console.log(dayjs(birthday).format("YYYY-MM-DD"));
+    console.log(accountExists);
+    const accountId = accountData?.id;
+    const birthdayString = dayjs(birthday).format("YYYY-MM-DD") as string;
+    if (accountExists === true) {
+      if (
+        accountId &&
+        username &&
+        bio &&
+        profileImage &&
+        headerImage &&
+        birthdayString
+      ) {
+        updateAccountDetails({
+          accountId,
+          username,
+          bio,
+          profileImage,
+          headerImage,
+          birthdayString,
+        }).then((data) => {
+          console.log(data);
+        });
+      }
+    } else {
+      console.log("creating account");
+      if (
+        accountId &&
+        username &&
+        bio &&
+        profileImage &&
+        headerImage &&
+        birthdayString
+      ) {
+        createAccountDetails({
+          accountId: accountData?.id,
+          username,
+          bio,
+          profileImage,
+          headerImage,
+          birthdayString,
+        }).then((data) => {
+          console.log(data);
+          setAccountExists(true);
+        });
+      }
+    }
   };
-  const handleBioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(event.target.value);
   };
 
@@ -108,7 +170,7 @@ const AccountPage = () => {
     console.log(event);
     processImage(event).then((image) => {
       const bytes = new Uint8Array(image as ArrayBuffer);
-      setNewProfilePicture(bytes);
+      setProfileImage(bytes);
     });
   };
 
@@ -288,6 +350,17 @@ const AccountPage = () => {
         setFolders(response.filter((folder) => folder.userId === account!.id));
       });
     }
+
+    fetchAccountDetails(account!.id).then((data) => {
+      console.log(data);
+      if (data) {
+        setUsername(data.username);
+        setBio(data.bio);
+        setBirthday(dayjs(data.birthdayString));
+      } else {
+        setAccountExists(false);
+      }
+    });
   }, [state.malAccount, newFolder]);
 
   return (
@@ -355,11 +428,11 @@ const AccountPage = () => {
                   <Typography color="white" fontFamily="Figtree">
                     Bio
                   </Typography>
-                  <input
-                    type="description"
-                    className="edit-info-fields"
-                    placeholder="Description"
-                    value={bio}
+                  <textarea
+                    className="edit-bio-field"
+                    placeholder="Bio"
+                    rows={5}
+                    defaultValue={bio}
                     onChange={handleBioChange}
                   />
                 </div>
@@ -431,6 +504,33 @@ const AccountPage = () => {
                       </MenuItem>
                     </Select>
                   </FormControl>
+                </div>
+                <div className="edit-info-fields-container">
+                  <Typography color="white" fontFamily="Figtree">
+                    Birthday
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      className="edit-birthday-field"
+                      slotProps={{
+                        textField: { error: false },
+                      }}
+                      sx={{
+                        svg: { color: "white" },
+                        input: { color: "white" },
+                        label: { color: "white" },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "white" },
+                          "&:hover fieldset": { borderColor: "white" },
+                          "&.Mui-focused fieldset": { borderColor: "white" },
+                        },
+                      }}
+                      defaultValue={birthday}
+                      onChange={(newValue) => {
+                        setBirthday(newValue);
+                      }}
+                    />
+                  </LocalizationProvider>
                 </div>
                 <div className="edit-info-fields-container">
                   <Button
