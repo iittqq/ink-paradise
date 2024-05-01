@@ -26,14 +26,15 @@
 }
 
 .edit-info-fields {
-  width: 95%;
   border-radius: 25px !important;
   padding: 5px !important;
   background-color: #333333;
   font-family: "Figtree" !important;
   margin: 5px 0px 5px 0px !important;
   border: 1px solid #75747a !important;
-  height: 20px !important;
+  height: 30px !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 input.edit-info-fields:focus {
@@ -44,17 +45,18 @@ input[type="file"] {
 }
 .custom-file-upload {
   display: inline-block;
-  width: 95%;
+  width: 100%;
   border-radius: 25px !important;
   padding: 5px !important;
   background-color: #333333;
   font-family: "Figtree" !important;
   margin: 5px 0px 5px 0px !important;
   border: 1px solid #75747a !important;
-  height: 20px !important;
+  height: 30px !important;
   text-align: center;
   color: #ffffff;
   font-family: "Figtree";
+  box-sizing: border-box;
 }
 .edit-info-fields-container {
   display: flex;
@@ -194,6 +196,7 @@ input[type="file"] {
   font-family: "Figtree" !important;
   width: 100%;
   margin: 5px 0px 5px 0px !important;
+  height: 30px !important;
 }
 
 #edit-content-filter-select {
@@ -213,12 +216,15 @@ input[type="file"] {
   font-family: "Figtree" !important;
   outline: none;
   background-color: #333333 !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .edit-birthday-field {
   color: #ffffff !important;
   font-family: "Figtree" !important;
   background-color: #333333 !important;
+  margin: 5px 0px 5px 0px !important;
   outline: none !important;
   :focus {
     border: none !important;

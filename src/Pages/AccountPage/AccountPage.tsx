@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Grid,
   FormControl,
   Select,
   MenuItem,
@@ -65,47 +64,47 @@ const AccountPage = () => {
   const [mangaFoldersToDelete, setMangaFoldersToDelete] = useState<number[]>(
     [],
   );
-  const [accountData, setAccountData] = useState<Account | null>(null);
+  const [accountData, setAccountData] = useState<Account>(
+    window.localStorage.getItem("account") as unknown as Account,
+  );
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
-  const [profileImage, setProfileImage] = useState<Uint8Array>();
-  const [headerImage, setHeaderImage] = useState<Uint8Array>();
-  const [newContentFilter, setNewContentFilter] = useState<string>("");
-  const [birthday, setBirthday] = useState<Dayjs | null>(dayjs());
+  const [profilePicture, setProfilePicture] = useState<number[]>();
+  const [headerPicture, setHeaderPicture] = useState<number[]>();
+  const [contentFilter, setContentFilter] = useState<string>("");
+  const [birthdayDayJs, setBirthdayDayJs] = useState<Dayjs | null>(dayjs());
   const [accountExists, setAccountExists] = useState<boolean>(false);
 
+  const [accountDetailsId, setAccountDetailsId] = useState<number>();
+
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
-    setNewContentFilter(event.target.value as string);
+    setContentFilter(event.target.value as string);
   };
   const handleEditAccountInfo = () => {
     console.log(accountData?.id);
     console.log(username);
     console.log(bio);
-    console.log(profileImage);
-    console.log(headerImage);
-    console.log(newContentFilter);
-    console.log(dayjs(birthday).format("YYYY-MM-DD"));
+    console.log(profilePicture);
+    console.log(headerPicture);
+    console.log(contentFilter);
+    console.log(dayjs(birthdayDayJs).format("YYYY-MM-DD"));
     console.log(accountExists);
-    const accountId = accountData?.id;
-    const birthdayString = dayjs(birthday).format("YYYY-MM-DD") as string;
+    const accountId: number = accountData.id!;
+    const birthday = dayjs(birthdayDayJs).format("YYYY-MM-DD") as string;
+
     if (accountExists === true) {
-      if (
-        accountId &&
-        username &&
-        bio &&
-        profileImage &&
-        headerImage &&
-        birthdayString
-      ) {
+      if (profilePicture !== undefined || headerPicture !== undefined) {
         updateAccountDetails({
+          id: accountDetailsId,
           accountId,
           username,
           bio,
-          profileImage,
-          headerImage,
-          birthdayString,
+          profilePicture,
+          headerPicture,
+          birthday,
+          contentFilter: Number(contentFilter),
         }).then((data) => {
           console.log(data);
         });
@@ -113,20 +112,18 @@ const AccountPage = () => {
     } else {
       console.log("creating account");
       if (
-        accountId &&
-        username &&
-        bio &&
-        profileImage &&
-        headerImage &&
-        birthdayString
+        accountId !== undefined ||
+        profilePicture !== undefined ||
+        headerPicture !== undefined
       ) {
         createAccountDetails({
-          accountId: accountData?.id,
+          accountId,
           username,
           bio,
-          profileImage,
-          headerImage,
-          birthdayString,
+          profilePicture,
+          headerPicture,
+          birthday,
+          contentFilter: Number(contentFilter),
         }).then((data) => {
           console.log(data);
           setAccountExists(true);
@@ -157,8 +154,9 @@ const AccountPage = () => {
   ) => {
     console.log(event);
     processImage(event).then((image) => {
-      const bytes = new Uint8Array(image as ArrayBuffer);
-      setHeaderImage(bytes);
+      const uint8Array = new Uint8Array(image as ArrayBuffer);
+      const bytesArray = Array.from(uint8Array);
+      setHeaderPicture(bytesArray);
     });
   };
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,8 +167,9 @@ const AccountPage = () => {
   ) => {
     console.log(event);
     processImage(event).then((image) => {
-      const bytes = new Uint8Array(image as ArrayBuffer);
-      setProfileImage(bytes);
+      const uint8Array = new Uint8Array(image as ArrayBuffer);
+      const bytesArray = Array.from(uint8Array);
+      setProfilePicture(bytesArray);
     });
   };
 
@@ -335,9 +334,8 @@ const AccountPage = () => {
   };
 
   useEffect(() => {
-    const accountString = window.localStorage.getItem("account") as
-      | string
-      | null;
+    const accountString = window.localStorage.getItem("account") as string;
+
     let account: Account | null = null;
     if (accountString !== null) {
       setAccountData(JSON.parse(accountString));
@@ -354,9 +352,10 @@ const AccountPage = () => {
     fetchAccountDetails(account!.id).then((data) => {
       console.log(data);
       if (data) {
+        setAccountDetailsId(data.id);
         setUsername(data.username);
         setBio(data.bio);
-        setBirthday(dayjs(data.birthdayString));
+        setBirthdayDayJs(dayjs(data.birthday));
       } else {
         setAccountExists(false);
       }
@@ -406,143 +405,136 @@ const AccountPage = () => {
               Account Information
             </DialogTitle>
             <DialogContent>
-              <Grid
-                container
-                direction="column"
-                justifyContent="space-evenly"
-                alignItems="center"
-              >
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Username
-                  </Typography>
-                  <input
-                    type="username"
-                    className="edit-info-fields"
-                    placeholder="Username"
-                    value={username}
-                    onChange={handleUsernameChange}
-                  />
-                </div>
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Bio
-                  </Typography>
-                  <textarea
-                    className="edit-bio-field"
-                    placeholder="Bio"
-                    rows={5}
-                    defaultValue={bio}
-                    onChange={handleBioChange}
-                  />
-                </div>
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Profile Picture
-                  </Typography>
-                  <label
-                    htmlFor="profile-picture-file-upload"
-                    className="custom-file-upload"
-                  >
-                    <i></i> Upload
-                  </label>
-                  <input
-                    id="profile-picture-file-upload"
-                    type="file"
-                    onChange={handleProfilePictureChange}
-                  />{" "}
-                </div>
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Header Picture
-                  </Typography>
-                  <label
-                    htmlFor="header-picture-file-upload"
-                    className="custom-file-upload"
-                  >
-                    <i></i> Upload
-                  </label>
-                  <input
-                    id="header-picture-file-upload"
-                    type="file"
-                    onChange={handleHeaderImageChange}
-                  />{" "}
-                </div>
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Content Filter
-                  </Typography>
-                  <FormControl fullWidth>
-                    <Select
-                      id="edit-content-filter-select"
-                      className="edit-content-filter-dropdown"
-                      value={newContentFilter}
-                      label="Content Filter"
-                      variant="standard"
-                      disableUnderline={true}
-                      onChange={handleChangeNewContentFilter}
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          color: "white",
-                        },
-                      }}
-                      MenuProps={{
-                        PaperProps: { style: { backgroundColor: "#333333" } },
-                      }}
-                    >
-                      <MenuItem className="edit-content-menu-item" value={1}>
-                        Safe
-                      </MenuItem>
-                      <MenuItem className="edit-content-menu-item" value={2}>
-                        Suggestive
-                      </MenuItem>
-                      <MenuItem className="edit-content-menu-item" value={3}>
-                        Explicit
-                      </MenuItem>
-                      <MenuItem className="edit-content-menu-item" value={4}>
-                        Pornographic
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="edit-info-fields-container">
-                  <Typography color="white" fontFamily="Figtree">
-                    Birthday
-                  </Typography>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      className="edit-birthday-field"
-                      slotProps={{
-                        textField: { error: false },
-                      }}
-                      sx={{
-                        svg: { color: "white" },
-                        input: { color: "white" },
-                        label: { color: "white" },
-                        "& .MuiOutlinedInput-root": {
-                          "& fieldset": { borderColor: "white" },
-                          "&:hover fieldset": { borderColor: "white" },
-                          "&.Mui-focused fieldset": { borderColor: "white" },
-                        },
-                      }}
-                      defaultValue={birthday}
-                      onChange={(newValue) => {
-                        setBirthday(newValue);
-                      }}
-                    />
-                  </LocalizationProvider>
-                </div>
-                <div className="edit-info-fields-container">
-                  <Button
-                    className="save-new-info-button"
-                    onClick={() => {
-                      handleEditAccountInfo();
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Username
+                </Typography>
+                <input
+                  type="username"
+                  className="edit-info-fields"
+                  placeholder="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
+                />
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Bio
+                </Typography>
+                <textarea
+                  className="edit-bio-field"
+                  placeholder="Bio"
+                  rows={5}
+                  defaultValue={bio}
+                  onChange={handleBioChange}
+                />
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Profile Picture
+                </Typography>
+                <label
+                  htmlFor="profile-picture-file-upload"
+                  className="custom-file-upload"
+                >
+                  <i></i> Upload
+                </label>
+                <input
+                  id="profile-picture-file-upload"
+                  type="file"
+                  onChange={handleProfilePictureChange}
+                />{" "}
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Header Picture
+                </Typography>
+                <label
+                  htmlFor="header-picture-file-upload"
+                  className="custom-file-upload"
+                >
+                  <i></i> Upload
+                </label>
+                <input
+                  id="header-picture-file-upload"
+                  type="file"
+                  onChange={handleHeaderImageChange}
+                />{" "}
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Content Filter
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    id="edit-content-filter-select"
+                    className="edit-content-filter-dropdown"
+                    value={contentFilter}
+                    label="Content Filter"
+                    variant="standard"
+                    disableUnderline={true}
+                    onChange={handleChangeNewContentFilter}
+                    sx={{
+                      "& .MuiSvgIcon-root": {
+                        color: "white",
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: { style: { backgroundColor: "#333333" } },
                     }}
                   >
-                    Save Changes
-                  </Button>
-                </div>
-              </Grid>
+                    <MenuItem className="edit-content-menu-item" value={1}>
+                      Safe
+                    </MenuItem>
+                    <MenuItem className="edit-content-menu-item" value={2}>
+                      Suggestive
+                    </MenuItem>
+                    <MenuItem className="edit-content-menu-item" value={3}>
+                      Explicit
+                    </MenuItem>
+                    <MenuItem className="edit-content-menu-item" value={4}>
+                      Pornographic
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Birthday
+                </Typography>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    className="edit-birthday-field"
+                    slotProps={{
+                      textField: { error: false },
+                    }}
+                    sx={{
+                      svg: { color: "white" },
+                      input: { color: "white" },
+                      label: { color: "white" },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "white" },
+                        "&:hover fieldset": { borderColor: "white" },
+                        "&.Mui-focused fieldset": { borderColor: "white" },
+                      },
+                    }}
+                    defaultValue={birthdayDayJs}
+                    onChange={(newValue) => {
+                      setBirthdayDayJs(newValue);
+                    }}
+                  />
+                </LocalizationProvider>
+              </div>
+              <div className="edit-info-fields-container">
+                <Button
+                  className="save-new-info-button"
+                  onClick={() => {
+                    handleEditAccountInfo();
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
             </DialogContent>
           </Dialog>
           <Button

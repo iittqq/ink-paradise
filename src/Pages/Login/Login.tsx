@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
+import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
@@ -16,17 +8,11 @@ import { Account } from "../../interfaces/AccountInterfaces";
 
 const Login = () => {
   const [visible, setVisible] = useState<boolean>(false);
-  const [contentFilter, setContentFilter] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
-
-  const handleChangeContentFilter = (event: SelectChangeEvent) => {
-    setContentFilter(event.target.value);
-    console.log(event.target.value);
-  };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -47,7 +33,7 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    console.log(email, password, username, contentFilter);
+    console.log(email, password, username);
     login(email, password).then((response: Account | string) => {
       if (typeof response !== "string") {
         window.localStorage.setItem("account", JSON.stringify(response));
@@ -63,13 +49,12 @@ const Login = () => {
   };
 
   const handleRegister = async () => {
-    console.log(username);
+    console.log(username, email, password, confirmPassword);
     if (password === confirmPassword) {
       createAccount({
         email: email,
         username: username,
         password: password,
-        contentFilter: contentFilter,
       }).then((response: Account) => {
         console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
@@ -88,7 +73,7 @@ const Login = () => {
       {visible === true ? (
         <Card className="login-card" elevation={5}>
           <Typography className="register-header">Register</Typography>
-          <div>
+          <div className="register-section-container">
             <div className="register-section">
               <Typography className="register-text-field-headers">
                 Email
@@ -145,6 +130,7 @@ const Login = () => {
                 />
               </div>
             </div>
+            {/**
             <div className="register-section">
               <Typography className="register-text-field-headers">
                 Content Filter
@@ -184,7 +170,7 @@ const Login = () => {
                   </Select>
                 </FormControl>
               </div>
-            </div>
+            </div>*/}
           </div>
           <Button
             variant="contained"

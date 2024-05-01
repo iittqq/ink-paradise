@@ -1,8 +1,10 @@
 export interface AccountDetails {
+  id?: number;
   accountId: number;
   username: string;
   bio: string;
-  profileImage: Uint8Array;
-  headerImage: Uint8Array;
-  birthdayString: string;
+  profilePicture?: number[];
+  headerPicture?: number[];
+  birthday: string;
+  contentFilter: number;
 }
