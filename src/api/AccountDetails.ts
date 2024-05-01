@@ -35,7 +35,7 @@ async function updateAccountDetails(
 ): Promise<AccountDetails> {
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/v1/account-details/${accountDetails.id}`,
+      `${BASE_URL}/api/v1/account-details/${accountDetails.accountId}`,
       accountDetails,
     );
     return response.data;
