@@ -5,6 +5,8 @@ import { useState } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import { createAccountDetails } from "../../api/AccountDetails";
 
 const Login = () => {
   const [visible, setVisible] = useState<boolean>(false);
@@ -59,6 +61,14 @@ const Login = () => {
         console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
+        createAccountDetails({
+          accountId: response.id,
+          bio: "Hello World",
+          birthday: "12/12/2000",
+          contentFilter: 1,
+        }).then((response: AccountDetails) => {
+          console.log(response);
+        });
       });
     } else {
       setPassword("");

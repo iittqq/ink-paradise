@@ -40,7 +40,6 @@ import dayjs, { Dayjs } from "dayjs";
 import {
   fetchAccountDetails,
   updateAccountDetails,
-  createAccountDetails,
 } from "../../api/AccountDetails";
 
 const AccountPage = () => {
@@ -71,8 +70,8 @@ const AccountPage = () => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
-  const [profilePicture, setProfilePicture] = useState<number[]>();
-  const [headerPicture, setHeaderPicture] = useState<number[]>();
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [headerPicture, setHeaderPicture] = useState<File | null>(null);
   const [contentFilter, setContentFilter] = useState<string>("");
   const [birthdayDayJs, setBirthdayDayJs] = useState<Dayjs | null>(dayjs());
   const [accountExists, setAccountExists] = useState<boolean>(false);
@@ -94,70 +93,29 @@ const AccountPage = () => {
     const accountId: number = accountData.id!;
     const birthday = dayjs(birthdayDayJs).format("YYYY-MM-DD") as string;
 
-    if (accountExists === true) {
-      if (profilePicture !== undefined || headerPicture !== undefined) {
-        updateAccountDetails({
-          id: accountDetailsId,
-          accountId,
-          username,
-          bio,
-          profilePicture,
-          headerPicture,
-          birthday,
-          contentFilter: Number(contentFilter),
-        }).then((data) => {
-          console.log(data);
-        });
-      }
-    } else {
-      console.log("creating account");
-      if (
-        accountId !== undefined ||
-        profilePicture !== undefined ||
-        headerPicture !== undefined
-      ) {
-        createAccountDetails({
-          accountId,
-          username,
-          bio,
-          profilePicture,
-          headerPicture,
-          birthday,
-          contentFilter: Number(contentFilter),
-        }).then((data) => {
-          console.log(data);
-          setAccountExists(true);
-        });
-      }
+    if (profilePicture !== undefined || headerPicture !== undefined) {
+      updateAccountDetails({
+        id: accountDetailsId,
+        accountId,
+        bio,
+        profilePicture,
+        headerPicture,
+        birthday,
+        contentFilter: Number(contentFilter),
+      }).then((data) => {
+        console.log(data);
+      });
     }
   };
   const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(event.target.value);
   };
 
-  const processImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const image = event.target.files![0];
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(image);
-      reader.onload = (event) => {
-        resolve(event.target?.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
   const handleHeaderImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     console.log(event);
-    processImage(event).then((image) => {
-      const uint8Array = new Uint8Array(image as ArrayBuffer);
-      const bytesArray = Array.from(uint8Array);
-      setHeaderPicture(bytesArray);
-    });
+    setHeaderPicture(event.target.files![0]);
   };
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -166,11 +124,7 @@ const AccountPage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     console.log(event);
-    processImage(event).then((image) => {
-      const uint8Array = new Uint8Array(image as ArrayBuffer);
-      const bytesArray = Array.from(uint8Array);
-      setProfilePicture(bytesArray);
-    });
+    setProfilePicture(event.target.files![0]);
   };
 
   const handleDeleteMangaEntries = async () => {
@@ -341,6 +295,9 @@ const AccountPage = () => {
       setAccountData(JSON.parse(accountString));
       account = JSON.parse(accountString) as Account | null;
       console.log(account);
+      if (account !== null) {
+        setUsername(account.username);
+      }
     }
 
     if (account !== null) {
@@ -353,8 +310,9 @@ const AccountPage = () => {
       console.log(data);
       if (data) {
         setAccountDetailsId(data.id);
-        setUsername(data.username);
-        setBio(data.bio);
+        if (data.bio !== null) {
+          setBio(data.bio);
+        }
         setBirthdayDayJs(dayjs(data.birthday));
       } else {
         setAccountExists(false);

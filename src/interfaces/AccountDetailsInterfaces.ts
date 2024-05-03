@@ -1,10 +1,9 @@
 export interface AccountDetails {
   id?: number;
   accountId: number;
-  username: string;
-  bio: string;
-  profilePicture?: number[];
-  headerPicture?: number[];
-  birthday: string;
+  bio: string | null;
+  profilePicture?: File | string | null;
+  headerPicture?: File | string | null;
+  birthday: string | null;
   contentFilter: number;
 }
