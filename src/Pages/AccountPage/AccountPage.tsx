@@ -36,6 +36,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 
 import {
   fetchAccountDetails,
@@ -66,15 +67,17 @@ const AccountPage = () => {
   const [accountData, setAccountData] = useState<Account>(
     window.localStorage.getItem("account") as unknown as Account,
   );
+  const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
+    null,
+  );
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [bio, setBio] = useState<string>("");
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [headerPicture, setHeaderPicture] = useState<File | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>("");
+  const [headerPicture, setHeaderPicture] = useState<string | null>("");
   const [contentFilter, setContentFilter] = useState<string>("");
   const [birthdayDayJs, setBirthdayDayJs] = useState<Dayjs | null>(dayjs());
-  const [accountExists, setAccountExists] = useState<boolean>(false);
 
   const [accountDetailsId, setAccountDetailsId] = useState<number>();
 
@@ -89,23 +92,23 @@ const AccountPage = () => {
     console.log(headerPicture);
     console.log(contentFilter);
     console.log(dayjs(birthdayDayJs).format("YYYY-MM-DD"));
-    console.log(accountExists);
     const accountId: number = accountData.id!;
     const birthday = dayjs(birthdayDayJs).format("YYYY-MM-DD") as string;
 
-    if (profilePicture !== undefined || headerPicture !== undefined) {
-      updateAccountDetails({
-        id: accountDetailsId,
+    if (profilePicture !== null || headerPicture !== null) {
+      updateAccountDetails(accountDetailsId!, {
         accountId,
         bio,
+        birthday,
         profilePicture,
         headerPicture,
-        birthday,
         contentFilter: Number(contentFilter),
       }).then((data) => {
         console.log(data);
+        setAccountDetails(data);
       });
     }
+    setOpenEdit(false);
   };
   const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(event.target.value);
@@ -115,7 +118,11 @@ const AccountPage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     console.log(event);
-    setHeaderPicture(event.target.files![0]);
+    if (event.target.value === "") {
+      setHeaderPicture(null);
+    } else {
+      setHeaderPicture(event.target.value);
+    }
   };
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -124,7 +131,11 @@ const AccountPage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     console.log(event);
-    setProfilePicture(event.target.files![0]);
+    if (event.target.value === "") {
+      setProfilePicture(null);
+    } else {
+      setProfilePicture(event.target.value);
+    }
   };
 
   const handleDeleteMangaEntries = async () => {
@@ -308,44 +319,77 @@ const AccountPage = () => {
 
     fetchAccountDetails(account!.id).then((data) => {
       console.log(data);
-      if (data) {
-        setAccountDetailsId(data.id);
-        if (data.bio !== null) {
-          setBio(data.bio);
-        }
-        setBirthdayDayJs(dayjs(data.birthday));
-      } else {
-        setAccountExists(false);
+      setAccountDetails(data);
+      setAccountDetailsId(data.id);
+      setContentFilter(data.contentFilter.toString());
+      if (data.profilePicture !== null) {
+        setProfilePicture(data.profilePicture);
       }
+      if (data.headerPicture !== null) {
+        setHeaderPicture(data.headerPicture);
+      }
+      if (data.bio !== null) {
+        setBio(data.bio);
+      }
+      setBirthdayDayJs(dayjs(data.birthday));
     });
   }, [state.malAccount, newFolder]);
 
   return (
     <div className="user-page-container">
       <Header />
+      <div className="utility-buttons">
+        <Button
+          className="info-open-button"
+          sx={{ marginRight: "10px" }}
+          onClick={() => {
+            setOpenEdit(true);
+          }}
+        >
+          <EditIcon />
+        </Button>
+        <Button
+          className="info-open-button"
+          sx={{ marginRight: "10px" }}
+          onClick={() => {
+            window.localStorage.clear();
+            navigate("/");
+          }}
+        >
+          <LogoutIcon />
+        </Button>
+      </div>
       <div className="user-details-section">
         <div className="image-details-section">
-          {/**
-          <img
-            className="user-image"
-            src={}
-            alt="profile"
-          ></img>*/}
+          {accountDetails !== null ? (
+            <img
+              className="user-image"
+              src={accountDetails.profilePicture!}
+              alt="profile"
+            ></img>
+          ) : null}
         </div>
-        <Typography color="white" className="user-details">
-          {accountData?.username}
-        </Typography>
 
+        <div
+          className="account-details-section"
+          style={{
+            backgroundImage:
+              accountDetails !== null
+                ? `url( ${accountDetails!.headerPicture})`
+                : "none",
+          }}
+        >
+          <Typography color="white" className="user-details">
+            {accountData?.username}
+          </Typography>
+          <Typography color="white" className="user-details">
+            {accountDetails?.bio}
+          </Typography>
+          <Typography color="white" className="user-details">
+            {accountDetails?.birthday}
+          </Typography>
+        </div>
         <div className="info-button-container">
-          <Button
-            className="info-open-button"
-            sx={{ marginRight: "10px" }}
-            onClick={() => {
-              setOpenEdit(true);
-            }}
-          >
-            <EditIcon />
-          </Button>
           <Dialog
             id="info-dialog"
             open={openEdit}
@@ -391,31 +435,24 @@ const AccountPage = () => {
                 <Typography color="white" fontFamily="Figtree">
                   Profile Picture
                 </Typography>
-                <label
-                  htmlFor="profile-picture-file-upload"
-                  className="custom-file-upload"
-                >
-                  <i></i> Upload
-                </label>
+
                 <input
-                  id="profile-picture-file-upload"
-                  type="file"
+                  type="profile-picture"
+                  className="edit-info-fields"
+                  placeholder="Link"
+                  value={profilePicture !== null ? profilePicture : ""}
                   onChange={handleProfilePictureChange}
-                />{" "}
+                />
               </div>
               <div className="edit-info-fields-container">
                 <Typography color="white" fontFamily="Figtree">
                   Header Picture
                 </Typography>
-                <label
-                  htmlFor="header-picture-file-upload"
-                  className="custom-file-upload"
-                >
-                  <i></i> Upload
-                </label>
                 <input
-                  id="header-picture-file-upload"
-                  type="file"
+                  className="edit-info-fields"
+                  type="header-picture"
+                  placeholder="Link"
+                  value={headerPicture !== null ? headerPicture : ""}
                   onChange={handleHeaderImageChange}
                 />{" "}
               </div>
@@ -495,16 +532,6 @@ const AccountPage = () => {
               </div>
             </DialogContent>
           </Dialog>
-          <Button
-            className="info-open-button"
-            sx={{ marginRight: "10px" }}
-            onClick={() => {
-              window.localStorage.clear();
-              navigate("/");
-            }}
-          >
-            <LogoutIcon />
-          </Button>
         </div>
       </div>
       <FolderActionsBar

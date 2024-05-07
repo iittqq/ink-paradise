@@ -31,11 +31,12 @@ async function createAccountDetails(
 }
 
 async function updateAccountDetails(
+  id: number,
   accountDetails: AccountDetails,
 ): Promise<AccountDetails> {
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/v1/account-details/update-details/${accountDetails.id}`,
+      `${BASE_URL}/api/v1/account-details/update-details/${id}`,
       accountDetails,
     );
     return response.data;
