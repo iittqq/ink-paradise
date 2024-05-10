@@ -32,10 +32,7 @@ import { Manga } from "../../interfaces/MangaDexInterfaces";
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar";
 import { Account } from "../../interfaces/AccountInterfaces";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs, { Dayjs } from "dayjs";
+
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 
 import {
@@ -72,11 +69,10 @@ const AccountPage = () => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
-  const [bio, setBio] = useState<string>("");
-  const [profilePicture, setProfilePicture] = useState<string | null>("");
-  const [headerPicture, setHeaderPicture] = useState<string | null>("");
+  const [bio, setBio] = useState<string | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [headerPicture, setHeaderPicture] = useState<string | null>(null);
   const [contentFilter, setContentFilter] = useState<string>("");
-  const [birthdayDayJs, setBirthdayDayJs] = useState<Dayjs | null>(dayjs());
 
   const [accountDetailsId, setAccountDetailsId] = useState<number>();
 
@@ -90,23 +86,18 @@ const AccountPage = () => {
     console.log(profilePicture);
     console.log(headerPicture);
     console.log(contentFilter);
-    console.log(dayjs(birthdayDayJs).format("YYYY-MM-DD"));
     const accountId: number = accountData.id!;
-    const birthday = dayjs(birthdayDayJs).format("YYYY-MM-DD") as string;
 
-    if (profilePicture !== null || headerPicture !== null) {
-      updateAccountDetails(accountDetailsId!, {
-        accountId,
-        bio,
-        birthday,
-        profilePicture,
-        headerPicture,
-        contentFilter: Number(contentFilter),
-      }).then((data) => {
-        console.log(data);
-        setAccountDetails(data);
-      });
-    }
+    updateAccountDetails(accountDetailsId!, {
+      accountId,
+      bio,
+      profilePicture,
+      headerPicture,
+      contentFilter: Number(contentFilter),
+    }).then((data) => {
+      console.log(data);
+      setAccountDetails(data);
+    });
     setOpenEdit(false);
   };
   const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -116,11 +107,10 @@ const AccountPage = () => {
   const handleHeaderImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    console.log(event);
-    if (event.target.value === "") {
-      setHeaderPicture(null);
-    } else {
+    if (event.target.value.trim() !== "") {
       setHeaderPicture(event.target.value);
+    } else {
+      setHeaderPicture(null);
     }
   };
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,11 +119,12 @@ const AccountPage = () => {
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
+    console.log(event.target.value);
     console.log(event);
-    if (event.target.value === "") {
-      setProfilePicture(null);
-    } else {
+    if (event.target.value.trim() !== "") {
       setProfilePicture(event.target.value);
+    } else {
+      setProfilePicture(null);
     }
   };
 
@@ -321,16 +312,9 @@ const AccountPage = () => {
       setAccountDetails(data);
       setAccountDetailsId(data.id);
       setContentFilter(data.contentFilter.toString());
-      if (data.profilePicture !== null) {
-        setProfilePicture(data.profilePicture);
-      }
-      if (data.headerPicture !== null) {
-        setHeaderPicture(data.headerPicture);
-      }
-      if (data.bio !== null) {
-        setBio(data.bio);
-      }
-      setBirthdayDayJs(dayjs(data.birthday));
+      setProfilePicture(data.profilePicture);
+      setHeaderPicture(data.headerPicture);
+      setBio(data.bio);
     });
   }, [newFolder]);
 
@@ -358,34 +342,29 @@ const AccountPage = () => {
           <LogoutIcon />
         </Button>
       </div>
+
       <div
         className="user-details-section"
         style={{
           backgroundImage:
-            accountDetails!.headerPicture !== null
-              ? `url( ${accountDetails!.headerPicture})`
+            accountDetails !== null
+              ? `url(${accountDetails!.headerPicture})`
               : "none",
         }}
       >
-        <img
-          className="user-image"
-          src={
-            accountDetails!.profilePicture !== null
-              ? accountDetails!.profilePicture
-              : ""
-          }
-          alt="profile"
-        ></img>
-
+        {accountDetails !== null && accountDetails.profilePicture !== null ? (
+          <img
+            className="user-image"
+            src={accountDetails.profilePicture!}
+            alt="profile"
+          ></img>
+        ) : null}
         <div className="account-details-section">
           <Typography color="white" className="user-details">
             {accountData?.username}
           </Typography>
           <Typography color="white" className="user-details">
             {accountDetails?.bio}
-          </Typography>
-          <Typography color="white" className="user-details">
-            {accountDetails?.birthday}
           </Typography>
         </div>
         <div className="info-button-container">
@@ -418,6 +397,7 @@ const AccountPage = () => {
                   onChange={handleUsernameChange}
                 />
               </div>
+
               <div className="edit-info-fields-container">
                 <Typography color="white" fontFamily="Figtree">
                   Bio
@@ -426,7 +406,7 @@ const AccountPage = () => {
                   className="edit-bio-field"
                   placeholder="Bio"
                   rows={5}
-                  defaultValue={bio}
+                  defaultValue={bio !== null ? bio : ""}
                   onChange={handleBioChange}
                 />
               </div>
@@ -453,7 +433,7 @@ const AccountPage = () => {
                   placeholder="Link"
                   value={headerPicture !== null ? headerPicture : ""}
                   onChange={handleHeaderImageChange}
-                />{" "}
+                />
               </div>
               <div className="edit-info-fields-container">
                 <Typography color="white" fontFamily="Figtree">
@@ -493,33 +473,6 @@ const AccountPage = () => {
                 </FormControl>
               </div>
               <div className="edit-info-fields-container">
-                <Typography color="white" fontFamily="Figtree">
-                  Birthday
-                </Typography>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    className="edit-birthday-field"
-                    slotProps={{
-                      textField: { error: false },
-                    }}
-                    sx={{
-                      svg: { color: "white" },
-                      input: { color: "white" },
-                      label: { color: "white" },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "white" },
-                        "&:hover fieldset": { borderColor: "white" },
-                        "&.Mui-focused fieldset": { borderColor: "white" },
-                      },
-                    }}
-                    defaultValue={birthdayDayJs}
-                    onChange={(newValue) => {
-                      setBirthdayDayJs(newValue);
-                    }}
-                  />
-                </LocalizationProvider>
-              </div>
-              <div className="edit-info-fields-container">
                 <Button
                   className="save-new-info-button"
                   onClick={() => {
@@ -533,6 +486,7 @@ const AccountPage = () => {
           </Dialog>
         </div>
       </div>
+
       <FolderActionsBar
         handleInput={handleInput}
         searchFolders={searchFolders}

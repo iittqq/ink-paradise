@@ -64,7 +64,6 @@ const Login = () => {
         createAccountDetails({
           accountId: response.id,
           bio: "Hello World",
-          birthday: "12/12/2000",
           profilePicture: null,
           headerPicture: null,
           contentFilter: 1,

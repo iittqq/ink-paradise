@@ -4,6 +4,5 @@ export interface AccountDetails {
   bio: string | null;
   profilePicture: string | null;
   headerPicture: string | null;
-  birthday: string | null;
   contentFilter: number;
 }
