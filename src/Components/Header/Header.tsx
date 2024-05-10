@@ -19,13 +19,13 @@ const Header = () => {
 
   const handleClickAccount = () => {
     const account = window.localStorage.getItem("account");
+
     const accountData = JSON.parse(account as string);
+    console.log(accountData);
     if (accountData === null) {
       navigate("/login");
     } else {
-      navigate("/account", {
-        state: { account: account },
-      });
+      navigate("/account");
     }
   };
 

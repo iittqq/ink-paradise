@@ -45,7 +45,7 @@ const FolderGrid = (props: Props) => {
       justifyContent="center"
       alignItems="center"
       direction="row"
-      spacing={2}
+      columnSpacing={1}
     >
       {loading ? (
         <Grid item>
@@ -53,7 +53,7 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : selectedFolder === null ? (
         folders.map((folder: MangaFolder) => (
-          <Grid item>
+          <Grid item className="folder-grid-item">
             <Button
               className="folder"
               onClick={() => {

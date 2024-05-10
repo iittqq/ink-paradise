@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -44,7 +44,6 @@ import {
 } from "../../api/AccountDetails";
 
 const AccountPage = () => {
-  const { state } = useLocation();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
@@ -333,7 +332,7 @@ const AccountPage = () => {
       }
       setBirthdayDayJs(dayjs(data.birthday));
     });
-  }, [state.malAccount, newFolder]);
+  }, [newFolder]);
 
   return (
     <div className="user-page-container">
@@ -359,26 +358,26 @@ const AccountPage = () => {
           <LogoutIcon />
         </Button>
       </div>
-      <div className="user-details-section">
-        <div className="image-details-section">
-          {accountDetails !== null ? (
-            <img
-              className="user-image"
-              src={accountDetails.profilePicture!}
-              alt="profile"
-            ></img>
-          ) : null}
-        </div>
+      <div
+        className="user-details-section"
+        style={{
+          backgroundImage:
+            accountDetails!.headerPicture !== null
+              ? `url( ${accountDetails!.headerPicture})`
+              : "none",
+        }}
+      >
+        <img
+          className="user-image"
+          src={
+            accountDetails!.profilePicture !== null
+              ? accountDetails!.profilePicture
+              : ""
+          }
+          alt="profile"
+        ></img>
 
-        <div
-          className="account-details-section"
-          style={{
-            backgroundImage:
-              accountDetails !== null
-                ? `url( ${accountDetails!.headerPicture})`
-                : "none",
-          }}
-        >
+        <div className="account-details-section">
           <Typography color="white" className="user-details">
             {accountData?.username}
           </Typography>
@@ -554,13 +553,11 @@ const AccountPage = () => {
         toggleSelectAll={toggleSelectAll}
       />
       <div className="personal-folders">
-        <div>
-          {selectedFolder !== null ? (
-            <div className="current-folder-header">
-              {selectedFolder.folderName}
-            </div>
-          ) : null}
-        </div>
+        {selectedFolder !== null ? (
+          <div className="current-folder-header">
+            {selectedFolder.folderName}
+          </div>
+        ) : null}
         <FolderGrid
           folderClick={handleFolderClick}
           mangaEntryClick={handleMangaEntryClick}
