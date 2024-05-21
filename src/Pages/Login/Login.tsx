@@ -57,6 +57,8 @@ const Login = () => {
         email: email,
         username: username,
         password: password,
+        verificationCode: "",
+        verified: false,
       }).then((response: Account) => {
         console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
