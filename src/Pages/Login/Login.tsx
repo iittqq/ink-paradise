@@ -2,7 +2,7 @@ import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, login } from "../../api/Account";
+import { createAccount, login, registerAccount } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
@@ -63,6 +63,9 @@ const Login = () => {
         console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
+        registerAccount(response).then((response) => {
+          console.log(response);
+        });
         createAccountDetails({
           accountId: response.id,
           bio: "Hello World",

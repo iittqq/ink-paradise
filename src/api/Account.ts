@@ -40,4 +40,17 @@ async function login(email: string, password: string): Promise<Account> {
   }
 }
 
-export { fetchAccountData, createAccount, login };
+async function registerAccount(account: Account): Promise<Account> {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/accounts/register`,
+      account,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+export { fetchAccountData, createAccount, login, registerAccount };
