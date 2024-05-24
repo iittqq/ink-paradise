@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { TextField, Typography, Button } from "@mui/material";
+import { TextField, Typography, Button, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
 import { fetchMangaByTitle } from "../../api/MangaDexApi";
+import { fetchAccountData } from "../../api/Account";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import BookIcon from "@mui/icons-material/Book";
 import WhatsHotIcon from "@mui/icons-material/Whatshot";
@@ -11,21 +12,30 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import { Account } from "../../interfaces/AccountInterfaces";
+import PetsIcon from "@mui/icons-material/Pets";
 const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleClickAccount = () => {
     const account = window.localStorage.getItem("account");
-
     const accountData = JSON.parse(account as string);
-    console.log(accountData);
-    if (accountData === null) {
-      navigate("/login");
+    if (account !== null) {
+      fetchAccountData(accountData.id).then((data: Account) => {
+        if (data.verified === true) {
+          console.log(data);
+          window.localStorage.setItem("account", JSON.stringify(data));
+          navigate("/account");
+        } else {
+          console.log("Account not verified");
+          setShowAlert(true);
+        }
+      });
     } else {
-      navigate("/account");
+      navigate("/login");
     }
   };
 
@@ -56,6 +66,15 @@ const Header = () => {
         <Button onClick={() => handleClickLogo()} className="logo-header-icon">
           <HomeIcon sx={{ width: "80%", height: "80%" }} />
         </Button>
+        {showAlert == true ? (
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please verify your account before proceeding
+          </Alert>
+        ) : null}
         <div>
           {searching ? (
             <div className="search-functionality-container">

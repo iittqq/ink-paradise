@@ -126,3 +126,15 @@ input[type="search"]:focus {
   font-size: 12px !important;
   text-transform: none !important;
 }
+
+.account-verification-alert {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.account-verification-alert-icon {
+  color: #ffffff !important;
+}

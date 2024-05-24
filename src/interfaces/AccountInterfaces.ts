@@ -6,3 +6,14 @@ export interface Account {
   verificationCode: string;
   verified: boolean;
 }
+
+export interface UsernameChange {
+  id: number;
+  username: string;
+}
+
+export interface PasswordChange {
+  id: number;
+  oldPassword: string;
+  newPassword: string;
+}

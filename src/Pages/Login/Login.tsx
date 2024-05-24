@@ -2,11 +2,12 @@ import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, login, registerAccount } from "../../api/Account";
+import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Login = () => {
   const [visible, setVisible] = useState<boolean>(false);
@@ -36,23 +37,32 @@ const Login = () => {
 
   const handleLogin = async () => {
     console.log(email, password, username);
-    login(email, password).then((response: Account | string) => {
-      if (typeof response !== "string") {
-        window.localStorage.setItem("account", JSON.stringify(response));
-        setAttemptedLogin(false);
-        navigate("/");
-      } else {
-        console.log("Invalid login");
-        setEmail("");
-        setPassword("");
-        setAttemptedLogin(true);
-      }
-    });
+    if (email !== "" || password !== "") {
+      login(email, password).then((response: Account | string) => {
+        if (typeof response !== "string") {
+          window.localStorage.setItem("account", JSON.stringify(response));
+          setAttemptedLogin(false);
+          navigate("/");
+        } else {
+          console.log("Invalid login");
+          setEmail("");
+          setPassword("");
+          setAttemptedLogin(true);
+        }
+      });
+    } else {
+      console.log("Entries are empty");
+    }
   };
 
   const handleRegister = async () => {
     console.log(username, email, password, confirmPassword);
-    if (password === confirmPassword) {
+    if (
+      password === confirmPassword &&
+      email !== "" &&
+      username !== "" &&
+      password !== ""
+    ) {
       createAccount({
         email: email,
         username: username,
@@ -63,9 +73,7 @@ const Login = () => {
         console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
-        registerAccount(response).then((response) => {
-          console.log(response);
-        });
+
         createAccountDetails({
           accountId: response.id,
           bio: "Hello World",
@@ -88,7 +96,12 @@ const Login = () => {
     <div className="login-page">
       {visible === true ? (
         <Card className="login-card" elevation={5}>
-          <Typography className="register-header">Register</Typography>
+          <div className="header-back-button-container">
+            <Button onClick={() => setVisible(false)} className="back-button">
+              <ArrowBackIcon />
+            </Button>
+            <Typography className="register-header">Register</Typography>
+          </div>
           <div className="register-section-container">
             <div className="register-section">
               <Typography className="register-text-field-headers">

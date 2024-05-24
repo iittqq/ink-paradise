@@ -34,6 +34,10 @@ import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar
 import { Account } from "../../interfaces/AccountInterfaces";
 
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import {
+  updateAccountUsername,
+  updateAccountPassword,
+} from "../../api/Account";
 
 import {
   fetchAccountDetails,
@@ -75,6 +79,9 @@ const AccountPage = () => {
   const [contentFilter, setContentFilter] = useState<string>("");
 
   const [accountDetailsId, setAccountDetailsId] = useState<number>();
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
@@ -87,21 +94,65 @@ const AccountPage = () => {
     console.log(headerPicture);
     console.log(contentFilter);
     const accountId: number = accountData.id!;
-
-    updateAccountDetails(accountDetailsId!, {
-      accountId,
-      bio,
-      profilePicture,
-      headerPicture,
-      contentFilter: Number(contentFilter),
-    }).then((data) => {
-      console.log(data);
-      setAccountDetails(data);
-    });
+    if (
+      newPassword !== "" &&
+      oldPassword !== "" &&
+      newPassword === confirmNewPassword
+    ) {
+      updateAccountPassword({
+        id: accountId,
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      }).then((data: Account) => {
+        setAccountData(data);
+      });
+    }
+    if (username !== accountData.username) {
+      updateAccountUsername({ id: accountId, username: username }).then(
+        (data: Account) => {
+          setAccountData(data);
+        },
+      );
+    }
+    if (
+      bio !== accountDetails?.bio ||
+      profilePicture !== accountDetails?.profilePicture ||
+      headerPicture !== accountDetails?.headerPicture ||
+      contentFilter !== accountDetails?.contentFilter.toString()
+    ) {
+      updateAccountDetails(accountDetailsId!, {
+        accountId,
+        bio,
+        profilePicture,
+        headerPicture,
+        contentFilter: Number(contentFilter),
+      }).then((data) => {
+        console.log(data);
+        setAccountDetails(data);
+      });
+    }
     setOpenEdit(false);
   };
   const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(event.target.value);
+  };
+
+  const handleOldPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setOldPassword(event.target.value);
+  };
+
+  const handleNewPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setNewPassword(event.target.value);
+  };
+
+  const handleConfirmNewPasswordChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setConfirmNewPassword(event.target.value);
   };
 
   const handleHeaderImageChange = (
@@ -409,6 +460,9 @@ const AccountPage = () => {
                   defaultValue={bio !== null ? bio : ""}
                   onChange={handleBioChange}
                 />
+                {bio !== null ? (
+                  <div className="bio-field-counter">Chars: {bio.length}</div>
+                ) : null}
               </div>
               <div className="edit-info-fields-container">
                 <Typography color="white" fontFamily="Figtree">
@@ -435,6 +489,43 @@ const AccountPage = () => {
                   onChange={handleHeaderImageChange}
                 />
               </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Old Password
+                </Typography>
+                <input
+                  type="password"
+                  className="edit-info-fields"
+                  placeholder="Old Password"
+                  value={oldPassword}
+                  onChange={handleOldPasswordChange}
+                />
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  New Password
+                </Typography>
+                <input
+                  type="password"
+                  className="edit-info-fields"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={handleNewPasswordChange}
+                />
+              </div>
+              <div className="edit-info-fields-container">
+                <Typography color="white" fontFamily="Figtree">
+                  Confirm New Password
+                </Typography>
+                <input
+                  type="password"
+                  className="edit-info-fields"
+                  placeholder="Confirm New Password"
+                  value={confirmNewPassword}
+                  onChange={handleConfirmNewPasswordChange}
+                />
+              </div>
+
               <div className="edit-info-fields-container">
                 <Typography color="white" fontFamily="Figtree">
                   Content Filter

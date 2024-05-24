@@ -13,10 +13,38 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  border-radius: 25px !important;
 }
 
-.login-header,
+.back-button {
+  align-self: left;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  background-color: #3f51b5 !important;
+  color: #ffffff !important;
+  margin-left: 10px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.header-back-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
 .register-header {
+  font-size: 30px !important;
+  color: #879ebf !important;
+  font-family: "Figtree" !important;
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+.login-header {
   font-size: 30px !important;
   color: #879ebf !important;
   font-family: "Figtree" !important;

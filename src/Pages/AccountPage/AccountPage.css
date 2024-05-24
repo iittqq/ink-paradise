@@ -111,7 +111,7 @@ input[type="file"] {
   padding: 10px;
 
   margin-left: 10px;
-  background-color: rgb(18, 18, 18, 0.6);
+  background-color: rgb(18, 18, 18, 0.8);
   border-radius: 10px;
 }
 
@@ -230,6 +230,14 @@ input[type="file"] {
   background-color: #333333 !important;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 10px !important;
+  padding: 5px !important;
+}
+
+.bio-field-counter {
+  color: #ffffff !important;
+  position: relative;
+  align-self: flex-end;
 }
 
 .edit-birthday-field {
