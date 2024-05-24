@@ -8,7 +8,11 @@ import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import { PasswordResults } from "../../interfaces/PasswordStrengthInterface";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 const Login = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -16,6 +20,17 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+  const [passwordResults, setPasswordResults] = useState<PasswordResults>({
+    length: 0,
+    lowercase: 0,
+    uppercase: 0,
+    numbers: 0,
+    special: 0,
+  });
+  const [togglePasswordVisibility, setTogglePasswordVisibility] =
+    useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -23,12 +38,57 @@ const Login = () => {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    testPasswordStrength(event.target.value);
+    setPasswordError(false);
+    console.log(passwordStrength);
+    console.log(passwordResults);
   };
 
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setConfirmPassword(event.target.value);
+  };
+
+  const testPasswordStrength = (password: string) => {
+    let score = 0;
+    const results: PasswordResults = {
+      length: 0,
+      lowercase: 0,
+      uppercase: 0,
+      numbers: 0,
+      special: 0,
+    };
+    if (!password) return "";
+    // Check password length
+    if (password.length >= 8 && password.length <= 15) {
+      score += 1;
+      results.length = 1;
+    } else {
+      results.length = 0;
+    }
+    // Contains lowercase
+    if (/[a-z]/.test(password)) {
+      score += 1;
+      results.lowercase = 1;
+    }
+    // Contains uppercase
+    if (/[A-Z]/.test(password)) {
+      score += 1;
+      results.uppercase = 1;
+    }
+    // Contains numbers
+    if (/\d/.test(password)) {
+      score += 1;
+      results.numbers = 1;
+    }
+    // Contains special characters
+    if (/[^A-Za-z0-9]/.test(password)) {
+      score += 1;
+      results.special = 1;
+    }
+    setPasswordResults(results);
+    setPasswordStrength(score);
   };
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +121,9 @@ const Login = () => {
       password === confirmPassword &&
       email !== "" &&
       username !== "" &&
-      password !== ""
+      password !== "" &&
+      passwordStrength > 3 &&
+      passwordResults.length === 1
     ) {
       createAccount({
         email: email,
@@ -88,6 +150,7 @@ const Login = () => {
       setPassword("");
       setConfirmPassword("");
       console.log("Passwords do not match");
+      setPasswordError(true);
     }
   };
   const navigate = useNavigate();
@@ -137,7 +200,7 @@ const Login = () => {
               </Typography>
               <div className="register-icon-field-container">
                 <input
-                  type="password"
+                  type={togglePasswordVisibility ? "text" : "password"}
                   className="register-input-fields"
                   placeholder="Password"
                   value={password}
@@ -151,59 +214,114 @@ const Login = () => {
               </Typography>
               <div className="register-icon-field-container">
                 <input
-                  type="password"
+                  type={togglePasswordVisibility ? "text" : "password"}
                   className="register-input-fields"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
                 />
               </div>
-            </div>
-            {/**
-            <div className="register-section">
-              <Typography className="register-text-field-headers">
-                Content Filter
-              </Typography>
-
-              <div className="content-filter-selection-box">
-                <FormControl fullWidth>
-                  <Select
-                    id="content-filter-select"
-                    className="content-filter-dropdown"
-                    value={contentFilter}
-                    label="Content Filter"
-                    variant="standard"
-                    disableUnderline={true}
-                    onChange={handleChangeContentFilter}
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        color: "white",
-                      },
-                    }}
-                    MenuProps={{
-                      PaperProps: { style: { backgroundColor: "#333333" } },
-                    }}
-                  >
-                    <MenuItem className="register-menu-item" value={1}>
-                      Safe
-                    </MenuItem>
-                    <MenuItem className="register-menu-item" value={2}>
-                      Suggestive
-                    </MenuItem>
-                    <MenuItem className="register-menu-item" value={3}>
-                      Explicit
-                    </MenuItem>
-                    <MenuItem className="register-menu-item" value={4}>
-                      Pornographic
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+              <div className="password-util-container">
+                <Button
+                  className="toggle-password-visibility-button"
+                  onClick={() =>
+                    setTogglePasswordVisibility(!togglePasswordVisibility)
+                  }
+                >
+                  {togglePasswordVisibility ? (
+                    <VisibilityOffIcon />
+                  ) : (
+                    <VisibilityIcon />
+                  )}
+                </Button>
+                {passwordError ? (
+                  <Typography className="password-error-text">
+                    Password Error: make sure passwords match and are strong and
+                    8-15 characters long
+                  </Typography>
+                ) : null}
               </div>
-            </div>*/}
+            </div>
+            <div className="register-section">
+              <div className="password-strength-container">
+                <Typography className="password-strength-text">
+                  Password Strength:{" "}
+                  {passwordStrength > 3
+                    ? "Strong"
+                    : passwordStrength > 2
+                      ? "Medium"
+                      : "Weak"}
+                </Typography>
+                <div className="password-strength-results">
+                  <div className="result-group">
+                    Length (8 - 15):
+                    {passwordResults.length === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Lowercase:
+                    {passwordResults.lowercase === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Uppercase:
+                    {passwordResults.uppercase === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Number:
+                    {passwordResults.numbers === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Special Char:
+                    {passwordResults.special === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <Button
             variant="contained"
             className="register-button"
+            sx={{
+              opacity: !(
+                password === confirmPassword &&
+                email !== "" &&
+                username !== "" &&
+                password !== "" &&
+                passwordStrength > 3 &&
+                passwordResults.length === 1
+              )
+                ? 0.5
+                : 1,
+            }}
+            disabled={
+              !(
+                password === confirmPassword &&
+                email !== "" &&
+                username !== "" &&
+                password !== "" &&
+                passwordStrength > 3 &&
+                passwordResults.length === 1
+              )
+            }
             onClick={() => {
               handleRegister();
             }}

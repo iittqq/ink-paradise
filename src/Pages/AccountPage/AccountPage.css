@@ -201,6 +201,7 @@ input[type="file"] {
 
 #info-dialog .MuiPaper-root {
   background-color: #121212 !important;
+  width: 20dvw !important;
 }
 
 .edit-content-filter-dropdown {
@@ -238,6 +239,9 @@ input[type="file"] {
   color: #ffffff !important;
   position: relative;
   align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .edit-birthday-field {

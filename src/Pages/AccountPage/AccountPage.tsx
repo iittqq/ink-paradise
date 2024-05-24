@@ -43,6 +43,8 @@ import {
   fetchAccountDetails,
   updateAccountDetails,
 } from "../../api/AccountDetails";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 
 const AccountPage = () => {
   const navigate = useNavigate();
@@ -82,6 +84,7 @@ const AccountPage = () => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
+  const [viableBio, setViableBio] = useState<boolean>(true);
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
@@ -134,7 +137,13 @@ const AccountPage = () => {
     setOpenEdit(false);
   };
   const handleBioChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBio(event.target.value);
+    if (event.target.value.length <= 150) {
+      setBio(event.target.value);
+      setViableBio(true);
+    } else {
+      setViableBio(false);
+      setBio(event.target.value);
+    }
   };
 
   const handleOldPasswordChange = (
@@ -461,7 +470,11 @@ const AccountPage = () => {
                   onChange={handleBioChange}
                 />
                 {bio !== null ? (
-                  <div className="bio-field-counter">Chars: {bio.length}</div>
+                  <div className="bio-field-counter">
+                    Chars: {bio.length}
+                    &nbsp;
+                    {viableBio ? <CheckIcon /> : <CloseIcon />}
+                  </div>
                 ) : null}
               </div>
               <div className="edit-info-fields-container">
@@ -566,6 +579,8 @@ const AccountPage = () => {
               <div className="edit-info-fields-container">
                 <Button
                   className="save-new-info-button"
+                  disabled={!viableBio}
+                  sx={{ opacity: !viableBio ? 0.5 : 1 }}
                   onClick={() => {
                     handleEditAccountInfo();
                   }}

@@ -6,8 +6,8 @@
 }
 
 .login-card {
-  width: 35dvh;
-  height: 60dvh;
+  width: 40dvh;
+  height: 65dvh;
   background-color: #222222 !important;
   display: flex;
   flex-direction: column;
@@ -22,18 +22,29 @@
   font-family: "Figtree" !important;
   background-color: #3f51b5 !important;
   color: #ffffff !important;
-  margin-left: 10px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
 }
+.password-util-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.password-error-text {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 12px !important;
+  max-width: 75%;
+}
 .header-back-button-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  width: 100%;
+  width: 92%;
 }
 
 .register-header {
@@ -49,7 +60,43 @@
   color: #879ebf !important;
   font-family: "Figtree" !important;
 }
+.password-strength-text {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 14px !important;
+}
 
+.password-strength-results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  color: #ffffff !important;
+}
+.toggle-password-visibility-button {
+  color: #ffffff !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.result-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: "Figtree" !important;
+  font-size: 14px !important;
+}
+
+.results-icon {
+  width: 20px !important;
+  height: 20px !important;
+}
 .login-input-fields,
 .register-input-fields {
   width: 95%;
@@ -147,7 +194,7 @@ input.register-input-fields:focus {
 
 .register-section-container {
   width: 80%;
-  height: 60%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
