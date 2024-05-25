@@ -616,8 +616,16 @@ const AccountPage = () => {
         {selectedFolder !== null ? (
           <div className="current-folder-header">
             {selectedFolder.folderName}
+            <div>
+              {selectedFolder.folderDescription !== null ? (
+                <Typography className="folder-description">
+                  {selectedFolder.folderDescription}
+                </Typography>
+              ) : null}
+            </div>
           </div>
         ) : null}
+
         <FolderGrid
           folderClick={handleFolderClick}
           mangaEntryClick={handleMangaEntryClick}

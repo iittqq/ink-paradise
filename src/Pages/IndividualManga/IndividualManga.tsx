@@ -14,7 +14,6 @@ import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaTags from "../../Components/MangaTags/MangaTags";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
-import AddIcon from "@mui/icons-material/Add";
 import {
   Relationship,
   Manga,
@@ -38,6 +37,7 @@ import {
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
+import FolderIcon from "@mui/icons-material/Folder";
 
 const IndividualManga = () => {
   const { state } = useLocation();
@@ -226,7 +226,7 @@ const IndividualManga = () => {
             handleClickOpen();
           }}
         >
-          <AddIcon />
+          <FolderIcon />
         </Button>
         <Dialog open={open} onClose={handleClose} id="folder-dialog">
           <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>

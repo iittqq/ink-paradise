@@ -45,7 +45,7 @@ const FolderGrid = (props: Props) => {
       justifyContent="center"
       alignItems="center"
       direction="row"
-      columnSpacing={1}
+      spacing={1}
     >
       {loading ? (
         <Grid item>
@@ -78,9 +78,6 @@ const FolderGrid = (props: Props) => {
                   fontFamily={"Figtree"}
                 >
                   {folder.folderName} <br />
-                </Typography>
-                <Typography className="folder-description">
-                  {folder.folderDescription}
                 </Typography>
               </div>
             </Button>

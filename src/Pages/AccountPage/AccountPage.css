@@ -168,8 +168,20 @@ input[type="file"] {
   font-size: 20px;
   font-family: "Figtree";
   padding-bottom: 10px;
+  text-align: center;
 }
-
+.folder-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: none !important;
+  color: #ffffff;
+  font-family: "Figtree";
+  font-size: 12px;
+  width: 90dvw;
+}
 .info-button-container {
   position: absolute;
   right: 5px;

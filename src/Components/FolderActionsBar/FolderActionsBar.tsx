@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -66,7 +66,7 @@ const FolderActionsBar = (props: Props) => {
         {selectedFolder !== null ? (
           <div className="folder-options">
             <Button
-              className="back-button"
+              className="back-button-account-page"
               onClick={() => {
                 handleClickBack();
               }}
@@ -173,7 +173,7 @@ const FolderActionsBar = (props: Props) => {
             handleClickAddFolderButton();
           }}
         >
-          <AddIcon sx={{ height: "30px", width: "30px" }} />
+          <CreateNewFolderIcon sx={{ width: "25px", height: "25px" }} />
         </Button>
         <Dialog
           id="create-folder-dialog"

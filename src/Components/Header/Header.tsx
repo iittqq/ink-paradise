@@ -44,9 +44,21 @@ const Header = () => {
   };
 
   const handleClickLibrary = async () => {
-    navigate("/library");
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (account !== null) {
+      fetchAccountData(accountData.id).then((data: Account) => {
+        if (data.verified === true) {
+          console.log(data);
+          window.localStorage.setItem("account", JSON.stringify(data));
+          navigate("/library");
+        } else {
+          console.log("Account not verified");
+          setShowAlert(true);
+        }
+      });
+    }
   };
-
   const handleClickLogo = async () => {
     navigate("/");
   };
