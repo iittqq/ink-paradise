@@ -19,16 +19,13 @@ const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
-  const [contentFilter, setContentFilter] = useState<string>("Reading");
+  const [contentFilter, setContentFilter] = useState<string>("Library");
   const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
     string[]
   >([]);
-  const [filteredUpdateEntries, setFilteredUpdateEntries] = useState<Manga[]>(
-    [],
-  );
-  const [favoriteMangas, setFavoriteMangas] = useState<Manga[]>([]);
+
   const [accountData, setAccountData] = useState<Account | null>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
@@ -59,27 +56,63 @@ const Library = () => {
     setLoading(true);
 
     getReadingByUserId(userId).then((data: Reading[]) => {
-      const promises = data.map((data: Reading) => {
-        return fetchMangaById(data.mangaId);
+      switch (contentFilter) {
+        case "Continue":
+          if (ascending) {
+            data = data
+              .map(function (e) {
+                return e;
+              })
+              .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+          } else {
+            data = data
+              .map(function (e) {
+                return e;
+              })
+              .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
+          }
+          break;
+        case "Recently":
+          break;
+        default:
+          if (ascending) {
+            data = data.sort((a, b) => a.mangaName.localeCompare(b.mangaName));
+          } else {
+            data = data.sort(
+              (a, b) => -1 * a.mangaName.localeCompare(b.mangaName),
+            );
+          }
+      }
+      console.log(data);
+      const promises = data.map((mangaData: Reading) => {
+        return fetchMangaById(mangaData.mangaId);
       });
 
       Promise.all(promises)
         .then((data) => {
-          if (ascending) {
-            setLibrary(
-              data.sort((a, b) =>
-                a.attributes.title.en.localeCompare(b.attributes.title.en),
-              ),
-            );
-          } else {
-            setLibrary(
-              data.sort(
-                (a, b) =>
-                  -1 *
-                  a.attributes.title.en.localeCompare(b.attributes.title.en),
-              ),
-            );
+          console.log(data);
+          if (contentFilter === "Recently") {
+            if (ascending) {
+              data = data
+                .map(function (e) {
+                  return e;
+                })
+                .sort((a, b) =>
+                  a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+                )
+                .reverse();
+            } else {
+              data = data
+                .map(function (e) {
+                  return e;
+                })
+                .sort((a, b) =>
+                  a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+                );
+            }
           }
+          console.log(data);
+          setLibrary(data);
           setLoading(false);
         })
         .catch((error) => console.log(error));
@@ -175,44 +208,10 @@ const Library = () => {
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
-      ) : contentFilter === "Reading" ? (
-        library.length === 0 ? (
-          <LibraryContents
-            header={contentFilter}
-            libraryManga={filteredUpdateEntries}
-            handleLibraryEntryClick={handleLibraryEntryClick}
-            checked={checked}
-            libraryEntriesToDelete={libraryEntriesToDelete}
-            selectAll={selectAll}
-          />
-        ) : (
-          <LibraryContents
-            header={contentFilter}
-            libraryManga={[
-              ...library,
-              ...filteredUpdateEntries.filter((manga) =>
-                library.includes(manga),
-              ),
-            ]}
-            handleLibraryEntryClick={handleLibraryEntryClick}
-            checked={checked}
-            libraryEntriesToDelete={libraryEntriesToDelete}
-            selectAll={selectAll}
-          />
-        )
-      ) : contentFilter === "Favorites" ? (
-        <LibraryContents
-          header={contentFilter}
-          libraryManga={favoriteMangas}
-          handleLibraryEntryClick={handleLibraryEntryClick}
-          checked={checked}
-          libraryEntriesToDelete={libraryEntriesToDelete}
-          selectAll={selectAll}
-        />
       ) : (
         <LibraryContents
           header={contentFilter}
-          libraryManga={filteredUpdateEntries}
+          libraryManga={library}
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}

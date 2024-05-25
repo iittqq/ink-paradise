@@ -19,6 +19,7 @@ const Header = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlertAccount, setShowAlertAccount] = useState(false);
 
   const handleClickAccount = () => {
     const account = window.localStorage.getItem("account");
@@ -53,10 +54,11 @@ const Header = () => {
           window.localStorage.setItem("account", JSON.stringify(data));
           navigate("/library");
         } else {
-          console.log("Account not verified");
           setShowAlert(true);
         }
       });
+    } else {
+      setShowAlertAccount(true);
     }
   };
   const handleClickLogo = async () => {
@@ -85,6 +87,15 @@ const Header = () => {
             className="account-verification-alert"
           >
             Please verify your account before proceeding
+          </Alert>
+        ) : null}
+        {showAlertAccount == true ? (
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please create and verify your account before proceeding
           </Alert>
         ) : null}
         <div>

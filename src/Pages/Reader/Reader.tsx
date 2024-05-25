@@ -8,6 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
+import dayjs from "dayjs";
+import { Reading } from "../../interfaces/ReadingInterfaces";
 
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
@@ -62,7 +64,8 @@ const Reader = () => {
       setPages(data.chapter.data);
       setHash(data.chapter.hash);
     });
-    console.log(state);
+    const date = dayjs();
+
     const account = window.localStorage.getItem("account") as string | null;
     let accountData: Account | null = null;
     if (account !== null) {
@@ -70,9 +73,9 @@ const Reader = () => {
     }
     let readingExists = false;
     if (accountData !== null) {
-      getReadingByUserId(accountData.id).then((data) => {
+      getReadingByUserId(accountData.id).then((data: Reading[]) => {
         console.log(data);
-        data.forEach((reading) => {
+        data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
             updateReading({
               id: reading.id,
@@ -80,6 +83,7 @@ const Reader = () => {
               mangaId: reading.mangaId,
               chapter: state.chapter,
               mangaName: reading.mangaName,
+              timestamp: date.toISOString(),
             });
             readingExists = true;
           }
@@ -100,6 +104,7 @@ const Reader = () => {
               mangaId: state.mangaId,
               chapter: state.chapterNumber,
               mangaName: state.mangaName,
+              timestamp: date.toISOString(),
             }).then((data) => {
               console.log(data);
             });

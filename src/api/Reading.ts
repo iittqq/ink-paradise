@@ -46,6 +46,7 @@ async function addReading(reading: {
   mangaId: string;
   chapter: number;
   mangaName: string;
+  timestamp: string;
 }): Promise<Reading> {
   console.log(reading);
   try {

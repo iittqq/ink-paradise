@@ -187,43 +187,28 @@ const LibraryHeader = (props: Props) => {
           >
             <Button
               onClick={() => {
-                handleContentFilter("Favorites");
+                handleContentFilter("Library");
               }}
               className="filter-button"
             >
-              Favorites
+              Library
+            </Button>
+
+            <Button
+              onClick={() => {
+                handleContentFilter("Continue");
+              }}
+              className="filter-button"
+            >
+              Continue Reading
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("Dropped");
+                handleContentFilter("Recently");
               }}
               className="filter-button"
             >
-              Dropped
-            </Button>
-            <Button
-              onClick={() => {
-                handleContentFilter("On-Hold");
-              }}
-              className="filter-button"
-            >
-              On-Hold
-            </Button>
-            <Button
-              onClick={() => {
-                handleContentFilter("Completed");
-              }}
-              className="filter-button"
-            >
-              Completed
-            </Button>
-            <Button
-              onClick={() => {
-                handleContentFilter("Reading");
-              }}
-              className="filter-button"
-            >
-              Reading
+              Recently Updated
             </Button>
           </DialogContent>
         </Dialog>
