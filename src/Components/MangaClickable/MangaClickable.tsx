@@ -19,7 +19,6 @@ type Props = {
   disabled?: boolean;
 };
 
-const baseUrl = "https://api.mangadex.org/";
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
   const [coverFile, setCoverFile] = useState("");
@@ -48,13 +47,19 @@ const MangaClickable = (props: Props) => {
   return (
     <>
       <Button
-        className="button"
+        className="manga-button"
         disabled={disabled && disabled != undefined ? true : false}
         onClick={() => {
           handleClick();
         }}
       >
-        <Card sx={{ width: "100px", height: "150px", position: "relative" }}>
+        <Card
+          sx={{
+            width: { xs: "100px", sm: "130px", md: "130px", lg: "130px" },
+            height: { xs: "150px", sm: "200px", md: "200px", lg: "200px" },
+            position: "relative",
+          }}
+        >
           <CardMedia
             sx={{
               width: "100%",
@@ -74,9 +79,9 @@ const MangaClickable = (props: Props) => {
             color="white"
             noWrap
             sx={{
-              fontSize: 10,
-              maxWidth: "100px",
+              fontSize: 15,
               overflow: "hidden",
+              maxWidth: "100%",
               top: 0,
             }}
           >
@@ -85,7 +90,7 @@ const MangaClickable = (props: Props) => {
           <Typography
             color="white"
             sx={{
-              fontSize: 10,
+              fontSize: 15,
             }}
           >
             {updatedAt === undefined

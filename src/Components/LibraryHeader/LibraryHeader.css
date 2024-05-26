@@ -1,0 +1,71 @@
+.library-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.library-header-button {
+  color: #ffffff !important;
+  padding: 3px 4px !important;
+  max-width: 60px !important;
+  min-width: 40px !important;
+  margin: 0px 2px 0px 2px !important;
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.library-header-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.library-search-bar {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border-radius: 25px !important;
+  width: 80%;
+  text-align: center;
+  &:focus {
+    outline: 2px solid #ffffff;
+  }
+}
+
+.delete-library-entry-button {
+  color: #ffffff !important;
+  text-transform: none !important;
+  font-family: "Figtree" !important;
+  padding: 3px 4px !important;
+}
+
+.library-modification-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.library-input-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#filter-dialog .MuiPaper-root {
+  background-color: #121212 !important;
+}
+
+.filter-button {
+  color: #ffffff !important;
+  text-transform: none !important;
+  font-family: "Figtree" !important;
+  &:hover {
+    background-color: transparent !important;
+  }
+}

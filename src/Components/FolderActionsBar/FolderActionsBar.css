@@ -3,27 +3,38 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  top: 20px;
-  padding-bottom: 20px;
 }
 
-.folder-inputs,
 .folder-search-bar {
   all: unset;
   font-family: "Figtree";
-  border: 1px solid #333333;
+  margin: 0px 10px 0px 0px;
+  padding: 0px 5px 0px 5px;
+  height: 25px;
+  text-align: center;
+  width: 50%;
+  border-radius: 25px !important;
+  @media screen and (min-width: 600px) {
+    margin: 0px 0px 0px 0px;
+  }
+  &:focus {
+    border: 2px solid #ffffff;
+  }
+}
+
+.folder-inputs {
+  all: unset;
+  font-family: "Figtree";
   padding: 5px;
+  border: none;
   width: 80%;
-
   margin: 10px 0px 10px 0px;
+  border-radius: 25px !important;
+  text-align: center;
 }
 
-input[type="search"].folder-search-bar:focus {
-  border: 1px solid #ffffff;
-}
-
-input[type="text"].folder-inputs:focus {
-  border: 1px solid #ffffff;
+input[type="text"]:focus {
+  border: 2px solid #ffffff;
 }
 
 .search-button {
@@ -41,10 +52,9 @@ input[type="text"].folder-inputs:focus {
 .header-options-left {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   @media screen and (max-width: 600px) {
     justify-content: flex-start;
-    width: 50%;
   }
   align-items: center;
 }
@@ -56,14 +66,11 @@ input[type="text"].folder-inputs:focus {
   align-items: center;
 }
 
-.back-button {
+.back-button-account-page {
   color: #ffffff !important;
-  background-color: #333333 !important;
-  margin: 0px 0px 0px 20px !important;
-  height: 30px;
-  font-family: "Figtree" !important;
-  text-transform: none !important;
-
+  background-color: #121212 !important;
+  max-width: 50px !important;
+  min-width: 30px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -79,40 +86,17 @@ input[type="text"].folder-inputs:focus {
   align-items: center;
 }
 
-.folder-modification-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.delete-folder-button {
+.folder-header-button {
   color: #ffffff !important;
+  max-width: 30px !important;
+  min-width: 30px !important;
   height: 30px;
-  font-family: "Figtree" !important;
-
-  text-transform: none !important;
-
+  margin: 0px 2px 0px 2px !important;
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
-  @media screen and (max-width: 600px) {
-    min-width: 80px !important;
-    font-size: 10px !important;
-  }
-}
-
-.add-folder-button {
-  max-width: 50px !important;
-  min-width: 30px !important;
-
-  height: 30px;
-  color: #ffffff !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #ffffff !important;
   }
 }
 
@@ -127,11 +111,27 @@ input[type="text"].folder-inputs:focus {
 
 .create-button {
   margin-top: 10px !important;
+  color: #ffffff !important;
+  text-transform: none !important;
   background-color: #222222 !important;
+  font-family: "Figtree" !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
+  }
+}
+
+#create-folder-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }

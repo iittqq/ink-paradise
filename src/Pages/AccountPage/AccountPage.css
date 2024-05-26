@@ -1,0 +1,272 @@
+.user-page-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.user-image {
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+  @media screen and (max-width: 600px) {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+.user-details-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-repeat: no-repeat;
+  padding: 10px 10px 10px 10px;
+  background-size: cover;
+  border-radius: 10px;
+}
+
+.utility-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.edit-info-fields {
+  border-radius: 25px !important;
+  padding: 5px !important;
+  background-color: #333333;
+  font-family: "Figtree" !important;
+  margin: 5px 0px 5px 0px !important;
+  border: 1px solid #75747a !important;
+  height: 30px !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input.edit-info-fields:focus {
+  outline: 2px solid #ffffff;
+}
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  display: inline-block;
+  width: 100%;
+  border-radius: 25px !important;
+  padding: 5px !important;
+  background-color: #333333;
+  font-family: "Figtree" !important;
+  margin: 5px 0px 5px 0px !important;
+  border: 1px solid #75747a !important;
+  height: 30px !important;
+  text-align: center;
+  color: #ffffff;
+  font-family: "Figtree";
+  box-sizing: border-box;
+}
+.edit-info-fields-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.save-new-info-button {
+  width: 100%;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  margin: 10px 0px 0px 0px !important;
+  height: 34px;
+  border: 1px solid #75747a !important;
+  background-color: #333333 !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.user-details {
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-y: scroll;
+  font-family: "Figtree" !important;
+  scrollbar-width: none;
+  -webkit-scrollbar {
+    display: none;
+  }
+}
+
+.account-details-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 1;
+  padding: 10px;
+
+  margin-left: 10px;
+  background-color: rgb(18, 18, 18, 0.8);
+  border-radius: 10px;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.manga-cover {
+  width: 100px;
+  height: 150px;
+  border-radius: 6%;
+  filter: brightness(40%);
+}
+
+.manga-text {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+
+.category-text {
+  padding: 10px;
+}
+
+.category-buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.category-button {
+  color: #ffffff;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: "white";
+  }
+  text-transform: none;
+}
+
+.personal-folders {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.current-folder-header {
+  font-size: 20px;
+  font-family: "Figtree";
+  padding-bottom: 10px;
+  text-align: center;
+}
+.folder-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: none !important;
+  color: #ffffff;
+  font-family: "Figtree";
+  font-size: 12px;
+  width: 90dvw;
+}
+.info-button-container {
+  position: absolute;
+  right: 5px;
+  top: 55px;
+}
+
+.info-open-button {
+  width: 30px !important;
+  min-width: 30px !important;
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+.field-name-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 300px;
+}
+.css-j204z7-MuiFormControlLabel-root {
+  margin: 0px 0px 0px 0px !important;
+}
+
+#info-dialog .MuiPaper-root {
+  background-color: #121212 !important;
+  width: 20dvw !important;
+  @media screen and (max-width: 600px) {
+    width: 90vw !important;
+  }
+}
+
+.edit-content-filter-dropdown {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  width: 100%;
+  margin: 5px 0px 5px 0px !important;
+  height: 30px !important;
+}
+
+#edit-content-filter-select {
+  background-color: #333333 !important;
+  border-radius: 25px !important;
+  color: #ffffff !important;
+  padding-left: 10px;
+}
+
+.edit-content-menu-item {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+}
+
+.edit-bio-field {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  outline: none;
+  background-color: #333333 !important;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px !important;
+  padding: 5px !important;
+}
+
+.bio-field-counter {
+  color: #ffffff !important;
+  position: relative;
+  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-birthday-field {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  background-color: #333333 !important;
+  margin: 5px 0px 5px 0px !important;
+  outline: none !important;
+  :focus {
+    border: none !important;
+    border: none !important;
+  }
+}

@@ -12,7 +12,6 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-
 import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
@@ -22,20 +21,16 @@ import {
 import {
   MangaTagsInterface,
   Manga,
-  TopManga,
   Relationship,
 } from "../../interfaces/MangaDexInterfaces";
 
-import { fetchTopManga } from "../../api/MalApi";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
-  const [topMangaData, setTopMangaData] = useState<TopManga[]>([]);
   const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
   const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
-
   const navigate = useNavigate();
 
   const handleClickRecentlyUpdated = async () => {
@@ -45,8 +40,6 @@ const Home = () => {
       });
     });
   };
-
-  const handleClickTrendingNow = async () => {};
 
   const handleClickMangaCoverListRA = async () => {
     fetchRecentlyAdded(75, 0).then((data: Manga[]) => {
@@ -62,10 +55,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchTopManga().then((data: TopManga[]) => {
-      setTopMangaData(data);
-    });
-
     fetchRecentlyUpdated(10, 0).then((data: Manga[]) => {
       setRecentlyUpdatedManga(data);
     });
@@ -104,6 +93,7 @@ const Home = () => {
             justifyContent="center"
             alignItems="center"
             className="manga-entries"
+            spacing={1}
           >
             {recentlyAddedManga.map((element: Manga) => (
               <Grid item>
@@ -130,34 +120,6 @@ const Home = () => {
         </div>
 
         <div className="manga-column">
-          <Typography color="white">Trending Now</Typography>
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            className="manga-entries"
-          >
-            {topMangaData.map((element: TopManga) => (
-              <Grid item>
-                <MangaClickable
-                  id={element.mal_id}
-                  title={element.title}
-                  coverUrl={element.images.jpg.image_url}
-                  rank={element.rank}
-                  author={element.authors[0].name}
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Button className="show-more-button">
-            <ExpandMore
-              sx={{ color: "#333333" }}
-              onClick={() => handleClickTrendingNow()}
-            />
-          </Button>
-        </div>
-        <div className="manga-column">
           <Typography color="white" noWrap>
             Recently Updated
           </Typography>
@@ -167,6 +129,7 @@ const Home = () => {
             justifyContent="center"
             alignItems="center"
             className="manga-entries"
+            spacing={1}
           >
             {recentlyUpdatedManga.map((element: Manga) => (
               <Grid item>

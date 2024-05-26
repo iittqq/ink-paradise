@@ -1,47 +1,65 @@
 import { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-} from "@mui/material";
+import { TextField, Typography, Button, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import "./Header.css";
 import { fetchMangaByTitle } from "../../api/MangaDexApi";
+import { fetchAccountData } from "../../api/Account";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { fetchAccountData } from "../../api/MalApi";
 import BookIcon from "@mui/icons-material/Book";
-import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { MalAccount } from "../../interfaces/MalInterfaces";
-
+import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Account } from "../../interfaces/AccountInterfaces";
+import PetsIcon from "@mui/icons-material/Pets";
 const Header = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [searching, setSearching] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showAlertAccount, setShowAlertAccount] = useState(false);
 
   const handleClickAccount = () => {
-    if (localStorage.getItem("malAccount") === null) {
-      navigate("/login");
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (account !== null) {
+      fetchAccountData(accountData.id).then((data: Account) => {
+        if (data.verified === true) {
+          console.log(data);
+          window.localStorage.setItem("account", JSON.stringify(data));
+          navigate("/account");
+        } else {
+          console.log("Account not verified");
+          setShowAlert(true);
+        }
+      });
     } else {
-      fetchAccountData(localStorage.getItem("malAccount")!).then(
-        (data: MalAccount) => {
-          navigate("/account", {
-            state: { malAccount: data },
-          });
-        },
-      );
+      navigate("/login");
     }
   };
 
-  const handleClickLibrary = async () => {
-    navigate("/library");
+  const handleClickSearchIcon = async () => {
+    setSearching(!searching);
   };
 
+  const handleClickLibrary = async () => {
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (account !== null) {
+      fetchAccountData(accountData.id).then((data: Account) => {
+        if (data.verified === true) {
+          console.log(data);
+          window.localStorage.setItem("account", JSON.stringify(data));
+          navigate("/library");
+        } else {
+          setShowAlert(true);
+        }
+      });
+    } else {
+      setShowAlertAccount(true);
+    }
+  };
   const handleClickLogo = async () => {
     navigate("/");
   };
@@ -49,7 +67,7 @@ const Header = () => {
   const handleClick = async () =>
     searchInput === ""
       ? null
-      : fetchMangaByTitle(searchInput).then((data: Manga[]) => {
+      : fetchMangaByTitle(searchInput, 10).then((data: Manga[]) => {
           navigate("/mangaCoverList", {
             state: { listType: "SearchResults", manga: data },
           });
@@ -57,69 +75,96 @@ const Header = () => {
 
   return (
     <div className="container-header">
-      <Button onClick={() => handleClickLogo()} className="logo-header-icon">
-        <Typography textTransform="none" color="white">
-          Ink Paradise
-        </Typography>
-      </Button>
-
       <div className="search-section">
-        <TextField
-          variant="outlined"
-          focused
-          size="small"
-          className="input-field"
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter") {
-              handleClick();
-            }
-          }}
-          onChange={(event) => {
-            setSearchInput(event.target.value);
-          }}
-        />
-        <Button
-          onClick={() => {
-            setOpen(true);
-          }}
-          className="header-buttons"
-        >
-          <MoreVertIcon />
+        <Button onClick={() => handleClickLogo()} className="logo-header-icon">
+          <HomeIcon sx={{ width: "80%", height: "80%" }} />
         </Button>
-        <Dialog
-          open={open}
-          onClose={() => {
-            setOpen(false);
-          }}
-          id="nav-dialog"
-        >
-          <DialogTitle>Destination</DialogTitle>
-          <DialogActions>
-            <Button
-              className="folder-button"
-              onClick={() => {
-                handleClickLibrary();
-              }}
-            >
-              <BookIcon />
-            </Button>
-            <Button className="folder-button">
-              <WhatsHotIcon />
-            </Button>
-            <Button
-              onClick={() => {
-                handleClickAccount();
-              }}
-              className="header-buttons"
-            >
-              <AccountBoxIcon />
-            </Button>{" "}
-          </DialogActions>
-        </Dialog>
-
-        <Button className="header-buttons" onClick={() => handleClick()}>
-          <KeyboardArrowRightIcon />
-        </Button>
+        {showAlert == true ? (
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please verify your account before proceeding
+          </Alert>
+        ) : null}
+        {showAlertAccount == true ? (
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please create and verify your account before proceeding
+          </Alert>
+        ) : null}
+        <div>
+          {searching ? (
+            <div className="search-functionality-container">
+              <Button
+                className="header-buttons"
+                onClick={() => handleClickSearchIcon()}
+              >
+                <ArrowBackIcon />
+              </Button>
+              <TextField
+                variant="outlined"
+                id="header-search-input"
+                focused
+                type="search"
+                size="small"
+                className="input-field"
+                placeholder="Search Manga"
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    handleClick();
+                  }
+                }}
+                onChange={(event) => {
+                  setSearchInput(event.target.value);
+                }}
+              />
+              <Button className="header-buttons" onClick={() => handleClick()}>
+                <KeyboardArrowRightIcon />
+              </Button>{" "}
+            </div>
+          ) : (
+            <div>
+              <Button
+                className="header-buttons"
+                sx={{ marginRight: "5px" }}
+                onClick={() => handleClickSearchIcon()}
+              >
+                <div className="header-nav-dialog-columns">
+                  <SearchIcon />
+                  <Typography className="header-nav-label">Search</Typography>
+                </div>
+              </Button>
+              <Button
+                className="header-buttons"
+                sx={{ marginRight: "5px" }}
+                onClick={() => {
+                  handleClickLibrary();
+                }}
+              >
+                <div className="header-nav-dialog-columns">
+                  <BookIcon />
+                  <Typography className="header-nav-label">Library</Typography>
+                </div>
+              </Button>
+              <Button
+                onClick={() => {
+                  handleClickAccount();
+                }}
+                className="header-buttons"
+              >
+                <div className="header-nav-dialog-columns">
+                  <AccountBoxIcon />
+                  <Typography className="header-nav-label">Account</Typography>
+                </div>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

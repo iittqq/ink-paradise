@@ -1,5 +1,5 @@
 export interface MangaFolderEntry {
-  uniqueId: number;
+  uniqueId?: number;
   folderId: number;
   mangaId: string;
 }

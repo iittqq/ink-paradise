@@ -1,13 +1,18 @@
+import { useState } from "react";
 import {
   Button,
-  FormControlLabel,
-  Switch,
   Typography,
   Dialog,
   DialogTitle,
+  DialogContent,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import SearchIcon from "@mui/icons-material/Search";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearIcon from "@mui/icons-material/Clear";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import "./FolderActionsBar.css";
 
@@ -18,9 +23,7 @@ type Props = {
   handleDeleteMangaEntries: () => void;
   handleDeleteMangaFolders: () => void;
   checked: boolean;
-  toggleMangaEntriesDelete: (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  toggleMangaEntriesDelete: (value: boolean) => void;
   handleClickAddFolderButton: () => void;
   handleFolderDialogClose: () => void;
   handleCreateFolder: () => void;
@@ -31,6 +34,8 @@ type Props = {
   handleFolderDescriptionChange: (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => void;
+  selectAll: boolean;
+  toggleSelectAll: () => void;
 };
 
 const FolderActionsBar = (props: Props) => {
@@ -50,89 +55,143 @@ const FolderActionsBar = (props: Props) => {
     newFolderName,
     handleFolderNameChange,
     handleFolderDescriptionChange,
+    selectAll,
+    toggleSelectAll,
   } = props;
+  const [searching, setSearching] = useState(false);
+
   return (
     <div className="folder-section-header">
       <div className="header-options-left">
-        <input
-          type="search"
-          placeholder="Search Folders"
-          className="folder-search-bar"
-          onChange={(event) => {
-            handleInput(event);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              searchFolders();
-            }
-          }}
-        />
-        <Button
-          className="search-button"
-          onClick={() => {
-            searchFolders();
-          }}
-        >
-          <SearchIcon />
-        </Button>
         {selectedFolder !== null ? (
           <div className="folder-options">
             <Button
-              className="back-button"
+              className="back-button-account-page"
               onClick={() => {
                 handleClickBack();
               }}
             >
-              Back
+              <ArrowBackIcon />
             </Button>
           </div>
         ) : null}
+        {searching ? (
+          <div>
+            <input
+              type="search"
+              placeholder="Search Folders"
+              className="folder-search-bar"
+              onChange={(event) => {
+                handleInput(event);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchFolders();
+                  setSearching(!searching);
+                }
+              }}
+            />
+            <Button
+              className="search-button"
+              onClick={() => {
+                searchFolders();
+                setSearching(!searching);
+              }}
+            >
+              <SearchIcon />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            className="search-button"
+            onClick={() => {
+              setSearching(!searching);
+            }}
+          >
+            <SearchIcon />
+          </Button>
+        )}
       </div>
       <div className="create-folder-container">
-        <div className="folder-modification-buttons">
+        {selectedFolder !== null ? (
+          selectAll ? (
+            <Button
+              className="folder-header-button"
+              sx={{
+                backgroundColor: "#ff7597",
+              }}
+              onClick={() => {
+                toggleSelectAll();
+              }}
+            >
+              <CheckBoxIcon />
+            </Button>
+          ) : (
+            <Button
+              className="folder-header-button"
+              onClick={() => {
+                toggleSelectAll();
+              }}
+            >
+              <CheckBoxOutlineBlankIcon />
+            </Button>
+          )
+        ) : null}
+        {checked || selectAll ? (
           <Button
-            className="delete-folder-button"
+            className="folder-header-button"
             sx={{
-              backgroundColor: checked ? "#ff7597" : "#333333",
-              "&.MuiButtonBase-root:hover": {
-                backgroundColor: checked ? "#ff7597" : "#333333",
-              },
+              backgroundColor: "#ff7597",
             }}
             onClick={() => {
-              if (checked && selectedFolder !== null) {
+              toggleMangaEntriesDelete(false);
+              if (selectedFolder !== null) {
                 handleDeleteMangaEntries();
               } else {
                 handleDeleteMangaFolders();
               }
             }}
           >
-            {selectedFolder !== null ? "Delete Manga" : "Delete Folder"}
+            <ClearIcon />{" "}
           </Button>
-          <FormControlLabel
-            control={
-              <Switch checked={checked} onChange={toggleMangaEntriesDelete} />
-            }
-            label="Select"
-          />
-        </div>
-
+        ) : (
+          <Button
+            className="folder-header-button"
+            sx={{
+              backgroundColor: "none",
+            }}
+            onClick={() => {
+              toggleMangaEntriesDelete(true);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
         <Button
-          className="add-folder-button"
+          className="folder-header-button"
           onClick={() => {
             handleClickAddFolderButton();
           }}
         >
-          <AddIcon sx={{ height: "30px", width: "30px" }} />
+          <CreateNewFolderIcon sx={{ width: "25px", height: "25px" }} />
         </Button>
         <Dialog
-          id="folder-dialog"
+          id="create-folder-dialog"
           open={openAddFolder}
           onClose={() => {
             handleFolderDialogClose();
           }}
         >
-          <DialogTitle>Create Folder</DialogTitle>
-          <div className="create-folder-fields">
+          <DialogTitle
+            sx={{
+              color: "#ffffff",
+              textAlign: "center",
+              fontFamily: "Figtree",
+            }}
+          >
+            Create Folder
+          </DialogTitle>
+          <DialogContent>
             <Typography fontFamily={"Figtree"}>Name</Typography>
             <input
               type="text"
@@ -171,7 +230,7 @@ const FolderActionsBar = (props: Props) => {
             >
               Create
             </Button>
-          </div>
+          </DialogContent>
         </Dialog>
       </div>
     </div>

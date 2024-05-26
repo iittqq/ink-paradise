@@ -1,4 +1,7 @@
 .logo-header-icon {
+  color: #ffffff !important;
+  height: 40px !important;
+  padding: 0px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -21,29 +24,41 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+}
+
+#header-search-input {
+  border-radius: 25px !important;
+}
+
+input[type="search"]:focus {
+  font-family: "Figtree" !important;
+  border: 2px solid #ffffff !important;
 }
 
 .input-field {
-  width: 300px;
-  margin-right: 6px !important;
-
-  @media screen and (max-width: 800px) {
-    width: 150px;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  &:focus {
+    border: 2px solid #ffffff !important;
   }
-
   input {
     color: white;
-  }
-
-  & label.Mui-focused {
-    color: white;
+    text-align: center;
   }
 
   & .MuiOutlinedInput-root {
     &.Mui-focused fieldset {
-      border-color: white;
+      border: none;
     }
   }
+}
+
+.search-functionality-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .account-login {
@@ -75,6 +90,8 @@
 .header-buttons {
   color: #ffffff !important;
   background-color: transparent !important;
+  padding: 0px !important;
+  height: 50px !important;
   @media screen and (max-width: 600px) {
     min-width: 30px !important;
   }
@@ -94,32 +111,29 @@
   text-transform: none;
 }
 
-#nav-dialog .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
-  background-color: #121212 !important;
-  max-width: 80dvw;
-}
-
-#nav-dialog .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  text-align: center !important;
-}
-
-#nav-dialog .css-knqc4i-MuiDialogActions-root {
+.header-nav-dialog-columns {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 40px;
 }
 
-#nav-dialog .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
+.header-nav-label {
   color: #ffffff !important;
   font-family: "Figtree" !important;
-  text-transform: none;
+  font-size: 12px !important;
+  text-transform: none !important;
 }
 
-.folder-button {
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
+.account-verification-alert {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.account-verification-alert-icon {
+  color: #ffffff !important;
 }

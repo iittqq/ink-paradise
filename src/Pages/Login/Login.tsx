@@ -1,46 +1,47 @@
-import {
-  Button,
-  Card,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import PasswordIcon from "@mui/icons-material/Password";
+import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
-
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import { createAccountDetails } from "../../api/AccountDetails";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { PasswordResults } from "../../interfaces/PasswordStrengthInterface";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 const Login = () => {
-  const [visible, setVisible] = useState(false);
-  const [contentFilter, setContentFilter] = useState("");
-  const [email, setEmail] = useState("");
-  const [malUsername, setMalUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [attemptedLogin, setAttemptedLogin] = useState(false);
-
-  const handleChangeContentFilter = (event: SelectChangeEvent) => {
-    setContentFilter(event.target.value as string);
-  };
+  const [visible, setVisible] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [attemptedLogin, setAttemptedLogin] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+  const [passwordResults, setPasswordResults] = useState<PasswordResults>({
+    length: 0,
+    lowercase: 0,
+    uppercase: 0,
+    numbers: 0,
+    special: 0,
+  });
+  const [togglePasswordVisibility, setTogglePasswordVisibility] =
+    useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  const handleMalUsernameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setMalUsername(event.target.value);
-  };
-
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    testPasswordStrength(event.target.value);
+    setPasswordError(false);
+    console.log(passwordStrength);
+    console.log(passwordResults);
   };
 
   const handleConfirmPasswordChange = (
@@ -49,41 +50,107 @@ const Login = () => {
     setConfirmPassword(event.target.value);
   };
 
+  const testPasswordStrength = (password: string) => {
+    let score = 0;
+    const results: PasswordResults = {
+      length: 0,
+      lowercase: 0,
+      uppercase: 0,
+      numbers: 0,
+      special: 0,
+    };
+    if (!password) return "";
+    // Check password length
+    if (password.length >= 8 && password.length <= 15) {
+      score += 1;
+      results.length = 1;
+    } else {
+      results.length = 0;
+    }
+    // Contains lowercase
+    if (/[a-z]/.test(password)) {
+      score += 1;
+      results.lowercase = 1;
+    }
+    // Contains uppercase
+    if (/[A-Z]/.test(password)) {
+      score += 1;
+      results.uppercase = 1;
+    }
+    // Contains numbers
+    if (/\d/.test(password)) {
+      score += 1;
+      results.numbers = 1;
+    }
+    // Contains special characters
+    if (/[^A-Za-z0-9]/.test(password)) {
+      score += 1;
+      results.special = 1;
+    }
+    setPasswordResults(results);
+    setPasswordStrength(score);
+  };
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
   const handleLogin = async () => {
-    console.log(email, password, malUsername, contentFilter);
-    login(email, password).then((response: Account | string) => {
-      if (typeof response !== "string") {
-        localStorage.setItem("malAccount", response.username);
-        localStorage.setItem("account", JSON.stringify(response));
-        setAttemptedLogin(false);
-        navigate("/");
-      } else {
-        console.log("Invalid login");
-        setEmail("");
-        setPassword("");
-        setAttemptedLogin(true);
-      }
-    });
+    console.log(email, password, username);
+    if (email !== "" || password !== "") {
+      login(email, password).then((response: Account | string) => {
+        if (typeof response !== "string") {
+          window.localStorage.setItem("account", JSON.stringify(response));
+          setAttemptedLogin(false);
+          navigate("/");
+        } else {
+          console.log("Invalid login");
+          setEmail("");
+          setPassword("");
+          setAttemptedLogin(true);
+        }
+      });
+    } else {
+      console.log("Entries are empty");
+    }
   };
 
   const handleRegister = async () => {
-    console.log(malUsername);
-    if (password === confirmPassword) {
+    console.log(username, email, password, confirmPassword);
+    if (
+      password === confirmPassword &&
+      email !== "" &&
+      username !== "" &&
+      password !== "" &&
+      passwordStrength > 3 &&
+      passwordResults.length === 1
+    ) {
       createAccount({
         email: email,
-        username: malUsername,
+        username: username,
         password: password,
-        contentFilter: contentFilter,
+        verificationCode: "",
+        verified: false,
       }).then((response: Account) => {
         console.log(response);
-        localStorage.setItem("userId", response.id);
-        localStorage.setItem("malAccount", response.username);
+        window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
+
+        createAccountDetails({
+          accountId: response.id,
+          bio: "Hello World",
+          profilePicture: null,
+          headerPicture: null,
+          contentFilter: 1,
+        }).then((response: AccountDetails) => {
+          console.log(response);
+        });
       });
     } else {
       setPassword("");
       setConfirmPassword("");
       console.log("Passwords do not match");
+      setPasswordError(true);
     }
   };
   const navigate = useNavigate();
@@ -92,17 +159,20 @@ const Login = () => {
     <div className="login-page">
       {visible === true ? (
         <Card className="login-card" elevation={5}>
-          <Typography className="register-header">Register</Typography>
-          <div>
+          <div className="header-back-button-container">
+            <Button onClick={() => setVisible(false)} className="back-button">
+              <ArrowBackIcon />
+            </Button>
+            <Typography className="register-header">Register</Typography>
+          </div>
+          <div className="register-section-container">
             <div className="register-section">
               <Typography className="register-text-field-headers">
                 Email
               </Typography>
               <div className="register-icon-field-container">
-                <PersonOutlineIcon className="register-field-icons" />
-
                 <input
-                  type="text"
+                  type="email"
                   className="register-input-fields"
                   placeholder="Email"
                   value={email}
@@ -112,17 +182,15 @@ const Login = () => {
             </div>
             <div className="register-section">
               <Typography className="register-text-field-headers">
-                MAL Username (Optional)
+                Username
               </Typography>
               <div className="register-icon-field-container">
-                <PersonOutlineIcon className="register-field-icons" />
-
                 <input
-                  type="text"
+                  type="username"
                   className="register-input-fields"
-                  placeholder="My Anime List Username"
-                  value={malUsername}
-                  onChange={handleMalUsernameChange}
+                  placeholder="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
               </div>
             </div>
@@ -131,9 +199,8 @@ const Login = () => {
                 Password
               </Typography>
               <div className="register-icon-field-container">
-                <PasswordIcon className="register-field-icons" />
                 <input
-                  type="password"
+                  type={togglePasswordVisibility ? "text" : "password"}
                   className="register-input-fields"
                   placeholder="Password"
                   value={password}
@@ -146,43 +213,115 @@ const Login = () => {
                 Confirm Password
               </Typography>
               <div className="register-icon-field-container">
-                <PasswordIcon className="register-field-icons" />
                 <input
-                  type="password"
+                  type={togglePasswordVisibility ? "text" : "password"}
                   className="register-input-fields"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
                 />
               </div>
+              <div className="password-util-container">
+                <Button
+                  className="toggle-password-visibility-button"
+                  onClick={() =>
+                    setTogglePasswordVisibility(!togglePasswordVisibility)
+                  }
+                >
+                  {togglePasswordVisibility ? (
+                    <VisibilityOffIcon />
+                  ) : (
+                    <VisibilityIcon />
+                  )}
+                </Button>
+                {passwordError ? (
+                  <Typography className="password-error-text">
+                    Password Error: make sure passwords match and are strong and
+                    8-15 characters long
+                  </Typography>
+                ) : null}
+              </div>
             </div>
             <div className="register-section">
-              <Typography className="register-text-field-headers">
-                Content Filter
-              </Typography>
-
-              <div className="content-filter-selection-box">
-                <FormControl fullWidth>
-                  <Select
-                    className="content-filter-dropdown"
-                    value={contentFilter}
-                    label="Content Filter"
-                    variant="standard"
-                    disableUnderline={true}
-                    onChange={handleChangeContentFilter}
-                  >
-                    <MenuItem value={1}>Safe</MenuItem>
-                    <MenuItem value={2}>Suggestive</MenuItem>
-                    <MenuItem value={3}>Explicit</MenuItem>
-                    <MenuItem value={4}>Pornographic</MenuItem>
-                  </Select>
-                </FormControl>
+              <div className="password-strength-container">
+                <Typography className="password-strength-text">
+                  Password Strength:{" "}
+                  {passwordStrength > 3
+                    ? "Strong"
+                    : passwordStrength > 2
+                      ? "Medium"
+                      : "Weak"}
+                </Typography>
+                <div className="password-strength-results">
+                  <div className="result-group">
+                    Length (8 - 15):
+                    {passwordResults.length === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Lowercase:
+                    {passwordResults.lowercase === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Uppercase:
+                    {passwordResults.uppercase === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Number:
+                    {passwordResults.numbers === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                  <div className="result-group">
+                    Special Character:
+                    {passwordResults.special === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <Button
             variant="contained"
             className="register-button"
+            sx={{
+              opacity: !(
+                password === confirmPassword &&
+                email !== "" &&
+                username !== "" &&
+                password !== "" &&
+                passwordStrength > 3 &&
+                passwordResults.length === 1
+              )
+                ? 0.5
+                : 1,
+            }}
+            disabled={
+              !(
+                password === confirmPassword &&
+                email !== "" &&
+                username !== "" &&
+                password !== "" &&
+                passwordStrength > 3 &&
+                passwordResults.length === 1
+              )
+            }
             onClick={() => {
               handleRegister();
             }}
@@ -193,37 +332,30 @@ const Login = () => {
       ) : (
         <Card className="login-card" elevation={5}>
           <Typography className="login-header">Login</Typography>
-          <div>
+          <div className="login-section-container">
             <Typography className="login-text-field-headers">Email</Typography>
-            <div className="login-icon-field-container">
-              <PersonOutlineIcon className="login-field-icons" />
-
-              <input
-                type="text"
-                className="login-input-fields"
-                placeholder="Email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-            </div>
+            <input
+              type="email"
+              className="login-input-fields"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
           </div>
-          <div>
+          <div className="login-section-container">
             <Typography
               fontFamily="Figtree"
               className="login-text-field-headers"
             >
               Password
             </Typography>
-            <div className="login-icon-field-container">
-              <PasswordIcon className="login-field-icons" />
-              <input
-                type="password"
-                className="login-input-fields"
-                placeholder="Password"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </div>
+            <input
+              type="password"
+              className="login-input-fields"
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
             {attemptedLogin === true ? (
               <Typography className="incorrect-login-message">
                 Invalid Credentials. Retry

@@ -15,6 +15,7 @@ type Props = {
   mangaFoldersToDelete: number[];
   folderMangaData: Manga[] | null;
   mangaEntriesToDelete: string[];
+  selectAll: boolean;
 };
 
 const FolderGrid = (props: Props) => {
@@ -28,6 +29,7 @@ const FolderGrid = (props: Props) => {
     mangaFoldersToDelete,
     folderMangaData,
     mangaEntriesToDelete,
+    selectAll,
   } = props;
   const handleFolderClick = (folder: MangaFolder) => {
     folderClick(folder);
@@ -43,7 +45,7 @@ const FolderGrid = (props: Props) => {
       justifyContent="center"
       alignItems="center"
       direction="row"
-      spacing={2}
+      spacing={1}
     >
       {loading ? (
         <Grid item>
@@ -51,7 +53,7 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : selectedFolder === null ? (
         folders.map((folder: MangaFolder) => (
-          <Grid item>
+          <Grid item className="folder-grid-item">
             <Button
               className="folder"
               onClick={() => {
@@ -61,9 +63,12 @@ const FolderGrid = (props: Props) => {
                 //border: mangaEntriesToDelete.includes(element.id)
                 //? "2px solid #ffffff"
                 //: "none",
-                opacity: mangaFoldersToDelete.includes(folder.folderId)
-                  ? 0.2
-                  : 1,
+                opacity:
+                  folder.folderId !== undefined
+                    ? mangaFoldersToDelete.includes(folder.folderId)
+                      ? 0.2
+                      : 1
+                    : null,
               }}
             >
               <div>
@@ -73,9 +78,6 @@ const FolderGrid = (props: Props) => {
                   fontFamily={"Figtree"}
                 >
                   {folder.folderName} <br />
-                </Typography>
-                <Typography className="folder-description">
-                  {folder.folderDescription}
                 </Typography>
               </div>
             </Button>
@@ -109,7 +111,7 @@ const FolderGrid = (props: Props) => {
                   )?.id
                 }
                 updatedAt={element.attributes.updatedAt}
-                disabled={checked}
+                disabled={checked || selectAll}
               />
             </Button>
           </Grid>

@@ -1,4 +1,6 @@
 export interface MalFavorites {
+  mal_id: number;
+  type: string;
   images: { jpg: { large_image_url: string } };
   title: string;
 }
@@ -10,7 +12,6 @@ export interface UserMangaLogistics {
 }
 
 export interface MalUpdates {
-  title: string;
   status: string;
   entry: { title: string; images: { jpg: { large_image_url: string } } };
 }

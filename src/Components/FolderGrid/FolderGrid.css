@@ -9,18 +9,13 @@
   }
 }
 
-.folder-description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: none !important;
-  color: #ffffff;
-  font-family: "Figtree";
-  font-size: 12px;
+.folder-description-clicked {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60dvw;
 }
-
 .folder {
   height: 100px;
   width: 200px;
@@ -30,5 +25,9 @@
   }
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 170px;
   }
 }

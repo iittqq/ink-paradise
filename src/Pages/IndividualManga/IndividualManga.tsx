@@ -5,7 +5,7 @@ import {
   Typography,
   Dialog,
   DialogTitle,
-  DialogActions,
+  DialogContent,
   Grid,
   Alert,
 } from "@mui/material";
@@ -14,7 +14,6 @@ import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaTags from "../../Components/MangaTags/MangaTags";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
-import AddIcon from "@mui/icons-material/Add";
 import {
   Relationship,
   Manga,
@@ -38,6 +37,7 @@ import {
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
+import FolderIcon from "@mui/icons-material/Folder";
 
 const IndividualManga = () => {
   const { state } = useLocation();
@@ -96,17 +96,18 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
-    getMangaFolders().then((response) => {
-      console.log(response);
-      setFolders(
-        response.filter(
-          (folder) =>
-            folder.userId === JSON.parse(localStorage.getItem("userId")),
-        ),
-      );
-    });
+    const account = window.localStorage.getItem("account");
+    const accountData = JSON.parse(account as string);
+    if (accountData !== null) {
+      getMangaFolders().then((response) => {
+        console.log(response);
+        setFolders(
+          response.filter((folder) => folder.userId === accountData.id),
+        );
+      });
+    }
     if (state["title"] !== undefined) {
-      fetchMangaByTitle(state["title"]).then((data: Manga[]) => {
+      fetchMangaByTitle(state["title"], 10).then((data: Manga[]) => {
         console.log(data);
         setMangaId(data[0].id);
         setMangaName(data[0].attributes.title.en);
@@ -225,11 +226,13 @@ const IndividualManga = () => {
             handleClickOpen();
           }}
         >
-          <AddIcon />
+          <FolderIcon />
         </Button>
         <Dialog open={open} onClose={handleClose} id="folder-dialog">
-          <DialogTitle>Select Folder</DialogTitle>
-          <DialogActions>
+          <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>
+            Select Folder
+          </DialogTitle>
+          <DialogContent>
             <Grid
               container
               direction="row"
@@ -241,10 +244,12 @@ const IndividualManga = () => {
                   <Button
                     className="folder-button"
                     onClick={() => {
-                      handleAddToFolder(
-                        current.folderId,
-                        state.id === undefined ? mangaId : state.id,
-                      );
+                      if (current.folderId !== undefined) {
+                        handleAddToFolder(
+                          current.folderId,
+                          state.id === undefined ? mangaId : state.id,
+                        );
+                      }
                     }}
                   >
                     {current.folderName}
@@ -252,7 +257,7 @@ const IndividualManga = () => {
                 </Grid>
               ))}
             </Grid>
-          </DialogActions>
+          </DialogContent>
           {mangaExistsError === true ? (
             <Alert variant="outlined" severity="error">
               Manga already exists in the folder
