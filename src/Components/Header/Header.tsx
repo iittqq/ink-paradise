@@ -7,7 +7,6 @@ import { fetchMangaByTitle } from "../../api/MangaDexApi";
 import { fetchAccountData } from "../../api/Account";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import BookIcon from "@mui/icons-material/Book";
-import WhatsHotIcon from "@mui/icons-material/Whatshot";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -132,6 +131,7 @@ const Header = () => {
             <div>
               <Button
                 className="header-buttons"
+                sx={{ marginRight: "5px" }}
                 onClick={() => handleClickSearchIcon()}
               >
                 <div className="header-nav-dialog-columns">
@@ -141,6 +141,7 @@ const Header = () => {
               </Button>
               <Button
                 className="header-buttons"
+                sx={{ marginRight: "5px" }}
                 onClick={() => {
                   handleClickLibrary();
                 }}
@@ -148,12 +149,6 @@ const Header = () => {
                 <div className="header-nav-dialog-columns">
                   <BookIcon />
                   <Typography className="header-nav-label">Library</Typography>
-                </div>
-              </Button>
-              <Button className="header-buttons">
-                <div className="header-nav-dialog-columns">
-                  <WhatsHotIcon />
-                  <Typography className="header-nav-label">Hot</Typography>
                 </div>
               </Button>
               <Button

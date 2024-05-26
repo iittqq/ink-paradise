@@ -286,7 +286,7 @@ const Login = () => {
                     )}
                   </div>
                   <div className="result-group">
-                    Special Char:
+                    Special Character:
                     {passwordResults.special === 1 ? (
                       <CheckIcon className="results-icon" />
                     ) : (

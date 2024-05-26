@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
@@ -65,6 +65,12 @@ const LibraryHeader = (props: Props) => {
       <div className="library-header-options">
         {searching ? (
           <div className="library-input-section">
+            <Button
+              className="library-header-button"
+              onClick={() => handleClickSearchIcon()}
+            >
+              <ArrowBackIcon />
+            </Button>
             <input
               type="search"
               placeholder="Search Library"
@@ -183,20 +189,24 @@ const LibraryHeader = (props: Props) => {
           <DialogContent
             sx={{
               backgroundColor: "#121212",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Button
               onClick={() => {
-                handleContentFilter("Library");
+                handleContentFilter("Alphabetical Order");
               }}
               className="filter-button"
             >
-              Library
+              Alphabetical Order
             </Button>
 
             <Button
               onClick={() => {
-                handleContentFilter("Continue");
+                handleContentFilter("Continue Reading");
               }}
               className="filter-button"
             >
@@ -204,7 +214,7 @@ const LibraryHeader = (props: Props) => {
             </Button>
             <Button
               onClick={() => {
-                handleContentFilter("Recently");
+                handleContentFilter("Recently Updated");
               }}
               className="filter-button"
             >

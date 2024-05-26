@@ -31,6 +31,9 @@ const LibraryContents = (props: Props) => {
         justifyContent={"center"}
         alignItems={"center"}
       >
+        {libraryManga.length === 0 ? (
+          <Typography fontFamily={"Figtree"}>Empty...</Typography>
+        ) : null}
         {libraryManga.map((manga: Manga) => (
           <Grid item>
             <Button

@@ -384,7 +384,6 @@ const AccountPage = () => {
       <div className="utility-buttons">
         <Button
           className="info-open-button"
-          sx={{ marginRight: "10px" }}
           onClick={() => {
             setOpenEdit(true);
           }}
@@ -393,7 +392,6 @@ const AccountPage = () => {
         </Button>
         <Button
           className="info-open-button"
-          sx={{ marginRight: "10px" }}
           onClick={() => {
             window.localStorage.clear();
             navigate("/");

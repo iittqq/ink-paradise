@@ -19,7 +19,8 @@ const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
-  const [contentFilter, setContentFilter] = useState<string>("Library");
+  const [contentFilter, setContentFilter] =
+    useState<string>("Alphabetical Order");
   const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
@@ -56,32 +57,28 @@ const Library = () => {
     setLoading(true);
 
     getReadingByUserId(userId).then((data: Reading[]) => {
-      switch (contentFilter) {
-        case "Continue":
-          if (ascending) {
-            data = data
-              .map(function (e) {
-                return e;
-              })
-              .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-          } else {
-            data = data
-              .map(function (e) {
-                return e;
-              })
-              .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
-          }
-          break;
-        case "Recently":
-          break;
-        default:
-          if (ascending) {
-            data = data.sort((a, b) => a.mangaName.localeCompare(b.mangaName));
-          } else {
-            data = data.sort(
-              (a, b) => -1 * a.mangaName.localeCompare(b.mangaName),
-            );
-          }
+      if (contentFilter === "Continue Reading") {
+        if (ascending) {
+          data = data
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+        } else {
+          data = data
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
+        }
+      } else {
+        if (ascending) {
+          data = data.sort((a, b) => a.mangaName.localeCompare(b.mangaName));
+        } else {
+          data = data.sort(
+            (a, b) => -1 * a.mangaName.localeCompare(b.mangaName),
+          );
+        }
       }
       console.log(data);
       const promises = data.map((mangaData: Reading) => {
@@ -91,7 +88,7 @@ const Library = () => {
       Promise.all(promises)
         .then((data) => {
           console.log(data);
-          if (contentFilter === "Recently") {
+          if (contentFilter === "Recently Updated") {
             if (ascending) {
               data = data
                 .map(function (e) {
