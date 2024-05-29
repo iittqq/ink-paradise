@@ -5,19 +5,6 @@
   width: 100%;
 }
 
-.raw-button {
-  background-color: #191919;
-  width: 50px;
-  height: 20px;
-  text-align: center;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #ffffff;
-  }
-}
-
 .centered-content {
   display: flex;
   justify-content: center;
@@ -26,27 +13,13 @@
   padding-bottom: 20px;
 }
 
-.folder-add-button {
-  background-color: #191919;
-  color: #333333 !important;
-  width: 50px;
-  height: 20px;
-  text-align: center;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #ffffff;
-  }
-}
-
 .controls-chapters-section {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   position: relative;
-  bottom: 0;
+  padding-top: 20px;
 }
 
 .page-header {
@@ -61,25 +34,14 @@
 .manga-chapter-list {
   overflow: scroll;
   height: 40dvh;
+  justify-content: center;
   width: 50%;
-  margin: 10px;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  @media (max-width: 1000px) {
+    width: 90%;
+  }
 }
 .manga-chapter-list::-webkit-scrollbar {
   display: none;
-}
-
-#folder-dialog {
-  & .MuiPaper-root {
-    background-color: #121212 !important;
-  }
-}
-
-.folder-button {
-  color: #ffffff !important;
-  text-transform: none !important;
-  &:hover {
-    background-color: transparent !important;
-  }
 }

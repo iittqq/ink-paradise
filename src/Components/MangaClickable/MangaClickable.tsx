@@ -78,21 +78,11 @@ const MangaClickable = (props: Props) => {
             textTransform="none"
             color="white"
             noWrap
-            sx={{
-              fontSize: 15,
-              overflow: "hidden",
-              maxWidth: "100%",
-              top: 0,
-            }}
+            className="overlay-title"
           >
             {title}
           </Typography>
-          <Typography
-            color="white"
-            sx={{
-              fontSize: 15,
-            }}
-          >
+          <Typography color="white" className="overlay-date">
             {updatedAt === undefined
               ? null
               : dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}

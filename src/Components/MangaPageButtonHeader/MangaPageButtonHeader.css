@@ -1,0 +1,35 @@
+.manga-details-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+
+.individual-details-button {
+  width: 30px !important;
+  min-width: 30px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+#folder-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    width: 50dvw;
+  }
+}
+
+.folder-button {
+  color: #ffffff !important;
+  text-transform: none !important;
+  font-family: "Figtree" !important;
+  font-size: 16px !important;
+  &:hover {
+    background-color: transparent !important;
+  }
+}
