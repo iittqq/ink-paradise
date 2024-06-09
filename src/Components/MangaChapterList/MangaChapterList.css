@@ -7,16 +7,29 @@
   display: none;
 }
 
-.chapter-button {
-  color: #ffffff !important;
-  height: 100%;
+.chapter-button-container {
+  height: 50px;
   width: 100%;
-  background-color: #191919 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.chapter-button {
+  color: #fff !important;
+  width: 95%;
+  height: 90%;
   justify-content: space-evenly !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent !important;
-  }
+
   .MuiTouchRipple-child {
-    background-color: #ffffff !important;
+    background-color: #fff !important;
   }
+}
+
+.manga-chapters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }

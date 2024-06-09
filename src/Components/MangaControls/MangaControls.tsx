@@ -82,21 +82,6 @@ const MangaControls = (props: Props) => {
             )}
           </ListItemButton>
         </List>
-        <List className="list-container">
-          <ListItemButton
-            className="list-button"
-            onClick={() => handleOpenLanguages()}
-          >
-            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
-              Translators
-            </Typography>{" "}
-            {open ? (
-              <ExpandLess sx={{ color: "#333333" }} />
-            ) : (
-              <ExpandMore sx={{ color: "#333333" }} />
-            )}
-          </ListItemButton>
-        </List>
         <Button
           className="asc-desc-button"
           sx={{ ":hover": { backgroundColor: "transparent" } }}
@@ -111,7 +96,22 @@ const MangaControls = (props: Props) => {
           }}
         >
           <SwapVertIcon />
-        </Button>
+        </Button>{" "}
+        <List className="list-container">
+          <ListItemButton
+            className="list-button"
+            onClick={() => handleOpenLanguages()}
+          >
+            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
+              Languages
+            </Typography>{" "}
+            {open ? (
+              <ExpandLess sx={{ color: "#333333" }} />
+            ) : (
+              <ExpandMore sx={{ color: "#333333" }} />
+            )}
+          </ListItemButton>
+        </List>
       </div>
       <Collapse unmountOnExit in={openTranslators} timeout="auto">
         <Grid

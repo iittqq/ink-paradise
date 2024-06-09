@@ -21,6 +21,10 @@
   & .MuiPaper-root {
     background-color: #121212 !important;
     width: 50dvw;
+    border-radius: 10px;
+    @media (width <= 600px) {
+      width: 90dvw;
+    }
   }
 }
 
@@ -32,4 +36,12 @@
   &:hover {
     background-color: transparent !important;
   }
+}
+
+.content-rating-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

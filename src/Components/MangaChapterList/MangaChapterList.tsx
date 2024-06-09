@@ -70,21 +70,25 @@ const MangaChapterList = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="manga-chapters">
       <Grid
         container
         direction="row"
         justifyContent="center"
         alignItems="center"
         className="chapters-list"
-        spacing={1}
       >
         {mangaFeed.map((current: MangaFeed) =>
           current["attributes"]["translatedLanguage"] === selectedLanguage ? (
-            <Grid item xs={6}>
+            <Grid item xs={6} className="chapter-button-container">
               {insideReader === true ? (
                 <Button
+                  disableRipple
                   className="chapter-button"
+                  sx={{
+                    backgroundColor: "#191919",
+                    "&:hover": { backgroundColor: "transparent" },
+                  }}
                   onClick={() => {
                     handleClickInsideReader(
                       mangaId,
@@ -104,12 +108,12 @@ const MangaChapterList = (props: Props) => {
                         fontFamily: "Figtree",
                         fontSize: { xs: 10, sm: 10, lg: 15 },
                       }}
-                      color="#555555"
+                      color="#fff"
                     >
                       Chapter {current["attributes"].chapter}
                     </Typography>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontSize: { xs: 10, sm: 10, lg: 15 },
                         fontFamily: "Figtree",
@@ -119,7 +123,7 @@ const MangaChapterList = (props: Props) => {
                       {current["attributes"].translatedLanguage}
                     </Typography>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontSize: { xs: 10, sm: 10, lg: 15 },
                         fontFamily: "Figtree",
@@ -131,7 +135,7 @@ const MangaChapterList = (props: Props) => {
                   </div>
                   <div>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontFamily: "Figtree",
                         fontSize: { xs: 10, sm: 10, lg: 15 },
@@ -146,6 +150,11 @@ const MangaChapterList = (props: Props) => {
               ) : (
                 <Button
                   className="chapter-button"
+                  disableRipple
+                  sx={{
+                    backgroundColor: "#191919",
+                    "&:hover": { backgroundColor: "transparent" },
+                  }}
                   onClick={() => {
                     handleClick(
                       mangaId,
@@ -165,12 +174,12 @@ const MangaChapterList = (props: Props) => {
                         textTransform: "none",
                         fontSize: { xs: 10, sm: 10, lg: 15 },
                       }}
-                      color="#555555"
+                      color="#fff"
                     >
                       Chapter {current["attributes"].chapter}
                     </Typography>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontFamily: "Figtree",
                         fontSize: { xs: 10, sm: 10, lg: 15 },
@@ -180,7 +189,7 @@ const MangaChapterList = (props: Props) => {
                       {current["attributes"].translatedLanguage}
                     </Typography>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontFamily: "Figtree",
                         fontSize: { xs: 10, sm: 10, lg: 15 },
@@ -192,7 +201,7 @@ const MangaChapterList = (props: Props) => {
                   </div>
                   <div>
                     <Typography
-                      color="#555555"
+                      color="#fff"
                       sx={{
                         fontFamily: "Figtree",
                         fontSize: { xs: 10, sm: 10, lg: 15 },

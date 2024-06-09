@@ -1,5 +1,6 @@
 .controls-container {
   padding-bottom: 10px;
+  width: 100%;
 }
 
 .asc-desc-button {
@@ -30,9 +31,14 @@
 .controls {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   padding-bottom: 10px;
+  width: 100%;
+
+  @media (width >= 900px) {
+    justify-content: center;
+  }
 }
 
 .list-container {

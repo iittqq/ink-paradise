@@ -27,14 +27,6 @@
   width: "100%";
 }
 
-.manga-controls {
-  width: 50%;
-
-  @media (width <= 1000px) {
-    width: 90%;
-  }
-}
-
 .manga-chapter-list {
   overflow: scroll;
   height: 40dvh;
@@ -43,8 +35,14 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  @media (width <= 1000px) {
-    width: 90%;
+  @media (width <= 1600px) {
+    width: 100%;
+    height: 65dvh;
+  }
+
+  @media (width <= 600px) {
+    width: 100%;
+    height: 55dvh;
   }
 }
 

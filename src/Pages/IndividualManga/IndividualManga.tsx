@@ -187,19 +187,17 @@ const IndividualManga = () => {
       />
 
       <div className="controls-chapters-section">
-        <div className="manga-controls">
-          <MangaControls
-            mangaLanguages={mangaLanguages}
-            setCurrentOffset={setCurrentOffset}
-            currentOrder={currentOrder}
-            setCurrentOrder={setCurrentOrder}
-            selectedLanguage={selectedLanguage}
-            setSelectedLanguage={setSelectedLanguage}
-            mangaTranslators={scantalationGroups}
-            setTranslator={setScantalationGroups}
-            handleSwitchOrder={handleSwitchOrder}
-          />
-        </div>
+        <MangaControls
+          mangaLanguages={mangaLanguages}
+          setCurrentOffset={setCurrentOffset}
+          currentOrder={currentOrder}
+          setCurrentOrder={setCurrentOrder}
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
+          mangaTranslators={scantalationGroups}
+          setTranslator={setScantalationGroups}
+          handleSwitchOrder={handleSwitchOrder}
+        />
         <div className="manga-chapter-list" onScroll={handleScroll}>
           <MangaChapterList
             mangaFeed={mangaFeed}
