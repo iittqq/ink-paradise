@@ -1,71 +1,44 @@
 .asc-desc-button {
-	color: #333333 !important;
-	height: 20px;
-	width: 150px;
-	background-color: #191919 !important;
-	position: relative;
-	left: 50;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: #ffffff !important;
-	}
+  font-family: "Figtree", sans-serif !important;
+  text-transform: none !important;
+  color: #333 !important;
+  height: 20px;
+  width: 150px;
+  background-color: #191919 !important;
 }
 
 .arrow-button {
-	color: #333333 !important;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: #ffffff !important;
-	}
+  color: #333 !important;
 }
 
 .language-button {
-	background-color: #191919 !important;
-	width: 20px;
-	height: 20px;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: #ffffff !important;
-	}
+  background-color: #191919 !important;
+  width: 20px;
+  height: 20px;
 }
 
 .translator-button {
-	background-color: #191919 !important;
-	width: 55px;
-	height: 45px;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: #ffffff !important;
-	}
+  background-color: #191919 !important;
+  width: 55px;
+  height: 45px;
 }
 
 .controls {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .list-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .list-button {
-	width: 150px;
-	color: #121212;
-	background-color: transparent;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
+  width: 150px;
+  color: #121212;
+  background-color: transparent;
 }

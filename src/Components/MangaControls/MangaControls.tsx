@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   List,
   ListItemButton,
-  ListItemText,
   Collapse,
   Grid,
   Typography,
@@ -37,7 +36,7 @@ const MangaControls = (props: Props) => {
     setCurrentOrder,
     mangaTranslators,
   } = props;
-  const handleOpenTags = () => {
+  const handleOpenLanguages = () => {
     setOpen(!open);
   };
   const handleOpenTranslators = () => {
@@ -69,7 +68,9 @@ const MangaControls = (props: Props) => {
             distinguishUniqueTranslators();
           }}
         >
-          <ListItemText sx={{ color: "#555555" }} primary="Translators" />
+          <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
+            Translators
+          </Typography>
           {openTranslators ? (
             <ExpandLess sx={{ color: "#333333" }} />
           ) : (
@@ -97,6 +98,7 @@ const MangaControls = (props: Props) => {
                   <Typography
                     sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
                     color="#333333"
+                    fontFamily="Figtree"
                   >
                     {current.toString()}
                   </Typography>
@@ -107,9 +109,11 @@ const MangaControls = (props: Props) => {
         </Collapse>
         <ListItemButton
           className="list-button"
-          onClick={() => handleOpenTags()}
+          onClick={() => handleOpenLanguages()}
         >
-          <ListItemText sx={{ color: "#555555" }} primary="Languages" />
+          <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
+            Translators
+          </Typography>{" "}
           {open ? (
             <ExpandLess sx={{ color: "#333333" }} />
           ) : (
@@ -133,10 +137,12 @@ const MangaControls = (props: Props) => {
                     setSelectedLanguage(current);
                     setCurrentOffset(0);
                   }}
+                  sx={{ ":hover": { backgroundColor: "transparent" } }}
                 >
                   <Typography
                     sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
                     color="#333333"
+                    fontFamily="Figtree"
                   >
                     {current}
                   </Typography>
@@ -150,13 +156,14 @@ const MangaControls = (props: Props) => {
         {currentOrder === "desc" ? (
           <Button
             className="asc-desc-button"
+            sx={{ ":hover": { backgroundColor: "transparent" } }}
             onClick={() => {
               setCurrentOrder("asc");
               console.log(currentOrder);
               setCurrentOffset(0);
             }}
           >
-            <Typography textTransform={"none"}>Ascending</Typography>
+            Ascending
           </Button>
         ) : (
           <Button
@@ -166,7 +173,7 @@ const MangaControls = (props: Props) => {
               console.log(currentOrder);
             }}
           >
-            <Typography textTransform={"none"}>Descending</Typography>
+            Descending
           </Button>
         )}
       </div>
