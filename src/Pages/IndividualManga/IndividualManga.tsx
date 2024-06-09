@@ -43,9 +43,15 @@ const IndividualManga = () => {
   const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
   const [showInfoToggled, setShowInfoToggled] = useState(false);
   const [showCategoriesToggled, setShowCategoriesToggled] = useState(false);
+  const [switchedOrder, setSwitchedOrder] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleSwitchOrder = () => {
+    setSwitchedOrder(true);
+    setCurrentOffset(0);
   };
 
   const handleCloseCategories = () => {
@@ -138,7 +144,11 @@ const IndividualManga = () => {
     ).then((data: MangaFeed[]) => {
       data.length === 0
         ? setCurrentOffset(0)
-        : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+        : switchedOrder === true
+          ? setMangaFeed(data)
+          : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+      console.log(data);
+      setSwitchedOrder(false);
     });
   }, [state, selectedLanguage, currentOffset, currentOrder]);
 
@@ -177,16 +187,6 @@ const IndividualManga = () => {
       />
 
       <div className="controls-chapters-section">
-        <div className="manga-chapter-list" onScroll={handleScroll}>
-          <MangaChapterList
-            mangaFeed={mangaFeed}
-            mangaName={mangaName}
-            selectedLanguage={selectedLanguage}
-            mangaId={state.id}
-            insideReader={false}
-            scantalationGroups={scantalationGroups}
-          />
-        </div>{" "}
         <div className="manga-controls">
           <MangaControls
             mangaLanguages={mangaLanguages}
@@ -197,8 +197,19 @@ const IndividualManga = () => {
             setSelectedLanguage={setSelectedLanguage}
             mangaTranslators={scantalationGroups}
             setTranslator={setScantalationGroups}
+            handleSwitchOrder={handleSwitchOrder}
           />
         </div>
+        <div className="manga-chapter-list" onScroll={handleScroll}>
+          <MangaChapterList
+            mangaFeed={mangaFeed}
+            mangaName={mangaName}
+            selectedLanguage={selectedLanguage}
+            mangaId={state.id}
+            insideReader={false}
+            scantalationGroups={scantalationGroups}
+          />
+        </div>{" "}
       </div>
     </div>
   );

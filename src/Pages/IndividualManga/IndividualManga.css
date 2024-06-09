@@ -29,6 +29,10 @@
 
 .manga-controls {
   width: 50%;
+
+  @media (width <= 1000px) {
+    width: 90%;
+  }
 }
 
 .manga-chapter-list {
@@ -38,10 +42,12 @@
   width: 50%;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  @media (max-width: 1000px) {
+
+  @media (width <= 1000px) {
     width: 90%;
   }
 }
+
 .manga-chapter-list::-webkit-scrollbar {
   display: none;
 }

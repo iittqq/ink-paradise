@@ -1,10 +1,12 @@
 .cover-image {
-  @media (min-width: 600px) and (max-width: 1000px) {
+  @media (width <= 600px) and (width >= 1000px) {
     width: 20%;
   }
-  @media (max-width: 600px) {
+
+  @media (width <= 600px) {
     width: 30%;
   }
+
   width: 10%;
 }
 
@@ -17,6 +19,10 @@
 }
 
 .manga-details {
+  @media (width <= 600px) {
+    margin-left: 10px;
+  }
+
   width: 80%;
 }
 
