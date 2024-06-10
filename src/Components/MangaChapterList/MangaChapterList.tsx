@@ -3,20 +3,15 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import "./MangaChapterList.css";
-import {
-  MangaFeed,
-  ScanlationGroup,
-} from "../../interfaces/MangaDexInterfaces";
+import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 
 type Props = {
   mangaId: string;
-  mangaFeed: MangaFeed[];
+  mangaFeed: MangaFeedScanlationGroup[];
   mangaName: string;
   selectedLanguage: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
-  scanlationGroups: ScanlationGroup[];
-  selectedScanlationGroup: ScanlationGroup | undefined;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -26,8 +21,6 @@ const MangaChapterList = (props: Props) => {
     selectedLanguage,
     insideReader,
     setOpen,
-    scanlationGroups,
-    selectedScanlationGroup,
   } = props;
 
   const navigate = useNavigate();
@@ -84,7 +77,7 @@ const MangaChapterList = (props: Props) => {
         alignItems="center"
         className="chapters-list"
       >
-        {mangaFeed.map((current: MangaFeed) =>
+        {mangaFeed.map((current: MangaFeedScanlationGroup) =>
           current["attributes"]["translatedLanguage"] === selectedLanguage ? (
             <Grid item xs={6} className="chapter-button-container">
               {insideReader === true ? (
@@ -107,12 +100,12 @@ const MangaChapterList = (props: Props) => {
                     if (setOpen !== undefined) setOpen(false);
                   }}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div className="chapter-button-text">
                     <Typography
                       sx={{
                         textTransform: "none",
                         fontFamily: "Figtree",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                       }}
                       color="#fff"
                     >
@@ -121,7 +114,7 @@ const MangaChapterList = (props: Props) => {
                     <Typography
                       color="#fff"
                       sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                         fontFamily: "Figtree",
                         paddingLeft: "10px",
                       }}
@@ -131,22 +124,19 @@ const MangaChapterList = (props: Props) => {
                     <Typography
                       color="#fff"
                       sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                         fontFamily: "Figtree",
                         paddingLeft: "10px",
                       }}
                     >
-                      {selectedScanlationGroup !== undefined
-                        ? selectedScanlationGroup.attributes.name
-                        : scanlationGroups[0].attributes.name}
+                      {current.relationships[0].attributes.name}
                     </Typography>
-                  </div>
-                  <div>
+
                     <Typography
                       color="#fff"
                       sx={{
                         fontFamily: "Figtree",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                       }}
                     >
                       {dayjs(current["attributes"].createdAt).format(
@@ -175,12 +165,12 @@ const MangaChapterList = (props: Props) => {
                     );
                   }}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div className="chapter-button-text">
                     <Typography
                       sx={{
                         fontFamily: "Figtree",
                         textTransform: "none",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                       }}
                       color="#fff"
                     >
@@ -190,7 +180,7 @@ const MangaChapterList = (props: Props) => {
                       color="#fff"
                       sx={{
                         fontFamily: "Figtree",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                         paddingLeft: "10px",
                       }}
                     >
@@ -200,19 +190,18 @@ const MangaChapterList = (props: Props) => {
                       color="#fff"
                       sx={{
                         fontFamily: "Figtree",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                         paddingLeft: "10px",
                       }}
                     >
-                      {/**scantalationGroups[index]*/}
+                      {current.relationships[0].attributes.name}
                     </Typography>
-                  </div>
-                  <div>
+
                     <Typography
                       color="#fff"
                       sx={{
                         fontFamily: "Figtree",
-                        fontSize: { xs: 10, sm: 10, lg: 15 },
+                        fontSize: { xs: 8, sm: 10, lg: 15 },
                       }}
                     >
                       {dayjs(current["attributes"].createdAt).format(

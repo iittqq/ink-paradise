@@ -7,8 +7,8 @@ import {
   CoverFile,
   MangaTagsInterface,
   MangaChapter,
-  MangaFeed,
   ScanlationGroup,
+  MangaFeedScanlationGroup,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
@@ -131,7 +131,7 @@ async function fetchMangaFeed(
   offset: number,
   order: string,
   language: string,
-): Promise<MangaFeed[]> {
+): Promise<MangaFeedScanlationGroup[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-feed`, {
       params: {

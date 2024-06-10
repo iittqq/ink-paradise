@@ -23,15 +23,15 @@ type Props = {
   mangaTranslators: ScanlationGroup[];
   setTranslator: React.Dispatch<React.SetStateAction<ScanlationGroup[]>>;
   handleSwitchOrder: () => void;
-  handleFilterScanlationGroups: (translator: ScanlationGroup) => void;
+  handleFilterScanlationGroups: (
+    translator: ScanlationGroup | undefined,
+  ) => void;
 };
 
 const MangaControls = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [openTranslators, setOpenTranslators] = useState(false);
   const [translators, setTranslators] = useState<string[]>();
-  const [selectedTranslator, setSelectedTranslator] =
-    useState<ScanlationGroup>();
 
   const {
     mangaLanguages,
@@ -50,14 +50,11 @@ const MangaControls = (props: Props) => {
     setOpenTranslators(!openTranslators);
   };
 
-  const clickedTranslator = (translator: string) => {
+  const clickedTranslator = (translator: string | undefined) => {
     const translatorObject: ScanlationGroup | undefined = mangaTranslators.find(
       (current) => current.attributes.name === translator,
     );
-    if (translatorObject !== undefined) {
-      setSelectedTranslator(translatorObject);
-      handleFilterScanlationGroups(translatorObject);
-    }
+    handleFilterScanlationGroups(translatorObject);
 
     console.log(translatorObject);
   };
@@ -126,16 +123,34 @@ const MangaControls = (props: Props) => {
           sx={{ paddingBottom: open ? "10px" : "0px" }}
           spacing={1}
         >
+          <Grid item>
+            {" "}
+            <Button
+              className="scanlation-button"
+              onClick={() => {
+                clickedTranslator(undefined);
+              }}
+            >
+              <Typography
+                className="scanlation-text"
+                sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+                color="#333333"
+                fontFamily="Figtree"
+              >
+                All
+              </Typography>
+            </Button>
+          </Grid>
           {translators?.map((current: string) => (
             <Grid item>
               <Button
                 className="scanlation-button"
                 onClick={() => {
                   clickedTranslator(current);
-                  setCurrentOffset(0);
                 }}
               >
                 <Typography
+                  className="scanlation-text"
                   sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
                   color="#333333"
                   fontFamily="Figtree"
