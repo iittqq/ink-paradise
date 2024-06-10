@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 import "./MangaChapterList.css";
-import { MangaFeed } from "../../interfaces/MangaDexInterfaces";
+import {
+  MangaFeed,
+  ScanlationGroup,
+} from "../../interfaces/MangaDexInterfaces";
 
 type Props = {
   mangaId: string;
@@ -12,7 +15,8 @@ type Props = {
   selectedLanguage: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
-  scantalationGroups: object[];
+  scanlationGroups: ScanlationGroup[];
+  selectedScanlationGroup: ScanlationGroup | undefined;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -22,6 +26,8 @@ const MangaChapterList = (props: Props) => {
     selectedLanguage,
     insideReader,
     setOpen,
+    scanlationGroups,
+    selectedScanlationGroup,
   } = props;
 
   const navigate = useNavigate();
@@ -130,7 +136,9 @@ const MangaChapterList = (props: Props) => {
                         paddingLeft: "10px",
                       }}
                     >
-                      {/**scantalationGroups[index]*/}
+                      {selectedScanlationGroup !== undefined
+                        ? selectedScanlationGroup.attributes.name
+                        : scanlationGroups[0].attributes.name}
                     </Typography>
                   </div>
                   <div>

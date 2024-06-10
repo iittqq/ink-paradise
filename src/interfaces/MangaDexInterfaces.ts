@@ -54,6 +54,34 @@ export interface MangaFeed {
     publishAt: string;
     readableAt: string;
   };
+  relationships: {
+    id: string;
+    type: string;
+  };
+}
+
+export interface ScanlationGroup {
+  id: string;
+  type: string;
+  attributes: {
+    name: string;
+    altNames: string[];
+    locked: boolean;
+    website: string | null;
+    ircServer: string | null;
+    ircChannel: string | null;
+    discord: string | null;
+    contactEmail: string | null;
+    description: string | null;
+    twitter: string | null;
+    focusedLanguage: string[] | null;
+    official: boolean;
+    verified: boolean;
+    inactive: boolean;
+    publishDelay: string | null;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export interface Relationship {

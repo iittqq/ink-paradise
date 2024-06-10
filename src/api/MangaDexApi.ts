@@ -8,6 +8,7 @@ import {
   MangaTagsInterface,
   MangaChapter,
   MangaFeed,
+  ScanlationGroup,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
@@ -148,21 +149,18 @@ async function fetchMangaFeed(
   }
 }
 
-async function fetchScantalationGroup(
-  groupId: string,
-): Promise<object[] | undefined> {
+async function fetchScanlationGroup(id: string): Promise<ScanlationGroup> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/scanlation-group`, {
       params: {
-        id: groupId,
+        id: id,
       },
     });
     return response["data"]["data"];
   } catch (error) {
     console.error("Error fetching manga:", error);
-    //throw error;
+    throw error;
   }
-  return undefined;
 }
 
 async function fetchMangaByAuthor(
@@ -208,7 +206,7 @@ export {
   fetchMangaByTitle,
   fetchMangaCover,
   fetchMangaFeed,
-  fetchScantalationGroup,
+  fetchScanlationGroup,
   fetchMangaByAuthor,
   fetchMangaByTag,
   fetchChapterData,

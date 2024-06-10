@@ -10,9 +10,15 @@ import {
   Manga,
   MangaTagsInterface,
   MangaFeed,
+  Relationship,
+  ScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
 
-import { fetchMangaFeed, fetchMangaById } from "../../api/MangaDexApi";
+import {
+  fetchMangaFeed,
+  fetchMangaById,
+  fetchScanlationGroup,
+} from "../../api/MangaDexApi";
 
 import "./IndividualManga.css";
 import {
@@ -37,7 +43,12 @@ const IndividualManga = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentOffset, setCurrentOffset] = useState(0);
   const [currentOrder, setCurrentOrder] = useState("asc");
-  const [scantalationGroups, setScantalationGroups] = useState<object[]>([]);
+  const [scanlationGroups, setScanlationGroups] = useState<ScanlationGroup[]>(
+    [],
+  );
+  const [selectedScanlationGroup, setSelectedScanlationGroup] = useState<
+    ScanlationGroup | undefined
+  >();
   const [folders, setFolders] = useState<MangaFolder[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
@@ -73,6 +84,63 @@ const IndividualManga = () => {
   const handleClose = () => {
     setOpen(false);
     setMangaExistsError(false);
+  };
+  {
+    /**
+  const handleFetchMangaFeed = () => {
+    fetchMangaFeed(
+      state.id,
+      100,
+      currentOffset,
+      currentOrder,
+      selectedLanguage,
+    ).then((data: MangaFeed[]) => {
+      console.log(selectedScanlationGroup);
+      data.length === 0
+        ? setCurrentOffset(0)
+        : switchedOrder === true
+          ? setMangaFeed(data)
+          : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+
+      data.map((current: MangaFeed) => {
+        if (Array.isArray(current.relationships)) {
+          fetchScanlationGroup(
+            current.relationships.filter(
+              (rel: Relationship) => rel.type === "scanlation_group",
+            )[0].id,
+          ).then((data: ScanlationGroup) => {
+            setScanlationGroups((scanlationGroups) => [
+              ...scanlationGroups,
+              data,
+            ]);
+          });
+        }
+      });
+    });
+    setSwitchedOrder(false);
+  };
+*/
+  }
+  const handleFilterScanlationGroups = (scanlationGroup: ScanlationGroup) => {
+    setSelectedScanlationGroup(scanlationGroup);
+    {
+      /**
+    const filteredFeed: MangaFeed[] = [];
+    mangaFeed.map((current: MangaFeed) => {
+      if (Array.isArray(current.relationships)) {
+        console.log(current);
+        const hasMatchingGroup = current.relationships.some(
+          (rel: Relationship) => rel.id === scanlationGroup.id,
+        );
+        if (hasMatchingGroup) {
+          filteredFeed.push(current);
+        }
+
+        console.log(filteredFeed);
+      }
+    });
+    setMangaFeed(filteredFeed);*/
+    }
   };
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
@@ -142,15 +210,53 @@ const IndividualManga = () => {
       currentOrder,
       selectedLanguage,
     ).then((data: MangaFeed[]) => {
+      console.log(selectedScanlationGroup);
       data.length === 0
         ? setCurrentOffset(0)
         : switchedOrder === true
           ? setMangaFeed(data)
           : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-      console.log(data);
-      setSwitchedOrder(false);
+
+      data.map((current: MangaFeed) => {
+        if (Array.isArray(current.relationships)) {
+          fetchScanlationGroup(
+            current.relationships.filter(
+              (rel: Relationship) => rel.type === "scanlation_group",
+            )[0].id,
+          ).then((data: ScanlationGroup) => {
+            setScanlationGroups((scanlationGroups) => [
+              ...scanlationGroups,
+              data,
+            ]);
+          });
+        }
+        if (selectedScanlationGroup !== undefined) {
+          const filteredFeed: MangaFeed[] = [];
+          data.map((current: MangaFeed) => {
+            if (Array.isArray(current.relationships)) {
+              console.log(current);
+              const hasMatchingGroup = current.relationships.some(
+                (rel: Relationship) => rel.id === selectedScanlationGroup.id,
+              );
+              if (hasMatchingGroup) {
+                filteredFeed.push(current);
+              }
+
+              console.log(filteredFeed);
+            }
+          });
+          setMangaFeed(filteredFeed);
+        }
+      });
     });
-  }, [state, selectedLanguage, currentOffset, currentOrder]);
+    setSwitchedOrder(false);
+  }, [
+    state,
+    selectedLanguage,
+    currentOffset,
+    currentOrder,
+    selectedScanlationGroup,
+  ]);
 
   return (
     <div>
@@ -194,9 +300,10 @@ const IndividualManga = () => {
           setCurrentOrder={setCurrentOrder}
           selectedLanguage={selectedLanguage}
           setSelectedLanguage={setSelectedLanguage}
-          mangaTranslators={scantalationGroups}
-          setTranslator={setScantalationGroups}
+          mangaTranslators={scanlationGroups}
+          setTranslator={setScanlationGroups}
           handleSwitchOrder={handleSwitchOrder}
+          handleFilterScanlationGroups={handleFilterScanlationGroups}
         />
         <div className="manga-chapter-list" onScroll={handleScroll}>
           <MangaChapterList
@@ -205,7 +312,8 @@ const IndividualManga = () => {
             selectedLanguage={selectedLanguage}
             mangaId={state.id}
             insideReader={false}
-            scantalationGroups={scantalationGroups}
+            scanlationGroups={scanlationGroups}
+            selectedScanlationGroup={selectedScanlationGroup}
           />
         </div>{" "}
       </div>

@@ -16,6 +16,12 @@
   color: #333 !important;
 }
 
+.scanlation-button {
+  background-color: #191919 !important;
+  width: 100px;
+  height: 30px;
+}
+
 .language-button {
   background-color: #191919 !important;
   width: 60px;
@@ -46,7 +52,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-right: 10px !important;
 }
 
 .list-button {

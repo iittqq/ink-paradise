@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   List,
   ListItemButton,
@@ -11,6 +11,7 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 import "./MangaControls.css";
+import { ScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 
 type Props = {
   mangaLanguages: string[];
@@ -19,16 +20,18 @@ type Props = {
   setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
   setCurrentOffset: React.Dispatch<React.SetStateAction<number>>;
   setCurrentOrder: React.Dispatch<React.SetStateAction<string>>;
-  mangaTranslators: object[];
-  setTranslator: React.Dispatch<React.SetStateAction<object[]>>;
+  mangaTranslators: ScanlationGroup[];
+  setTranslator: React.Dispatch<React.SetStateAction<ScanlationGroup[]>>;
   handleSwitchOrder: () => void;
+  handleFilterScanlationGroups: (translator: ScanlationGroup) => void;
 };
 
 const MangaControls = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [openTranslators, setOpenTranslators] = useState(false);
-  const [uniqueTranslators, setUniqueTranslators] = useState<object[]>([]);
-  const [doneSettingTranslators, setDoneSettingTranslators] = useState(false);
+  const [translators, setTranslators] = useState<string[]>();
+  const [selectedTranslator, setSelectedTranslator] =
+    useState<ScanlationGroup>();
 
   const {
     mangaLanguages,
@@ -38,6 +41,7 @@ const MangaControls = (props: Props) => {
     setCurrentOrder,
     mangaTranslators,
     handleSwitchOrder,
+    handleFilterScanlationGroups,
   } = props;
   const handleOpenLanguages = () => {
     setOpen(!open);
@@ -46,21 +50,22 @@ const MangaControls = (props: Props) => {
     setOpenTranslators(!openTranslators);
   };
 
-  const distinguishUniqueTranslators = () => {
-    if (doneSettingTranslators === false) {
-      const uniqueTranslatorsArray: object[] = [];
-
-      for (const current of mangaTranslators) {
-        if (!uniqueTranslatorsArray.includes(current)) {
-          uniqueTranslatorsArray.push(current);
-        }
-      }
-      console.log(uniqueTranslatorsArray);
-      setUniqueTranslators(uniqueTranslatorsArray);
+  const clickedTranslator = (translator: string) => {
+    const translatorObject: ScanlationGroup | undefined = mangaTranslators.find(
+      (current) => current.attributes.name === translator,
+    );
+    if (translatorObject !== undefined) {
+      setSelectedTranslator(translatorObject);
+      handleFilterScanlationGroups(translatorObject);
     }
-    setDoneSettingTranslators(true);
-  };
 
+    console.log(translatorObject);
+  };
+  useEffect(() => {
+    setTranslators([
+      ...new Set(mangaTranslators.map((current) => current.attributes.name)),
+    ]);
+  }, [mangaTranslators]);
   return (
     <div className="controls-container">
       <div className="controls">
@@ -69,7 +74,6 @@ const MangaControls = (props: Props) => {
             className="list-button"
             onClick={() => {
               handleOpenTranslators();
-              distinguishUniqueTranslators();
             }}
           >
             <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
@@ -119,15 +123,15 @@ const MangaControls = (props: Props) => {
           direction="row"
           justifyContent="center"
           alignItems="center"
-          sx={{}}
+          sx={{ paddingBottom: open ? "10px" : "0px" }}
           spacing={1}
         >
-          {uniqueTranslators.map((current: object) => (
+          {translators?.map((current: string) => (
             <Grid item>
               <Button
-                className="translator-button"
+                className="scanlation-button"
                 onClick={() => {
-                  //setTranslator(current);
+                  clickedTranslator(current);
                   setCurrentOffset(0);
                 }}
               >
@@ -136,7 +140,7 @@ const MangaControls = (props: Props) => {
                   color="#333333"
                   fontFamily="Figtree"
                 >
-                  {current.toString()}
+                  {current}
                 </Typography>
               </Button>
             </Grid>

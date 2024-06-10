@@ -36,7 +36,7 @@
   scrollbar-width: none;
 
   @media (width <= 1600px) {
-    width: 100%;
+    width: 90%;
     height: 65dvh;
   }
 
