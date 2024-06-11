@@ -38,7 +38,7 @@ const MangaBanner = (props: Props) => {
         <Typography
           className="manga-description"
           sx={{
-            WebkitLineClamp: showMoreToggled === true ? 5 : 1,
+            WebkitLineClamp: showMoreToggled === true ? 6 : 5,
             fontSize: { xs: 15, sm: 15, lg: 20 },
           }}
         >

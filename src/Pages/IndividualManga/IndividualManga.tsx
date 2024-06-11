@@ -84,42 +84,6 @@ const IndividualManga = () => {
     setOpen(false);
     setMangaExistsError(false);
   };
-  {
-    /**
-  const handleFetchMangaFeed = () => {
-    fetchMangaFeed(
-      state.id,
-      100,
-      currentOffset,
-      currentOrder,
-      selectedLanguage,
-    ).then((data: MangaFeed[]) => {
-      console.log(selectedScanlationGroup);
-      data.length === 0
-        ? setCurrentOffset(0)
-        : switchedOrder === true
-          ? setMangaFeed(data)
-          : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-
-      data.map((current: MangaFeed) => {
-        if (Array.isArray(current.relationships)) {
-          fetchScanlationGroup(
-            current.relationships.filter(
-              (rel: Relationship) => rel.type === "scanlation_group",
-            )[0].id,
-          ).then((data: ScanlationGroup) => {
-            setScanlationGroups((scanlationGroups) => [
-              ...scanlationGroups,
-              data,
-            ]);
-          });
-        }
-      });
-    });
-    setSwitchedOrder(false);
-  };
-*/
-  }
   const handleFilterScanlationGroups = (
     scanlationGroup: ScanlationGroup | undefined,
   ) => {
@@ -128,41 +92,18 @@ const IndividualManga = () => {
     } else {
       setSelectedScanlationGroup(undefined);
     }
-    {
-      /**
-    const filteredFeed: MangaFeed[] = [];
-    mangaFeed.map((current: MangaFeed) => {
-      if (Array.isArray(current.relationships)) {
-        console.log(current);
-        const hasMatchingGroup = current.relationships.some(
-          (rel: Relationship) => rel.id === scanlationGroup.id,
-        );
-        if (hasMatchingGroup) {
-          filteredFeed.push(current);
-        }
-
-        console.log(filteredFeed);
-      }
-    });
-    setMangaFeed(filteredFeed);*/
-    }
   };
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
       getMangaFolderEntries().then((response) => {
         let exists = false;
         response.map((current: MangaFolderEntry) => {
-          console.log(current);
-          console.log(folderId);
-          console.log(mangaId);
           if (current.folderId === folderId && current.mangaId === mangaId) {
             exists = true;
           }
         });
         if (!exists) {
-          addMangaFolderEntry({ folderId, mangaId }).then((data) => {
-            console.log(data);
-          });
+          addMangaFolderEntry({ folderId, mangaId }).then((data) => {});
           setMangaExistsError(false);
         } else {
           console.log("entry already exists");
@@ -197,6 +138,7 @@ const IndividualManga = () => {
       setMangaLanguages(data.attributes.availableTranslatedLanguages);
       setMangaContentRating(data.attributes.contentRating);
 
+      console.log(data.attributes.availableTranslatedLanguages);
       setMangaRaw(
         data["attributes"].links === null ? "" : data["attributes"].links.raw,
       );
@@ -222,22 +164,23 @@ const IndividualManga = () => {
           : switchedOrder === true || currentOffset === 0
             ? setMangaFeed(data)
             : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-        console.log(data);
-        setScanlationGroups((scanlationGroups) => [
-          ...scanlationGroups,
-          ...new Set(
-            data.map(
-              (current: MangaFeedScanlationGroup) =>
-                current.relationships.filter(
-                  (rel: Relationship) => rel.type === "scanlation_group",
-                )[0],
-            ),
-          ),
-        ]);
+
+        const promises = data.map(
+          (current: MangaFeedScanlationGroup) =>
+            current.relationships.filter(
+              (rel: Relationship) => rel.type === "scanlation_group",
+            )[0],
+        );
+        Promise.all(promises).then((data) => {
+          console.log(data);
+          setScanlationGroups((scanlationGroups) => [
+            ...scanlationGroups,
+            ...new Set(data),
+          ]);
+        });
       });
     }
     if (selectedScanlationGroup !== undefined) {
-      console.log(mangaFeed);
       const filteredFeed: MangaFeedScanlationGroup[] = [];
       mangaFeed.map((current: MangaFeedScanlationGroup) => {
         if (Array.isArray(current.relationships)) {
@@ -320,6 +263,7 @@ const IndividualManga = () => {
             mangaId={state.id}
             insideReader={false}
           />
+
           <Button
             className="show-more-button"
             onClick={() => {
@@ -329,7 +273,7 @@ const IndividualManga = () => {
             {" "}
             Show More
           </Button>
-        </div>{" "}
+        </div>
       </div>
     </div>
   );

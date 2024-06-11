@@ -62,6 +62,13 @@ const MangaControls = (props: Props) => {
     setTranslators([
       ...new Set(mangaTranslators.map((current) => current.attributes.name)),
     ]);
+
+    console.log([
+      ...new Set(mangaTranslators.map((current) => current.attributes.name)),
+    ]);
+    console.log(mangaLanguages);
+    console.log(mangaTranslators);
+    console.log(currentOrder);
   }, [mangaTranslators]);
   return (
     <div className="controls-container">

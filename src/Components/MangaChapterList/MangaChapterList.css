@@ -37,7 +37,23 @@
 .chapter-button-text {
   display: flex;
   flex-direction: row;
+  @media (width >= 1200px) {
+    width: 70%;
+  }
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 90%;
+}
+
+.info-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chapter-details {
+  font-family: "Figtree" !important;
+  color: #fff;
+  text-transform: none;
 }

@@ -25,7 +25,11 @@ import {
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
 
 import { Account } from "../../interfaces/AccountInterfaces";
-import { MangaChapter, MangaFeed } from "../../interfaces/MangaDexInterfaces";
+import {
+  MangaChapter,
+  MangaFeedScanlationGroup,
+  Relationship,
+} from "../../interfaces/MangaDexInterfaces";
 
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
 
@@ -33,11 +37,11 @@ const Reader = () => {
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
-  const [chapters, setChapters] = useState<MangaFeed[]>([]);
+  const [chapters, setChapters] = useState<MangaFeedScanlationGroup[]>([]);
   const [selectedLanguage] = useState("en");
   const [open, setOpen] = useState(false);
   const [order] = useState("desc");
-  const [scantalationGroups] = useState<object[]>([]);
+  const [scanlationGroups, setScanlationGroups] = useState<object[]>([]);
 
   const handleOpenChapters = () => {
     /** 
@@ -112,10 +116,20 @@ const Reader = () => {
         }
       });
     }
-
-    fetchMangaFeed(state.mangaId, 300, 0, order, selectedLanguage).then(
-      (data: MangaFeed[]) => {
+    fetchMangaFeed(state.mangaId, 100, 0, order, selectedLanguage).then(
+      (data: MangaFeedScanlationGroup[]) => {
         setChapters(data);
+
+        setScanlationGroups([
+          ...new Set(
+            data.map(
+              (current: MangaFeedScanlationGroup) =>
+                current.relationships.filter(
+                  (rel: Relationship) => rel.type === "scanlation_group",
+                )[0],
+            ),
+          ),
+        ]);
       },
     );
   }, [state, order, selectedLanguage]);
@@ -153,7 +167,6 @@ const Reader = () => {
               mangaName={state.mangaName}
               selectedLanguage={selectedLanguage}
               insideReader={true}
-              scantalationGroups={scantalationGroups}
               setOpen={setOpen}
             />
           </Collapse>

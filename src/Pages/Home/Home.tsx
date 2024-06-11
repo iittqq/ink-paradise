@@ -111,7 +111,7 @@ const Home = () => {
             ))}
           </Grid>
 
-          <Button className="show-more-button">
+          <Button className="show-more-button-home">
             <ExpandMore
               sx={{ color: "#333333" }}
               onClick={() => handleClickMangaCoverListRA()}
@@ -146,7 +146,7 @@ const Home = () => {
               </Grid>
             ))}
           </Grid>
-          <Button className="show-more-button">
+          <Button className="show-more-button-home">
             <ExpandMore
               sx={{ color: "#333333" }}
               onClick={() => handleClickRecentlyUpdated()}

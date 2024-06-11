@@ -34,38 +34,31 @@ const MangaChapterList = (props: Props) => {
     mangaName: string,
     chapterNumber: number,
   ) => {
-    navigate("/reader", {
-      state: {
-        mangaId: mangaId,
-        chapterId: chapterId,
-        title: title,
-        volume: volume,
-        chapter: chapter,
-        mangaName: mangaName,
-        chapterNumber: chapterNumber,
-      },
-    });
-  };
-
-  const handleClickInsideReader = (
-    mangaId: string,
-    chapterId: string,
-    title: string,
-    volume: string,
-    chapter: string,
-    mangaName: string,
-  ) => {
-    //setCurrentPage(0);
-    navigate("/reader", {
-      state: {
-        mangaId: mangaId,
-        chapterId: chapterId,
-        title: title,
-        volume: volume,
-        chapter: chapter,
-        mangaName: mangaName,
-      },
-    });
+    if (insideReader) {
+      navigate("/reader", {
+        state: {
+          mangaId,
+          chapterId,
+          title,
+          volume,
+          chapter,
+          mangaName,
+        },
+      });
+      if (setOpen !== undefined) setOpen(false);
+    } else {
+      navigate("/reader", {
+        state: {
+          mangaId: mangaId,
+          chapterId: chapterId,
+          title: title,
+          volume: volume,
+          chapter: chapter,
+          mangaName: mangaName,
+          chapterNumber: chapterNumber,
+        },
+      });
+    }
   };
 
   return (
@@ -80,137 +73,68 @@ const MangaChapterList = (props: Props) => {
         {mangaFeed.map((current: MangaFeedScanlationGroup) =>
           current["attributes"]["translatedLanguage"] === selectedLanguage ? (
             <Grid item xs={6} className="chapter-button-container">
-              {insideReader === true ? (
-                <Button
-                  disableRipple
-                  className="chapter-button"
-                  sx={{
-                    backgroundColor: "#191919",
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                  onClick={() => {
-                    handleClickInsideReader(
-                      mangaId,
-                      current["id"],
-                      current["attributes"]["title"],
-                      current["attributes"]["volume"],
-                      current["attributes"]["chapter"],
-                      mangaName,
-                    );
-                    if (setOpen !== undefined) setOpen(false);
-                  }}
-                >
-                  <div className="chapter-button-text">
+              <Button
+                className="chapter-button"
+                disableRipple
+                sx={{
+                  backgroundColor: "#191919",
+                  "&:hover": { backgroundColor: "transparent" },
+                }}
+                onClick={() => {
+                  handleClick(
+                    mangaId,
+                    current["id"],
+                    current["attributes"]["title"],
+                    current["attributes"]["volume"],
+                    current["attributes"]["chapter"],
+                    mangaName,
+                    +current["attributes"]["chapter"],
+                  );
+                }}
+              >
+                <div className="chapter-button-text">
+                  <div className="info-stack">
                     <Typography
+                      className="chapter-details"
                       sx={{
-                        textTransform: "none",
-                        fontFamily: "Figtree",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
+                        fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
-                      color="#fff"
                     >
                       Chapter {current["attributes"].chapter}
                     </Typography>
                     <Typography
+                      fontFamily="Figtree"
                       color="#fff"
                       sx={{
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                        fontFamily: "Figtree",
-                        paddingLeft: "10px",
+                        fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
                       {current["attributes"].translatedLanguage}
                     </Typography>
+                  </div>
+                  <div className="info-stack">
                     <Typography
-                      color="#fff"
+                      className="chapter-details"
                       sx={{
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                        fontFamily: "Figtree",
-                        paddingLeft: "10px",
+                        fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
                       {current.relationships[0].attributes.name}
                     </Typography>
 
                     <Typography
-                      color="#fff"
+                      className="chapter-details"
                       sx={{
-                        fontFamily: "Figtree",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
+                        fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
                       {dayjs(current["attributes"].createdAt).format(
-                        "DD/MM/YYYY / HH:mm",
+                        "DD/MM/YYYY",
                       )}
                     </Typography>
                   </div>
-                </Button>
-              ) : (
-                <Button
-                  className="chapter-button"
-                  disableRipple
-                  sx={{
-                    backgroundColor: "#191919",
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                  onClick={() => {
-                    handleClick(
-                      mangaId,
-                      current["id"],
-                      current["attributes"]["title"],
-                      current["attributes"]["volume"],
-                      current["attributes"]["chapter"],
-                      mangaName,
-                      +current["attributes"]["chapter"],
-                    );
-                  }}
-                >
-                  <div className="chapter-button-text">
-                    <Typography
-                      sx={{
-                        fontFamily: "Figtree",
-                        textTransform: "none",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                      }}
-                      color="#fff"
-                    >
-                      Chapter {current["attributes"].chapter}
-                    </Typography>
-                    <Typography
-                      color="#fff"
-                      sx={{
-                        fontFamily: "Figtree",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                        paddingLeft: "10px",
-                      }}
-                    >
-                      {current["attributes"].translatedLanguage}
-                    </Typography>
-                    <Typography
-                      color="#fff"
-                      sx={{
-                        fontFamily: "Figtree",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                        paddingLeft: "10px",
-                      }}
-                    >
-                      {current.relationships[0].attributes.name}
-                    </Typography>
-
-                    <Typography
-                      color="#fff"
-                      sx={{
-                        fontFamily: "Figtree",
-                        fontSize: { xs: 8, sm: 10, lg: 15 },
-                      }}
-                    >
-                      {dayjs(current["attributes"].createdAt).format(
-                        "DD/MM/YYYY / HH:mm",
-                      )}
-                    </Typography>
-                  </div>
-                </Button>
-              )}
+                </div>
+              </Button>
             </Grid>
           ) : null,
         )}
