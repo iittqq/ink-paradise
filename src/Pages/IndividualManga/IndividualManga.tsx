@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
+import { Button } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
@@ -36,6 +36,9 @@ const IndividualManga = () => {
   const [mangaRaw, setMangaRaw] = useState("");
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
   const [mangaFeed, setMangaFeed] = useState<MangaFeedScanlationGroup[]>([]);
+  const [filteredMangaFeed, setFilteredMangaFeed] = useState<
+    MangaFeedScanlationGroup[] | undefined
+  >(undefined);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [currentOffset, setCurrentOffset] = useState(0);
   const [currentOrder, setCurrentOrder] = useState("asc");
@@ -123,7 +126,6 @@ const IndividualManga = () => {
     if (scanlationGroup !== undefined) {
       setSelectedScanlationGroup(scanlationGroup);
     } else {
-      setCurrentOffset(0);
       setSelectedScanlationGroup(undefined);
     }
     {
@@ -172,13 +174,8 @@ const IndividualManga = () => {
     }
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const bottom =
-      e.currentTarget.scrollHeight - e.currentTarget.scrollTop ===
-      e.currentTarget.clientHeight;
-    if (bottom) {
-      setCurrentOffset(currentOffset + 100);
-    }
+  const handleShowMore = () => {
+    setCurrentOffset(currentOffset + 100);
   };
 
   useEffect(() => {
@@ -206,49 +203,54 @@ const IndividualManga = () => {
 
       setMangaTags(data["attributes"].tags);
     });
-    setScanlationGroups([]);
-    fetchMangaFeed(
-      state.id,
-      100,
-      currentOffset,
-      currentOrder,
-      selectedLanguage,
-    ).then((data: MangaFeedScanlationGroup[]) => {
-      console.log(selectedScanlationGroup);
-      data.length === 0
-        ? setCurrentOffset(0)
-        : switchedOrder === true
-          ? setMangaFeed(data)
-          : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-      console.log(data);
-      setScanlationGroups([
-        ...new Set(
-          data.map(
-            (current: MangaFeedScanlationGroup) =>
-              current.relationships.filter(
-                (rel: Relationship) => rel.type === "scanlation_group",
-              )[0],
+    if (
+      currentOffset !== mangaFeed.length ||
+      currentOffset === 0 ||
+      currentOffset === 100
+    ) {
+      fetchMangaFeed(
+        state.id,
+        100,
+        currentOffset,
+        currentOrder,
+        selectedLanguage,
+      ).then((data: MangaFeedScanlationGroup[]) => {
+        console.log(selectedScanlationGroup);
+        console.log(currentOffset);
+        data.length === 0
+          ? setCurrentOffset(0)
+          : switchedOrder === true || currentOffset === 0
+            ? setMangaFeed(data)
+            : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+        console.log(data);
+        setScanlationGroups((scanlationGroups) => [
+          ...scanlationGroups,
+          ...new Set(
+            data.map(
+              (current: MangaFeedScanlationGroup) =>
+                current.relationships.filter(
+                  (rel: Relationship) => rel.type === "scanlation_group",
+                )[0],
+            ),
           ),
-        ),
-      ]);
-
-      if (selectedScanlationGroup !== undefined) {
-        const filteredFeed: MangaFeedScanlationGroup[] = [];
-        data.map((current: MangaFeedScanlationGroup) => {
-          if (Array.isArray(current.relationships)) {
-            const hasMatchingGroup = current.relationships.some(
-              (rel: Relationship) => rel.id === selectedScanlationGroup.id,
-            );
-            if (hasMatchingGroup) {
-              filteredFeed.push(current);
-            }
+        ]);
+      });
+    }
+    if (selectedScanlationGroup !== undefined) {
+      console.log(mangaFeed);
+      const filteredFeed: MangaFeedScanlationGroup[] = [];
+      mangaFeed.map((current: MangaFeedScanlationGroup) => {
+        if (Array.isArray(current.relationships)) {
+          const hasMatchingGroup = current.relationships.some(
+            (rel: Relationship) => rel.id === selectedScanlationGroup.id,
+          );
+          if (hasMatchingGroup) {
+            filteredFeed.push(current);
           }
-        });
-        setMangaFeed(filteredFeed);
-      } else {
-        setMangaFeed(data);
-      }
-    });
+        }
+      });
+      setFilteredMangaFeed(filteredFeed);
+    }
     setSwitchedOrder(false);
   }, [
     state,
@@ -305,14 +307,28 @@ const IndividualManga = () => {
           handleSwitchOrder={handleSwitchOrder}
           handleFilterScanlationGroups={handleFilterScanlationGroups}
         />
-        <div className="manga-chapter-list" onScroll={handleScroll}>
+        <div className="manga-chapter-list">
           <MangaChapterList
-            mangaFeed={mangaFeed}
+            mangaFeed={
+              selectedScanlationGroup !== undefined &&
+              filteredMangaFeed !== undefined
+                ? filteredMangaFeed
+                : mangaFeed
+            }
             mangaName={mangaName}
             selectedLanguage={selectedLanguage}
             mangaId={state.id}
             insideReader={false}
           />
+          <Button
+            className="show-more-button"
+            onClick={() => {
+              handleShowMore();
+            }}
+          >
+            {" "}
+            Show More
+          </Button>
         </div>{" "}
       </div>
     </div>

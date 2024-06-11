@@ -141,6 +141,7 @@ const MangaControls = (props: Props) => {
               </Typography>
             </Button>
           </Grid>
+
           {translators?.map((current: string) => (
             <Grid item>
               <Button
