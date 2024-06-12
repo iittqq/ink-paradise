@@ -160,8 +160,6 @@ const MangaControls = (props: Props) => {
                 <Typography
                   className="scanlation-text"
                   sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-                  color="#333333"
-                  fontFamily="Figtree"
                 >
                   {current}
                 </Typography>

@@ -103,7 +103,7 @@ const IndividualManga = () => {
           }
         });
         if (!exists) {
-          addMangaFolderEntry({ folderId, mangaId }).then((data) => {});
+          addMangaFolderEntry({ folderId, mangaId });
           setMangaExistsError(false);
         } else {
           console.log("entry already exists");
@@ -157,8 +157,6 @@ const IndividualManga = () => {
         currentOrder,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
-        console.log(selectedScanlationGroup);
-        console.log(currentOffset);
         data.length === 0
           ? setCurrentOffset(0)
           : switchedOrder === true || currentOffset === 0
@@ -172,10 +170,13 @@ const IndividualManga = () => {
             )[0],
         );
         Promise.all(promises).then((data) => {
-          console.log(data);
           setScanlationGroups((scanlationGroups) => [
             ...scanlationGroups,
-            ...new Set(data),
+            ...new Set(
+              data.filter(function (element) {
+                return element !== undefined;
+              }),
+            ),
           ]);
         });
       });

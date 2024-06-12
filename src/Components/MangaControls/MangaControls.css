@@ -64,4 +64,10 @@
 
 .scanlation-text {
   text-transform: none;
+  font-family: "Figtree", sans-serif !important;
+  color: #333 !important;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }

@@ -33,6 +33,7 @@ const MangaChapterList = (props: Props) => {
     chapter: string,
     mangaName: string,
     chapterNumber: number,
+    externalUrl: string,
   ) => {
     if (insideReader) {
       navigate("/reader", {
@@ -56,6 +57,7 @@ const MangaChapterList = (props: Props) => {
           chapter: chapter,
           mangaName: mangaName,
           chapterNumber: chapterNumber,
+          externalUrl: externalUrl,
         },
       });
     }
@@ -71,7 +73,7 @@ const MangaChapterList = (props: Props) => {
         className="chapters-list"
       >
         {mangaFeed.map((current: MangaFeedScanlationGroup) =>
-          current["attributes"]["translatedLanguage"] === selectedLanguage ? (
+          current.attributes.translatedLanguage === selectedLanguage ? (
             <Grid item xs={6} className="chapter-button-container">
               <Button
                 className="chapter-button"
@@ -83,12 +85,13 @@ const MangaChapterList = (props: Props) => {
                 onClick={() => {
                   handleClick(
                     mangaId,
-                    current["id"],
-                    current["attributes"]["title"],
-                    current["attributes"]["volume"],
-                    current["attributes"]["chapter"],
+                    current.id,
+                    current.attributes.title,
+                    current.attributes.volume,
+                    current.attributes.chapter,
                     mangaName,
-                    +current["attributes"]["chapter"],
+                    +current.attributes.chapter,
+                    current.attributes.externalUrl,
                   );
                 }}
               >
@@ -100,7 +103,7 @@ const MangaChapterList = (props: Props) => {
                         fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
-                      Chapter {current["attributes"].chapter}
+                      Chapter {current.attributes.chapter}
                     </Typography>
                     <Typography
                       fontFamily="Figtree"
@@ -109,9 +112,10 @@ const MangaChapterList = (props: Props) => {
                         fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
-                      {current["attributes"].translatedLanguage}
+                      {current.attributes.translatedLanguage}
                     </Typography>
                   </div>
+
                   <div className="info-stack">
                     <Typography
                       className="chapter-details"
@@ -119,7 +123,9 @@ const MangaChapterList = (props: Props) => {
                         fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
-                      {current.relationships[0].attributes.name}
+                      {current.relationships[0].type === "scanlation_group"
+                        ? current.relationships[0].attributes.name
+                        : "Unknown"}
                     </Typography>
 
                     <Typography
@@ -128,9 +134,7 @@ const MangaChapterList = (props: Props) => {
                         fontSize: { xs: 10, sm: 10, lg: 13 },
                       }}
                     >
-                      {dayjs(current["attributes"].createdAt).format(
-                        "DD/MM/YYYY",
-                      )}
+                      {dayjs(current.attributes.createdAt).format("DD/MM/YYYY")}
                     </Typography>
                   </div>
                 </div>

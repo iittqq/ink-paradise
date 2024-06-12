@@ -72,6 +72,7 @@ export interface MangaFeedScanlationGroup {
     updatedAt: string;
     publishAt: string;
     readableAt: string;
+    externalUrl: string;
   };
   relationships: {
     id: string;

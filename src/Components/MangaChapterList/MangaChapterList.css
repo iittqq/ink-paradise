@@ -50,10 +50,23 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 40%;
 }
 
+.scanlation-name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-family: "Figtree" !important;
+  color: #fff;
+}
 .chapter-details {
   font-family: "Figtree" !important;
   color: #fff;
   text-transform: none;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }

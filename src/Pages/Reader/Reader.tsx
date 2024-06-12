@@ -65,8 +65,12 @@ const Reader = () => {
 */
   useEffect(() => {
     fetchChapterData(state.chapterId).then((data: MangaChapter) => {
-      setPages(data.chapter.data);
-      setHash(data.chapter.hash);
+      if (data.chapter.data.length === 0) {
+        window.location.replace(state.externalUrl);
+      } else {
+        setPages(data.chapter.data);
+        setHash(data.chapter.hash);
+      }
     });
     const date = dayjs();
 
