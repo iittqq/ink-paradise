@@ -62,3 +62,23 @@
 .manga-chapter-list::-webkit-scrollbar {
   display: none;
 }
+
+.bottom-desktop-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.similar-manga {
+  height: 50dvh;
+  overflow: scroll;
+  @media (width <= 1600px) {
+    display: none;
+  }
+  scrollbar-width: none;
+}
+
+.similar-manga::-webkit-scrollbar {
+  display: none;
+}

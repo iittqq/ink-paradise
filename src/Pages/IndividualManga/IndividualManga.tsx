@@ -6,6 +6,7 @@ import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import MangaPageButtonHeader from "../../Components/MangaPageButtonHeader/MangaPageButtonHeader";
+import SimilarManga from "../../Components/SimilarManga/SimilarManga";
 import {
   Manga,
   MangaTagsInterface,
@@ -14,7 +15,11 @@ import {
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
 
-import { fetchMangaFeed, fetchMangaById } from "../../api/MangaDexApi";
+import {
+  fetchMangaFeed,
+  fetchMangaById,
+  fetchSimilarManga,
+} from "../../api/MangaDexApi";
 
 import "./IndividualManga.css";
 import {
@@ -54,6 +59,7 @@ const IndividualManga = () => {
   const [showInfoToggled, setShowInfoToggled] = useState(false);
   const [showCategoriesToggled, setShowCategoriesToggled] = useState(false);
   const [switchedOrder, setSwitchedOrder] = useState<boolean>(false);
+  const [similarManga, setSimilarManga] = useState<Manga[]>([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -144,6 +150,12 @@ const IndividualManga = () => {
       );
 
       setMangaTags(data["attributes"].tags);
+      const tagIds = data["attributes"].tags.map((tag) => tag.id);
+      console.log(tagIds);
+      fetchSimilarManga(10, tagIds).then((data: Manga[]) => {
+        console.log(data);
+        setSimilarManga(data);
+      });
     });
     if (
       currentOffset !== mangaFeed.length ||
@@ -251,29 +263,34 @@ const IndividualManga = () => {
           handleSwitchOrder={handleSwitchOrder}
           handleFilterScanlationGroups={handleFilterScanlationGroups}
         />
-        <div className="manga-chapter-list">
-          <MangaChapterList
-            mangaFeed={
-              selectedScanlationGroup !== undefined &&
-              filteredMangaFeed !== undefined
-                ? filteredMangaFeed
-                : mangaFeed
-            }
-            mangaName={mangaName}
-            selectedLanguage={selectedLanguage}
-            mangaId={state.id}
-            insideReader={false}
-          />
+        <div className="bottom-desktop-container">
+          <div className="manga-chapter-list">
+            <MangaChapterList
+              mangaFeed={
+                selectedScanlationGroup !== undefined &&
+                filteredMangaFeed !== undefined
+                  ? filteredMangaFeed
+                  : mangaFeed
+              }
+              mangaName={mangaName}
+              selectedLanguage={selectedLanguage}
+              mangaId={state.id}
+              insideReader={false}
+            />
 
-          <Button
-            className="show-more-button"
-            onClick={() => {
-              handleShowMore();
-            }}
-          >
-            {" "}
-            Show More
-          </Button>
+            <Button
+              className="show-more-button"
+              onClick={() => {
+                handleShowMore();
+              }}
+            >
+              {" "}
+              Show More
+            </Button>
+          </div>
+          <div className="similar-manga">
+            <SimilarManga manga={similarManga} />
+          </div>
         </div>
       </div>
     </div>

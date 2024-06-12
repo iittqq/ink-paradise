@@ -198,6 +198,26 @@ async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
   }
 }
 
+async function fetchSimilarManga(
+  limit: number,
+  tags: string[],
+): Promise<Manga[]> {
+  try {
+    const params = new URLSearchParams();
+    params.append("limit", limit.toString());
+    tags.forEach((tag) => {
+      params.append("tags", tag);
+    });
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-similar`, {
+      params,
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
 export {
   fetchMangaById,
   fetchRecentlyUpdated,
@@ -210,4 +230,5 @@ export {
   fetchMangaByAuthor,
   fetchMangaByTag,
   fetchChapterData,
+  fetchSimilarManga,
 };
