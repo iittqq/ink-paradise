@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
@@ -288,8 +288,13 @@ const IndividualManga = () => {
               Show More
             </Button>
           </div>
-          <div className="similar-manga">
-            <SimilarManga manga={similarManga} />
+          <div className="similar-manga-section">
+            <Typography fontSize={22} fontFamily="Figtree" align="center">
+              Similar Manga
+            </Typography>{" "}
+            <div className="similar-manga">
+              <SimilarManga manga={similarManga} />
+            </div>
           </div>
         </div>
       </div>
