@@ -10,7 +10,8 @@
   height: 250px;
   border-radius: 10px;
   object-fit: cover;
-  @media screen and (max-width: 600px) {
+
+  @media (width <= 600px) {
     width: 150px;
     height: 150px;
   }
@@ -214,7 +215,8 @@ input[type="file"] {
 #info-dialog .MuiPaper-root {
   background-color: #121212 !important;
   width: 20dvw !important;
-  @media screen and (max-width: 600px) {
+
+  @media (width <= 600px) {
     width: 90vw !important;
   }
 }

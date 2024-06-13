@@ -12,7 +12,7 @@ import Login from "./Pages/Login/Login";
 
 function App() {
   return (
-    <div className="page-details">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

@@ -7,7 +7,8 @@ import {
   CoverFile,
   MangaTagsInterface,
   MangaChapter,
-  MangaFeed,
+  ScanlationGroup,
+  MangaFeedScanlationGroup,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
@@ -130,7 +131,7 @@ async function fetchMangaFeed(
   offset: number,
   order: string,
   language: string,
-): Promise<MangaFeed[]> {
+): Promise<MangaFeedScanlationGroup[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-feed`, {
       params: {
@@ -148,21 +149,18 @@ async function fetchMangaFeed(
   }
 }
 
-async function fetchScantalationGroup(
-  groupId: string,
-): Promise<object[] | undefined> {
+async function fetchScanlationGroup(id: string): Promise<ScanlationGroup> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/scanlation-group`, {
       params: {
-        id: groupId,
+        id: id,
       },
     });
     return response["data"]["data"];
   } catch (error) {
     console.error("Error fetching manga:", error);
-    //throw error;
+    throw error;
   }
-  return undefined;
 }
 
 async function fetchMangaByAuthor(
@@ -200,6 +198,26 @@ async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
   }
 }
 
+async function fetchSimilarManga(
+  limit: number,
+  tags: string[],
+): Promise<Manga[]> {
+  try {
+    const params = new URLSearchParams();
+    params.append("limit", limit.toString());
+    tags.forEach((tag) => {
+      params.append("tags", tag);
+    });
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-similar`, {
+      params,
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
 export {
   fetchMangaById,
   fetchRecentlyUpdated,
@@ -208,8 +226,9 @@ export {
   fetchMangaByTitle,
   fetchMangaCover,
   fetchMangaFeed,
-  fetchScantalationGroup,
+  fetchScanlationGroup,
   fetchMangaByAuthor,
   fetchMangaByTag,
   fetchChapterData,
+  fetchSimilarManga,
 };

@@ -1,43 +1,43 @@
 .header {
-	position: relative;
-	top: 0;
-	left: 0;
-	width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 .reader-page {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .reader-feed {
-	@media screen and (max-width: 900px) {
-		width: 80dvw;
-	}
-	width: 20dvw;
-	height: 100%;
-	justify-content: center;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	overflow: scroll;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+  @media (width <= 1200px) {
+    width: 95dvw;
+  }
+  width: 80dvw;
+
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .reader-feed::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 .reader-feed-collapse {
-	width: 100%;
 }
 
 .reader-feed-button {
-	width: 100%;
-	color: #121212;
-	background-color: transparent;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
+  width: 100%;
+  color: #121212;
+  background-color: transparent;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
