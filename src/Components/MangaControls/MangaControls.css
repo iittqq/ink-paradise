@@ -39,7 +39,6 @@
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  padding-bottom: 10px;
   width: 100%;
 
   @media (width >= 900px) {

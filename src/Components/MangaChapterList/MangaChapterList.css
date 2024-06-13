@@ -1,7 +1,6 @@
 .chapters-list {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  width: 100% !important;
 }
 .chapters-list::-webkit-scrollbar {
   display: none;
@@ -9,7 +8,7 @@
 
 .chapter-button-container {
   height: 50px;
-  width: 100%;
+  width: 25dvw;
   display: flex;
   justify-content: center;
   align-items: center;

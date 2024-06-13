@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
@@ -22,6 +23,7 @@ const MangaChapterList = (props: Props) => {
     insideReader,
     setOpen,
   } = props;
+  const [xsValue, setXsValue] = useState(6);
 
   const navigate = useNavigate();
 
@@ -63,6 +65,12 @@ const MangaChapterList = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (mangaFeed.length === 1) {
+      setXsValue(12);
+    }
+  }, [mangaFeed]);
+
   return (
     <div className="manga-chapters">
       <Grid
@@ -74,7 +82,7 @@ const MangaChapterList = (props: Props) => {
       >
         {mangaFeed.map((current: MangaFeedScanlationGroup) =>
           current.attributes.translatedLanguage === selectedLanguage ? (
-            <Grid item xs={6} className="chapter-button-container">
+            <Grid item xs={xsValue} className="chapter-button-container">
               <Button
                 className="chapter-button"
                 disableRipple
