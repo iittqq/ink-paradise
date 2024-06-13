@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
+import { Reading } from "../../interfaces/ReadingInterfaces";
+import { Account } from "../../interfaces/AccountInterfaces";
+import { getReadingByUserId } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
@@ -13,6 +16,7 @@ type Props = {
   selectedLanguage: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
+  handleSwitchedManga?: () => void;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -22,8 +26,10 @@ const MangaChapterList = (props: Props) => {
     selectedLanguage,
     insideReader,
     setOpen,
+    handleSwitchedManga,
   } = props;
   const [xsValue, setXsValue] = useState(6);
+  const [userProgress, setUserProgress] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -72,7 +78,24 @@ const MangaChapterList = (props: Props) => {
     if (mangaFeed.length === 1) {
       setXsValue(12);
     }
-  }, [mangaFeed]);
+    setUserProgress(0);
+    const account = window.localStorage.getItem("account") as string | null;
+    let accountData: Account | null = null;
+    if (account !== null) {
+      accountData = JSON.parse(account);
+    }
+    if (accountData !== null) {
+      getReadingByUserId(accountData.id).then((data: Reading[]) => {
+        data
+          .filter((reading: Reading) => reading.mangaId === mangaId)
+          .map((reading: Reading) => {
+            setUserProgress(reading.chapter);
+            console.log(reading);
+          });
+        console.log(data);
+      });
+    }
+  }, [mangaFeed, mangaId]);
 
   return (
     <div className="manga-chapters">
@@ -90,10 +113,14 @@ const MangaChapterList = (props: Props) => {
                 className="chapter-button"
                 disableRipple
                 sx={{
-                  backgroundColor: "#191919",
+                  backgroundColor:
+                    Number(current.attributes.chapter) < Number(userProgress)
+                      ? "#191919"
+                      : "#333333",
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {
+                  handleSwitchedManga !== undefined && handleSwitchedManga();
                   handleClick(
                     mangaId,
                     current.id,
