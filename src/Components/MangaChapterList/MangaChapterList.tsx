@@ -36,16 +36,18 @@ const MangaChapterList = (props: Props) => {
     mangaName: string,
     chapterNumber: number,
     externalUrl: string,
+    scanlationGroup: string,
   ) => {
     if (insideReader) {
       navigate("/reader", {
         state: {
-          mangaId,
-          chapterId,
-          title,
-          volume,
-          chapter,
-          mangaName,
+          mangaId: mangaId,
+          chapterId: chapterId,
+          title: title,
+          volume: volume,
+          chapter: chapter,
+          mangaName: mangaName,
+          scanlationGroup: scanlationGroup,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -60,6 +62,7 @@ const MangaChapterList = (props: Props) => {
           mangaName: mangaName,
           chapterNumber: chapterNumber,
           externalUrl: externalUrl,
+          scanlationGroup: scanlationGroup,
         },
       });
     }
@@ -100,6 +103,9 @@ const MangaChapterList = (props: Props) => {
                     mangaName,
                     +current.attributes.chapter,
                     current.attributes.externalUrl,
+                    current.relationships[0].type === "scanlation_group"
+                      ? current.relationships[0].attributes.name
+                      : "Unknown",
                   );
                 }}
               >

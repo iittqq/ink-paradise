@@ -12,6 +12,11 @@
   align-items: center;
 }
 
+.reader-page-text {
+  color: #fff;
+  font-family: "Figtree", sans-serif !important;
+}
+
 .reader-feed {
   @media (width <= 1200px) {
     width: 95dvw;

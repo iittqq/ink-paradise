@@ -140,3 +140,7 @@ export interface TopManga {
   rank: string;
   authors: { name: string }[];
 }
+
+export interface PageImage {
+  url: string;
+}

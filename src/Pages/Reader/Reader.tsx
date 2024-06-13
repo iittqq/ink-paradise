@@ -4,8 +4,10 @@ import {
   ListItemButton,
   ListItemText,
   Collapse,
+  Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import dayjs from "dayjs";
@@ -28,41 +30,28 @@ import { Account } from "../../interfaces/AccountInterfaces";
 import {
   MangaChapter,
   MangaFeedScanlationGroup,
-  Relationship,
 } from "../../interfaces/MangaDexInterfaces";
 
 const pageBaseUrl = "https://uploads.mangadex.org/data/";
 
 const Reader = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
   const [chapters, setChapters] = useState<MangaFeedScanlationGroup[]>([]);
   const [selectedLanguage] = useState("en");
   const [open, setOpen] = useState(false);
-  const [order] = useState("desc");
-  const [scanlationGroups, setScanlationGroups] = useState<object[]>([]);
+  const [order] = useState("asc");
+  const [userProgress, setUserProgress] = useState<Reading[]>([]);
 
   const handleOpenChapters = () => {
-    /** 
-		chapters.forEach((current) => {
-			fetchScantalationGroup(current["relationships"][0]["id"]);
-		});*/
     setOpen(!open);
   };
-  /** 
-	const fetchScantalationGroup = async (id: string) => {
-		fetch(`${baseUrl}/group/${id}`)
-			.then((response) => response.json())
-			.then((group) => {
-				setScantalationGroups((scantalationGroups) => [
-					...scantalationGroups,
-					group["data"]["attributes"]["name"],
-				]);
-				console.log(group);
-			});
-	};
-*/
+
+  function handleClickTitle() {
+    navigate(-1);
+  }
   useEffect(() => {
     fetchChapterData(state.chapterId).then((data: MangaChapter) => {
       if (data.chapter.data.length === 0) {
@@ -82,6 +71,7 @@ const Reader = () => {
     let readingExists = false;
     if (accountData !== null) {
       getReadingByUserId(accountData.id).then((data: Reading[]) => {
+        setUserProgress(data);
         console.log(data);
         data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
@@ -123,17 +113,6 @@ const Reader = () => {
     fetchMangaFeed(state.mangaId, 100, 0, order, selectedLanguage).then(
       (data: MangaFeedScanlationGroup[]) => {
         setChapters(data);
-
-        setScanlationGroups([
-          ...new Set(
-            data.map(
-              (current: MangaFeedScanlationGroup) =>
-                current.relationships.filter(
-                  (rel: Relationship) => rel.type === "scanlation_group",
-                )[0],
-            ),
-          ),
-        ]);
       },
     );
   }, [state, order, selectedLanguage]);
@@ -144,8 +123,21 @@ const Reader = () => {
         <Header />
       </div>
       <div className="reader-page">
-        <Typography color="white">{state.mangaName}</Typography>
-        <Typography color="white">{state.title}</Typography>
+        <Button
+          sx={{ textTransform: "none" }}
+          onClick={() => {
+            handleClickTitle();
+          }}
+        >
+          <Typography className="reader-page-text" fontSize={20}>
+            {state.mangaName}
+          </Typography>
+        </Button>
+        <Typography className="reader-page-text">{state.title}</Typography>
+        <Typography className="reader-page-text">
+          {" "}
+          Scanlation Group: {state.scanlationGroup}
+        </Typography>
         <List className="reader-feed">
           <ListItemButton
             className="reader-feed-button"
@@ -153,7 +145,11 @@ const Reader = () => {
           >
             <ListItemText
               primary={
-                <Typography color="white" sx={{ width: "100%" }} noWrap>
+                <Typography
+                  className="reader-page-text"
+                  sx={{ width: "100%" }}
+                  noWrap
+                >
                   {"Volume " + state.volume + " Chapter " + state.chapter}
                 </Typography>
               }
@@ -185,12 +181,7 @@ const Reader = () => {
           currentChapter={state.chapter}
           mangaId={state.mangaId}
           mangaName={state.mangaName}
-          offsetStart={
-            isNaN(state.startingPage) === true ||
-            state.startingPage === undefined
-              ? 0
-              : state.startingPage
-          }
+          scanlationGroup={state.scanlationGroup}
         />
       )}
     </div>
