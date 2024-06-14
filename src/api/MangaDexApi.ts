@@ -218,6 +218,20 @@ async function fetchSimilarManga(
   }
 }
 
+async function fetchPopularManga(limit: number): Promise<Manga[]> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/popular-manga`, {
+      params: {
+        limit: limit,
+      },
+    });
+    return response["data"]["data"];
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
 export {
   fetchMangaById,
   fetchRecentlyUpdated,
@@ -231,4 +245,5 @@ export {
   fetchMangaByTag,
   fetchChapterData,
   fetchSimilarManga,
+  fetchPopularManga,
 };

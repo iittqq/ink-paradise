@@ -1,0 +1,47 @@
+.popular-carousel-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.popular-carousel-grid-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 200px;
+}
+
+.popular-carousel-grid-item-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 250px;
+  width: 20px;
+}
+
+.popular-carousel-grid-item-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: rotate(-180deg);
+  writing-mode: vertical-rl;
+  text-transform: none;
+  max-height: 80%;
+  font-family: "Figtree", sans-serif !important;
+}
+
+.popular-carousel-grid-item-rank {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transform: rotate(-90deg);
+  writing-mode: vertical-rl;
+  text-transform: none;
+  font-family: "Figtree", sans-serif !important;
+  height: 20px;
+}
