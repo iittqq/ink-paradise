@@ -217,7 +217,7 @@ const IndividualManga = () => {
   ]);
 
   return (
-    <div>
+    <div className="individual-page-container">
       <div className="header">
         <Header />
       </div>

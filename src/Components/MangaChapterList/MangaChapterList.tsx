@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { getReadingByUserId } from "../../api/Reading";
@@ -16,7 +17,6 @@ type Props = {
   selectedLanguage: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
-  handleSwitchedManga?: () => void;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -26,7 +26,6 @@ const MangaChapterList = (props: Props) => {
     selectedLanguage,
     insideReader,
     setOpen,
-    handleSwitchedManga,
   } = props;
   const [xsValue, setXsValue] = useState(6);
   const [userProgress, setUserProgress] = useState<number>(0);
@@ -78,6 +77,7 @@ const MangaChapterList = (props: Props) => {
     if (mangaFeed.length === 1) {
       setXsValue(12);
     }
+    console.log(mangaFeed);
     setUserProgress(0);
     const account = window.localStorage.getItem("account") as string | null;
     let accountData: Account | null = null;
@@ -120,20 +120,23 @@ const MangaChapterList = (props: Props) => {
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {
-                  handleSwitchedManga !== undefined && handleSwitchedManga();
-                  handleClick(
-                    mangaId,
-                    current.id,
-                    current.attributes.title,
-                    current.attributes.volume,
-                    current.attributes.chapter,
-                    mangaName,
-                    +current.attributes.chapter,
-                    current.attributes.externalUrl,
-                    current.relationships[0].type === "scanlation_group"
-                      ? current.relationships[0].attributes.name
-                      : "Unknown",
-                  );
+                  if (current.attributes.externalUrl !== null) {
+                    window.location.replace(current.attributes.externalUrl);
+                  } else {
+                    handleClick(
+                      mangaId,
+                      current.id,
+                      current.attributes.title,
+                      current.attributes.volume,
+                      current.attributes.chapter,
+                      mangaName,
+                      +current.attributes.chapter,
+                      current.attributes.externalUrl,
+                      current.relationships[0].type === "scanlation_group"
+                        ? current.relationships[0].attributes.name
+                        : "Unknown",
+                    );
+                  }
                 }}
               >
                 <div className="chapter-button-text">
@@ -179,6 +182,11 @@ const MangaChapterList = (props: Props) => {
                     </Typography>
                   </div>
                 </div>
+                {current.attributes.externalUrl !== null ? (
+                  <div className="external-link-button">
+                    <OpenInNewIcon />
+                  </div>
+                ) : null}
               </Button>
             </Grid>
           ) : null,

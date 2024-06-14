@@ -24,9 +24,11 @@
 }
 
 .page-container {
-  height: 65dvh;
   position: relative;
   overflow: scroll;
+  display: grid;
+  justify-content: center;
+  align-items: center;
   scrollbar-width: none;
   @media (width >= 1600px) {
     height: 74dvh;
@@ -39,7 +41,6 @@
 .page {
   width: 100%;
   object-fit: contain;
-  min-height: 65dvh;
 }
 
 .overlay-buttons {

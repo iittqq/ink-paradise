@@ -43,7 +43,6 @@ const Reader = () => {
   const [selectedLanguage] = useState("en");
   const [open, setOpen] = useState(false);
   const [order] = useState("asc");
-  const [userProgress, setUserProgress] = useState<Reading[]>([]);
 
   const handleOpenChapters = () => {
     setOpen(!open);
@@ -54,12 +53,8 @@ const Reader = () => {
   }
   useEffect(() => {
     fetchChapterData(state.chapterId).then((data: MangaChapter) => {
-      if (data.chapter.data.length === 0) {
-        window.location.replace(state.externalUrl);
-      } else {
-        setPages(data.chapter.data);
-        setHash(data.chapter.hash);
-      }
+      setPages(data.chapter.data);
+      setHash(data.chapter.hash);
     });
     const date = dayjs();
 
@@ -71,7 +66,6 @@ const Reader = () => {
     let readingExists = false;
     if (accountData !== null) {
       getReadingByUserId(accountData.id).then((data: Reading[]) => {
-        setUserProgress(data);
         console.log(data);
         data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
@@ -122,7 +116,7 @@ const Reader = () => {
       <div className="header">
         <Header />
       </div>
-      <div className="reader-page">
+      <div className="current-manga-details">
         <Button
           sx={{ textTransform: "none" }}
           onClick={() => {

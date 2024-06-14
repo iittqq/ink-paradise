@@ -1,3 +1,7 @@
+.individual-page-container {
+  height: 100%;
+}
+
 .header {
   position: relative;
   top: 0;
@@ -40,22 +44,19 @@
 .manga-chapter-list {
   overflow: scroll;
   display: flex;
-
-  height: 50dvh;
   align-items: center;
   flex-direction: column;
   width: 50%;
+  height: 50dvh;
   -ms-overflow-style: none;
   scrollbar-width: none;
 
   @media (width <= 1600px) {
     width: 90%;
-    height: 70dvh;
   }
 
   @media (width <= 600px) {
-    width: 100%;
-    height: 58dvh;
+    width: 90dvw;
   }
 }
 
