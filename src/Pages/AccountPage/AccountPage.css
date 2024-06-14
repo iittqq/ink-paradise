@@ -1,6 +1,7 @@
 .user-page-container {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  height: 100%;
 }
 
 .user-image {

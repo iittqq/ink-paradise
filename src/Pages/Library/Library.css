@@ -4,3 +4,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.library-page-container {
+  height: 100%;
+}

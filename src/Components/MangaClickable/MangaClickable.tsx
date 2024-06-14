@@ -14,8 +14,6 @@ type Props = {
   coverId?: string;
   updatedAt?: string;
   rank?: string;
-  coverUrl?: string;
-  author?: string;
   disabled?: boolean;
 };
 
@@ -24,25 +22,21 @@ const MangaClickable = (props: Props) => {
   const [coverFile, setCoverFile] = useState("");
   //const [showDetails, setShowDetails] = useState(false);
 
-  const { id, title, coverId, updatedAt, rank, coverUrl, author, disabled } =
-    props;
+  const { id, title, coverId, updatedAt, rank, disabled } = props;
 
   function handleClick() {
     navigate("/individualView", {
-      state:
-        coverUrl === undefined
-          ? { id: id, coverFile: coverFile }
-          : { title: title, author: author },
+      state: { id: id, coverFile: coverFile },
     });
   }
 
   useEffect(() => {
-    if (coverId !== undefined && coverUrl === undefined) {
+    if (coverId !== undefined) {
       fetchMangaCover(coverId).then((data) => {
         setCoverFile(data.attributes.fileName);
       });
     }
-  }, [coverUrl, coverId]);
+  }, [coverId]);
 
   return (
     <>
@@ -66,9 +60,7 @@ const MangaClickable = (props: Props) => {
               height: "100%",
             }}
             image={
-              coverUrl === undefined
-                ? "https://uploads.mangadex.org/covers/" + id + "/" + coverFile
-                : coverUrl
+              "https://uploads.mangadex.org/covers/" + id + "/" + coverFile
             }
           />
         </Card>

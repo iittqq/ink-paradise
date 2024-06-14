@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { Reading } from "../../interfaces/ReadingInterfaces";
+import { Account } from "../../interfaces/AccountInterfaces";
+import { getReadingByUserId } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
@@ -24,6 +28,7 @@ const MangaChapterList = (props: Props) => {
     setOpen,
   } = props;
   const [xsValue, setXsValue] = useState(6);
+  const [userProgress, setUserProgress] = useState<number>(0);
 
   const navigate = useNavigate();
 
@@ -36,16 +41,18 @@ const MangaChapterList = (props: Props) => {
     mangaName: string,
     chapterNumber: number,
     externalUrl: string,
+    scanlationGroup: string,
   ) => {
     if (insideReader) {
       navigate("/reader", {
         state: {
-          mangaId,
-          chapterId,
-          title,
-          volume,
-          chapter,
-          mangaName,
+          mangaId: mangaId,
+          chapterId: chapterId,
+          title: title,
+          volume: volume,
+          chapter: chapter,
+          mangaName: mangaName,
+          scanlationGroup: scanlationGroup,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -60,16 +67,38 @@ const MangaChapterList = (props: Props) => {
           mangaName: mangaName,
           chapterNumber: chapterNumber,
           externalUrl: externalUrl,
+          scanlationGroup: scanlationGroup,
         },
       });
     }
   };
 
   useEffect(() => {
+    console.log(mangaFeed.length);
     if (mangaFeed.length === 1) {
       setXsValue(12);
+    } else {
+      setXsValue(6);
     }
-  }, [mangaFeed]);
+    console.log(mangaFeed);
+    setUserProgress(0);
+    const account = window.localStorage.getItem("account") as string | null;
+    let accountData: Account | null = null;
+    if (account !== null) {
+      accountData = JSON.parse(account);
+    }
+    if (accountData !== null) {
+      getReadingByUserId(accountData.id).then((data: Reading[]) => {
+        data
+          .filter((reading: Reading) => reading.mangaId === mangaId)
+          .map((reading: Reading) => {
+            setUserProgress(reading.chapter);
+            console.log(reading);
+          });
+        console.log(data);
+      });
+    }
+  }, [mangaFeed, mangaId]);
 
   return (
     <div className="manga-chapters">
@@ -87,20 +116,30 @@ const MangaChapterList = (props: Props) => {
                 className="chapter-button"
                 disableRipple
                 sx={{
-                  backgroundColor: "#191919",
+                  backgroundColor:
+                    Number(current.attributes.chapter) < Number(userProgress)
+                      ? "#191919"
+                      : "#333333",
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {
-                  handleClick(
-                    mangaId,
-                    current.id,
-                    current.attributes.title,
-                    current.attributes.volume,
-                    current.attributes.chapter,
-                    mangaName,
-                    +current.attributes.chapter,
-                    current.attributes.externalUrl,
-                  );
+                  if (current.attributes.externalUrl !== null) {
+                    window.location.replace(current.attributes.externalUrl);
+                  } else {
+                    handleClick(
+                      mangaId,
+                      current.id,
+                      current.attributes.title,
+                      current.attributes.volume,
+                      current.attributes.chapter,
+                      mangaName,
+                      +current.attributes.chapter,
+                      current.attributes.externalUrl,
+                      current.relationships[0].type === "scanlation_group"
+                        ? current.relationships[0].attributes.name
+                        : "Unknown",
+                    );
+                  }
                 }}
               >
                 <div className="chapter-button-text">
@@ -146,6 +185,11 @@ const MangaChapterList = (props: Props) => {
                     </Typography>
                   </div>
                 </div>
+                {current.attributes.externalUrl !== null ? (
+                  <div className="external-link-button">
+                    <OpenInNewIcon />
+                  </div>
+                ) : null}
               </Button>
             </Grid>
           ) : null,

@@ -187,7 +187,7 @@ const Library = () => {
   }, [loadLibrary, ascending, contentFilter]);
 
   return (
-    <div>
+    <div className="library-page-container">
       <div>
         <Header />
       </div>
