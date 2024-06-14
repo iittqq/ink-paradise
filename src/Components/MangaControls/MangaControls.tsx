@@ -17,8 +17,7 @@ type Props = {
   mangaLanguages: string[];
   currentOrder: string;
   selectedLanguage: string;
-  setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentOffset: React.Dispatch<React.SetStateAction<number>>;
+  handleClickedLanguageButton: (language: string) => void;
   setCurrentOrder: React.Dispatch<React.SetStateAction<string>>;
   mangaTranslators: ScanlationGroup[];
   setTranslator: React.Dispatch<React.SetStateAction<ScanlationGroup[]>>;
@@ -36,8 +35,7 @@ const MangaControls = (props: Props) => {
   const {
     mangaLanguages,
     currentOrder,
-    setSelectedLanguage,
-    setCurrentOffset,
+    handleClickedLanguageButton,
     setCurrentOrder,
     mangaTranslators,
     handleSwitchOrder,
@@ -62,13 +60,6 @@ const MangaControls = (props: Props) => {
     setTranslators([
       ...new Set(mangaTranslators.map((current) => current.attributes.name)),
     ]);
-
-    console.log([
-      ...new Set(mangaTranslators.map((current) => current.attributes.name)),
-    ]);
-    console.log(mangaLanguages);
-    console.log(mangaTranslators);
-    console.log(currentOrder);
   }, [mangaTranslators]);
   return (
     <div className="controls-container">
@@ -182,8 +173,7 @@ const MangaControls = (props: Props) => {
               <Button
                 className="language-button"
                 onClick={() => {
-                  setSelectedLanguage(current);
-                  setCurrentOffset(0);
+                  handleClickedLanguageButton(current);
                 }}
                 sx={{ ":hover": { backgroundColor: "transparent" } }}
               >

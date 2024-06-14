@@ -60,6 +60,8 @@ const IndividualManga = () => {
   const [showCategoriesToggled, setShowCategoriesToggled] = useState(false);
   const [switchedOrder, setSwitchedOrder] = useState<boolean>(false);
   const [similarManga, setSimilarManga] = useState<Manga[]>([]);
+  const [previousLanguage, setPreviousLanguage] = useState<string>("en");
+  const [previousId, setPreviousId] = useState<string>("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -99,6 +101,12 @@ const IndividualManga = () => {
       setSelectedScanlationGroup(undefined);
     }
   };
+
+  const handleClickedLanguageButton = (language: string) => {
+    setSelectedLanguage(language);
+    setSelectedScanlationGroup(undefined);
+    setCurrentOffset(0);
+  };
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
       getMangaFolderEntries().then((response) => {
@@ -122,6 +130,7 @@ const IndividualManga = () => {
   };
 
   const handleShowMore = () => {
+    setSelectedScanlationGroup(undefined);
     setCurrentOffset(currentOffset + 100);
   };
 
@@ -157,10 +166,11 @@ const IndividualManga = () => {
         setSimilarManga(data);
       });
     });
+    console.log(currentOffset);
+    console.log(selectedScanlationGroup);
     if (
-      currentOffset !== mangaFeed.length ||
-      currentOffset === 0 ||
-      currentOffset === 100
+      currentOffset <= mangaFeed.length &&
+      selectedScanlationGroup === undefined
     ) {
       fetchMangaFeed(
         state.id,
@@ -169,11 +179,12 @@ const IndividualManga = () => {
         currentOrder,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
-        data.length === 0
-          ? setCurrentOffset(0)
-          : switchedOrder === true || currentOffset === 0
-            ? setMangaFeed(data)
-            : setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+        data.length === 0 ? setCurrentOffset(0) : switchedOrder === true;
+        if (previousLanguage !== selectedLanguage || state.id !== previousId) {
+          setMangaFeed(data);
+        } else {
+          setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
+        }
 
         const promises = data.map(
           (current: MangaFeedScanlationGroup) =>
@@ -182,14 +193,19 @@ const IndividualManga = () => {
             )[0],
         );
         Promise.all(promises).then((data) => {
-          setScanlationGroups((scanlationGroups) => [
-            ...scanlationGroups,
-            ...new Set(
-              data.filter(function (element) {
-                return element !== undefined;
-              }),
-            ),
-          ]);
+          if (
+            previousLanguage !== selectedLanguage ||
+            state.id !== previousId
+          ) {
+            setScanlationGroups([
+              ...new Set(data.filter((element) => element !== undefined)),
+            ]);
+          } else {
+            setScanlationGroups((scanlationGroups) => [
+              ...scanlationGroups,
+              ...new Set(data.filter((element) => element !== undefined)),
+            ]);
+          }
         });
       });
     }
@@ -207,6 +223,8 @@ const IndividualManga = () => {
       });
       setFilteredMangaFeed(filteredFeed);
     }
+    setPreviousLanguage(selectedLanguage);
+    setPreviousId(state.id);
     setSwitchedOrder(false);
   }, [
     state,
@@ -253,11 +271,10 @@ const IndividualManga = () => {
       <div className="controls-chapters-section">
         <MangaControls
           mangaLanguages={mangaLanguages}
-          setCurrentOffset={setCurrentOffset}
           currentOrder={currentOrder}
           setCurrentOrder={setCurrentOrder}
           selectedLanguage={selectedLanguage}
-          setSelectedLanguage={setSelectedLanguage}
+          handleClickedLanguageButton={handleClickedLanguageButton}
           mangaTranslators={scanlationGroups}
           setTranslator={setScanlationGroups}
           handleSwitchOrder={handleSwitchOrder}

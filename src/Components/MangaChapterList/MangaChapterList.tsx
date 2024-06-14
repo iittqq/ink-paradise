@@ -74,8 +74,11 @@ const MangaChapterList = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log(mangaFeed.length);
     if (mangaFeed.length === 1) {
       setXsValue(12);
+    } else {
+      setXsValue(6);
     }
     console.log(mangaFeed);
     setUserProgress(0);

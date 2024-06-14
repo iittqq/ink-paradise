@@ -26,13 +26,9 @@
 .page-container {
   position: relative;
   overflow: scroll;
-  display: grid;
   justify-content: center;
   align-items: center;
   scrollbar-width: none;
-  @media (width >= 1600px) {
-    height: 74dvh;
-  }
 }
 
 .page-container: -webkit-scrollbar {
@@ -45,7 +41,7 @@
 
 .overlay-buttons {
   position: absolute;
+  top: 0;
   height: 100%;
   width: 100%;
-  top: 0;
 }

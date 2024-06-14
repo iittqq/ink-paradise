@@ -42,7 +42,30 @@ const PageAndControls = (props: Props) => {
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
 
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) =>
+    setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      handlePreviousPage();
+    } else if (isRightSwipe) {
+      handleNextPage();
+    }
+    // add your conditional logic here
+  };
   const handleNextChapter = () => {
     setCurrentPage(0);
     chapters.forEach((current: MangaFeedScanlationGroup, index: number) =>
@@ -77,7 +100,7 @@ const PageAndControls = (props: Props) => {
     );
   };
 
-  const handlePreviousChapterButton = () => {
+  const handlePreviousPage = () => {
     setLoading(true);
     currentPage === 0
       ? handlePreviousChapter()
@@ -85,7 +108,7 @@ const PageAndControls = (props: Props) => {
     setLoading(false);
   };
 
-  const handleNextChapterButton = () => {
+  const handleNextPage = () => {
     setLoading(true);
     currentPage === pages.length - 1
       ? handleNextChapter()
@@ -155,7 +178,12 @@ const PageAndControls = (props: Props) => {
 
   return (
     <div>
-      <div className="page-container">
+      <div
+        className="page-container"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {loading ? (
           <div className="loading">
             <CircularProgress size={25} sx={{ color: "#ffffff" }} />
@@ -166,11 +194,11 @@ const PageAndControls = (props: Props) => {
             <div className="overlay-buttons">
               <Button
                 className="chapter-page-traversal"
-                onClick={() => handleNextChapterButton()}
+                onClick={() => handleNextPage()}
               ></Button>
               <Button
                 className="chapter-page-traversal"
-                onClick={() => handlePreviousChapterButton()}
+                onClick={() => handlePreviousPage()}
               ></Button>
             </div>
           </>
@@ -189,7 +217,7 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handleNextChapterButton();
+            handleNextPage();
           }}
         >
           <KeyboardArrowLeftIcon />
@@ -197,7 +225,7 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handlePreviousChapterButton();
+            handlePreviousPage();
           }}
         >
           <KeyboardArrowRightIcon />
