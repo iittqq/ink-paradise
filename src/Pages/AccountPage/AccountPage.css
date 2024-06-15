@@ -255,6 +255,7 @@ input[type="file"] {
 
 .bio-field-counter {
   color: #ffffff !important;
+  font-family: "Figtree" !important;
   position: relative;
   align-self: flex-end;
   display: flex;
