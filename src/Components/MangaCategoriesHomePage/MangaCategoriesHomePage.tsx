@@ -11,6 +11,11 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+import {
+  fetchRecentlyUpdated,
+  fetchRecentlyAdded,
+  fetchSimilarManga,
+} from "../../api/MangaDexApi";
 import { useNavigate } from "react-router-dom";
 import "./MangaCategoriesHomePage.css";
 
@@ -28,6 +33,10 @@ const MangaCategoriesHomePage = (props: Props) => {
     navigate("/individualView", {
       state: { id: id, coverUrl: coverUrl },
     });
+  };
+
+  const handleClickedShowMore = (title: string, manga: Manga[]) => {
+    navigate("/mangaCoverList", { state: { listType: title, manga: manga } });
   };
 
   return (
@@ -56,19 +65,8 @@ const MangaCategoriesHomePage = (props: Props) => {
               >
                 <Card
                   sx={{
-                    width: {
-                      xs: "140px",
-                      sm: "180px",
-                      md: "180px",
-                      lg: "80px",
-                    },
-                    height: {
-                      xs: "200px",
-                      sm: "250px",
-                      md: "250px",
-                      lg: "100px",
-                    },
-                    position: "relative",
+                    width: "80px",
+                    height: "110px",
                   }}
                 >
                   <CardMedia
@@ -94,7 +92,16 @@ const MangaCategoriesHomePage = (props: Props) => {
             <Divider variant="fullWidth" className="divider" />
           </>
         ))}
-        <Button className="more-button"> Show More</Button>{" "}
+        <Button
+          className="more-button"
+          onClick={() => {
+            fetchRecentlyUpdated(50, 0).then((data: Manga[]) => {
+              handleClickedShowMore("Recently Updated", data);
+            });
+          }}
+        >
+          Show More
+        </Button>
       </Grid>
       <Grid container className="home-category-manga-grid-container">
         <Typography className="category-stack-name"> Recently Added</Typography>
@@ -117,19 +124,8 @@ const MangaCategoriesHomePage = (props: Props) => {
               >
                 <Card
                   sx={{
-                    width: {
-                      xs: "140px",
-                      sm: "180px",
-                      md: "180px",
-                      lg: "80px",
-                    },
-                    height: {
-                      xs: "200px",
-                      sm: "250px",
-                      md: "250px",
-                      lg: "100px",
-                    },
-                    position: "relative",
+                    width: "80px",
+                    height: "110px",
                   }}
                 >
                   <CardMedia
@@ -155,7 +151,16 @@ const MangaCategoriesHomePage = (props: Props) => {
             <Divider variant="fullWidth" className="divider" />
           </>
         ))}
-        <Button className="more-button"> Show More</Button>{" "}
+        <Button
+          className="more-button"
+          onClick={() => {
+            fetchRecentlyAdded(50, 0).then((data: Manga[]) => {
+              handleClickedShowMore("Recently Updated", data);
+            });
+          }}
+        >
+          Show More
+        </Button>
       </Grid>
       {mangaFromTag !== undefined && tag !== undefined ? (
         <Grid container className="home-category-manga-grid-container">
@@ -181,19 +186,8 @@ const MangaCategoriesHomePage = (props: Props) => {
                 >
                   <Card
                     sx={{
-                      width: {
-                        xs: "140px",
-                        sm: "180px",
-                        md: "180px",
-                        lg: "80px",
-                      },
-                      height: {
-                        xs: "200px",
-                        sm: "250px",
-                        md: "250px",
-                        lg: "100px",
-                      },
-                      position: "relative",
+                      width: "80px",
+                      height: "110px",
                     }}
                   >
                     <CardMedia
@@ -219,7 +213,17 @@ const MangaCategoriesHomePage = (props: Props) => {
               <Divider variant="fullWidth" className="divider" />
             </>
           ))}
-          <Button className="more-button"> Show More</Button>{" "}
+          <Button
+            className="more-button"
+            onClick={() => {
+              fetchSimilarManga(50, [tag.id]).then((data: Manga[]) => {
+                handleClickedShowMore(tag.attributes.name.en, data);
+              });
+            }}
+          >
+            {" "}
+            Show More
+          </Button>{" "}
         </Grid>
       ) : null}
     </div>

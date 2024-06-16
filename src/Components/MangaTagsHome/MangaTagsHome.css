@@ -21,11 +21,17 @@
   color: #fff !important;
   text-transform: none !important;
   background-color: transparent !important;
+
+  @media (width < 600px) {
+    font-size: 13px !important;
+  }
 }
 
 #open-tags-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
+    border-radius: 25px;
+    padding: 20px;
   }
   & .MuiDialogContent-root {
     color: #ffffff !important;

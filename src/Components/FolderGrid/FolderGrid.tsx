@@ -60,9 +60,6 @@ const FolderGrid = (props: Props) => {
                 handleFolderClick(folder);
               }}
               sx={{
-                //border: mangaEntriesToDelete.includes(element.id)
-                //? "2px solid #ffffff"
-                //: "none",
                 opacity:
                   folder.folderId !== undefined
                     ? mangaFoldersToDelete.includes(folder.folderId)
@@ -96,19 +93,19 @@ const FolderGrid = (props: Props) => {
                 handleMangaEntryClick(element);
               }}
               sx={{
-                //border: mangaEntriesToDelete.includes(element.id)
-                //? "2px solid #ffffff"
-                //: "none",
                 opacity: mangaEntriesToDelete.includes(element.id) ? 0.2 : 1,
               }}
             >
               <MangaClickable
                 id={element.id}
                 title={element.attributes.title.en}
-                coverId={
+                coverUrl={
+                  "https://uploads.mangadex.org/covers/" +
+                  element.id +
+                  "/" +
                   element.relationships.find(
                     (i: Relationship) => i.type === "cover_art",
-                  )?.id
+                  )?.attributes?.fileName
                 }
                 updatedAt={element.attributes.updatedAt}
                 disabled={checked || selectAll}

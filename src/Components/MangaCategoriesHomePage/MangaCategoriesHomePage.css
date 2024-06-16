@@ -17,6 +17,9 @@
   align-items: flex-start;
   width: 25%;
   margin-right: 20px;
+  @media (width < 600px) {
+    margin-right: 0px;
+  }
 }
 
 .category-stack-name {
@@ -41,6 +44,10 @@
   font-family: "Figtree", sans-serif !important;
   font-size: 20px !important;
   width: 80%;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
 }
 
 .divider {

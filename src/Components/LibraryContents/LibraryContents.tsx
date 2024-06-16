@@ -48,10 +48,13 @@ const LibraryContents = (props: Props) => {
               <MangaClickable
                 id={manga.id}
                 title={manga.attributes.title.en}
-                coverId={
+                coverUrl={
+                  "https://uploads.mangadex.org/covers/" +
+                  manga.id +
+                  "/" +
                   manga.relationships.find(
                     (i: Relationship) => i.type === "cover_art",
-                  )?.id
+                  )?.attributes?.fileName
                 }
                 updatedAt={manga.attributes.updatedAt}
                 disabled={checked || selectAll}
