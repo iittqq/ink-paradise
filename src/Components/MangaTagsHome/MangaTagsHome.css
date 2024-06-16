@@ -1,0 +1,44 @@
+.manga-tags-home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.tags-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.tag-button {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 16px !important;
+  border: none;
+  color: #fff !important;
+  text-transform: none !important;
+  background-color: transparent !important;
+}
+
+#open-tags-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.open-tags-dialog-title {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 20px !important;
+  color: #fff !important;
+  align-self: center;
+}

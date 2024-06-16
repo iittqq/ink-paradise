@@ -1,17 +1,13 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-import { useEffect, useState } from "react";
-
 import { Card, CardMedia, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 import "./MangaClickable.css";
-import { fetchMangaCover } from "../../api/MangaDexApi";
 
 type Props = {
   id?: string;
   title: string;
-  coverId?: string;
+  coverUrl?: string;
   updatedAt?: string;
   rank?: string;
   disabled?: boolean;
@@ -19,24 +15,15 @@ type Props = {
 
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
-  const [coverFile, setCoverFile] = useState("");
   //const [showDetails, setShowDetails] = useState(false);
 
-  const { id, title, coverId, updatedAt, rank, disabled } = props;
+  const { id, title, coverUrl, updatedAt, rank, disabled } = props;
 
   function handleClick() {
     navigate("/individualView", {
-      state: { id: id, coverFile: coverFile },
+      state: { id: id, coverUrl: coverUrl },
     });
   }
-
-  useEffect(() => {
-    if (coverId !== undefined) {
-      fetchMangaCover(coverId).then((data) => {
-        setCoverFile(data.attributes.fileName);
-      });
-    }
-  }, [coverId]);
 
   return (
     <>
@@ -59,9 +46,7 @@ const MangaClickable = (props: Props) => {
               width: "100%",
               height: "100%",
             }}
-            image={
-              "https://uploads.mangadex.org/covers/" + id + "/" + coverFile
-            }
+            image={coverUrl}
           />
         </Card>
 

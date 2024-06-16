@@ -1,23 +1,25 @@
 import "./TrendingMangaCarousel.css";
-import { Manga } from "../../interfaces/MangaDexInterfaces";
+import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import { Grid, Button, Card, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useHorizontalScroll } from "./HorizontalScroll";
 
-type Props = { manga: Manga[]; coverFiles: string[] };
+type Props = { manga: Manga[] };
 
 const TrendingMangaCarousel = (props: Props) => {
-  const { manga, coverFiles } = props;
+  const scrollRef = useHorizontalScroll();
+  const { manga } = props;
   const navigate = useNavigate();
 
-  const handleClick = (id: string, coverFile: string) => {
+  const handleClick = (id: string, coverUrl: string) => {
     navigate("/individualView", {
-      state: { id: id, coverFile: coverFile },
+      state: { id: id, coverUrl: coverUrl },
     });
   };
 
   return (
-    <div>
-      <Grid container className="popular-carousel-grid">
+    <div ref={scrollRef} className="popular-carousel-container">
+      <Grid container className="popular-carousel-grid" wrap="nowrap">
         {manga.map((current: Manga, index: number) => (
           <Grid item className="popular-carousel-grid-item">
             <div className="popular-carousel-grid-item-text-container">
@@ -31,12 +33,20 @@ const TrendingMangaCarousel = (props: Props) => {
             </div>
             <Button
               onClick={() => {
-                handleClick(current.id, coverFiles[index]);
+                handleClick(
+                  current.id,
+                  "https://uploads.mangadex.org/covers/" +
+                    current.id +
+                    "/" +
+                    current.relationships.find(
+                      (i: Relationship) => i.type === "cover_art",
+                    )?.attributes?.fileName,
+                );
               }}
             >
               <Card
                 sx={{
-                  width: { xs: "150px", sm: "200px", md: "200px", lg: "200px" },
+                  width: { xs: "140px", sm: "180px", md: "180px", lg: "180px" },
                   height: {
                     xs: "200px",
                     sm: "250px",
@@ -51,7 +61,14 @@ const TrendingMangaCarousel = (props: Props) => {
                     width: "100%",
                     height: "100%",
                   }}
-                  image={coverFiles[index]}
+                  image={
+                    "https://uploads.mangadex.org/covers/" +
+                    current.id +
+                    "/" +
+                    current.relationships.find(
+                      (i: Relationship) => i.type === "cover_art",
+                    )?.attributes?.fileName
+                  }
                 />
               </Card>
             </Button>

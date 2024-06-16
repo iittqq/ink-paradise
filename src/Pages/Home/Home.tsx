@@ -1,50 +1,96 @@
 import { useState, useEffect } from "react";
-
 import Header from "../../Components/Header/Header";
 import "./Home.css";
-import { fetchMangaCover, fetchPopularManga } from "../../api/MangaDexApi";
-
-import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
-
 import {
-  Manga,
-  Relationship,
-  CoverFile,
-} from "../../interfaces/MangaDexInterfaces";
+  fetchPopularManga,
+  fetchRecentlyUpdated,
+  fetchRecentlyAdded,
+  fetchMangaTags,
+  fetchSimilarManga,
+} from "../../api/MangaDexApi";
+import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
+import MangaCategoriesHomePage from "../../Components/MangaCategoriesHomePage/MangaCategoriesHomePage";
+import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
+import { Button, Typography } from "@mui/material";
+import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
+import StyleIcon from "@mui/icons-material/Style";
 
 const Home = () => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
-  const [coverFiles, setCoverFiles] = useState<string[]>([]);
+  const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
+  const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
+  const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+  const [mangaFromTag, setMangaFromTag] = useState<Manga[]>([]);
+  const [selectedTag, setSelectedTag] = useState<MangaTagsInterface | null>(
+    null,
+  );
+  const [openTags, setOpenTags] = useState(false);
 
   useEffect(() => {
     fetchPopularManga(10).then((data: Manga[]) => {
       setPopularManga(data);
-
-      data.map((current: Manga) => {
-        const coverId = current.relationships.find(
-          (i: Relationship) => i.type === "cover_art",
-        )?.id;
-        if (coverId !== undefined) {
-          fetchMangaCover(coverId).then((data: CoverFile) => {
-            setCoverFiles((prev) => [
-              ...prev,
-              "https://uploads.mangadex.org/covers/" +
-                current.id +
-                "/" +
-                data.attributes.fileName,
-            ]);
-            console.log(data);
-          });
-        }
-      });
     });
-  }, []);
+    fetchRecentlyUpdated(5, 0).then((data: Manga[]) => {
+      setRecentlyUpdatedManga(data);
+    });
+    fetchRecentlyAdded(5, 0).then((data: Manga[]) => {
+      setRecentlyAddedManga(data);
+    });
+
+    fetchMangaTags().then((data: MangaTagsInterface[]) => {
+      setMangaTags(data);
+    });
+
+    if (selectedTag !== null) {
+      fetchSimilarManga(5, [selectedTag.id]).then((data: Manga[]) => {
+        setMangaFromTag(data);
+        console.log(data);
+      });
+    }
+    console.log(selectedTag);
+  }, [selectedTag]);
+
+  const handleClickedTag = (tag: MangaTagsInterface | null) => {
+    setSelectedTag(tag);
+  };
+
+  const handleClickedOpenTags = () => {
+    setOpenTags(true);
+  };
+
+  const handleTagsDialogClose = () => {
+    setOpenTags(false);
+  };
 
   return (
-    <div className="home-page-container">
+    <div>
       <Header />
-
-      <TrendingMangaCarousel manga={popularManga} coverFiles={coverFiles} />
+      <div className="home-title-and-dialog-button">
+        <Typography className="popular-manga-header">
+          {" "}
+          Popular Manga:
+        </Typography>
+        <MangaTagsHome
+          mangaTags={mangaTags}
+          handleClickedTag={handleClickedTag}
+          selectedTag={selectedTag !== null ? selectedTag : undefined}
+          handleClickOpenTags={handleClickedOpenTags}
+          openTags={openTags}
+          handleTagsDialogClose={handleTagsDialogClose}
+        />
+        <Button onClick={handleClickedOpenTags} className="tags-button">
+          <StyleIcon />
+        </Button>
+      </div>
+      <TrendingMangaCarousel manga={popularManga} />
+      <div className="bottom-home-page">
+        <MangaCategoriesHomePage
+          recentlyUpdatedManga={recentlyUpdatedManga}
+          recentlyAddedManga={recentlyAddedManga}
+          mangaFromTag={mangaFromTag ? mangaFromTag : undefined}
+          tag={selectedTag !== null ? selectedTag : undefined}
+        />
+      </div>
     </div>
   );
 };

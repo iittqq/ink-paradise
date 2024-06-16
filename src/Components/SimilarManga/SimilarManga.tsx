@@ -21,10 +21,13 @@ const SimilarManga = (props: Props) => {
               <MangaClickable
                 id={current.id}
                 title={current.attributes.title.en}
-                coverId={
+                coverUrl={
+                  "https://uploads.mangadex.org/covers/" +
+                  current.id +
+                  "/" +
                   current.relationships.find(
                     (i: Relationship) => i.type === "cover_art",
-                  )?.id
+                  )?.attributes?.fileName
                 }
                 updatedAt={current.attributes.updatedAt}
               />

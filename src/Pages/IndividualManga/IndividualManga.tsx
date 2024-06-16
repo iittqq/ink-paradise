@@ -262,8 +262,7 @@ const IndividualManga = () => {
       </div>
 
       <MangaBanner
-        id={state.id}
-        coverFile={state.coverFile}
+        coverUrl={state.coverUrl}
         mangaDescription={mangaDescription}
         mangaName={mangaName}
       />
