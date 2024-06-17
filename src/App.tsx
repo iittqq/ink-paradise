@@ -5,27 +5,27 @@ import IndividualManga from "./Pages/IndividualManga/IndividualManga";
 import Reader from "./Pages/Reader/Reader";
 import MangaCoverList from "./Pages/MangaCoverList/MangaCoverList";
 import Library from "./Pages/Library/Library";
-import Account from "./Pages/Account/Account";
+import AccountPage from "./Pages/AccountPage/AccountPage";
 import Login from "./Pages/Login/Login";
 
 //#121212
 
 function App() {
-	return (
-		<>
-			<BrowserRouter>
-				<Routes>
-					<Route path='/' element={<Home />} />
-					<Route path='/individualView' element={<IndividualManga />}></Route>
-					<Route path='/mangaCoverList' element={<MangaCoverList />}></Route>
-					<Route path='/reader' element={<Reader />}></Route>
-					<Route path='/library' element={<Library />}></Route>
-					<Route path='/account' element={<Account />}></Route>
-					<Route path='/login' element={<Login />}></Route>
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+  return (
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/individualView" element={<IndividualManga />}></Route>
+          <Route path="/mangaCoverList" element={<MangaCoverList />}></Route>
+          <Route path="/reader" element={<Reader />}></Route>
+          <Route path="/library" element={<Library />}></Route>
+          <Route path="/account" element={<AccountPage />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;

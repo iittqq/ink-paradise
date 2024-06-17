@@ -1,41 +1,139 @@
-.input-field {
-	input {
-		color: white;
-	}
-	& label.Mui-focused {
-		color: white;
-	}
-	& .MuiOutlinedInput-root {
-		&.Mui-focused fieldset {
-			border-color: white;
-		}
-	}
-}
-
-.search-section {
-	position: relative;
-	right: 0px;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
+.logo-header-icon {
+  color: #ffffff !important;
+  height: 40px !important;
+  padding: 0px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
 
 .container-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	min-height: 50px;
-	padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px;
+  position: relative;
+  top: 0;
 }
 
-.search-button {
-	color: #ffffff !important;
-	&.MuiButtonBase-root:hover {
-		background-color: transparent;
-	}
-	.MuiTouchRipple-child {
-		background-color: white;
-	}
+.search-section {
+  position: relative;
+  right: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#header-search-input {
+  border-radius: 25px !important;
+}
+
+input[type="search"]:focus {
+  font-family: "Figtree" !important;
+  border: 2px solid #ffffff !important;
+}
+
+.input-field {
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  &:focus {
+    border: 2px solid #ffffff !important;
+  }
+  input {
+    color: white;
+    text-align: center;
+  }
+
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border: none;
+    }
+  }
+}
+
+.search-functionality-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.account-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 300px;
+  height: 150px;
+  background-color: #1f1f1f;
+}
+
+.logo-field-login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+}
+
+.login-logo {
+  &.MuiSvgIcon-root {
+    height: 40px;
+    width: 40px;
+  }
+  color: #ffffff;
+}
+
+.header-buttons {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  padding: 0px !important;
+  height: 40px !important;
+  @media screen and (max-width: 600px) {
+    min-width: 30px !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: white;
+  }
+}
+
+.account-details-submit-button {
+  color: #ffffff !important;
+  background-color: #444444 !important;
+  margin-bottom: -10px;
+  text-transform: none;
+}
+
+.header-nav-dialog-columns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+}
+
+.header-nav-label {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 12px !important;
+  text-transform: none !important;
+}
+
+.account-verification-alert {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.account-verification-alert-icon {
+  color: #ffffff !important;
 }

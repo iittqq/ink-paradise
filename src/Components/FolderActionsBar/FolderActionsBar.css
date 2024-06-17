@@ -1,0 +1,137 @@
+.folder-section-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.folder-search-bar {
+  all: unset;
+  font-family: "Figtree";
+  margin: 0px 10px 0px 0px;
+  padding: 0px 5px 0px 5px;
+  height: 25px;
+  text-align: center;
+  width: 50%;
+  border-radius: 25px !important;
+  @media screen and (min-width: 600px) {
+    margin: 0px 0px 0px 0px;
+  }
+  &:focus {
+    border: 2px solid #ffffff;
+  }
+}
+
+.folder-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px;
+  border-radius: 25px !important;
+  text-align: center;
+}
+
+input[type="text"]:focus {
+  border: 2px solid #ffffff;
+}
+
+.search-button {
+  max-width: 50px !important;
+  min-width: 30px !important;
+
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+.header-options-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  @media screen and (max-width: 600px) {
+    justify-content: flex-start;
+  }
+  align-items: center;
+}
+
+.folder-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.back-button-account-page {
+  color: #ffffff !important;
+  background-color: #121212 !important;
+  max-width: 50px !important;
+  min-width: 30px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRippl e-child {
+    background-color: #ffffff !important;
+  }
+}
+
+.create-folder-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.folder-header-button {
+  color: #ffffff !important;
+  max-width: 30px !important;
+  min-width: 30px !important;
+  height: 30px;
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.create-folder-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.create-button {
+  margin-top: 10px !important;
+  color: #ffffff !important;
+  text-transform: none !important;
+  background-color: #222222 !important;
+  font-family: "Figtree" !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+#create-folder-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 25px !important;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

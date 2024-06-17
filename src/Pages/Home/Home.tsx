@@ -1,246 +1,98 @@
 import { useState, useEffect } from "react";
-import {
-	Grid,
-	Typography,
-	Button,
-	List,
-	ListItemButton,
-	ListItemText,
-	Collapse,
-} from "@mui/material";
-import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import Header from "../../Components/Header/Header";
-import Footer from "../../Components/Footer/Footer";
-import { useNavigate } from "react-router-dom";
 import "./Home.css";
-
 import {
-	fetchRecentlyUpdated,
-	fetchRecentlyAdded,
-	fetchMangaTags,
+  fetchPopularManga,
+  fetchRecentlyUpdated,
+  fetchRecentlyAdded,
+  fetchMangaTags,
+  fetchSimilarManga,
 } from "../../api/MangaDexApi";
-
-import {
-	MangaTagsInterface,
-	Manga,
-	TopManga,
-	Relationship,
-} from "../../interfaces/MangaDexInterfaces";
-
-import { fetchTopManga } from "../../api/MalApi";
-import MangaClickable from "../../Components/MangaClickable/MangaClickable";
+import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
+import MangaCategoriesHomePage from "../../Components/MangaCategoriesHomePage/MangaCategoriesHomePage";
+import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
+import { Button, Typography } from "@mui/material";
+import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
+import StyleIcon from "@mui/icons-material/Style";
 
 const Home = () => {
-	const [open, setOpen] = useState(false);
-	const [topMangaData, setTopMangaData] = useState<TopManga[]>([]);
-	const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
-	const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
-	const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
-	const navigate = useNavigate();
+  const [popularManga, setPopularManga] = useState<Manga[]>([]);
+  const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
+  const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
+  const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+  const [mangaFromTag, setMangaFromTag] = useState<Manga[]>([]);
+  const [selectedTag, setSelectedTag] = useState<MangaTagsInterface | null>(
+    null,
+  );
+  const [openTags, setOpenTags] = useState(false);
 
-	const handleClickRecentlyUpdated = async () => {
-		navigate("/mangaCoverList", {
-			state: { listType: "RecentlyUpdated" },
-		});
-	};
+  useEffect(() => {
+    fetchPopularManga(10).then((data: Manga[]) => {
+      setPopularManga(data);
+    });
+    fetchRecentlyUpdated(5, 0).then((data: Manga[]) => {
+      setRecentlyUpdatedManga(data);
+    });
+    fetchRecentlyAdded(5, 0).then((data: Manga[]) => {
+      setRecentlyAddedManga(data);
+    });
 
-	const handleClickTrendingNow = async () => {};
+    fetchMangaTags().then((data: MangaTagsInterface[]) => {
+      setMangaTags(data);
+    });
 
-	const handleClickMangaCoverListRA = async () => {
-		navigate("/mangaCoverList", {
-			state: { listType: "RecentlyAdded" },
-		});
-	};
-	const handleClick = async (tagId: string) => {
-		console.log(tagId);
-		navigate("mangaList", {
-			state: { tagId: tagId },
-		});
-	};
+    if (selectedTag !== null) {
+      fetchSimilarManga(5, [selectedTag.id]).then((data: Manga[]) => {
+        setMangaFromTag(data);
+        console.log(data);
+      });
+    }
+    console.log(selectedTag);
+  }, [selectedTag]);
 
-	useEffect(() => {
-		fetchTopManga().then((data: TopManga[]) => {
-			setTopMangaData(data);
-		});
+  const handleClickedTag = (tag: MangaTagsInterface | null) => {
+    setSelectedTag(tag);
+  };
 
-		fetchRecentlyUpdated(10, 0).then((data: Manga[]) => {
-			setRecentlyUpdatedManga(data);
-		});
+  const handleClickedOpenTags = () => {
+    setOpenTags(true);
+  };
 
-		fetchMangaTags().then((data: MangaTagsInterface[]) => {
-			setMangaTags(data);
-		});
+  const handleTagsDialogClose = () => {
+    setOpenTags(false);
+  };
 
-		fetchRecentlyAdded(10, 0).then((data: Manga[]) => {
-			setRecentlyAddedManga(data);
-		});
-	}, []);
-
-	const handleOpenTags = () => {
-		setOpen(!open);
-	};
-
-	return (
-		<div>
-			<div className='header'>
-				<Header />
-			</div>
-
-			<div className='manga-category-section'>
-				<div className='manga-column'>
-					<Typography
-						className='manga-category-label'
-						textTransform='none'
-						noWrap
-						color={"white"}
-						fontSize={13}
-					>
-						Recently Added
-					</Typography>
-					<Grid
-						container
-						direction='row'
-						justifyContent='center'
-						alignItems='center'
-						className='manga-entries'
-					>
-						{recentlyAddedManga.map((element: Manga) => (
-							<Grid item>
-								<MangaClickable
-									id={element.id}
-									title={element.attributes.title.en}
-									coverId={
-										element.relationships.find(
-											(i: Relationship) => i.type === "cover_art",
-										)?.id
-									}
-									updatedAt={element.attributes.updatedAt}
-								/>
-							</Grid>
-						))}
-					</Grid>
-
-					<Button className='show-more-button'>
-						<ExpandMore
-							sx={{ color: "#333333" }}
-							onClick={() => handleClickMangaCoverListRA()}
-						/>
-					</Button>
-				</div>
-
-				<div className='manga-column'>
-					<Typography color='white'>Trending Now</Typography>
-					<Grid
-						container
-						direction='row'
-						justifyContent='center'
-						alignItems='center'
-						className='manga-entries'
-					>
-						{topMangaData.map((element: TopManga) => (
-							<Grid item>
-								<MangaClickable
-									id={element.mal_id}
-									title={element.title}
-									coverUrl={element.images.jpg.image_url}
-									rank={element.rank}
-									author={element.authors[0].name}
-								/>
-							</Grid>
-						))}
-					</Grid>
-
-					<Button className='show-more-button'>
-						<ExpandMore
-							sx={{ color: "#333333" }}
-							onClick={() => handleClickTrendingNow()}
-						/>
-					</Button>
-				</div>
-				<div className='manga-column'>
-					<Typography color='white' noWrap>
-						Recently Updated
-					</Typography>
-					<Grid
-						container
-						direction='row'
-						justifyContent='center'
-						alignItems='center'
-						className='manga-entries'
-					>
-						{recentlyUpdatedManga.map((element: Manga) => (
-							<Grid item>
-								<MangaClickable
-									id={element.id}
-									title={element.attributes.title.en}
-									coverId={
-										element.relationships.find(
-											(i: Relationship) => i.type === "cover_art",
-										)?.id
-									}
-									updatedAt={element.attributes.updatedAt}
-								/>
-							</Grid>
-						))}
-					</Grid>
-					<Button className='show-more-button'>
-						<ExpandMore
-							sx={{ color: "#333333" }}
-							onClick={() => handleClickRecentlyUpdated()}
-						/>
-					</Button>
-				</div>
-			</div>
-
-			<List className='tags-list'>
-				<ListItemButton
-					className='tags-list-button'
-					onClick={() => handleOpenTags()}
-				>
-					<ListItemText sx={{ color: "white" }} primary='Tags' />
-					{open ? (
-						<ExpandLess sx={{ color: "#333333" }} />
-					) : (
-						<ExpandMore sx={{ color: "#333333" }} />
-					)}
-				</ListItemButton>
-				<Collapse
-					sx={{
-						width: "100%",
-					}}
-					in={open}
-					timeout='auto'
-				>
-					<Grid
-						container
-						justifyContent='center'
-						direction='row'
-						alignItems='center'
-						spacing={0.5}
-						sx={{ paddingBottom: "40px" }}
-					>
-						{mangaTags.map((element: MangaTagsInterface) => (
-							<Grid item>
-								<Button
-									className='tag-button'
-									variant='contained'
-									onClick={() => handleClick(element.id)}
-								>
-									<Typography fontSize={10} textTransform='none'>
-										{element.attributes.name.en}
-									</Typography>
-								</Button>
-							</Grid>
-						))}
-					</Grid>
-				</Collapse>
-			</List>
-
-			<div className='footer'>
-				<Footer />
-			</div>
-		</div>
-	);
+  return (
+    <div>
+      <Header />
+      <div className="home-title-and-dialog-button">
+        <Typography className="popular-manga-header">
+          {" "}
+          Popular Manga
+        </Typography>
+        <MangaTagsHome
+          mangaTags={mangaTags}
+          handleClickedTag={handleClickedTag}
+          selectedTag={selectedTag !== null ? selectedTag : undefined}
+          handleClickOpenTags={handleClickedOpenTags}
+          openTags={openTags}
+          handleTagsDialogClose={handleTagsDialogClose}
+        />
+        <Button onClick={handleClickedOpenTags} className="tags-button">
+          <StyleIcon />
+        </Button>
+      </div>
+      <TrendingMangaCarousel manga={popularManga} />
+      <div className="bottom-home-page">
+        <MangaCategoriesHomePage
+          recentlyUpdatedManga={recentlyUpdatedManga}
+          recentlyAddedManga={recentlyAddedManga}
+          mangaFromTag={mangaFromTag ? mangaFromTag : undefined}
+          tag={selectedTag !== null ? selectedTag : undefined}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default Home;

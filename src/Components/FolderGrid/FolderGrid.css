@@ -1,0 +1,33 @@
+.manga-entry-overlay-button {
+  background-color: transparent !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #121212 !important;
+  }
+}
+
+.folder-description-clicked {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60dvw;
+}
+.folder {
+  height: 100px;
+  width: 200px;
+  background-color: #222222 !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 170px;
+  }
+}

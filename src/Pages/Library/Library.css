@@ -1,18 +1,10 @@
-.library-header {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	color: #ffffff;
-	width: 98%;
+.loading-indicator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.library-header-button {
-	color: #ffffff;
-}
-
-.footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+.library-page-container {
+  height: 100%;
 }
