@@ -4,26 +4,21 @@ import { useState } from "react";
 import "./MangaBanner.css";
 
 type Props = {
-  id: string;
-  coverFile: string;
+  coverUrl: string;
   mangaDescription: string;
   mangaName: string;
 };
 
 const MangaBanner = (props: Props) => {
   const [showMoreToggled, setShowMoreToggled] = useState(false);
-  const { id, coverFile, mangaDescription, mangaName } = props;
+  const { coverUrl, mangaDescription, mangaName } = props;
   const handleShowMore = () => {
     setShowMoreToggled(!showMoreToggled);
   };
   return (
     <div className="banner-container">
       <div className="cover-image">
-        <img
-          style={{ width: "100%", height: "100%" }}
-          src={"https://uploads.mangadex.org/covers/" + id + "/" + coverFile}
-          alt=""
-        />
+        <img style={{ width: "100%", height: "100%" }} src={coverUrl} alt="" />
       </div>
       <div className="manga-details">
         <Typography

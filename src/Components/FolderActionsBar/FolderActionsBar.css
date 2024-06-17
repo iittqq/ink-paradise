@@ -91,7 +91,6 @@ input[type="text"]:focus {
   max-width: 30px !important;
   min-width: 30px !important;
   height: 30px;
-  margin: 0px 2px 0px 2px !important;
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -126,6 +125,7 @@ input[type="text"]:focus {
 #create-folder-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
+    border-radius: 25px !important;
   }
   & .MuiDialogContent-root {
     color: #ffffff !important;

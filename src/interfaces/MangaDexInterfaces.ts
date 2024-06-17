@@ -33,7 +33,11 @@ export interface Manga {
     createdAt: string;
     updatedAt: string;
   };
-  relationships: { id: string; type: string }[];
+  relationships: {
+    id: string;
+    type: string;
+    attributes?: { fileName: string };
+  }[];
   status?: string;
 }
 

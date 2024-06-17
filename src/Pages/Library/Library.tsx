@@ -45,6 +45,7 @@ const Library = () => {
             return fetchMangaById(readingEntry.mangaId);
           });
           Promise.all(promises).then((data) => {
+            console.log(data);
             setLibrary(data);
             setLoading(false);
           });

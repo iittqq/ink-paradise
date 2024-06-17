@@ -59,6 +59,7 @@
 
 #filter-dialog .MuiPaper-root {
   background-color: #121212 !important;
+  border-radius: 25px !important;
 }
 
 .filter-button {
