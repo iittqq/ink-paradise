@@ -68,7 +68,7 @@ const Home = () => {
       <div className="home-title-and-dialog-button">
         <Typography className="popular-manga-header">
           {" "}
-          Popular Manga:
+          Popular Manga
         </Typography>
         <MangaTagsHome
           mangaTags={mangaTags}

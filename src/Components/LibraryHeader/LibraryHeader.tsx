@@ -59,7 +59,7 @@ const LibraryHeader = (props: Props) => {
 
   return (
     <div className="library-header">
-      <Typography padding={1} fontSize={20}>
+      <Typography fontSize={20} fontFamily={"Figtree"}>
         Library
       </Typography>
       <div className="library-header-options">

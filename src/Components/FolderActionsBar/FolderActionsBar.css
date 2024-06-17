@@ -125,6 +125,7 @@ input[type="text"]:focus {
 #create-folder-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
+    border-radius: 25px !important;
   }
   & .MuiDialogContent-root {
     color: #ffffff !important;

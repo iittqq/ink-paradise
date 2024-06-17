@@ -23,7 +23,7 @@ const LibraryContents = (props: Props) => {
   return (
     <div>
       <div className="library-contents-header">
-        <Typography>{header}</Typography>
+        <Typography fontFamily={"Figtree"} fontSize={20}>{header}</Typography>
       </div>
       <Grid
         container
