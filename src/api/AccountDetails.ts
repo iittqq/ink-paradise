@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AccountDetails } from "../interfaces/AccountDetailsInterfaces";
 
-const BASE_URL = "http://18.217.5.180:8080";
+const BASE_URL = "http://3.132.121.60:8080";
 //const BASE_URL = "http://localhost:8080";
 
 async function fetchAccountDetails(accountId: number): Promise<AccountDetails> {
