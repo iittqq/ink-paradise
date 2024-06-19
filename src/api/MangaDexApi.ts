@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://18.191.56.64:8080";
+const BASE_URL = "http://18.217.5.180:8080";
 //const BASE_URL = "http://localhost:8080";
 
 import {

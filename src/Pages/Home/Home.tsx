@@ -52,6 +52,7 @@ const Home = () => {
 
   const handleClickedTag = (tag: MangaTagsInterface | null) => {
     setSelectedTag(tag);
+    setOpenTags(false);
   };
 
   const handleClickedOpenTags = () => {
