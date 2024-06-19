@@ -31,9 +31,15 @@ type Props = {
 const MangaCategoriesHomePage = (props: Props) => {
   const navigate = useNavigate();
   const { recentlyUpdatedManga, recentlyAddedManga, mangaFromTag, tag } = props;
-  const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{ [key: string]: string }>({});
-  const [coverUrlsRecentlyAdded, setCoverUrlsRecentlyAdded] = useState<{ [key: string]: string }>({});
-  const [coverUrlsMangaFromTag, setCoverUrlsMangaFromTag] = useState<{ [key: string]: string }>({});
+  const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{
+    [key: string]: string;
+  }>({});
+  const [coverUrlsRecentlyAdded, setCoverUrlsRecentlyAdded] = useState<{
+    [key: string]: string;
+  }>({});
+  const [coverUrlsMangaFromTag, setCoverUrlsMangaFromTag] = useState<{
+    [key: string]: string;
+  }>({});
 
   const handleClick = (id: string, coverUrl: string) => {
     navigate("/individualView", {
@@ -50,7 +56,9 @@ const MangaCategoriesHomePage = (props: Props) => {
       const coverUrlsRecentlyUpdated: { [key: string]: string } = {};
 
       for (const manga of recentlyUpdatedManga) {
-        const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+        const fileName = manga.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
         if (fileName) {
           const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
           coverUrlsRecentlyUpdated[manga.id] = URL.createObjectURL(imageBlob);
@@ -63,7 +71,9 @@ const MangaCategoriesHomePage = (props: Props) => {
       const coverUrlsRecentlyAdded: { [key: string]: string } = {};
 
       for (const manga of recentlyAddedManga) {
-        const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+        const fileName = manga.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
         if (fileName) {
           const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
           coverUrlsRecentlyAdded[manga.id] = URL.createObjectURL(imageBlob);
@@ -76,7 +86,9 @@ const MangaCategoriesHomePage = (props: Props) => {
       const coverUrlsMangaFromTag: { [key: string]: string } = {};
       if (mangaFromTag !== undefined) {
         for (const manga of mangaFromTag) {
-          const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+          const fileName = manga.relationships.find(
+            (i: Relationship) => i.type === "cover_art",
+          )?.attributes?.fileName;
           if (fileName) {
             const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
             coverUrlsMangaFromTag[manga.id] = URL.createObjectURL(imageBlob);
@@ -109,10 +121,7 @@ const MangaCategoriesHomePage = (props: Props) => {
               <Button
                 className="home-category-manga-button"
                 onClick={() => {
-                  handleClick(
-                    current.id,
-                    coverUrlsRecentlyUpdated[current.id]
-                  );
+                  handleClick(current.id, coverUrlsRecentlyUpdated[current.id]);
                 }}
               >
                 <Card
@@ -126,9 +135,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                       width: "100%",
                       height: "100%",
                     }}
-                    image={
-                      coverUrlsRecentlyUpdated[current.id]
-                    }
+                    image={coverUrlsRecentlyUpdated[current.id]}
                   />
                 </Card>
               </Button>
@@ -158,10 +165,7 @@ const MangaCategoriesHomePage = (props: Props) => {
               <Button
                 className="home-category-manga-button"
                 onClick={() => {
-                  handleClick(
-                    current.id,
-                    coverUrlsRecentlyAdded[current.id]
-                  );
+                  handleClick(current.id, coverUrlsRecentlyAdded[current.id]);
                 }}
               >
                 <Card
@@ -175,9 +179,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                       width: "100%",
                       height: "100%",
                     }}
-                    image={
-                      coverUrlsRecentlyAdded[current.id]
-                    }
+                    image={coverUrlsRecentlyAdded[current.id]}
                   />
                 </Card>
               </Button>
@@ -210,10 +212,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
-                    handleClick(
-                      current.id,
-                      coverUrlsMangaFromTag[current.id]
-                    );
+                    handleClick(current.id, coverUrlsMangaFromTag[current.id]);
                   }}
                 >
                   <Card
@@ -227,9 +226,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                         width: "100%",
                         height: "100%",
                       }}
-                      image={
-                        coverUrlsMangaFromTag[current.id]
-                      }
+                      image={coverUrlsMangaFromTag[current.id]}
                     />
                   </Card>
                 </Button>

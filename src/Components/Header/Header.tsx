@@ -10,7 +10,7 @@ import BookIcon from "@mui/icons-material/Book";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { Account } from "../../interfaces/AccountInterfaces";
 import PetsIcon from "@mui/icons-material/Pets";
 const Header = () => {
@@ -104,7 +104,7 @@ const Header = () => {
                 className="header-buttons"
                 onClick={() => handleClickSearchIcon()}
               >
-                <CloseIcon/>
+                <CloseIcon />
               </Button>
               <TextField
                 variant="outlined"

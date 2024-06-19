@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Grid,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Grid, Button, CircularProgress, Typography } from "@mui/material";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
@@ -38,7 +33,9 @@ const FolderGrid = (props: Props) => {
     selectAll,
   } = props;
 
-  const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{ [key: string]: string }>({});
+  const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{
+    [key: string]: string;
+  }>({});
 
   const handleFolderClick = (folder: MangaFolder) => {
     folderClick(folder);
@@ -53,7 +50,9 @@ const FolderGrid = (props: Props) => {
       const coverUrlsFolderGrid: { [key: string]: string } = {};
       if (folderMangaData) {
         for (const manga of folderMangaData) {
-          const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+          const fileName = manga.relationships.find(
+            (i: Relationship) => i.type === "cover_art",
+          )?.attributes?.fileName;
           if (fileName) {
             const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
             coverUrlsFolderGrid[manga.id] = URL.createObjectURL(imageBlob);
@@ -89,11 +88,12 @@ const FolderGrid = (props: Props) => {
                 handleFolderClick(folder);
               }}
               sx={{
-                opacity: folder.folderId !== undefined
-                  ? mangaFoldersToDelete.includes(folder.folderId)
-                    ? 0.2
-                    : 1
-                  : undefined,
+                opacity:
+                  folder.folderId !== undefined
+                    ? mangaFoldersToDelete.includes(folder.folderId)
+                      ? 0.2
+                      : 1
+                    : undefined,
               }}
             >
               <div>

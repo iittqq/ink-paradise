@@ -233,16 +233,19 @@ async function fetchPopularManga(limit: number): Promise<Manga[]> {
   }
 }
 
-async function fetchMangaCoverBackend(id: string, fileName: string): Promise<Blob> {
+async function fetchMangaCoverBackend(
+  id: string,
+  fileName: string,
+): Promise<Blob> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/cover-image`, {
       params: {
         id: id,
         fileName: fileName,
       },
-      responseType: 'blob',
+      responseType: "blob",
     });
-    console.log( URL.createObjectURL(response.data));
+    console.log(URL.createObjectURL(response.data));
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
@@ -250,23 +253,25 @@ async function fetchMangaCoverBackend(id: string, fileName: string): Promise<Blo
   }
 }
 
-async function fetchPageImageBackend(hash: string, page: string): Promise<Blob> {
+async function fetchPageImageBackend(
+  hash: string,
+  page: string,
+): Promise<Blob> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/page-image`, {
       params: {
         hash: hash,
         page: page,
       },
-      responseType: 'blob',
+      responseType: "blob",
     });
-    console.log( URL.createObjectURL(response.data));
+    console.log(URL.createObjectURL(response.data));
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
   }
 }
-
 
 export {
   fetchMangaById,
@@ -283,5 +288,5 @@ export {
   fetchSimilarManga,
   fetchPopularManga,
   fetchMangaCoverBackend,
-  fetchPageImageBackend
+  fetchPageImageBackend,
 };

@@ -7,9 +7,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import { useNavigate } from "react-router-dom";
 import "./PageAndControls.css";
 
-import {
-  MangaFeedScanlationGroup,
-} from "../../interfaces/MangaDexInterfaces";
+import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 import { fetchPageImageBackend } from "../../api/MangaDexApi";
 
 type Props = {
@@ -148,10 +146,9 @@ const PageAndControls = (props: Props) => {
 
   useEffect(() => {
     if (currentPage >= 0 && currentPage < pages.length) {
-      handleLoadImage(hash, pages[currentPage])
-        .catch((error) => {
-          console.error("Error loading image:", error);
-        });
+      handleLoadImage(hash, pages[currentPage]).catch((error) => {
+        console.error("Error loading image:", error);
+      });
     }
   }, [currentPage, hash, pages]);
   return (
@@ -168,9 +165,13 @@ const PageAndControls = (props: Props) => {
           </div>
         ) : (
           <>
-              {imageBlob && (
-            <img className="page" src={URL.createObjectURL(imageBlob)} alt="" />
-              )}
+            {imageBlob && (
+              <img
+                className="page"
+                src={URL.createObjectURL(imageBlob)}
+                alt=""
+              />
+            )}
             <div className="overlay-buttons">
               <Button
                 className="chapter-page-traversal"

@@ -32,7 +32,6 @@ import {
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
 
-
 const Reader = () => {
   const navigate = useNavigate();
   const { state } = useLocation();

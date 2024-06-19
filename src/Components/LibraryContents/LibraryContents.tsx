@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
@@ -24,7 +24,9 @@ const LibraryContents = (props: Props) => {
     selectAll,
   } = props;
 
-  const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{ [key: string]: string }>({});
+  const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{
+    [key: string]: string;
+  }>({});
 
   useEffect(() => {
     const fetchCoverImagesLibrary = async () => {
@@ -44,11 +46,13 @@ const LibraryContents = (props: Props) => {
       fetchCoverImagesLibrary();
     }
   }, [libraryManga]);
-    
+
   return (
     <div>
       <div className="library-contents-header">
-        <Typography fontFamily={"Figtree"} fontSize={20}>{header}</Typography>
+        <Typography fontFamily={"Figtree"} fontSize={20}>
+          {header}
+        </Typography>
       </div>
       <Grid
         container
@@ -73,9 +77,7 @@ const LibraryContents = (props: Props) => {
               <MangaClickable
                 id={manga.id}
                 title={manga.attributes.title.en}
-                coverUrl={
-                coverUrlsLibrary[manga.id]
-                }
+                coverUrl={coverUrlsLibrary[manga.id]}
                 updatedAt={manga.attributes.updatedAt}
                 disabled={checked || selectAll}
               />

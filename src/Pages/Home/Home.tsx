@@ -66,10 +66,7 @@ const Home = () => {
     <div>
       <Header />
       <div className="home-title-and-dialog-button">
-        <Typography className="popular-manga-header">
-          {" "}
-          Popular Manga
-        </Typography>
+        <Typography className="popular-manga-header"> Popular Manga</Typography>
         <MangaTagsHome
           mangaTags={mangaTags}
           handleClickedTag={handleClickedTag}

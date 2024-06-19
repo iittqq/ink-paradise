@@ -7,7 +7,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./MangaCoverList.css";
 
-import {fetchMangaCoverBackend} from "../../api/MangaDexApi";
+import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 
 const MangaCoverList = () => {
@@ -18,18 +18,21 @@ const MangaCoverList = () => {
 
   useEffect(() => {
     const fetchCoverImages = async () => {
-    const coverUrls: { [key: string]: string } = {};
-    for (const mangaCurrent of state.manga) {
-      const fileName = mangaCurrent.relationships.find(
-        (i: Relationship) => i.type === "cover_art",
-      )?.attributes?.fileName;
-      if (fileName) {
-        const imageBlob = await fetchMangaCoverBackend(mangaCurrent.id, fileName);
-        coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
+      const coverUrls: { [key: string]: string } = {};
+      for (const mangaCurrent of state.manga) {
+        const fileName = mangaCurrent.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(
+            mangaCurrent.id,
+            fileName,
+          );
+          coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
+        }
       }
-    }
-    setCoverUrls(coverUrls);
-    }
+      setCoverUrls(coverUrls);
+    };
     if (state.manga.length > 0) {
       fetchCoverImages();
     }
@@ -56,9 +59,7 @@ const MangaCoverList = () => {
               <MangaClickable
                 id={element.id}
                 title={element.attributes.title.en}
-                coverUrl={
-                coverUrls[element.id]
-                }
+                coverUrl={coverUrls[element.id]}
               />
             </Grid>
           ))}
