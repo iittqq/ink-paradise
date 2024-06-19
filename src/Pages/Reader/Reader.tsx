@@ -32,7 +32,6 @@ import {
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
 
-const pageBaseUrl = "https://uploads.mangadex.org/data/";
 
 const Reader = () => {
   const navigate = useNavigate();
@@ -170,7 +169,6 @@ const Reader = () => {
         <PageAndControls
           chapters={chapters}
           pages={pages}
-          pageBaseUrl={pageBaseUrl}
           hash={hash}
           currentChapter={state.chapter}
           mangaId={state.mangaId}

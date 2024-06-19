@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Manga,
   Relationship,
@@ -15,6 +16,7 @@ import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
   fetchSimilarManga,
+  fetchMangaCoverBackend,
 } from "../../api/MangaDexApi";
 import { useNavigate } from "react-router-dom";
 import "./MangaCategoriesHomePage.css";
@@ -29,6 +31,10 @@ type Props = {
 const MangaCategoriesHomePage = (props: Props) => {
   const navigate = useNavigate();
   const { recentlyUpdatedManga, recentlyAddedManga, mangaFromTag, tag } = props;
+  const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{ [key: string]: string }>({});
+  const [coverUrlsRecentlyAdded, setCoverUrlsRecentlyAdded] = useState<{ [key: string]: string }>({});
+  const [coverUrlsMangaFromTag, setCoverUrlsMangaFromTag] = useState<{ [key: string]: string }>({});
+
   const handleClick = (id: string, coverUrl: string) => {
     navigate("/individualView", {
       state: { id: id, coverUrl: coverUrl },
@@ -39,11 +45,62 @@ const MangaCategoriesHomePage = (props: Props) => {
     navigate("/mangaCoverList", { state: { listType: title, manga: manga } });
   };
 
+  useEffect(() => {
+    const fetchCoverImagesRecentlyUpdated = async () => {
+      const coverUrlsRecentlyUpdated: { [key: string]: string } = {};
+
+      for (const manga of recentlyUpdatedManga) {
+        const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          coverUrlsRecentlyUpdated[manga.id] = URL.createObjectURL(imageBlob);
+        }
+      }
+      setCoverUrlsRecentlyUpdated(coverUrlsRecentlyUpdated);
+    };
+
+    const fetchCoverImagesRecentlyAdded = async () => {
+      const coverUrlsRecentlyAdded: { [key: string]: string } = {};
+
+      for (const manga of recentlyAddedManga) {
+        const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          coverUrlsRecentlyAdded[manga.id] = URL.createObjectURL(imageBlob);
+        }
+      }
+      setCoverUrlsRecentlyAdded(coverUrlsRecentlyAdded);
+    };
+
+    const fetchCoverImagesMangaFromTag = async () => {
+      const coverUrlsMangaFromTag: { [key: string]: string } = {};
+      if (mangaFromTag !== undefined) {
+        for (const manga of mangaFromTag) {
+          const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+          if (fileName) {
+            const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+            coverUrlsMangaFromTag[manga.id] = URL.createObjectURL(imageBlob);
+          }
+        }
+      }
+      setCoverUrlsMangaFromTag(coverUrlsMangaFromTag);
+    };
+
+    if (recentlyAddedManga.length > 0) {
+      fetchCoverImagesRecentlyAdded();
+    }
+    if (recentlyUpdatedManga.length > 0) {
+      fetchCoverImagesRecentlyUpdated();
+    }
+    if (mangaFromTag !== undefined) {
+      fetchCoverImagesMangaFromTag();
+    }
+  }, [recentlyUpdatedManga, recentlyAddedManga, mangaFromTag]);
+
   return (
     <div className="home-category-manga-container">
       <Grid container className="home-category-manga-grid-container">
         <Typography className="category-stack-name">
-          {" "}
           Recently Updated
         </Typography>
         {recentlyUpdatedManga.map((current) => (
@@ -54,12 +111,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                 onClick={() => {
                   handleClick(
                     current.id,
-                    "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName,
+                    coverUrlsRecentlyUpdated[current.id]
                   );
                 }}
               >
@@ -75,12 +127,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                       height: "100%",
                     }}
                     image={
-                      "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName
+                      coverUrlsRecentlyUpdated[current.id]
                     }
                   />
                 </Card>
@@ -113,12 +160,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                 onClick={() => {
                   handleClick(
                     current.id,
-                    "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName,
+                    coverUrlsRecentlyAdded[current.id]
                   );
                 }}
               >
@@ -134,19 +176,14 @@ const MangaCategoriesHomePage = (props: Props) => {
                       height: "100%",
                     }}
                     image={
-                      "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName
+                      coverUrlsRecentlyAdded[current.id]
                     }
                   />
                 </Card>
               </Button>
               <div className="home-category-manga-text">
                 <Typography>{current.attributes.title.en}</Typography>
-              </div>{" "}
+              </div>
             </Grid>
             <Divider variant="fullWidth" className="divider" />
           </>
@@ -175,12 +212,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                   onClick={() => {
                     handleClick(
                       current.id,
-                      "https://uploads.mangadex.org/covers/" +
-                        current.id +
-                        "/" +
-                        current.relationships.find(
-                          (i: Relationship) => i.type === "cover_art",
-                        )?.attributes?.fileName,
+                      coverUrlsMangaFromTag[current.id]
                     );
                   }}
                 >
@@ -196,19 +228,14 @@ const MangaCategoriesHomePage = (props: Props) => {
                         height: "100%",
                       }}
                       image={
-                        "https://uploads.mangadex.org/covers/" +
-                        current.id +
-                        "/" +
-                        current.relationships.find(
-                          (i: Relationship) => i.type === "cover_art",
-                        )?.attributes?.fileName
+                        coverUrlsMangaFromTag[current.id]
                       }
                     />
                   </Card>
                 </Button>
                 <div className="home-category-manga-text">
                   <Typography>{current.attributes.title.en}</Typography>
-                </div>{" "}
+                </div>
               </Grid>
               <Divider variant="fullWidth" className="divider" />
             </>
@@ -221,9 +248,8 @@ const MangaCategoriesHomePage = (props: Props) => {
               });
             }}
           >
-            {" "}
             Show More
-          </Button>{" "}
+          </Button>
         </Grid>
       ) : null}
     </div>

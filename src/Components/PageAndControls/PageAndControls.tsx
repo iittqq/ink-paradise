@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import { Button, Typography, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -10,13 +9,12 @@ import "./PageAndControls.css";
 
 import {
   MangaFeedScanlationGroup,
-  PageImage,
 } from "../../interfaces/MangaDexInterfaces";
+import { fetchPageImageBackend } from "../../api/MangaDexApi";
 
 type Props = {
   chapters: MangaFeedScanlationGroup[];
   pages: string[];
-  pageBaseUrl: string;
   hash: string;
   currentChapter: string;
   mangaId: string;
@@ -28,7 +26,6 @@ const PageAndControls = (props: Props) => {
   const {
     chapters,
     pages,
-    pageBaseUrl,
     hash,
     currentChapter,
     mangaId,
@@ -36,8 +33,7 @@ const PageAndControls = (props: Props) => {
     scanlationGroup,
   } = props;
   const [loading, setLoading] = useState(false);
-
-  const [pageUrl, setPageUrl] = useState<string>("");
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null);
 
   const navigate = useNavigate();
 
@@ -115,33 +111,19 @@ const PageAndControls = (props: Props) => {
       : setCurrentPage(currentPage + 1);
   };
 
-  const handleLoadImage = (image: PageImage): Promise<string> => {
+  const handleLoadImage = async (hash: string, page: string): Promise<void> => {
     setLoading(true);
-
-    return loadImage(image);
-  };
-
-  const loadImage = (image: PageImage): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const loadImg = new Image();
-      loadImg.src = image.url;
-
-      loadImg.onload = () => {
+    return fetchPageImageBackend(hash, page)
+      .then((blob) => {
+        setImageBlob(blob);
         setLoading(false);
-        console.log(image.url);
-        console.log(image);
-        resolve(image.url);
-
-        console.log(image.url);
-      };
-
-      loadImg.onerror = (error) => {
+      })
+      .catch((error) => {
         setLoading(false);
-        reject(error);
-      };
-    });
+        console.error("Error loading image:", error);
+        throw error;
+      });
   };
-
   const handleClick = (
     mangaId: string,
     chapterId: string,
@@ -165,17 +147,13 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
-    const image = { url: pageBaseUrl + hash + "/" + pages[currentPage] };
-    handleLoadImage(image)
-      .then((url: string) => {
-        setPageUrl(url);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [currentPage, hash, pageBaseUrl]);
-
+    if (currentPage >= 0 && currentPage < pages.length) {
+      handleLoadImage(hash, pages[currentPage])
+        .catch((error) => {
+          console.error("Error loading image:", error);
+        });
+    }
+  }, [currentPage, hash, pages]);
   return (
     <div>
       <div
@@ -190,7 +168,9 @@ const PageAndControls = (props: Props) => {
           </div>
         ) : (
           <>
-            <img className="page" src={pageUrl} alt="" />
+              {imageBlob && (
+            <img className="page" src={URL.createObjectURL(imageBlob)} alt="" />
+              )}
             <div className="overlay-buttons">
               <Button
                 className="chapter-page-traversal"

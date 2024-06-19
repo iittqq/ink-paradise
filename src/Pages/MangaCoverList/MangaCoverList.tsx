@@ -7,14 +7,32 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "./MangaCoverList.css";
 
+import {fetchMangaCoverBackend} from "../../api/MangaDexApi";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 
 const MangaCoverList = () => {
   const { state } = useLocation();
   const [offset, setOffset] = useState<number>(0);
   const [mangaDetails, setMangaDetails] = useState<Manga[]>([]);
+  const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
+    const fetchCoverImages = async () => {
+    const coverUrls: { [key: string]: string } = {};
+    for (const mangaCurrent of state.manga) {
+      const fileName = mangaCurrent.relationships.find(
+        (i: Relationship) => i.type === "cover_art",
+      )?.attributes?.fileName;
+      if (fileName) {
+        const imageBlob = await fetchMangaCoverBackend(mangaCurrent.id, fileName);
+        coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
+      }
+    }
+    setCoverUrls(coverUrls);
+    }
+    if (state.manga.length > 0) {
+      fetchCoverImages();
+    }
     setMangaDetails(state.manga);
     console.log(state.manga);
   }, [state]);
@@ -39,12 +57,7 @@ const MangaCoverList = () => {
                 id={element.id}
                 title={element.attributes.title.en}
                 coverUrl={
-                  "https://uploads.mangadex.org/covers/" +
-                  element.id +
-                  "/" +
-                  element.relationships.find(
-                    (i: Relationship) => i.type === "cover_art",
-                  )?.attributes?.fileName
+                coverUrls[element.id]
                 }
               />
             </Grid>

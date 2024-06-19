@@ -3,12 +3,15 @@ import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import { Grid, Button, Card, CardMedia, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useHorizontalScroll } from "./HorizontalScroll";
+import { useEffect, useState } from "react";
+import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 
 type Props = { manga: Manga[] };
 
 const TrendingMangaCarousel = (props: Props) => {
   const scrollRef = useHorizontalScroll();
   const { manga } = props;
+  const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   const handleClick = (id: string, coverUrl: string) => {
@@ -16,6 +19,25 @@ const TrendingMangaCarousel = (props: Props) => {
       state: { id: id, coverUrl: coverUrl },
     });
   };
+
+  useEffect(() => {
+    const fetchCoverImages = async () => {
+      const coverUrls: { [key: string]: string } = {};
+      for (const mangaCurrent of manga) {
+      const fileName = mangaCurrent.relationships.find(
+        (i: Relationship) => i.type === "cover_art",
+      )?.attributes?.fileName;
+      if (fileName) {
+        const imageBlob = await fetchMangaCoverBackend(mangaCurrent.id, fileName);
+        coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
+      }
+      }
+      setCoverUrls(coverUrls);
+    };
+    if (manga.length > 0) {
+      fetchCoverImages();
+    }
+  }, [manga]);
 
   return (
     <div ref={scrollRef} className="popular-carousel-container">
@@ -35,12 +57,8 @@ const TrendingMangaCarousel = (props: Props) => {
               onClick={() => {
                 handleClick(
                   current.id,
-                  "https://uploads.mangadex.org/covers/" +
-                    current.id +
-                    "/" +
-                    current.relationships.find(
-                      (i: Relationship) => i.type === "cover_art",
-                    )?.attributes?.fileName,
+                  coverUrls[current.id],
+                                  
                 );
               }}
             >
@@ -62,12 +80,7 @@ const TrendingMangaCarousel = (props: Props) => {
                     height: "100%",
                   }}
                   image={
-                    "https://uploads.mangadex.org/covers/" +
-                    current.id +
-                    "/" +
-                    current.relationships.find(
-                      (i: Relationship) => i.type === "cover_art",
-                    )?.attributes?.fileName
+                  coverUrls[current.id]
                   }
                 />
               </Card>

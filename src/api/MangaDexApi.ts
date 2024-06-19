@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://18.191.56.64:8080";
+//const BASE_URL = "http://localhost:8080";
 
 import {
   Manga,
@@ -232,6 +233,41 @@ async function fetchPopularManga(limit: number): Promise<Manga[]> {
   }
 }
 
+async function fetchMangaCoverBackend(id: string, fileName: string): Promise<Blob> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/cover-image`, {
+      params: {
+        id: id,
+        fileName: fileName,
+      },
+      responseType: 'blob',
+    });
+    console.log( URL.createObjectURL(response.data));
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function fetchPageImageBackend(hash: string, page: string): Promise<Blob> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/page-image`, {
+      params: {
+        hash: hash,
+        page: page,
+      },
+      responseType: 'blob',
+    });
+    console.log( URL.createObjectURL(response.data));
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+
 export {
   fetchMangaById,
   fetchRecentlyUpdated,
@@ -246,4 +282,6 @@ export {
   fetchChapterData,
   fetchSimilarManga,
   fetchPopularManga,
+  fetchMangaCoverBackend,
+  fetchPageImageBackend
 };

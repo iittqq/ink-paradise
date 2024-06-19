@@ -1,9 +1,15 @@
-import { Grid, Button, CircularProgress, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Grid,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { Relationship } from "../../interfaces/MangaDexInterfaces";
+import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./FolderGrid.css";
+import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 
 type Props = {
   folderClick: (folder: MangaFolder) => void;
@@ -31,6 +37,9 @@ const FolderGrid = (props: Props) => {
     mangaEntriesToDelete,
     selectAll,
   } = props;
+
+  const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{ [key: string]: string }>({});
+
   const handleFolderClick = (folder: MangaFolder) => {
     folderClick(folder);
   };
@@ -38,6 +47,26 @@ const FolderGrid = (props: Props) => {
   const handleMangaEntryClick = (manga: Manga) => {
     mangaEntryClick(manga);
   };
+
+  useEffect(() => {
+    const fetchCoverImagesFolderGrid = async () => {
+      const coverUrlsFolderGrid: { [key: string]: string } = {};
+      if (folderMangaData) {
+        for (const manga of folderMangaData) {
+          const fileName = manga.relationships.find((i: Relationship) => i.type === "cover_art")?.attributes?.fileName;
+          if (fileName) {
+            const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+            coverUrlsFolderGrid[manga.id] = URL.createObjectURL(imageBlob);
+          }
+        }
+      }
+      setCoverUrlsFolderGrid(coverUrlsFolderGrid);
+    };
+
+    if (folderMangaData) {
+      fetchCoverImagesFolderGrid();
+    }
+  }, [folderMangaData]);
 
   return (
     <Grid
@@ -53,26 +82,25 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : selectedFolder === null ? (
         folders.map((folder: MangaFolder) => (
-          <Grid item className="folder-grid-item">
+          <Grid item key={folder.folderId} className="folder-grid-item">
             <Button
               className="folder"
               onClick={() => {
                 handleFolderClick(folder);
               }}
               sx={{
-                opacity:
-                  folder.folderId !== undefined
-                    ? mangaFoldersToDelete.includes(folder.folderId)
-                      ? 0.2
-                      : 1
-                    : null,
+                opacity: folder.folderId !== undefined
+                  ? mangaFoldersToDelete.includes(folder.folderId)
+                    ? 0.2
+                    : 1
+                  : undefined,
               }}
             >
               <div>
                 <Typography
-                  textTransform={"none"}
-                  color={"#ffffff"}
-                  fontFamily={"Figtree"}
+                  textTransform="none"
+                  color="#ffffff"
+                  fontFamily="Figtree"
                 >
                   {folder.folderName} <br />
                 </Typography>
@@ -82,11 +110,11 @@ const FolderGrid = (props: Props) => {
         ))
       ) : folderMangaData?.length === 0 ? (
         <Grid item>
-          <Typography fontFamily={"Figtree"}>Empty...</Typography>
+          <Typography fontFamily="Figtree">Empty...</Typography>
         </Grid>
       ) : (
         folderMangaData?.map((element: Manga) => (
-          <Grid item>
+          <Grid item key={element.id}>
             <Button
               className="manga-entry-overlay-button"
               onClick={() => {
@@ -99,14 +127,7 @@ const FolderGrid = (props: Props) => {
               <MangaClickable
                 id={element.id}
                 title={element.attributes.title.en}
-                coverUrl={
-                  "https://uploads.mangadex.org/covers/" +
-                  element.id +
-                  "/" +
-                  element.relationships.find(
-                    (i: Relationship) => i.type === "cover_art",
-                  )?.attributes?.fileName
-                }
+                coverUrl={coverUrlsFolderGrid[element.id]}
                 updatedAt={element.attributes.updatedAt}
                 disabled={checked || selectAll}
               />

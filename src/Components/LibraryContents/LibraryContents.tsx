@@ -1,7 +1,10 @@
+import {useEffect, useState} from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./LibraryContents.css";
+import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
+
 type Props = {
   header: string;
   libraryManga: Manga[];
@@ -20,6 +23,28 @@ const LibraryContents = (props: Props) => {
     libraryEntriesToDelete,
     selectAll,
   } = props;
+
+  const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const fetchCoverImagesLibrary = async () => {
+      const coverUrlsLibrary: { [key: string]: string } = {};
+      for (const manga of libraryManga) {
+        const fileName = manga.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          coverUrlsLibrary[manga.id] = URL.createObjectURL(imageBlob);
+        }
+      }
+      setCoverUrlsLibrary(coverUrlsLibrary);
+    };
+    if (libraryManga.length > 0) {
+      fetchCoverImagesLibrary();
+    }
+  }, [libraryManga]);
+    
   return (
     <div>
       <div className="library-contents-header">
@@ -49,12 +74,7 @@ const LibraryContents = (props: Props) => {
                 id={manga.id}
                 title={manga.attributes.title.en}
                 coverUrl={
-                  "https://uploads.mangadex.org/covers/" +
-                  manga.id +
-                  "/" +
-                  manga.relationships.find(
-                    (i: Relationship) => i.type === "cover_art",
-                  )?.attributes?.fileName
+                coverUrlsLibrary[manga.id]
                 }
                 updatedAt={manga.attributes.updatedAt}
                 disabled={checked || selectAll}
