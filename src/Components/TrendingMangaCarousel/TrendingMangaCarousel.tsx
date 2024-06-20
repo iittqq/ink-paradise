@@ -15,9 +15,8 @@ const TrendingMangaCarousel = (props: Props) => {
   const navigate = useNavigate();
 
   const handleClick = (id: string, coverUrl: string) => {
-    navigate("/individualView", {
-      state: { id: id, coverUrl: coverUrl },
-    });
+    const encodedCoverUrl = encodeURIComponent(coverUrl);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`);
   };
 
   useEffect(() => {

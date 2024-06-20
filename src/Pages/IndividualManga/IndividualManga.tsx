@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
@@ -31,7 +31,8 @@ import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 
 const IndividualManga = () => {
-  const { state } = useLocation();
+  const { id, coverUrl } = useParams();
+  const navigate = useNavigate();
 
   const [mangaName, setMangaName] = useState("");
   const [mangaDescription, setMangaDescription] = useState("");
@@ -142,41 +143,34 @@ const IndividualManga = () => {
     const accountData = JSON.parse(account as string);
     if (accountData !== null) {
       getMangaFolders().then((response) => {
-        console.log(response);
         setFolders(
           response.filter((folder) => folder.userId === accountData.id),
         );
       });
     }
-    fetchMangaById(state.id).then((data: Manga) => {
-      console.log(data);
+    fetchMangaById(id!).then((data: Manga) => {
       setMangaName(data.attributes.title.en);
       setMangaDescription(data.attributes.description.en);
       setMangaAltTitles(data.attributes.altTitles);
       setMangaLanguages(data.attributes.availableTranslatedLanguages);
       setMangaContentRating(data.attributes.contentRating);
 
-      console.log(data.attributes.availableTranslatedLanguages);
       setMangaRaw(
         data["attributes"].links === null ? "" : data["attributes"].links.raw,
       );
 
       setMangaTags(data["attributes"].tags);
       const tagIds = data["attributes"].tags.map((tag) => tag.id);
-      console.log(tagIds);
       fetchSimilarManga(10, tagIds).then((data: Manga[]) => {
-        console.log(data);
         setSimilarManga(data);
       });
     });
-    console.log(currentOffset);
-    console.log(selectedScanlationGroup);
     if (
       currentOffset <= mangaFeed.length &&
       selectedScanlationGroup === undefined
     ) {
       fetchMangaFeed(
-        state.id,
+        id!,
         100,
         currentOffset,
         currentOrder,
@@ -185,7 +179,7 @@ const IndividualManga = () => {
         data.length === 0 ? setCurrentOffset(0) : null;
         if (
           previousLanguage !== selectedLanguage ||
-          state.id !== previousId ||
+          id !== previousId ||
           currentOffset === 0
         ) {
           setMangaFeed(data);
@@ -202,7 +196,7 @@ const IndividualManga = () => {
         Promise.all(promises).then((data) => {
           if (
             previousLanguage !== selectedLanguage ||
-            state.id !== previousId ||
+            id !== previousId ||
             currentOffset === 0
           ) {
             setScanlationGroups([
@@ -232,9 +226,14 @@ const IndividualManga = () => {
       setFilteredMangaFeed(filteredFeed);
     }
     setPreviousLanguage(selectedLanguage);
-    setPreviousId(state.id);
+    if (!id || !coverUrl) {
+      navigate("/");
+    } else {
+      setPreviousId(id);
+    }
   }, [
-    state,
+    id,
+    coverUrl,
     selectedLanguage,
     currentOffset,
     currentOrder,
@@ -252,7 +251,7 @@ const IndividualManga = () => {
           folders={folders}
           mangaAltTitles={mangaAltTitles}
           mangaTags={mangaTags}
-          id={state.id}
+          id={id !== undefined ? id : ""}
           handleAddToFolder={handleAddToFolder}
           handleClickOpen={handleClickOpen}
           handleCloseCategories={handleCloseCategories}
@@ -269,7 +268,7 @@ const IndividualManga = () => {
       </div>
 
       <MangaBanner
-        coverUrl={state.coverUrl}
+        coverUrl={coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""}
         mangaDescription={mangaDescription}
         mangaName={mangaName}
       />
@@ -296,7 +295,7 @@ const IndividualManga = () => {
               }
               mangaName={mangaName}
               selectedLanguage={selectedLanguage}
-              mangaId={state.id}
+              mangaId={id !== undefined ? id : ""}
               insideReader={false}
             />
             {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (

@@ -20,9 +20,8 @@ const MangaClickable = (props: Props) => {
   const { id, title, coverUrl, updatedAt, rank, disabled } = props;
 
   function handleClick() {
-    navigate("/individualView", {
-      state: { id: id, coverUrl: coverUrl },
-    });
+    const encodedCoverUrl = encodeURIComponent(coverUrl!);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`);
   }
 
   return (

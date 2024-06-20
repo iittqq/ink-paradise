@@ -12,6 +12,7 @@ type Props = {
 const MangaBanner = (props: Props) => {
   const [showMoreToggled, setShowMoreToggled] = useState(false);
   const { coverUrl, mangaDescription, mangaName } = props;
+
   const handleShowMore = () => {
     setShowMoreToggled(!showMoreToggled);
   };
