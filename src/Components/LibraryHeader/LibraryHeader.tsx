@@ -67,9 +67,6 @@ const LibraryHeader = (props: Props) => {
         </Typography>
       </div>{" "}
       <div className="library-header">
-        <Typography fontSize={20} fontFamily={"Figtree"}>
-          Library
-        </Typography>
         <div className="library-header-options">
           {searching ? (
             <div className="library-input-section">

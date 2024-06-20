@@ -42,9 +42,8 @@ const MangaCategoriesHomePage = (props: Props) => {
   }>({});
 
   const handleClick = (id: string, coverUrl: string) => {
-    navigate("/individualView", {
-      state: { id: id, coverUrl: coverUrl },
-    });
+    const encodedCoverUrl = encodeURIComponent(coverUrl);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`);
   };
 
   const handleClickedShowMore = (title: string, manga: Manga[]) => {
