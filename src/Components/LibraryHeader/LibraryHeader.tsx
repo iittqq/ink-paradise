@@ -26,6 +26,7 @@ type Props = {
   handleDeleteLibraryEntries: () => void;
   toggleSelectAll: () => void;
   selectAll: boolean;
+  header: string;
 };
 
 const LibraryHeader = (props: Props) => {
@@ -38,6 +39,7 @@ const LibraryHeader = (props: Props) => {
     handleDeleteLibraryEntries,
     toggleSelectAll,
     selectAll,
+    header,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
@@ -58,172 +60,179 @@ const LibraryHeader = (props: Props) => {
   };
 
   return (
-    <div className="library-header">
-      <Typography fontSize={20} fontFamily={"Figtree"}>
-        Library
-      </Typography>
-      <div className="library-header-options">
-        {searching ? (
-          <div className="library-input-section">
-            <Button
-              className="library-header-button"
-              onClick={() => handleClickSearchIcon()}
-            >
-              <ArrowBackIcon />
-            </Button>
-            <input
-              type="search"
-              placeholder="Search Library"
-              className="library-search-bar"
-              onChange={(event) => {
-                handleInput(event);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
+    <>
+      <div className="library-contents-header">
+        <Typography fontFamily={"Figtree"} fontSize={20}>
+          {header}
+        </Typography>
+      </div>{" "}
+      <div className="library-header">
+        <Typography fontSize={20} fontFamily={"Figtree"}>
+          Library
+        </Typography>
+        <div className="library-header-options">
+          {searching ? (
+            <div className="library-input-section">
+              <Button
+                className="library-header-button"
+                onClick={() => handleClickSearchIcon()}
+              >
+                <ArrowBackIcon />
+              </Button>
+              <input
+                type="search"
+                placeholder="Search Library"
+                className="library-search-bar"
+                onChange={(event) => {
+                  handleInput(event);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleEnter();
+                    handleClickSearchIcon();
+                  }
+                }}
+              />
+              <Button
+                className="library-header-button"
+                onClick={() => {
                   handleEnter();
                   handleClickSearchIcon();
-                }
-              }}
-            />
+                }}
+              >
+                <SearchIcon />
+              </Button>
+            </div>
+          ) : (
             <Button
               className="library-header-button"
               onClick={() => {
-                handleEnter();
                 handleClickSearchIcon();
               }}
             >
               <SearchIcon />
             </Button>
-          </div>
-        ) : (
-          <Button
-            className="library-header-button"
-            onClick={() => {
-              handleClickSearchIcon();
-            }}
-          >
-            <SearchIcon />
-          </Button>
-        )}
-        {selectAll ? (
-          <Button
-            className="library-header-button"
-            sx={{
-              backgroundColor: "#ff7597",
-            }}
-            onClick={() => {
-              toggleSelectAll();
-            }}
-          >
-            <CheckBoxIcon />{" "}
-          </Button>
-        ) : (
-          <Button
-            className="library-header-button"
-            onClick={() => {
-              toggleSelectAll();
-            }}
-          >
-            <CheckBoxOutlineBlankIcon />
-          </Button>
-        )}
-        {checked || selectAll ? (
-          <Button
-            className="library-header-button"
-            sx={{
-              backgroundColor: "#ff7597",
-            }}
-            onClick={() => {
-              handleDeleteLibraryEntries();
-              toggleLibraryEntries(false);
-            }}
-          >
-            <ClearIcon />
-          </Button>
-        ) : (
-          <Button
-            className="library-header-button"
-            sx={{
-              backgroundColor: "none",
-            }}
-            onClick={() => {
-              toggleLibraryEntries(true);
-            }}
-          >
-            <DeleteIcon />
-          </Button>
-        )}
-        <Button
-          className="library-header-button"
-          onClick={() => {
-            handleAscendingChange();
-          }}
-        >
-          <FilterListIcon />
-        </Button>
-        <Button
-          className="library-header-button"
-          onClick={() => {
-            setOpenFilterDialog(true);
-          }}
-        >
-          <ListIcon />
-        </Button>
-        <Dialog
-          id="filter-dialog"
-          open={openFilterDialog}
-          onClose={() => {
-            setOpenFilterDialog(false);
-          }}
-        >
-          <DialogTitle
-            sx={{
-              backgroundColor: "#121212",
-              color: "#ffffff",
-              textAlign: "center",
-              fontFamily: "Figtree",
-            }}
-          >
-            Filter
-          </DialogTitle>
-          <DialogContent
-            sx={{
-              backgroundColor: "#121212",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          )}
+          {selectAll ? (
             <Button
-              onClick={() => {
-                handleContentFilter("Alphabetical Order");
+              className="library-header-button"
+              sx={{
+                backgroundColor: "#ff7597",
               }}
-              className="filter-button"
+              onClick={() => {
+                toggleSelectAll();
+              }}
             >
-              Alphabetical Order
+              <CheckBoxIcon />{" "}
             </Button>
+          ) : (
+            <Button
+              className="library-header-button"
+              onClick={() => {
+                toggleSelectAll();
+              }}
+            >
+              <CheckBoxOutlineBlankIcon />
+            </Button>
+          )}
+          {checked || selectAll ? (
+            <Button
+              className="library-header-button"
+              sx={{
+                backgroundColor: "#ff7597",
+              }}
+              onClick={() => {
+                handleDeleteLibraryEntries();
+                toggleLibraryEntries(false);
+              }}
+            >
+              <ClearIcon />
+            </Button>
+          ) : (
+            <Button
+              className="library-header-button"
+              sx={{
+                backgroundColor: "none",
+              }}
+              onClick={() => {
+                toggleLibraryEntries(true);
+              }}
+            >
+              <DeleteIcon />
+            </Button>
+          )}
+          <Button
+            className="library-header-button"
+            onClick={() => {
+              handleAscendingChange();
+            }}
+          >
+            <FilterListIcon />
+          </Button>
+          <Button
+            className="library-header-button"
+            onClick={() => {
+              setOpenFilterDialog(true);
+            }}
+          >
+            <ListIcon />
+          </Button>
+          <Dialog
+            id="filter-dialog"
+            open={openFilterDialog}
+            onClose={() => {
+              setOpenFilterDialog(false);
+            }}
+          >
+            <DialogTitle
+              sx={{
+                backgroundColor: "#121212",
+                color: "#ffffff",
+                textAlign: "center",
+                fontFamily: "Figtree",
+              }}
+            >
+              Filter
+            </DialogTitle>
+            <DialogContent
+              sx={{
+                backgroundColor: "#121212",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                onClick={() => {
+                  handleContentFilter("Alphabetical Order");
+                }}
+                className="filter-button"
+              >
+                Alphabetical Order
+              </Button>
 
-            <Button
-              onClick={() => {
-                handleContentFilter("Continue Reading");
-              }}
-              className="filter-button"
-            >
-              Continue Reading
-            </Button>
-            <Button
-              onClick={() => {
-                handleContentFilter("Recently Updated");
-              }}
-              className="filter-button"
-            >
-              Recently Updated
-            </Button>
-          </DialogContent>
-        </Dialog>
+              <Button
+                onClick={() => {
+                  handleContentFilter("Continue Reading");
+                }}
+                className="filter-button"
+              >
+                Continue Reading
+              </Button>
+              <Button
+                onClick={() => {
+                  handleContentFilter("Recently Updated");
+                }}
+                className="filter-button"
+              >
+                Recently Updated
+              </Button>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

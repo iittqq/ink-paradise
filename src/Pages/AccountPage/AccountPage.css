@@ -215,12 +215,9 @@ input[type="file"] {
 
 #info-dialog .MuiPaper-root {
   background-color: #121212 !important;
-  width: 20vw !important;
+  width: 350px !important;
+  height: 750px !important;
   border-radius: 25px !important;
-
-  @media (width <= 600px) {
-    width: 90vw !important;
-  }
 }
 
 .edit-content-filter-dropdown {

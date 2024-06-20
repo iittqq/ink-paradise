@@ -142,54 +142,51 @@ const MangaChapterList = (props: Props) => {
                   }
                 }}
               >
-                <div className="chapter-button-text">
-                  <div className="info-stack">
-                    <Typography
-                      className="chapter-details"
-                      sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 13 },
-                      }}
-                    >
-                      Chapter {current.attributes.chapter}
-                    </Typography>
-                    <Typography
-                      fontFamily="Figtree"
-                      color="#fff"
-                      sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 13 },
-                      }}
-                    >
-                      {current.attributes.translatedLanguage}
-                    </Typography>
-                  </div>
-
-                  <div className="info-stack">
-                    <Typography
-                      className="chapter-details"
-                      sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 13 },
-                      }}
-                    >
-                      {current.relationships[0].type === "scanlation_group"
-                        ? current.relationships[0].attributes.name
-                        : "Unknown"}
-                    </Typography>
-
-                    <Typography
-                      className="chapter-details"
-                      sx={{
-                        fontSize: { xs: 10, sm: 10, lg: 13 },
-                      }}
-                    >
-                      {dayjs(current.attributes.createdAt).format("DD/MM/YYYY")}
-                    </Typography>
-                  </div>
+                <div className="info-stack">
+                  <Typography
+                    className="chapter-details"
+                    sx={{
+                      fontSize: { xs: 10, sm: 10, lg: 13 },
+                    }}
+                  >
+                    Chapter {current.attributes.chapter}
+                  </Typography>
+                  <Typography
+                    fontFamily="Figtree"
+                    color="#fff"
+                    sx={{
+                      fontSize: { xs: 10, sm: 10, lg: 13 },
+                    }}
+                  >
+                    {current.attributes.translatedLanguage}
+                  </Typography>
                 </div>
                 {current.attributes.externalUrl !== null ? (
                   <div className="external-link-button">
                     <OpenInNewIcon />
                   </div>
                 ) : null}
+                <div className="info-stack">
+                  <Typography
+                    className="chapter-details"
+                    sx={{
+                      fontSize: { xs: 10, sm: 10, lg: 13 },
+                    }}
+                  >
+                    {current.relationships[0].type === "scanlation_group"
+                      ? current.relationships[0].attributes.name
+                      : "Unknown"}
+                  </Typography>
+
+                  <Typography
+                    className="chapter-details"
+                    sx={{
+                      fontSize: { xs: 10, sm: 10, lg: 13 },
+                    }}
+                  >
+                    {dayjs(current.attributes.createdAt).format("DD/MM/YYYY")}
+                  </Typography>
+                </div>
               </Button>
             </Grid>
           ) : null,

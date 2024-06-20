@@ -32,6 +32,9 @@ const Header = () => {
         } else {
           console.log("Account not verified");
           setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000);
         }
       });
     } else {
@@ -54,16 +57,20 @@ const Header = () => {
           navigate("/library");
         } else {
           setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000);
         }
       });
     } else {
       setShowAlertAccount(true);
+      setTimeout(() => {
+        setShowAlertAccount(false);
+      }, 3000);
     }
   };
   const handleClickLogo = async () => {
     navigate("/");
-    setShowAlert(false);
-    setShowAlertAccount(false);
   };
 
   const handleClick = async () =>
@@ -76,97 +83,106 @@ const Header = () => {
         });
 
   return (
-    <div className="container-header">
-      <Button onClick={() => handleClickLogo()} className="logo-header-button">
-        <HomeIcon sx={{ height: "30px", width: "30px" }} />
-      </Button>
-      {showAlert == true ? (
-        <Alert
-          icon={<PetsIcon className="account-verification-alert-icon" />}
-          severity="info"
-          className="account-verification-alert"
+    <>
+      <div className="container-header">
+        <Button
+          onClick={() => handleClickLogo()}
+          className="logo-header-button"
         >
-          Please verify your account before proceeding
-        </Alert>
+          <HomeIcon sx={{ height: "30px", width: "30px" }} />
+        </Button>
+        <>
+          {searching ? (
+            <div className="search-functionality-container">
+              <Button
+                className="header-buttons"
+                onClick={() => handleClickSearchIcon()}
+              >
+                <CloseIcon />
+              </Button>
+              <TextField
+                variant="outlined"
+                id="header-search-input"
+                focused
+                type="search"
+                size="small"
+                className="input-field"
+                placeholder="Search Manga"
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    handleClick();
+                  }
+                }}
+                onChange={(event) => {
+                  setSearchInput(event.target.value);
+                }}
+              />
+              <Button className="header-buttons" onClick={() => handleClick()}>
+                <KeyboardArrowRightIcon />
+              </Button>{" "}
+            </div>
+          ) : (
+            <div className="header-buttons-right">
+              <Button
+                className="header-buttons"
+                sx={{ marginRight: "5px" }}
+                onClick={() => handleClickSearchIcon()}
+              >
+                <div className="header-nav-dialog-columns">
+                  <SearchIcon />
+                  <Typography className="header-nav-label">Search</Typography>
+                </div>
+              </Button>
+              <Button
+                className="header-buttons"
+                sx={{ marginRight: "5px" }}
+                onClick={() => {
+                  handleClickLibrary();
+                }}
+              >
+                <div className="header-nav-dialog-columns">
+                  <BookIcon />
+                  <Typography className="header-nav-label">Library</Typography>
+                </div>
+              </Button>
+              <Button
+                onClick={() => {
+                  handleClickAccount();
+                }}
+                className="header-buttons"
+              >
+                <div className="header-nav-dialog-columns">
+                  <AccountBoxIcon />
+                  <Typography className="header-nav-label">Account</Typography>
+                </div>
+              </Button>
+            </div>
+          )}
+        </>
+      </div>
+      {showAlert == true ? (
+        <div className="alert-container">
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please verify your account before proceeding
+          </Alert>
+        </div>
       ) : null}
       {showAlertAccount == true ? (
-        <Alert
-          icon={<PetsIcon className="account-verification-alert-icon" />}
-          severity="info"
-          className="account-verification-alert"
-        >
-          Please create and verify your account before proceeding
-        </Alert>
-      ) : null}
-      <>
-        {searching ? (
-          <div className="search-functionality-container">
-            <Button
-              className="header-buttons"
-              onClick={() => handleClickSearchIcon()}
-            >
-              <CloseIcon />
-            </Button>
-            <TextField
-              variant="outlined"
-              id="header-search-input"
-              focused
-              type="search"
-              size="small"
-              className="input-field"
-              placeholder="Search Manga"
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Enter") {
-                  handleClick();
-                }
-              }}
-              onChange={(event) => {
-                setSearchInput(event.target.value);
-              }}
-            />
-            <Button className="header-buttons" onClick={() => handleClick()}>
-              <KeyboardArrowRightIcon />
-            </Button>{" "}
-          </div>
-        ) : (
-          <div className="header-buttons-right">
-            <Button
-              className="header-buttons"
-              sx={{ marginRight: "5px" }}
-              onClick={() => handleClickSearchIcon()}
-            >
-              <div className="header-nav-dialog-columns">
-                <SearchIcon />
-                <Typography className="header-nav-label">Search</Typography>
-              </div>
-            </Button>
-            <Button
-              className="header-buttons"
-              sx={{ marginRight: "5px" }}
-              onClick={() => {
-                handleClickLibrary();
-              }}
-            >
-              <div className="header-nav-dialog-columns">
-                <BookIcon />
-                <Typography className="header-nav-label">Library</Typography>
-              </div>
-            </Button>
-            <Button
-              onClick={() => {
-                handleClickAccount();
-              }}
-              className="header-buttons"
-            >
-              <div className="header-nav-dialog-columns">
-                <AccountBoxIcon />
-                <Typography className="header-nav-label">Account</Typography>
-              </div>
-            </Button>
-          </div>
-        )}
-      </>
-    </div>
+        <div className="alert-container">
+          <Alert
+            icon={<PetsIcon className="account-verification-alert-icon" />}
+            severity="info"
+            className="account-verification-alert"
+          >
+            Please create and verify your account before proceeding
+          </Alert>
+        </div>
+      ) : null}{" "}
+    </>
   );
 };
 

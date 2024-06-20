@@ -201,6 +201,7 @@ const Library = () => {
         handleDeleteLibraryEntries={handleDeleteLibraryEntries}
         toggleSelectAll={toggleSelectAll}
         selectAll={selectAll}
+        header={contentFilter}
       />
       {loading === true ? (
         <div className="loading-indicator-container">
@@ -208,7 +209,6 @@ const Library = () => {
         </div>
       ) : (
         <LibraryContents
-          header={contentFilter}
           libraryManga={library}
           handleLibraryEntryClick={handleLibraryEntryClick}
           checked={checked}

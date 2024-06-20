@@ -6,8 +6,8 @@
 }
 
 .login-card {
-  width: 40vh;
-  height: 65vh;
+  width: 350px;
+  height: 550px;
   background-color: #191919 !important;
   display: flex;
   flex-direction: column;

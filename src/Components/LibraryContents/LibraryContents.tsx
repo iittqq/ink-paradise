@@ -6,7 +6,6 @@ import "./LibraryContents.css";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 
 type Props = {
-  header: string;
   libraryManga: Manga[];
   handleLibraryEntryClick: (manga: Manga) => void;
   checked: boolean;
@@ -16,7 +15,6 @@ type Props = {
 
 const LibraryContents = (props: Props) => {
   const {
-    header,
     libraryManga,
     handleLibraryEntryClick,
     checked,
@@ -49,11 +47,6 @@ const LibraryContents = (props: Props) => {
 
   return (
     <div>
-      <div className="library-contents-header">
-        <Typography fontFamily={"Figtree"} fontSize={20}>
-          {header}
-        </Typography>
-      </div>
       <Grid
         container
         direction={"row"}
@@ -61,7 +54,9 @@ const LibraryContents = (props: Props) => {
         alignItems={"center"}
       >
         {libraryManga.length === 0 ? (
-          <Typography fontFamily={"Figtree"}>Empty...</Typography>
+          <Typography fontFamily={"Figtree"} sx={{ marginTop: "20px" }}>
+            Empty...
+          </Typography>
         ) : null}
         {libraryManga.map((manga: Manga) => (
           <Grid item>
