@@ -58,7 +58,6 @@ const IndividualManga = () => {
   const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
   const [showInfoToggled, setShowInfoToggled] = useState(false);
   const [showCategoriesToggled, setShowCategoriesToggled] = useState(false);
-  const [switchedOrder, setSwitchedOrder] = useState<boolean>(false);
   const [similarManga, setSimilarManga] = useState<Manga[]>([]);
   const [previousLanguage, setPreviousLanguage] = useState<string>("en");
   const [previousId, setPreviousId] = useState<string>("");
@@ -68,7 +67,11 @@ const IndividualManga = () => {
   };
 
   const handleSwitchOrder = () => {
-    setSwitchedOrder(true);
+    if (currentOrder === "asc") {
+      setCurrentOrder("desc");
+    } else {
+      setCurrentOrder("asc");
+    }
     setCurrentOffset(0);
   };
 
@@ -179,8 +182,12 @@ const IndividualManga = () => {
         currentOrder,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
-        data.length === 0 ? setCurrentOffset(0) : switchedOrder === true;
-        if (previousLanguage !== selectedLanguage || state.id !== previousId) {
+        data.length === 0 ? setCurrentOffset(0) : null;
+        if (
+          previousLanguage !== selectedLanguage ||
+          state.id !== previousId ||
+          currentOffset === 0
+        ) {
           setMangaFeed(data);
         } else {
           setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
@@ -195,7 +202,8 @@ const IndividualManga = () => {
         Promise.all(promises).then((data) => {
           if (
             previousLanguage !== selectedLanguage ||
-            state.id !== previousId
+            state.id !== previousId ||
+            currentOffset === 0
           ) {
             setScanlationGroups([
               ...new Set(data.filter((element) => element !== undefined)),
@@ -225,7 +233,6 @@ const IndividualManga = () => {
     }
     setPreviousLanguage(selectedLanguage);
     setPreviousId(state.id);
-    setSwitchedOrder(false);
   }, [
     state,
     selectedLanguage,
@@ -271,7 +278,6 @@ const IndividualManga = () => {
         <MangaControls
           mangaLanguages={mangaLanguages}
           currentOrder={currentOrder}
-          setCurrentOrder={setCurrentOrder}
           selectedLanguage={selectedLanguage}
           handleClickedLanguageButton={handleClickedLanguageButton}
           mangaTranslators={scanlationGroups}
@@ -293,16 +299,17 @@ const IndividualManga = () => {
               mangaId={state.id}
               insideReader={false}
             />
-
-            <Button
-              className="show-more-button"
-              onClick={() => {
-                handleShowMore();
-              }}
-            >
-              {" "}
-              Show More
-            </Button>
+            {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
+              <Button
+                className="show-more-button"
+                onClick={() => {
+                  handleShowMore();
+                }}
+              >
+                {" "}
+                Show More
+              </Button>
+            ) : null}
           </div>
           <div className="similar-manga-section">
             <Typography fontSize={22} fontFamily="Figtree" align="center">

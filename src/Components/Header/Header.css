@@ -1,10 +1,18 @@
-.logo-header-icon {
+.logo-header-button {
   color: #ffffff !important;
-  height: 40px !important;
+  max-height: 40px !important;
+  max-width: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
   padding: 0px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+}
+
+.logo-home-icon {
+  width: 40px;
+  height: 40px;
 }
 
 .container-header {

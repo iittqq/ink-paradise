@@ -77,8 +77,8 @@ const Header = () => {
 
   return (
     <div className="container-header">
-      <Button onClick={() => handleClickLogo()} className="logo-header-icon">
-        <HomeIcon sx={{ width: "80%", height: "80%" }} />
+      <Button onClick={() => handleClickLogo()} className="logo-header-button">
+        <HomeIcon sx={{ height: "30px", width: "30px" }} />
       </Button>
       {showAlert == true ? (
         <Alert

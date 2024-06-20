@@ -49,6 +49,15 @@ const Reader = () => {
   function handleClickTitle() {
     navigate(-1);
   }
+
+  const handleScrollPosition = () => {
+    const scrollPosition = sessionStorage.getItem("scrollPosition");
+    if (scrollPosition) {
+      window.scrollTo(0, parseInt(scrollPosition));
+      sessionStorage.removeItem("scrollPosition");
+    }
+  };
+
   useEffect(() => {
     fetchChapterData(state.chapterId).then((data: MangaChapter) => {
       setPages(data.chapter.data);
@@ -107,6 +116,7 @@ const Reader = () => {
         setChapters(data);
       },
     );
+    handleScrollPosition();
   }, [state, order, selectedLanguage]);
 
   return (

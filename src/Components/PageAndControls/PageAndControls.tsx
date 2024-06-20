@@ -100,6 +100,7 @@ const PageAndControls = (props: Props) => {
       ? handlePreviousChapter()
       : setCurrentPage(currentPage - 1);
     setLoading(false);
+    window.localStorage.setItem("position", window.scrollY.toString());
   };
 
   const handleNextPage = () => {
@@ -107,6 +108,7 @@ const PageAndControls = (props: Props) => {
     currentPage === pages.length - 1
       ? handleNextChapter()
       : setCurrentPage(currentPage + 1);
+    window.localStorage.setItem("position", window.scrollY.toString());
   };
 
   const handleLoadImage = async (hash: string, page: string): Promise<void> => {
@@ -152,7 +154,7 @@ const PageAndControls = (props: Props) => {
     }
   }, [currentPage, hash, pages]);
   return (
-    <div>
+    <div className="page-and-controls-container">
       <div
         className="page-container"
         onTouchStart={onTouchStart}

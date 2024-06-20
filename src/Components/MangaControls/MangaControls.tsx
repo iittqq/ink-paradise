@@ -18,7 +18,6 @@ type Props = {
   currentOrder: string;
   selectedLanguage: string;
   handleClickedLanguageButton: (language: string) => void;
-  setCurrentOrder: React.Dispatch<React.SetStateAction<string>>;
   mangaTranslators: ScanlationGroup[];
   setTranslator: React.Dispatch<React.SetStateAction<ScanlationGroup[]>>;
   handleSwitchOrder: () => void;
@@ -36,7 +35,6 @@ const MangaControls = (props: Props) => {
     mangaLanguages,
     currentOrder,
     handleClickedLanguageButton,
-    setCurrentOrder,
     mangaTranslators,
     handleSwitchOrder,
     handleFilterScanlationGroups,
@@ -87,11 +85,6 @@ const MangaControls = (props: Props) => {
           onClick={() => {
             console.log(currentOrder);
             handleSwitchOrder();
-            if (currentOrder === "desc") {
-              setCurrentOrder("asc");
-            } else {
-              setCurrentOrder("desc");
-            }
           }}
         >
           <SwapVertIcon />
