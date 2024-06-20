@@ -23,7 +23,7 @@ function App() {
           <Route path="/mangaCoverList" element={<MangaCoverList />} />
           <Route path="/reader" element={<Reader />} />
           <Route path="/library" element={<Library />} />
-          <Route path="/accountPage" element={<AccountPage />} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
