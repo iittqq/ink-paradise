@@ -5,7 +5,7 @@ import {
   PasswordChange,
 } from "../interfaces/AccountInterfaces";
 
-const BASE_URL = "http://3.132.121.60:8080";
+const BASE_URL = "http://54.167.254.252:8080";
 //const BASE_URL = "http://localhost:8080";
 
 async function fetchAccountData(id: number): Promise<Account | null> {

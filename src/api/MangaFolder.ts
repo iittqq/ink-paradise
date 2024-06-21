@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { MangaFolder } from "../interfaces/MangaFolderInterfaces";
 
-const BASE_URL = "http://3.132.121.60:8080";
+const BASE_URL = "http://54.167.254.252:8080";
 //const BASE_URL = "http://localhost:8080";
 
 async function addMangaFolder(folder: MangaFolder): Promise<MangaFolder> {
