@@ -24,17 +24,21 @@ const Header = () => {
     const account = window.localStorage.getItem("account");
     const accountData = JSON.parse(account as string);
     if (account !== null) {
-      fetchAccountData(accountData.id).then((data: Account) => {
-        if (data.verified === true) {
-          console.log(data);
-          window.localStorage.setItem("account", JSON.stringify(data));
-          navigate("/account");
+      fetchAccountData(accountData.id).then((data: Account | null) => {
+        if (data === null) {
+          window.localStorage.removeItem("account");
         } else {
-          console.log("Account not verified");
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 3000);
+          if (data.verified === true) {
+            console.log(data);
+            window.localStorage.setItem("account", JSON.stringify(data));
+            navigate("/account");
+          } else {
+            console.log("Account not verified");
+            setShowAlert(true);
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 3000);
+          }
         }
       });
     } else {
@@ -50,16 +54,20 @@ const Header = () => {
     const account = window.localStorage.getItem("account");
     const accountData = JSON.parse(account as string);
     if (account !== null) {
-      fetchAccountData(accountData.id).then((data: Account) => {
-        if (data.verified === true) {
-          console.log(data);
-          window.localStorage.setItem("account", JSON.stringify(data));
-          navigate("/library");
+      fetchAccountData(accountData.id).then((data: Account | null) => {
+        if (data === null) {
+          window.localStorage.removeItem("account");
         } else {
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          }, 3000);
+          if (data.verified === true) {
+            console.log(data);
+            window.localStorage.setItem("account", JSON.stringify(data));
+            navigate("/library");
+          } else {
+            setShowAlert(true);
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 3000);
+          }
         }
       });
     } else {

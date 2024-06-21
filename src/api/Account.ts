@@ -8,13 +8,13 @@ import {
 const BASE_URL = "http://3.132.121.60:8080";
 //const BASE_URL = "http://localhost:8080";
 
-async function fetchAccountData(id: number): Promise<Account> {
+async function fetchAccountData(id: number): Promise<Account | null> {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/accounts/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
-    throw error;
+    return null;
   }
 }
 
