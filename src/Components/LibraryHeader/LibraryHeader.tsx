@@ -203,6 +203,7 @@ const LibraryHeader = (props: Props) => {
               <Button
                 onClick={() => {
                   handleContentFilter("Alphabetical Order");
+                  setOpenFilterDialog(false);
                 }}
                 className="filter-button"
               >
@@ -212,6 +213,7 @@ const LibraryHeader = (props: Props) => {
               <Button
                 onClick={() => {
                   handleContentFilter("Continue Reading");
+                  setOpenFilterDialog(false);
                 }}
                 className="filter-button"
               >
@@ -220,6 +222,7 @@ const LibraryHeader = (props: Props) => {
               <Button
                 onClick={() => {
                   handleContentFilter("Recently Updated");
+                  setOpenFilterDialog(false);
                 }}
                 className="filter-button"
               >

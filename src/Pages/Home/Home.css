@@ -22,5 +22,8 @@
 
 .tags-button {
   color: #fff !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
   background-color: transparent !important;
 }

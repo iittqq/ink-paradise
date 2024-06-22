@@ -9,7 +9,6 @@ type Props = {
   title: string;
   coverUrl?: string;
   updatedAt?: string;
-  rank?: string;
   disabled?: boolean;
 };
 
@@ -17,7 +16,7 @@ const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
   //const [showDetails, setShowDetails] = useState(false);
 
-  const { id, title, coverUrl, updatedAt, rank, disabled } = props;
+  const { id, title, coverUrl, updatedAt, disabled } = props;
 
   function handleClick() {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
@@ -53,7 +52,6 @@ const MangaClickable = (props: Props) => {
           <Typography
             textTransform="none"
             color="white"
-            noWrap
             className="overlay-title"
           >
             {title}
@@ -61,19 +59,8 @@ const MangaClickable = (props: Props) => {
           <Typography color="white" className="overlay-date">
             {updatedAt === undefined
               ? null
-              : dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}
+              : dayjs(updatedAt).format("DD/MM/YYYY ")}
           </Typography>
-          {rank === undefined ? null : (
-            <Typography
-              textTransform="none"
-              color="white"
-              sx={{
-                fontSize: 10,
-              }}
-            >
-              Rank: {rank}
-            </Typography>
-          )}
         </div>
       </Button>
     </>

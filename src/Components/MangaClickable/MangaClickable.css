@@ -14,6 +14,10 @@
   font-size: 15px !important;
   max-width: 100%;
   font-family: "Figtree" !important;
+  display: -webkit-box;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .overlay-date {

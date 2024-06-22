@@ -84,7 +84,7 @@ const Header = () => {
   const handleClick = async () =>
     searchInput === ""
       ? null
-      : fetchMangaByTitle(searchInput, 10).then((data: Manga[]) => {
+      : fetchMangaByTitle(searchInput, 50).then((data: Manga[]) => {
           navigate("/mangaCoverList", {
             state: { listType: "SearchResults", manga: data },
           });
@@ -133,7 +133,6 @@ const Header = () => {
             <div className="header-buttons-right">
               <Button
                 className="header-buttons"
-                sx={{ marginRight: "5px" }}
                 onClick={() => handleClickSearchIcon()}
               >
                 <div className="header-nav-dialog-columns">
@@ -143,7 +142,6 @@ const Header = () => {
               </Button>
               <Button
                 className="header-buttons"
-                sx={{ marginRight: "5px" }}
                 onClick={() => {
                   handleClickLibrary();
                 }}

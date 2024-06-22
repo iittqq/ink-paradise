@@ -38,7 +38,7 @@ const PageAndControls = (props: Props) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const minSwipeDistance = 50;
+  const minSwipeDistance = 250;
 
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setTouchEnd(null);
