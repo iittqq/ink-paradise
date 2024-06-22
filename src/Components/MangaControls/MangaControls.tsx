@@ -69,13 +69,13 @@ const MangaControls = (props: Props) => {
               handleOpenTranslators();
             }}
           >
-            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
-              Translators
+            <Typography sx={{ color: "#fff", fontFamily: "Figtree" }}>
+              Scan Groups
             </Typography>
             {openTranslators ? (
-              <ExpandLess sx={{ color: "#333333" }} />
+              <ExpandLess sx={{ color: "#fff" }} />
             ) : (
-              <ExpandMore sx={{ color: "#333333" }} />
+              <ExpandMore sx={{ color: "#fff" }} />
             )}
           </ListItemButton>
         </List>
@@ -94,13 +94,13 @@ const MangaControls = (props: Props) => {
             className="list-button"
             onClick={() => handleOpenLanguages()}
           >
-            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
+            <Typography sx={{ color: "#fff", fontFamily: "Figtree" }}>
               Languages
             </Typography>{" "}
             {open ? (
-              <ExpandLess sx={{ color: "#333333" }} />
+              <ExpandLess sx={{ color: "#fff" }} />
             ) : (
-              <ExpandMore sx={{ color: "#333333" }} />
+              <ExpandMore sx={{ color: "#fff" }} />
             )}
           </ListItemButton>
         </List>
@@ -125,8 +125,6 @@ const MangaControls = (props: Props) => {
               <Typography
                 className="scanlation-text"
                 sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-                color="#333333"
-                fontFamily="Figtree"
               >
                 All
               </Typography>
@@ -172,8 +170,7 @@ const MangaControls = (props: Props) => {
               >
                 <Typography
                   sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-                  color="#333333"
-                  fontFamily="Figtree"
+                  className="language-text"
                 >
                   {current}
                 </Typography>

@@ -17,6 +17,7 @@ type Props = {
   selectedLanguage: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
+  coverUrl: string;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -26,6 +27,7 @@ const MangaChapterList = (props: Props) => {
     selectedLanguage,
     insideReader,
     setOpen,
+    coverUrl,
   } = props;
   const [xsValue, setXsValue] = useState(6);
   const [userProgress, setUserProgress] = useState<number>(0);
@@ -42,6 +44,7 @@ const MangaChapterList = (props: Props) => {
     chapterNumber: number,
     externalUrl: string,
     scanlationGroup: string,
+    coverUrl: string,
   ) => {
     if (insideReader) {
       navigate("/reader", {
@@ -53,6 +56,7 @@ const MangaChapterList = (props: Props) => {
           chapter: chapter,
           mangaName: mangaName,
           scanlationGroup: scanlationGroup,
+          coverUrl: coverUrl,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -68,6 +72,7 @@ const MangaChapterList = (props: Props) => {
           chapterNumber: chapterNumber,
           externalUrl: externalUrl,
           scanlationGroup: scanlationGroup,
+          coverUrl: coverUrl,
         },
       });
     }
@@ -138,6 +143,7 @@ const MangaChapterList = (props: Props) => {
                       current.relationships[0].type === "scanlation_group"
                         ? current.relationships[0].attributes.name
                         : "Unknown",
+                      coverUrl,
                     );
                   }
                 }}

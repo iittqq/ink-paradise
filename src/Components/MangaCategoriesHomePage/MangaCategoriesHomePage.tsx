@@ -110,6 +110,54 @@ const MangaCategoriesHomePage = (props: Props) => {
 
   return (
     <div className="home-category-manga-container">
+      {mangaFromTag !== undefined && tag !== undefined ? (
+        <Grid container className="home-category-manga-grid-container">
+          <Typography className="category-stack-name">
+            {tag.attributes.name.en}
+          </Typography>
+          {mangaFromTag.map((current) => (
+            <>
+              <Grid item className="home-category-manga-grid-item">
+                <Button
+                  className="home-category-manga-button"
+                  onClick={() => {
+                    handleClick(current.id, coverUrlsMangaFromTag[current.id]);
+                  }}
+                >
+                  <Card
+                    sx={{
+                      width: "80px",
+                      height: "110px",
+                    }}
+                  >
+                    <CardMedia
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      image={coverUrlsMangaFromTag[current.id]}
+                    />
+                  </Card>
+                </Button>
+                <div className="home-category-manga-text">
+                  <Typography>{current.attributes.title.en}</Typography>
+                </div>
+              </Grid>
+              <Divider variant="fullWidth" className="divider" />
+            </>
+          ))}
+          <Button
+            className="more-button"
+            onClick={() => {
+              fetchSimilarManga(50, [tag.id]).then((data: Manga[]) => {
+                handleClickedShowMore(tag.attributes.name.en, data);
+              });
+            }}
+          >
+            Show More
+          </Button>
+        </Grid>
+      ) : null}
       <Grid container className="home-category-manga-grid-container">
         <Typography className="category-stack-name">
           Recently Updated
@@ -200,54 +248,6 @@ const MangaCategoriesHomePage = (props: Props) => {
           Show More
         </Button>
       </Grid>
-      {mangaFromTag !== undefined && tag !== undefined ? (
-        <Grid container className="home-category-manga-grid-container">
-          <Typography className="category-stack-name">
-            {tag.attributes.name.en}
-          </Typography>
-          {mangaFromTag.map((current) => (
-            <>
-              <Grid item className="home-category-manga-grid-item">
-                <Button
-                  className="home-category-manga-button"
-                  onClick={() => {
-                    handleClick(current.id, coverUrlsMangaFromTag[current.id]);
-                  }}
-                >
-                  <Card
-                    sx={{
-                      width: "80px",
-                      height: "110px",
-                    }}
-                  >
-                    <CardMedia
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      image={coverUrlsMangaFromTag[current.id]}
-                    />
-                  </Card>
-                </Button>
-                <div className="home-category-manga-text">
-                  <Typography>{current.attributes.title.en}</Typography>
-                </div>
-              </Grid>
-              <Divider variant="fullWidth" className="divider" />
-            </>
-          ))}
-          <Button
-            className="more-button"
-            onClick={() => {
-              fetchSimilarManga(50, [tag.id]).then((data: Manga[]) => {
-                handleClickedShowMore(tag.attributes.name.en, data);
-              });
-            }}
-          >
-            Show More
-          </Button>
-        </Grid>
-      ) : null}
     </div>
   );
 };

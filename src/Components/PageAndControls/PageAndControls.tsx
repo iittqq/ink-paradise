@@ -62,36 +62,48 @@ const PageAndControls = (props: Props) => {
   };
   const handleNextChapter = () => {
     setCurrentPage(0);
-    chapters.forEach((current: MangaFeedScanlationGroup, index: number) =>
-      current.attributes.chapter === currentChapter
-        ? handleClick(
-            mangaId,
-            chapters[index + 1]?.id,
-            chapters[index + 1]?.attributes?.title,
-            chapters[index + 1]?.attributes?.volume,
-            chapters[index + 1]?.attributes?.chapter,
-            mangaName,
-            scanlationGroup,
-          )
-        : null,
-    );
+    chapters.forEach((current: MangaFeedScanlationGroup, index) => {
+      if (
+        parseInt(current.attributes.chapter) === parseInt(currentChapter) + 1 &&
+        chapters[index].attributes.externalUrl === null
+      ) {
+        handleClick(
+          mangaId,
+          chapters[index].id,
+          chapters[index].attributes.title,
+          chapters[index].attributes.volume,
+          chapters[index].attributes.chapter,
+          mangaName,
+          scanlationGroup,
+        );
+      } else {
+        console.log("redirect");
+        return;
+      }
+    });
   };
 
   const handlePreviousChapter = () => {
     setCurrentPage(0);
-    chapters.forEach((current: MangaFeedScanlationGroup, index) =>
-      current.attributes.chapter === currentChapter
-        ? handleClick(
-            mangaId,
-            chapters[index - 1].id,
-            chapters[index - 1].attributes.title,
-            chapters[index - 1].attributes.volume,
-            chapters[index - 1].attributes.chapter,
-            mangaName,
-            scanlationGroup,
-          )
-        : null,
-    );
+    chapters.forEach((current: MangaFeedScanlationGroup, index) => {
+      if (
+        parseInt(current.attributes.chapter) === parseInt(currentChapter) - 1 &&
+        chapters[index].attributes.externalUrl === null
+      ) {
+        handleClick(
+          mangaId,
+          chapters[index].id,
+          chapters[index].attributes.title,
+          chapters[index].attributes.volume,
+          chapters[index].attributes.chapter,
+          mangaName,
+          scanlationGroup,
+        );
+      } else {
+        console.log("redirect");
+        return;
+      }
+    });
   };
 
   const handlePreviousPage = () => {

@@ -47,7 +47,8 @@ const Reader = () => {
   };
 
   function handleClickTitle() {
-    navigate(-1);
+    const encodedCoverUrl = encodeURIComponent(state.coverUrl);
+    navigate(`/individualView/${state.mangaId}/${encodedCoverUrl}`);
   }
 
   const handleScrollPosition = () => {
@@ -170,6 +171,7 @@ const Reader = () => {
               selectedLanguage={selectedLanguage}
               insideReader={true}
               setOpen={setOpen}
+              coverUrl={state.coverUrl}
             />
           </Collapse>
         </List>

@@ -148,68 +148,71 @@ const IndividualManga = () => {
         );
       });
     }
-    fetchMangaById(id!).then((data: Manga) => {
-      setMangaName(data.attributes.title.en);
-      setMangaDescription(data.attributes.description.en);
-      setMangaAltTitles(data.attributes.altTitles);
-      setMangaLanguages(data.attributes.availableTranslatedLanguages);
-      setMangaContentRating(data.attributes.contentRating);
+    if (id !== undefined) {
+      fetchMangaById(id).then((data: Manga) => {
+        setMangaName(data.attributes.title.en);
+        setMangaDescription(data.attributes.description.en);
+        setMangaAltTitles(data.attributes.altTitles);
+        setMangaLanguages(data.attributes.availableTranslatedLanguages);
+        setMangaContentRating(data.attributes.contentRating);
 
-      setMangaRaw(
-        data["attributes"].links === null ? "" : data["attributes"].links.raw,
-      );
-
-      setMangaTags(data["attributes"].tags);
-      const tagIds = data["attributes"].tags.map((tag) => tag.id);
-      fetchSimilarManga(10, tagIds).then((data: Manga[]) => {
-        setSimilarManga(data);
-      });
-    });
-    if (
-      currentOffset <= mangaFeed.length &&
-      selectedScanlationGroup === undefined
-    ) {
-      fetchMangaFeed(
-        id!,
-        100,
-        currentOffset,
-        currentOrder,
-        selectedLanguage,
-      ).then((data: MangaFeedScanlationGroup[]) => {
-        data.length === 0 ? setCurrentOffset(0) : null;
-        if (
-          previousLanguage !== selectedLanguage ||
-          id !== previousId ||
-          currentOffset === 0
-        ) {
-          setMangaFeed(data);
-        } else {
-          setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-        }
-
-        const promises = data.map(
-          (current: MangaFeedScanlationGroup) =>
-            current.relationships.filter(
-              (rel: Relationship) => rel.type === "scanlation_group",
-            )[0],
+        setMangaRaw(
+          data["attributes"].links === null ? "" : data["attributes"].links.raw,
         );
-        Promise.all(promises).then((data) => {
+
+        setMangaTags(data["attributes"].tags);
+        const tagIds = data["attributes"].tags.map((tag) => tag.id);
+        fetchSimilarManga(10, tagIds).then((data: Manga[]) => {
+          setSimilarManga(data);
+        });
+      });
+
+      if (
+        currentOffset <= mangaFeed.length &&
+        selectedScanlationGroup === undefined
+      ) {
+        fetchMangaFeed(
+          id,
+          100,
+          currentOffset,
+          currentOrder,
+          selectedLanguage,
+        ).then((data: MangaFeedScanlationGroup[]) => {
+          data.length === 0 ? setCurrentOffset(0) : null;
           if (
             previousLanguage !== selectedLanguage ||
             id !== previousId ||
             currentOffset === 0
           ) {
-            setScanlationGroups([
-              ...new Set(data.filter((element) => element !== undefined)),
-            ]);
+            setMangaFeed(data);
           } else {
-            setScanlationGroups((scanlationGroups) => [
-              ...scanlationGroups,
-              ...new Set(data.filter((element) => element !== undefined)),
-            ]);
+            setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
           }
+
+          const promises = data.map(
+            (current: MangaFeedScanlationGroup) =>
+              current.relationships.filter(
+                (rel: Relationship) => rel.type === "scanlation_group",
+              )[0],
+          );
+          Promise.all(promises).then((data) => {
+            if (
+              previousLanguage !== selectedLanguage ||
+              id !== previousId ||
+              currentOffset === 0
+            ) {
+              setScanlationGroups([
+                ...new Set(data.filter((element) => element !== undefined)),
+              ]);
+            } else {
+              setScanlationGroups((scanlationGroups) => [
+                ...scanlationGroups,
+                ...new Set(data.filter((element) => element !== undefined)),
+              ]);
+            }
+          });
         });
-      });
+      }
     }
     if (selectedScanlationGroup !== undefined) {
       const filteredFeed: MangaFeedScanlationGroup[] = [];
@@ -297,6 +300,9 @@ const IndividualManga = () => {
               selectedLanguage={selectedLanguage}
               mangaId={id !== undefined ? id : ""}
               insideReader={false}
+              coverUrl={
+                coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""
+              }
             />
             {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
               <Button

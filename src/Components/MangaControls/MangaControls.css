@@ -10,7 +10,7 @@
 .asc-desc-button {
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
-  color: #333 !important;
+  color: #fff !important;
   height: 30px;
   min-width: 20px !important;
   background-color: #191919 !important;
@@ -24,18 +24,39 @@
   background-color: #191919 !important;
   width: 100px;
   height: 30px;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
 }
 
 .language-button {
   background-color: #191919 !important;
   width: 60px;
   height: 25px;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
 }
 
 .translator-button {
   background-color: #191919 !important;
   width: 55px;
   height: 45px;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
 }
 
 .controls {
@@ -55,22 +76,30 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border-radius: 25px;
 }
 
 .list-button {
   width: 150px;
-  color: #121212;
   background-color: transparent;
   justify-content: center !important;
   align-items: center !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 
 .scanlation-text {
   text-transform: none;
   font-family: "Figtree", sans-serif !important;
-  color: #333 !important;
+  color: #fff !important;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+}
+
+.language-text {
+  font-family: "Figtree", sans-serif !important;
+  color: #fff !important;
+  background-color: #191919 !important;
 }
