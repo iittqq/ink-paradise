@@ -24,6 +24,7 @@ type Props = {
   handleFilterScanlationGroups: (
     translator: ScanlationGroup | undefined,
   ) => void;
+  selectedScanlationGroup: ScanlationGroup | undefined;
 };
 
 const MangaControls = (props: Props) => {
@@ -35,9 +36,11 @@ const MangaControls = (props: Props) => {
     mangaLanguages,
     currentOrder,
     handleClickedLanguageButton,
+    selectedLanguage,
     mangaTranslators,
     handleSwitchOrder,
     handleFilterScanlationGroups,
+    selectedScanlationGroup,
   } = props;
   const handleOpenLanguages = () => {
     setOpen(!open);
@@ -51,8 +54,6 @@ const MangaControls = (props: Props) => {
       (current) => current.attributes.name === translator,
     );
     handleFilterScanlationGroups(translatorObject);
-
-    console.log(translatorObject);
   };
   useEffect(() => {
     setTranslators([
@@ -83,7 +84,6 @@ const MangaControls = (props: Props) => {
           className="asc-desc-button"
           sx={{ ":hover": { backgroundColor: "transparent" } }}
           onClick={() => {
-            console.log(currentOrder);
             handleSwitchOrder();
           }}
         >
@@ -124,7 +124,10 @@ const MangaControls = (props: Props) => {
             >
               <Typography
                 className="scanlation-text"
-                sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+                sx={{
+                  fontSize: { xs: 10, sm: 10, lg: 12 },
+                  opacity: selectedScanlationGroup === undefined ? 0.5 : 1,
+                }}
               >
                 All
               </Typography>
@@ -135,6 +138,12 @@ const MangaControls = (props: Props) => {
             <Grid item>
               <Button
                 className="scanlation-button"
+                sx={{
+                  opacity:
+                    current === selectedScanlationGroup?.attributes.name
+                      ? 0.5
+                      : 1,
+                }}
                 onClick={() => {
                   clickedTranslator(current);
                 }}
@@ -166,7 +175,10 @@ const MangaControls = (props: Props) => {
                 onClick={() => {
                   handleClickedLanguageButton(current);
                 }}
-                sx={{ ":hover": { backgroundColor: "transparent" } }}
+                sx={{
+                  ":hover": { backgroundColor: "transparent" },
+                  opacity: current === selectedLanguage ? 0.5 : 1,
+                }}
               >
                 <Typography
                   sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}

@@ -4,4 +4,5 @@ export interface PasswordResults {
   uppercase: number;
   numbers: number;
   special: number;
+  matches: number;
 }

@@ -25,15 +25,13 @@ const Header = () => {
     const accountData = JSON.parse(account as string);
     if (account !== null) {
       fetchAccountData(accountData.id).then((data: Account | null) => {
-        if (data === null) {
+        if (data === null || data.password !== accountData.password) {
           window.localStorage.removeItem("account");
         } else {
           if (data.verified === true) {
-            console.log(data);
             window.localStorage.setItem("account", JSON.stringify(data));
             navigate("/account");
           } else {
-            console.log("Account not verified");
             setShowAlert(true);
             setTimeout(() => {
               setShowAlert(false);
@@ -59,7 +57,6 @@ const Header = () => {
           window.localStorage.removeItem("account");
         } else {
           if (data.verified === true) {
-            console.log(data);
             window.localStorage.setItem("account", JSON.stringify(data));
             navigate("/library");
           } else {
@@ -86,7 +83,7 @@ const Header = () => {
       ? null
       : fetchMangaByTitle(searchInput, 50).then((data: Manga[]) => {
           navigate("/mangaCoverList", {
-            state: { listType: "SearchResults", manga: data },
+            state: { listType: "Search Results", manga: data },
           });
         });
 

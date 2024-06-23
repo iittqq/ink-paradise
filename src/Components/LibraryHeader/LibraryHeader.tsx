@@ -50,7 +50,6 @@ const LibraryHeader = (props: Props) => {
   };
 
   const handleEnter = () => {
-    console.log(searchBarValue);
     searchFavorites(searchBarValue);
     setSearchBarValue("");
   };

@@ -79,13 +79,11 @@ const MangaChapterList = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log(mangaFeed.length);
     if (mangaFeed.length === 1) {
       setXsValue(12);
     } else {
       setXsValue(6);
     }
-    console.log(mangaFeed);
     setUserProgress(0);
     const account = window.localStorage.getItem("account") as string | null;
     let accountData: Account | null = null;
@@ -98,9 +96,7 @@ const MangaChapterList = (props: Props) => {
           .filter((reading: Reading) => reading.mangaId === mangaId)
           .map((reading: Reading) => {
             setUserProgress(reading.chapter);
-            console.log(reading);
           });
-        console.log(data);
       });
     }
   }, [mangaFeed, mangaId]);

@@ -74,7 +74,6 @@ const Reader = () => {
     let readingExists = false;
     if (accountData !== null) {
       getReadingByUserId(accountData.id).then((data: Reading[]) => {
-        console.log(data);
         data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
             updateReading({
@@ -89,7 +88,6 @@ const Reader = () => {
           }
         });
         if (readingExists === false) {
-          console.log(state.mangaId, state.chapterNumber);
           const account = window.localStorage.getItem("account") as
             | string
             | null;
@@ -105,8 +103,6 @@ const Reader = () => {
               chapter: state.chapterNumber,
               mangaName: state.mangaName,
               timestamp: date.toISOString(),
-            }).then((data) => {
-              console.log(data);
             });
           }
         }

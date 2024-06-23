@@ -5,6 +5,7 @@ import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./FolderGrid.css";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   folderClick: (folder: MangaFolder) => void;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const FolderGrid = (props: Props) => {
+  const navigate = useNavigate();
   const {
     folderClick,
     mangaEntryClick,
@@ -110,7 +112,14 @@ const FolderGrid = (props: Props) => {
         ))
       ) : folderMangaData?.length === 0 ? (
         <Grid item>
-          <Typography fontFamily="Figtree">Empty...</Typography>
+          <Button
+            className="redirect-button"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <Typography fontFamily="Figtree">Start Browsing</Typography>
+          </Button>
         </Grid>
       ) : (
         folderMangaData?.map((element: Manga) => (

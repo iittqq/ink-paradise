@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Alert,
 } from "@mui/material";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import SearchIcon from "@mui/icons-material/Search";
@@ -58,7 +59,9 @@ const FolderActionsBar = (props: Props) => {
     selectAll,
     toggleSelectAll,
   } = props;
-  const [searching, setSearching] = useState(false);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [showAddedFolderAlert, setShowAddedFolderAlert] =
+    useState<boolean>(false);
 
   return (
     <div className="folder-section-header">
@@ -216,8 +219,6 @@ const FolderActionsBar = (props: Props) => {
                 if (e.key === "Enter") {
                   if (newFolderName !== "") {
                     handleCreateFolder();
-                  } else {
-                    console.log("no name");
                   }
                 }
               }}
@@ -226,11 +227,24 @@ const FolderActionsBar = (props: Props) => {
               className="create-button"
               onClick={() => {
                 handleCreateFolder();
+                setShowAddedFolderAlert(true);
+                setTimeout(() => {
+                  setShowAddedFolderAlert(false);
+                }, 3000);
               }}
             >
               Create
             </Button>
           </DialogContent>
+          {showAddedFolderAlert === true ? (
+            <Alert
+              variant="outlined"
+              severity="success"
+              className="manga-folder-alert"
+            >
+              Manga added to folder
+            </Alert>
+          ) : null}
         </Dialog>
       </div>
     </div>

@@ -62,6 +62,7 @@ const IndividualManga = () => {
   const [similarManga, setSimilarManga] = useState<Manga[]>([]);
   const [previousLanguage, setPreviousLanguage] = useState<string>("en");
   const [previousId, setPreviousId] = useState<string>("");
+  const [mangaAddedAlert, setMangaAddedAlert] = useState<boolean>(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,6 +97,7 @@ const IndividualManga = () => {
     setOpen(false);
     setMangaExistsError(false);
   };
+
   const handleFilterScanlationGroups = (
     scanlationGroup: ScanlationGroup | undefined,
   ) => {
@@ -111,6 +113,7 @@ const IndividualManga = () => {
     setSelectedScanlationGroup(undefined);
     setCurrentOffset(0);
   };
+
   const handleAddToFolder = (folderId: number, mangaId: string) => {
     if (folderId !== undefined) {
       getMangaFolderEntries().then((response) => {
@@ -122,14 +125,17 @@ const IndividualManga = () => {
         });
         if (!exists) {
           addMangaFolderEntry({ folderId, mangaId });
-          setMangaExistsError(false);
+          setMangaAddedAlert(true);
+          setTimeout(() => {
+            setMangaAddedAlert(false);
+          }, 3000);
         } else {
-          console.log("entry already exists");
           setMangaExistsError(true);
+          setTimeout(() => {
+            setMangaExistsError(false);
+          }, 3000);
         }
       });
-    } else {
-      console.log("no folder chosen");
     }
   };
 
@@ -267,6 +273,7 @@ const IndividualManga = () => {
           mangaExistsError={mangaExistsError}
           handleClose={handleClose}
           mangaContentRating={mangaContentRating}
+          mangaAddedAlert={mangaAddedAlert}
         />{" "}
       </div>
 
@@ -286,6 +293,7 @@ const IndividualManga = () => {
           setTranslator={setScanlationGroups}
           handleSwitchOrder={handleSwitchOrder}
           handleFilterScanlationGroups={handleFilterScanlationGroups}
+          selectedScanlationGroup={selectedScanlationGroup}
         />
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">

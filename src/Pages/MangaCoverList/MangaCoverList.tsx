@@ -37,7 +37,6 @@ const MangaCoverList = () => {
       fetchCoverImages();
     }
     setMangaDetails(state.manga);
-    console.log(state.manga);
   }, [state]);
   return (
     <>

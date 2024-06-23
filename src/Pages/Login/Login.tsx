@@ -27,6 +27,7 @@ const Login = () => {
     uppercase: 0,
     numbers: 0,
     special: 0,
+    matches: 0,
   });
   const [togglePasswordVisibility, setTogglePasswordVisibility] =
     useState<boolean>(false);
@@ -38,19 +39,18 @@ const Login = () => {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-    testPasswordStrength(event.target.value);
+    testPasswordStrength(event.target.value, confirmPassword);
     setPasswordError(false);
-    console.log(passwordStrength);
-    console.log(passwordResults);
   };
 
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setConfirmPassword(event.target.value);
+    testPasswordStrength(password, event.target.value);
   };
 
-  const testPasswordStrength = (password: string) => {
+  const testPasswordStrength = (password: string, confirmPassword: string) => {
     let score = 0;
     const results: PasswordResults = {
       length: 0,
@@ -58,6 +58,7 @@ const Login = () => {
       uppercase: 0,
       numbers: 0,
       special: 0,
+      matches: 0,
     };
     if (!password) return "";
     // Check password length
@@ -87,6 +88,10 @@ const Login = () => {
       score += 1;
       results.special = 1;
     }
+    if (password === confirmPassword) {
+      score += 1;
+      results.matches = 1;
+    }
     setPasswordResults(results);
     setPasswordStrength(score);
   };
@@ -96,7 +101,6 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    console.log(email, password, username);
     if (email !== "" || password !== "") {
       login(email, password).then((response: Account | string) => {
         if (typeof response !== "string") {
@@ -104,19 +108,15 @@ const Login = () => {
           setAttemptedLogin(false);
           navigate("/");
         } else {
-          console.log("Invalid login");
           setEmail("");
           setPassword("");
           setAttemptedLogin(true);
         }
       });
-    } else {
-      console.log("Entries are empty");
     }
   };
 
   const handleRegister = async () => {
-    console.log(username, email, password, confirmPassword);
     if (
       password === confirmPassword &&
       email !== "" &&
@@ -132,7 +132,6 @@ const Login = () => {
         verificationCode: "",
         verified: false,
       }).then((response: Account) => {
-        console.log(response);
         window.localStorage.setItem("account", JSON.stringify(response));
         navigate("/");
 
@@ -142,14 +141,11 @@ const Login = () => {
           profilePicture: null,
           headerPicture: null,
           contentFilter: 1,
-        }).then((response: AccountDetails) => {
-          console.log(response);
         });
       });
     } else {
       setPassword("");
       setConfirmPassword("");
-      console.log("Passwords do not match");
       setPasswordError(true);
     }
   };
@@ -293,6 +289,14 @@ const Login = () => {
                       <CloseIcon className="results-icon" />
                     )}
                   </div>
+                  <div className="result-group">
+                    Password Matches:
+                    {passwordResults.matches === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -371,7 +375,6 @@ const Login = () => {
               </Typography>
             </Button>
           </div>
-
           <Button
             variant="contained"
             className="login-button"
@@ -383,19 +386,24 @@ const Login = () => {
               Login
             </Typography>
           </Button>
-
-          <Button
-            className="register-button"
-            onClick={() => {
-              setVisible(true);
-              setEmail("");
-              setPassword("");
-            }}
-          >
-            <Typography fontFamily="Figtree" textTransform="none">
-              Register
+          <div className="register-button-and-message-container">
+            <Typography className="register-message">
+              Don't have an account yet?
             </Typography>
-          </Button>
+
+            <Button
+              className="register-button"
+              onClick={() => {
+                setVisible(true);
+                setEmail("");
+                setPassword("");
+              }}
+            >
+              <Typography fontFamily="Figtree" textTransform="none">
+                Register
+              </Typography>
+            </Button>
+          </div>
         </Card>
       )}
     </div>

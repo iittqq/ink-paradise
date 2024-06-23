@@ -85,17 +85,12 @@ const AccountPage = () => {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [viableBio, setViableBio] = useState<boolean>(true);
+  const [openLogout, setOpenLogout] = useState<boolean>(false);
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
   };
   const handleEditAccountInfo = () => {
-    console.log(accountData?.id);
-    console.log(username);
-    console.log(bio);
-    console.log(profilePicture);
-    console.log(headerPicture);
-    console.log(contentFilter);
     const accountId: number = accountData.id!;
     if (
       newPassword !== "" &&
@@ -130,7 +125,6 @@ const AccountPage = () => {
         headerPicture,
         contentFilter: Number(contentFilter),
       }).then((data) => {
-        console.log(data);
         setAccountDetails(data);
       });
     }
@@ -179,8 +173,6 @@ const AccountPage = () => {
   const handleProfilePictureChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    console.log(event.target.value);
-    console.log(event);
     if (event.target.value.trim() !== "") {
       setProfilePicture(event.target.value);
     } else {
@@ -225,7 +217,6 @@ const AccountPage = () => {
 
   const searchFolders = async () => {
     getMangaFolders().then((response) => {
-      console.log(searchTerm);
       if (accountData !== null) {
         setFolders(
           response.filter(
@@ -300,7 +291,6 @@ const AccountPage = () => {
           mangaEntriesToDelete.filter((id) => id !== manga.id),
         );
       } else {
-        console.log(manga);
         setMangaEntriesToDelete([...mangaEntriesToDelete, manga.id]);
       }
       if (selectAll) {
@@ -355,7 +345,6 @@ const AccountPage = () => {
     if (accountString !== null) {
       setAccountData(JSON.parse(accountString));
       account = JSON.parse(accountString) as Account | null;
-      console.log(account);
       if (account !== null) {
         setUsername(account.username);
       }
@@ -368,7 +357,6 @@ const AccountPage = () => {
     }
 
     fetchAccountDetails(account!.id).then((data) => {
-      console.log(data);
       setAccountDetails(data);
       setAccountDetailsId(data.id);
       setContentFilter(data.contentFilter.toString());
@@ -393,11 +381,10 @@ const AccountPage = () => {
         <Button
           className="info-open-button"
           onClick={() => {
-            window.localStorage.clear();
-            navigate("/");
+            setOpenLogout(true);
           }}
         >
-          <LogoutIcon />
+          <LogoutIcon sx={{ color: "red" }} />
         </Button>
       </div>
 
@@ -424,6 +411,44 @@ const AccountPage = () => {
           <Typography color="white" className="user-details">
             {accountDetails?.bio}
           </Typography>
+        </div>
+        <div className="confirm-logout-container">
+          <Dialog
+            id="logout-dialog"
+            open={openLogout}
+            onClose={() => {
+              setOpenLogout(false);
+            }}
+          >
+            <DialogTitle
+              sx={{
+                textAlign: "center",
+                color: "#ffffff",
+                fontFamily: "Figtree",
+              }}
+            >
+              Are you sure you want to log out?
+            </DialogTitle>
+            <DialogContent className="logout-message-options">
+              <Button
+                className="logout-options"
+                onClick={() => {
+                  window.localStorage.clear();
+                  navigate("/");
+                }}
+              >
+                Yes
+              </Button>
+              <Button
+                className="logout-options"
+                onClick={() => {
+                  setOpenLogout(false);
+                }}
+              >
+                No
+              </Button>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="info-button-container">
           <Dialog
@@ -469,7 +494,7 @@ const AccountPage = () => {
                 />
                 {bio !== null ? (
                   <div className="bio-field-counter">
-                    Chars: {bio.length}
+                    Chars: {150 - bio.length}
                     &nbsp;
                     {viableBio ? <CheckIcon /> : <CloseIcon />}
                   </div>

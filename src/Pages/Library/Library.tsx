@@ -40,12 +40,10 @@ const Library = () => {
     if (accountData !== null) {
       getReadingByMangaName(accountData.id, searchValue).then(
         (filteredReading: Reading[]) => {
-          console.log(filteredReading);
           const promises = filteredReading.map((readingEntry: Reading) => {
             return fetchMangaById(readingEntry.mangaId);
           });
           Promise.all(promises).then((data) => {
-            console.log(data);
             setLibrary(data);
             setLoading(false);
           });
@@ -81,14 +79,12 @@ const Library = () => {
           );
         }
       }
-      console.log(data);
       const promises = data.map((mangaData: Reading) => {
         return fetchMangaById(mangaData.mangaId);
       });
 
       Promise.all(promises)
         .then((data) => {
-          console.log(data);
           if (contentFilter === "Recently Updated") {
             if (ascending) {
               data = data
@@ -109,7 +105,6 @@ const Library = () => {
                 );
             }
           }
-          console.log(data);
           setLibrary(data);
           setLoading(false);
         })
@@ -146,7 +141,6 @@ const Library = () => {
           libraryEntriesToDelete.filter((id) => id !== manga.id),
         );
       } else {
-        console.log(manga);
         setLibraryEntriesToDelete([...libraryEntriesToDelete, manga.id]);
       }
       if (selectAll) {
@@ -177,7 +171,6 @@ const Library = () => {
       setAccountData(JSON.parse(accountString));
       account = JSON.parse(accountString) as Account | null;
     }
-    console.log(account);
 
     setLoading(true);
     if (account !== null) {

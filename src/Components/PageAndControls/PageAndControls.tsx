@@ -77,7 +77,6 @@ const PageAndControls = (props: Props) => {
           scanlationGroup,
         );
       } else {
-        console.log("redirect");
         return;
       }
     });
@@ -100,7 +99,6 @@ const PageAndControls = (props: Props) => {
           scanlationGroup,
         );
       } else {
-        console.log("redirect");
         return;
       }
     });
@@ -162,6 +160,7 @@ const PageAndControls = (props: Props) => {
     if (currentPage >= 0 && currentPage < pages.length) {
       handleLoadImage(hash, pages[currentPage]).catch((error) => {
         console.error("Error loading image:", error);
+        throw error;
       });
     }
   }, [currentPage, hash, pages]);

@@ -33,6 +33,7 @@ type Props = {
   showCategoriesToggled: boolean;
   mangaExistsError: boolean;
   mangaContentRating: string;
+  mangaAddedAlert: boolean;
 };
 
 const MangaPageButtonHeader = (props: Props) => {
@@ -54,6 +55,7 @@ const MangaPageButtonHeader = (props: Props) => {
     showCategoriesToggled,
     mangaExistsError,
     mangaContentRating,
+    mangaAddedAlert,
   } = props;
 
   return (
@@ -98,8 +100,22 @@ const MangaPageButtonHeader = (props: Props) => {
             ))}
           </Grid>
         </DialogContent>
+        {mangaAddedAlert === true ? (
+          <Alert
+            variant="outlined"
+            severity="success"
+            className="manga-folder-alert"
+          >
+            Manga added to folder
+          </Alert>
+        ) : null}
+
         {mangaExistsError === true ? (
-          <Alert variant="outlined" severity="error">
+          <Alert
+            variant="outlined"
+            severity="error"
+            className="manga-folder-alert"
+          >
             Manga already exists in the folder
           </Alert>
         ) : null}

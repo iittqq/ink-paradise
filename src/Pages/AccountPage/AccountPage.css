@@ -70,6 +70,31 @@ input[type="file"] {
   font-family: "Figtree";
   box-sizing: border-box;
 }
+
+#logout-dialog .MuiPaper-root {
+  background-color: #121212 !important;
+  border-radius: 25px !important;
+}
+
+.logout-message-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.logout-options {
+  color: #fff !important;
+  font-family: "Figtree" !important;
+  text-transform: none !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: "white";
+  }
+}
+
 .edit-info-fields-container {
   display: flex;
   flex-direction: column;

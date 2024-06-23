@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import { Typography, Button } from "@mui/material";
 import { useState } from "react";
 import "./MangaBanner.css";
@@ -44,6 +43,7 @@ const MangaBanner = (props: Props) => {
         <Button
           variant="text"
           className="show-button"
+          disableRipple
           sx={{
             height: { xs: "20px", sm: "25px", lg: "30px" },
           }}
@@ -53,7 +53,9 @@ const MangaBanner = (props: Props) => {
             <Typography
               color="#333333"
               fontFamily="Figtree"
-              sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+              sx={{
+                fontSize: { xs: 10, sm: 10, lg: 12 },
+              }}
             >
               Show less
             </Typography>
@@ -61,7 +63,9 @@ const MangaBanner = (props: Props) => {
             <Typography
               color="#333333"
               fontFamily="Figtree"
-              sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+              sx={{
+                fontSize: { xs: 10, sm: 10, lg: 12 },
+              }}
             >
               Show more
             </Typography>
