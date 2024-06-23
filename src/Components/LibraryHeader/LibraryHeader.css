@@ -25,6 +25,7 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  padding-bottom: 10px;
   width: 30%;
   @media (width <= 800px) {
     width: 100%;

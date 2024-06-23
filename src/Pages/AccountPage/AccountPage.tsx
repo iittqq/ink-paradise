@@ -634,6 +634,8 @@ const AccountPage = () => {
         handleFolderDescriptionChange={handleFolderDescriptionChange}
         selectAll={selectAll}
         toggleSelectAll={toggleSelectAll}
+        mangaFoldersToDelete={mangaFoldersToDelete}
+        mangaEntriesToDelete={mangaEntriesToDelete}
       />
       <div className="personal-folders">
         {selectedFolder !== null ? (

@@ -152,10 +152,12 @@ const Library = () => {
 
   const handleDeleteLibraryEntries = async () => {
     setChecked(false);
+    setSelectAll(false);
     if (accountData !== null) {
       libraryEntriesToDelete.forEach((id) => {
         deleteReadingByMangaIdAndUserId(id, accountData.id).then(() => {
           setLibraryEntriesToDelete([]);
+
           handleFetchingLibrary(accountData.id, ascending);
         });
       });
@@ -195,6 +197,7 @@ const Library = () => {
         toggleSelectAll={toggleSelectAll}
         selectAll={selectAll}
         header={contentFilter}
+        libraryEntriesToDelete={libraryEntriesToDelete}
       />
       {loading === true ? (
         <div className="loading-indicator-container">

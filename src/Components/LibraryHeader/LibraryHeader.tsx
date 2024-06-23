@@ -27,6 +27,7 @@ type Props = {
   toggleSelectAll: () => void;
   selectAll: boolean;
   header: string;
+  libraryEntriesToDelete: string[];
 };
 
 const LibraryHeader = (props: Props) => {
@@ -40,6 +41,7 @@ const LibraryHeader = (props: Props) => {
     toggleSelectAll,
     selectAll,
     header,
+    libraryEntriesToDelete,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
@@ -135,7 +137,10 @@ const LibraryHeader = (props: Props) => {
             <Button
               className="library-header-button"
               sx={{
-                backgroundColor: "#ff7597",
+                backgroundColor:
+                  libraryEntriesToDelete.length !== 0
+                    ? "#ff7597"
+                    : "transparent",
               }}
               onClick={() => {
                 handleDeleteLibraryEntries();

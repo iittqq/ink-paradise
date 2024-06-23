@@ -37,6 +37,8 @@ type Props = {
   ) => void;
   selectAll: boolean;
   toggleSelectAll: () => void;
+  mangaFoldersToDelete: number[];
+  mangaEntriesToDelete: string[];
 };
 
 const FolderActionsBar = (props: Props) => {
@@ -58,6 +60,8 @@ const FolderActionsBar = (props: Props) => {
     handleFolderDescriptionChange,
     selectAll,
     toggleSelectAll,
+    mangaFoldersToDelete,
+    mangaEntriesToDelete,
   } = props;
   const [searching, setSearching] = useState<boolean>(false);
   const [showAddedFolderAlert, setShowAddedFolderAlert] =
@@ -116,6 +120,40 @@ const FolderActionsBar = (props: Props) => {
         )}
       </div>
       <div className="create-folder-container">
+        {checked || selectAll ? (
+          <Button
+            className="folder-header-button"
+            sx={{
+              backgroundColor:
+                mangaFoldersToDelete.length !== 0 ||
+                mangaEntriesToDelete.length !== 0
+                  ? "#ff7597"
+                  : "transparent",
+            }}
+            onClick={() => {
+              toggleMangaEntriesDelete(false);
+              if (selectedFolder !== null) {
+                handleDeleteMangaEntries();
+              } else {
+                handleDeleteMangaFolders();
+              }
+            }}
+          >
+            <ClearIcon />
+          </Button>
+        ) : (
+          <Button
+            className="folder-header-button"
+            sx={{
+              backgroundColor: "none",
+            }}
+            onClick={() => {
+              toggleMangaEntriesDelete(true);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+        )}
         {selectedFolder !== null ? (
           selectAll ? (
             <Button
@@ -140,36 +178,6 @@ const FolderActionsBar = (props: Props) => {
             </Button>
           )
         ) : null}
-        {checked || selectAll ? (
-          <Button
-            className="folder-header-button"
-            sx={{
-              backgroundColor: "#ff7597",
-            }}
-            onClick={() => {
-              toggleMangaEntriesDelete(false);
-              if (selectedFolder !== null) {
-                handleDeleteMangaEntries();
-              } else {
-                handleDeleteMangaFolders();
-              }
-            }}
-          >
-            <ClearIcon />{" "}
-          </Button>
-        ) : (
-          <Button
-            className="folder-header-button"
-            sx={{
-              backgroundColor: "none",
-            }}
-            onClick={() => {
-              toggleMangaEntriesDelete(true);
-            }}
-          >
-            <DeleteIcon />
-          </Button>
-        )}
         <Button
           className="folder-header-button"
           onClick={() => {
