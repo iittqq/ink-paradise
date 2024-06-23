@@ -38,6 +38,9 @@
 }
 
 .home-category-manga-button {
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
 
 .home-category-manga-text {

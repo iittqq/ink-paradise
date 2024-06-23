@@ -8,6 +8,12 @@
   display: none;
 }
 
+.manga-button-trending-carousel {
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .popular-carousel-grid {
   display: flex;
   flex-direction: row;

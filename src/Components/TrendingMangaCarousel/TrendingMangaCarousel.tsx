@@ -56,6 +56,8 @@ const TrendingMangaCarousel = (props: Props) => {
               </Typography>{" "}
             </div>
             <Button
+              disableRipple
+              className="manga-button-trending-carousel"
               onClick={() => {
                 handleClick(current.id, coverUrls[current.id]);
               }}

@@ -119,6 +119,7 @@ const MangaCategoriesHomePage = (props: Props) => {
             <>
               <Grid item className="home-category-manga-grid-item">
                 <Button
+                  disableRipple
                   className="home-category-manga-button"
                   onClick={() => {
                     handleClick(current.id, coverUrlsMangaFromTag[current.id]);
