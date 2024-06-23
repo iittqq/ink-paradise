@@ -15,7 +15,6 @@ import { ScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 
 type Props = {
   mangaLanguages: string[];
-  currentOrder: string;
   selectedLanguage: string;
   handleClickedLanguageButton: (language: string) => void;
   mangaTranslators: ScanlationGroup[];
@@ -34,7 +33,6 @@ const MangaControls = (props: Props) => {
 
   const {
     mangaLanguages,
-    currentOrder,
     handleClickedLanguageButton,
     selectedLanguage,
     mangaTranslators,

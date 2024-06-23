@@ -286,7 +286,6 @@ const IndividualManga = () => {
       <div className="controls-chapters-section">
         <MangaControls
           mangaLanguages={mangaLanguages}
-          currentOrder={currentOrder}
           selectedLanguage={selectedLanguage}
           handleClickedLanguageButton={handleClickedLanguageButton}
           mangaTranslators={scanlationGroups}

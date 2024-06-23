@@ -5,7 +5,6 @@ import { useState } from "react";
 import { createAccount, login } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
-import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { PasswordResults } from "../../interfaces/PasswordStrengthInterface";
