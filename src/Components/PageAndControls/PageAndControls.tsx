@@ -32,7 +32,7 @@ const PageAndControls = (props: Props) => {
     scanlationGroup,
     readerMode,
   } = props;
-  const [imageBlob, setImageBlob] = useState<Blob[]>([]);
+  const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
     Array(pages.length).fill(false),
   );
@@ -133,7 +133,10 @@ const PageAndControls = (props: Props) => {
       return fetchPageImageBackend(hash, page)
         .then((blob) => {
           // Assuming setImageBlob is modified to handle multiple blobs
-          setImageBlob((prevBlobs) => [...prevBlobs, blob]);
+          setImageBlob((prevBlobs) => ({
+            ...prevBlobs,
+            [page]: blob,
+          }));
 
           setLoadingStates((prev) => {
             const newLoadingStates = [...prev];
@@ -177,14 +180,13 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
-    setImageBlob([]);
-    if (currentPage >= 0 && currentPage < pages.length) {
-      handleLoadImage(hash, pages).catch((error) => {
-        console.error("Error loading image:", error);
-        throw error;
-      });
-    }
-  }, [currentPage, hash, pages]);
+    setImageBlob({});
+    console.log(pages);
+    handleLoadImage(hash, pages).catch((error) => {
+      console.error("Error loading image:", error);
+      throw error;
+    });
+  }, [hash, pages]);
   return (
     <div className="page-and-controls-container">
       <div
@@ -199,10 +201,10 @@ const PageAndControls = (props: Props) => {
           </div>
         ) : (
           <>
-            {imageBlob[currentPage] && (
+            {imageBlob[pages[currentPage]] && (
               <img
                 className="page"
-                src={URL.createObjectURL(imageBlob[currentPage])}
+                src={URL.createObjectURL(imageBlob[pages[currentPage]])}
                 alt=""
               />
             )}

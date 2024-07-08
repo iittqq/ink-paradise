@@ -245,7 +245,6 @@ async function fetchMangaCoverBackend(
       },
       responseType: "blob",
     });
-    console.log(URL.createObjectURL(response.data));
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
@@ -265,7 +264,6 @@ async function fetchPageImageBackend(
       },
       responseType: "blob",
     });
-    console.log(URL.createObjectURL(response.data));
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
