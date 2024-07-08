@@ -154,3 +154,11 @@ input[type="search"]:focus {
   justify-content: center;
   align-items: center;
 }
+
+.manga-dex-credit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-family: "Figtree" !important;
+  min-width: 200px;
+}

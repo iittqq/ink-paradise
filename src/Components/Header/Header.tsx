@@ -127,39 +127,46 @@ const Header = () => {
               </Button>{" "}
             </div>
           ) : (
-            <div className="header-buttons-right">
-              <Button
-                className="header-buttons"
-                onClick={() => handleClickSearchIcon()}
-              >
-                <div className="header-nav-dialog-columns">
-                  <SearchIcon />
-                  <Typography className="header-nav-label">Search</Typography>
-                </div>
-              </Button>
-              <Button
-                className="header-buttons"
-                onClick={() => {
-                  handleClickLibrary();
-                }}
-              >
-                <div className="header-nav-dialog-columns">
-                  <BookIcon />
-                  <Typography className="header-nav-label">Library</Typography>
-                </div>
-              </Button>
-              <Button
-                onClick={() => {
-                  handleClickAccount();
-                }}
-                className="header-buttons"
-              >
-                <div className="header-nav-dialog-columns">
-                  <AccountBoxIcon />
-                  <Typography className="header-nav-label">Account</Typography>
-                </div>
-              </Button>
-            </div>
+            <>
+              <div className="manga-dex-credit">API by MangaDex </div>
+              <div className="header-buttons-right">
+                <Button
+                  className="header-buttons"
+                  onClick={() => handleClickSearchIcon()}
+                >
+                  <div className="header-nav-dialog-columns">
+                    <SearchIcon />
+                    <Typography className="header-nav-label">Search</Typography>
+                  </div>
+                </Button>
+                <Button
+                  className="header-buttons"
+                  onClick={() => {
+                    handleClickLibrary();
+                  }}
+                >
+                  <div className="header-nav-dialog-columns">
+                    <BookIcon />
+                    <Typography className="header-nav-label">
+                      Library
+                    </Typography>
+                  </div>
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleClickAccount();
+                  }}
+                  className="header-buttons"
+                >
+                  <div className="header-nav-dialog-columns">
+                    <AccountBoxIcon />
+                    <Typography className="header-nav-label">
+                      Account
+                    </Typography>
+                  </div>
+                </Button>
+              </div>
+            </>
           )}
         </>
       </div>
