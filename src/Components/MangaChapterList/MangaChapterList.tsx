@@ -120,7 +120,10 @@ const MangaChapterList = (props: Props) => {
                   backgroundColor:
                     Number(current.attributes.chapter) < Number(userProgress)
                       ? "#191919"
-                      : "#333333",
+                      : Number(current.attributes.chapter) ===
+                          Number(userProgress)
+                        ? "#ff7597"
+                        : "#333333",
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {

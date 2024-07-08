@@ -18,6 +18,7 @@ type Props = {
   mangaId: string;
   mangaName: string;
   scanlationGroup: string;
+  readerMode: number;
 };
 
 const PageAndControls = (props: Props) => {
@@ -29,10 +30,12 @@ const PageAndControls = (props: Props) => {
     mangaId,
     mangaName,
     scanlationGroup,
+    readerMode,
   } = props;
-  const [loading, setLoading] = useState(false);
-  const [imageBlob, setImageBlob] = useState<Blob | null>(null);
-
+  const [imageBlob, setImageBlob] = useState<Blob[]>([]);
+  const [loadingStates, setLoadingStates] = useState<boolean[]>(
+    Array(pages.length).fill(false),
+  );
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -62,77 +65,94 @@ const PageAndControls = (props: Props) => {
   };
   const handleNextChapter = () => {
     setCurrentPage(0);
-    chapters.forEach((current: MangaFeedScanlationGroup, index) => {
+    for (let index = 0; index < chapters.length; index++) {
+      const current = chapters[index];
       if (
-        parseInt(current.attributes.chapter) === parseInt(currentChapter) + 1 &&
+        parseFloat(current.attributes.chapter) === parseFloat(currentChapter) &&
         chapters[index].attributes.externalUrl === null
       ) {
         handleClick(
           mangaId,
-          chapters[index].id,
-          chapters[index].attributes.title,
-          chapters[index].attributes.volume,
-          chapters[index].attributes.chapter,
+          chapters[index + 1].id,
+          chapters[index + 1].attributes.title,
+          chapters[index + 1].attributes.volume,
+          chapters[index + 1].attributes.chapter,
           mangaName,
           scanlationGroup,
         );
-      } else {
-        return;
       }
-    });
+    }
   };
 
   const handlePreviousChapter = () => {
     setCurrentPage(0);
-    chapters.forEach((current: MangaFeedScanlationGroup, index) => {
+    for (let index = 0; index < chapters.length; index++) {
+      const current = chapters[index];
       if (
-        parseInt(current.attributes.chapter) === parseInt(currentChapter) - 1 &&
+        parseFloat(current.attributes.chapter) === parseFloat(currentChapter) &&
         chapters[index].attributes.externalUrl === null
       ) {
         handleClick(
           mangaId,
-          chapters[index].id,
-          chapters[index].attributes.title,
-          chapters[index].attributes.volume,
-          chapters[index].attributes.chapter,
+          chapters[index - 1].id,
+          chapters[index - 1].attributes.title,
+          chapters[index - 1].attributes.volume,
+          chapters[index - 1].attributes.chapter,
           mangaName,
           scanlationGroup,
         );
-      } else {
-        return;
       }
-    });
+    }
   };
 
   const handlePreviousPage = () => {
-    setLoading(true);
     currentPage === 0
       ? handlePreviousChapter()
       : setCurrentPage(currentPage - 1);
-    setLoading(false);
     window.localStorage.setItem("position", window.scrollY.toString());
   };
 
   const handleNextPage = () => {
-    setLoading(true);
     currentPage === pages.length - 1
       ? handleNextChapter()
       : setCurrentPage(currentPage + 1);
     window.localStorage.setItem("position", window.scrollY.toString());
   };
 
-  const handleLoadImage = async (hash: string, page: string): Promise<void> => {
-    setLoading(true);
-    return fetchPageImageBackend(hash, page)
-      .then((blob) => {
-        setImageBlob(blob);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error("Error loading image:", error);
-        throw error;
+  const handleLoadImage = async (
+    hash: string,
+    pages: string[],
+  ): Promise<void> => {
+    const promises = pages.map(async (page, index) => {
+      setLoadingStates((prev) => {
+        const newLoadingStates = [...prev];
+        newLoadingStates[index] = true;
+        return newLoadingStates;
       });
+
+      return fetchPageImageBackend(hash, page)
+        .then((blob) => {
+          // Assuming setImageBlob is modified to handle multiple blobs
+          setImageBlob((prevBlobs) => [...prevBlobs, blob]);
+
+          setLoadingStates((prev) => {
+            const newLoadingStates = [...prev];
+            newLoadingStates[index] = false;
+            return newLoadingStates;
+          });
+        })
+        .catch((error) => {
+          setLoadingStates((prev) => {
+            const newLoadingStates = [...prev];
+            newLoadingStates[index] = false;
+            return newLoadingStates;
+          });
+          console.error("Error loading image:", error);
+          throw error;
+        });
+    });
+
+    await Promise.all(promises);
   };
   const handleClick = (
     mangaId: string,
@@ -157,8 +177,9 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
+    setImageBlob([]);
     if (currentPage >= 0 && currentPage < pages.length) {
-      handleLoadImage(hash, pages[currentPage]).catch((error) => {
+      handleLoadImage(hash, pages).catch((error) => {
         console.error("Error loading image:", error);
         throw error;
       });
@@ -172,27 +193,39 @@ const PageAndControls = (props: Props) => {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        {loading ? (
+        {loadingStates[currentPage] ? (
           <div className="loading">
             <CircularProgress size={25} sx={{ color: "#ffffff" }} />
           </div>
         ) : (
           <>
-            {imageBlob && (
+            {imageBlob[currentPage] && (
               <img
                 className="page"
-                src={URL.createObjectURL(imageBlob)}
+                src={URL.createObjectURL(imageBlob[currentPage])}
                 alt=""
               />
             )}
             <div className="overlay-buttons">
               <Button
                 className="chapter-page-traversal"
-                onClick={() => handleNextPage()}
+                onClick={() => {
+                  if (readerMode === 1) {
+                    handleNextPage();
+                  } else if (readerMode === 2) {
+                    handlePreviousPage();
+                  }
+                }}
               ></Button>
               <Button
                 className="chapter-page-traversal"
-                onClick={() => handlePreviousPage()}
+                onClick={() => {
+                  if (readerMode === 1) {
+                    handlePreviousPage();
+                  } else if (readerMode === 2) {
+                    handleNextPage();
+                  }
+                }}
               ></Button>
             </div>
           </>
@@ -203,7 +236,11 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handleNextChapter();
+            if (readerMode === 1) {
+              handleNextChapter();
+            } else if (readerMode === 2) {
+              handlePreviousChapter();
+            }
           }}
         >
           <KeyboardDoubleArrowLeftIcon />
@@ -211,7 +248,11 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handleNextPage();
+            if (readerMode === 1) {
+              handleNextPage();
+            } else if (readerMode === 2) {
+              handlePreviousPage();
+            }
           }}
         >
           <KeyboardArrowLeftIcon />
@@ -219,7 +260,11 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handlePreviousPage();
+            if (readerMode === 1) {
+              handlePreviousPage();
+            } else if (readerMode === 2) {
+              handleNextPage();
+            }
           }}
         >
           <KeyboardArrowRightIcon />
@@ -227,7 +272,11 @@ const PageAndControls = (props: Props) => {
         <Button
           sx={{ color: "white" }}
           onClick={() => {
-            handlePreviousChapter();
+            if (readerMode === 1) {
+              handlePreviousChapter();
+            } else if (readerMode === 2) {
+              handleNextChapter();
+            }
           }}
         >
           <KeyboardDoubleArrowRightIcon />

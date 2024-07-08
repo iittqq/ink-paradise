@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://18.117.15.147:8080";
-//const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://ink-paradise-api.com";
+//const BASE_URL = "http://localhost:5000";
 
 import {
   Manga,

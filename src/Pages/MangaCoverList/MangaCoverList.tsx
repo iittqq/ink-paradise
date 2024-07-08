@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
@@ -15,29 +15,43 @@ const MangaCoverList = () => {
   const [offset, setOffset] = useState<number>(0);
   const [mangaDetails, setMangaDetails] = useState<Manga[]>([]);
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const fetchCoverImages = async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+    for (const mangaCurrent of state.manga) {
+      const fileName = mangaCurrent.relationships.find(
+        (i: Relationship) => i.type === "cover_art",
+      )?.attributes?.fileName;
+      if (fileName) {
+        const imageBlob = await fetchMangaCoverBackend(
+          mangaCurrent.id,
+          fileName,
+        );
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setCoverUrls((prevCoverUrls) => ({
+          ...prevCoverUrls,
+          [mangaCurrent.id]: imageUrl,
+        }));
+      }
+    }
+  };
 
   useEffect(() => {
-    const fetchCoverImages = async () => {
-      const coverUrls: { [key: string]: string } = {};
-      for (const mangaCurrent of state.manga) {
-        const fileName = mangaCurrent.relationships.find(
-          (i: Relationship) => i.type === "cover_art",
-        )?.attributes?.fileName;
-        if (fileName) {
-          const imageBlob = await fetchMangaCoverBackend(
-            mangaCurrent.id,
-            fileName,
-          );
-          coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
-        }
-      }
-      setCoverUrls(coverUrls);
-    };
+    setMangaDetails(state.manga);
     if (state.manga.length > 0) {
       fetchCoverImages();
     }
-    setMangaDetails(state.manga);
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [state]);
+
   return (
     <>
       <div className="header">

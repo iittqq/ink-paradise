@@ -140,6 +140,7 @@ const Login = () => {
           profilePicture: null,
           headerPicture: null,
           contentFilter: 1,
+          readerMode: 1,
         });
       });
     } else {

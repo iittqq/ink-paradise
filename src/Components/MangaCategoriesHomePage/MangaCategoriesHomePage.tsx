@@ -82,7 +82,6 @@ const MangaCategoriesHomePage = (props: Props) => {
     };
 
     const fetchCoverImagesMangaFromTag = async () => {
-      const coverUrlsMangaFromTag: { [key: string]: string } = {};
       if (mangaFromTag !== undefined) {
         for (const manga of mangaFromTag) {
           const fileName = manga.relationships.find(
@@ -90,11 +89,16 @@ const MangaCategoriesHomePage = (props: Props) => {
           )?.attributes?.fileName;
           if (fileName) {
             const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
-            coverUrlsMangaFromTag[manga.id] = URL.createObjectURL(imageBlob);
+            const imageUrl = URL.createObjectURL(imageBlob);
+            setCoverUrlsMangaFromTag((prevCoverUrls) => {
+              return {
+                ...prevCoverUrls,
+                [manga.id]: imageUrl,
+              };
+            });
           }
         }
       }
-      setCoverUrlsMangaFromTag(coverUrlsMangaFromTag);
     };
 
     if (recentlyAddedManga.length > 0) {

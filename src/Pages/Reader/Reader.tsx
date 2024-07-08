@@ -5,6 +5,13 @@ import {
   ListItemText,
   Collapse,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormControl,
+  Select,
+  SelectChangeEvent,
+  MenuItem,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +19,7 @@ import { useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import dayjs from "dayjs";
 import { Reading } from "../../interfaces/ReadingInterfaces";
-
+import SettingsIcon from "@mui/icons-material/Settings";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
@@ -27,10 +34,15 @@ import {
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
 
 import { Account } from "../../interfaces/AccountInterfaces";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
   MangaChapter,
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
+import {
+  fetchAccountDetails,
+  updateAccountDetails,
+} from "../../api/AccountDetails";
 
 const Reader = () => {
   const navigate = useNavigate();
@@ -38,9 +50,12 @@ const Reader = () => {
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
   const [chapters, setChapters] = useState<MangaFeedScanlationGroup[]>([]);
-  const [selectedLanguage] = useState("en");
-  const [open, setOpen] = useState(false);
-  const [order] = useState("asc");
+  const [selectedLanguage] = useState<string>("en");
+  const [open, setOpen] = useState<boolean>(false);
+  const [order] = useState<string>("asc");
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
+  const [readerMode, setReaderMode] = useState<string>("");
+  const [readerInteger, setReaderInteger] = useState<number>(1);
 
   const handleOpenChapters = () => {
     setOpen(!open);
@@ -57,6 +72,37 @@ const Reader = () => {
       window.scrollTo(0, parseInt(scrollPosition));
       sessionStorage.removeItem("scrollPosition");
     }
+  };
+
+  const handleEditAccountInfo = () => {
+    const account = window.localStorage.getItem("account") as string;
+    let accountData: Account;
+    if (account !== null) {
+      accountData = JSON.parse(account);
+      if (accountData.id !== null && accountData !== null) {
+        fetchAccountDetails(accountData.id).then((data: AccountDetails) => {
+          updateAccountDetails(accountData.id, {
+            accountId: data.accountId,
+            bio: data.bio,
+            profilePicture: data.profilePicture,
+            headerPicture: data.headerPicture,
+            contentFilter: data.contentFilter,
+            readerMode: readerInteger,
+          });
+        });
+      }
+    }
+    setOpenSettings(false);
+  };
+
+  const handleSettingsDialogClose = () => {
+    setOpenSettings(false);
+  };
+
+  const handleChangeNewReaderMode = (event: SelectChangeEvent) => {
+    console.log(event.target.value);
+    setReaderInteger(parseInt(event.target.value));
+    setReaderMode(event.target.value as string);
   };
 
   useEffect(() => {
@@ -97,11 +143,13 @@ const Reader = () => {
           }
 
           if (accountData !== null) {
+            const simpleMangaName = state.mangaName.replace(/[^a-zA-Z]/g, " ");
+            console.log(simpleMangaName);
             addReading({
               userId: accountData.id,
               mangaId: state.mangaId,
               chapter: state.chapterNumber,
-              mangaName: state.mangaName,
+              mangaName: simpleMangaName,
               timestamp: date.toISOString(),
             });
           }
@@ -120,6 +168,71 @@ const Reader = () => {
     <div className="reader-page">
       <div className="header">
         <Header />
+      </div>
+      <div className="settings-icon">
+        <Button
+          onClick={() => {
+            setOpenSettings(true);
+          }}
+          sx={{ color: "white", minWidth: "40px" }}
+        >
+          {" "}
+          <SettingsIcon />{" "}
+        </Button>
+        <Dialog
+          id="settings-dialog"
+          open={openSettings}
+          onClose={() => {
+            handleSettingsDialogClose();
+          }}
+        >
+          <DialogTitle
+            sx={{ color: "#fff", textAlign: "center", fontFamily: "Figtree" }}
+          >
+            Settings
+          </DialogTitle>
+          <DialogContent>
+            <Typography color="white" fontFamily="Figtree">
+              Reader Mode
+            </Typography>
+            <FormControl fullWidth>
+              <Select
+                id="edit-reader-mode-select"
+                className="edit-reader-mode-dropdown"
+                value={readerMode}
+                label="Reader Mode"
+                variant="standard"
+                disableUnderline={true}
+                onChange={handleChangeNewReaderMode}
+                sx={{
+                  "& .MuiSvgIcon-root": {
+                    color: "white",
+                  },
+                }}
+                MenuProps={{
+                  PaperProps: { style: { backgroundColor: "#333333" } },
+                }}
+              >
+                <MenuItem className="edit-reader-mode-item" value={1}>
+                  Right to Left
+                </MenuItem>
+                <MenuItem className="edit-reader-mode-item" value={2}>
+                  Left to Right
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <div className="edit-reader-mode-container">
+              <Button
+                className="save-reader-mode-button"
+                onClick={() => {
+                  handleEditAccountInfo();
+                }}
+              >
+                Save Changes
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="current-manga-details">
         <Button
@@ -181,6 +294,7 @@ const Reader = () => {
           mangaId={state.mangaId}
           mangaName={state.mangaName}
           scanlationGroup={state.scanlationGroup}
+          readerMode={readerInteger}
         />
       )}
     </div>

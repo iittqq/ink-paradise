@@ -86,6 +86,7 @@ const AccountPage = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [viableBio, setViableBio] = useState<boolean>(true);
   const [openLogout, setOpenLogout] = useState<boolean>(false);
+  const [readerMode, setReaderMode] = useState<number>(0);
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
@@ -124,6 +125,7 @@ const AccountPage = () => {
         profilePicture,
         headerPicture,
         contentFilter: Number(contentFilter),
+        readerMode,
       }).then((data) => {
         setAccountDetails(data);
       });
@@ -363,6 +365,7 @@ const AccountPage = () => {
       setProfilePicture(data.profilePicture);
       setHeaderPicture(data.headerPicture);
       setBio(data.bio);
+      setReaderMode(data.readerMode);
     });
   }, [newFolder]);
 

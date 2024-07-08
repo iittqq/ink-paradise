@@ -13,7 +13,6 @@ const SimilarManga = (props: Props) => {
 
   useEffect(() => {
     const fetchCoverImages = async () => {
-      const coverUrls: { [key: string]: string } = {};
       for (const mangaCurrent of manga) {
         const fileName = mangaCurrent.relationships.find(
           (i: Relationship) => i.type === "cover_art",
@@ -23,10 +22,13 @@ const SimilarManga = (props: Props) => {
             mangaCurrent.id,
             fileName,
           );
-          coverUrls[mangaCurrent.id] = URL.createObjectURL(imageBlob);
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setCoverUrls((prevCoverUrls) => ({
+            ...prevCoverUrls,
+            [mangaCurrent.id]: imageUrl,
+          }));
         }
       }
-      setCoverUrls(coverUrls);
     };
     if (manga.length > 0) {
       fetchCoverImages();

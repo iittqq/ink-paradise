@@ -5,4 +5,5 @@ export interface AccountDetails {
   profilePicture: string | null;
   headerPicture: string | null;
   contentFilter: number;
+  readerMode: number;
 }
