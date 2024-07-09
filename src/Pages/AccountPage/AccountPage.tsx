@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -48,6 +48,7 @@ import CheckIcon from "@mui/icons-material/Check";
 
 const AccountPage = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
@@ -341,24 +342,24 @@ const AccountPage = () => {
   };
 
   useEffect(() => {
-    const accountString = window.localStorage.getItem("account") as string;
-
-    let account: Account | null = null;
-    if (accountString !== null) {
-      setAccountData(JSON.parse(accountString));
-      account = JSON.parse(accountString) as Account | null;
-      if (account !== null) {
-        setUsername(account.username);
+    console.log(state);
+    console.log(state.account);
+    if (state.account !== null) {
+      setAccountData(state.account);
+      if (state.account !== null) {
+        setUsername(state.account.username);
       }
     }
 
-    if (account !== null) {
+    if (state.account !== null) {
       getMangaFolders().then((response) => {
-        setFolders(response.filter((folder) => folder.userId === account!.id));
+        setFolders(
+          response.filter((folder) => folder.userId === state.account!.id),
+        );
       });
     }
 
-    fetchAccountDetails(account!.id).then((data) => {
+    fetchAccountDetails(state.account!.id).then((data) => {
       setAccountDetails(data);
       setAccountDetailsId(data.id);
       setContentFilter(data.contentFilter.toString());

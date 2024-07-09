@@ -103,7 +103,7 @@ const Login = () => {
     if (email !== "" || password !== "") {
       login(email, password).then((response: Account | string) => {
         if (typeof response !== "string") {
-          window.localStorage.setItem("account", JSON.stringify(response));
+          window.localStorage.setItem("accountId", JSON.stringify(response));
           setAttemptedLogin(false);
           navigate("/");
         } else {
@@ -131,7 +131,7 @@ const Login = () => {
         verificationCode: "",
         verified: false,
       }).then((response: Account) => {
-        window.localStorage.setItem("account", JSON.stringify(response));
+        window.localStorage.setItem("accountId", String(response.id));
         navigate("/");
 
         createAccountDetails({

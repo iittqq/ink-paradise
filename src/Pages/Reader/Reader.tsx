@@ -33,7 +33,6 @@ import {
 
 import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
 
-import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
   MangaChapter,
@@ -75,13 +74,11 @@ const Reader = () => {
   };
 
   const handleEditAccountInfo = () => {
-    const account = window.localStorage.getItem("account") as string;
-    let accountData: Account;
+    const account = window.localStorage.getItem("accountId") as string | null;
     if (account !== null) {
-      accountData = JSON.parse(account);
-      if (accountData.id !== null && accountData !== null) {
-        fetchAccountDetails(accountData.id).then((data: AccountDetails) => {
-          updateAccountDetails(accountData.id, {
+      if (account !== null) {
+        fetchAccountDetails(parseInt(account)).then((data: AccountDetails) => {
+          updateAccountDetails(parseInt(account), {
             accountId: data.accountId,
             bio: data.bio,
             profilePicture: data.profilePicture,
@@ -112,14 +109,10 @@ const Reader = () => {
     });
     const date = dayjs();
 
-    const account = window.localStorage.getItem("account") as string | null;
-    let accountData: Account | null = null;
-    if (account !== null) {
-      accountData = JSON.parse(account);
-    }
+    const account = window.localStorage.getItem("accountId") as string | null;
     let readingExists = false;
-    if (accountData !== null) {
-      getReadingByUserId(accountData.id).then((data: Reading[]) => {
+    if (account !== null) {
+      getReadingByUserId(parseInt(account)).then((data: Reading[]) => {
         data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
             updateReading({
@@ -134,19 +127,15 @@ const Reader = () => {
           }
         });
         if (readingExists === false) {
-          const account = window.localStorage.getItem("account") as
+          const account = window.localStorage.getItem("accountId") as
             | string
             | null;
-          let accountData: Account | null = null;
-          if (account !== null) {
-            accountData = JSON.parse(account);
-          }
 
-          if (accountData !== null) {
+          if (account !== null) {
             const simpleMangaName = state.mangaName.replace(/[^a-zA-Z]/g, " ");
             console.log(simpleMangaName);
             addReading({
-              userId: accountData.id,
+              userId: parseInt(account),
               mangaId: state.mangaId,
               chapter: state.chapterNumber,
               mangaName: simpleMangaName,

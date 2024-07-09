@@ -21,16 +21,17 @@ const Header = () => {
   const [showAlertAccount, setShowAlertAccount] = useState(false);
 
   const handleClickAccount = () => {
-    const account = window.localStorage.getItem("account");
+    const account = window.localStorage.getItem("accountId");
     const accountData = JSON.parse(account as string);
+    console.log(accountData);
+    console.log(account);
     if (account !== null) {
-      fetchAccountData(accountData.id).then((data: Account | null) => {
-        if (data === null || data.password !== accountData.password) {
-          window.localStorage.removeItem("account");
+      fetchAccountData(accountData).then((data: Account | null) => {
+        if (data === null) {
+          window.localStorage.removeItem("accountId");
         } else {
           if (data.verified === true) {
-            window.localStorage.setItem("account", JSON.stringify(data));
-            navigate("/account");
+            navigate("/account", { state: { account: data } });
           } else {
             setShowAlert(true);
             setTimeout(() => {
@@ -49,16 +50,16 @@ const Header = () => {
   };
 
   const handleClickLibrary = async () => {
-    const account = window.localStorage.getItem("account");
+    const account = window.localStorage.getItem("accountId");
     const accountData = JSON.parse(account as string);
+    console.log(accountData);
     if (account !== null) {
-      fetchAccountData(accountData.id).then((data: Account | null) => {
+      fetchAccountData(accountData).then((data: Account | null) => {
         if (data === null) {
-          window.localStorage.removeItem("account");
+          window.localStorage.removeItem("accountId");
         } else {
           if (data.verified === true) {
-            window.localStorage.setItem("account", JSON.stringify(data));
-            navigate("/library");
+            navigate("/library", { state: { account: data } });
           } else {
             setShowAlert(true);
             setTimeout(() => {

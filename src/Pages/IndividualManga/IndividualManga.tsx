@@ -145,12 +145,11 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
-    const account = window.localStorage.getItem("account");
-    const accountData = JSON.parse(account as string);
-    if (accountData !== null) {
+    const account = window.localStorage.getItem("accountId");
+    if (account !== null) {
       getMangaFolders().then((response) => {
         setFolders(
-          response.filter((folder) => folder.userId === accountData.id),
+          response.filter((folder) => folder.userId === parseInt(account)),
         );
       });
     }

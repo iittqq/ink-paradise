@@ -14,6 +14,7 @@ import {
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
+import { fetchAccountData } from "../../api/Account";
 
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
@@ -56,6 +57,7 @@ const Library = () => {
     setLoading(true);
 
     getReadingByUserId(userId).then((data: Reading[]) => {
+      console.log(data);
       if (contentFilter === "Continue Reading") {
         if (ascending) {
           data = data
@@ -165,19 +167,18 @@ const Library = () => {
   };
 
   useEffect(() => {
-    const accountString = window.localStorage.getItem("account") as
-      | string
-      | null;
-    let account: Account | null = null;
-    if (accountString !== null) {
-      setAccountData(JSON.parse(accountString));
-      account = JSON.parse(accountString) as Account | null;
+    const accountId = window.localStorage.getItem("accountId") as number | null;
+    if (accountId !== null) {
+      fetchAccountData(accountId).then((data: Account | null) => {
+        console.log(data);
+        setAccountData(data);
+        if (data !== null) {
+          handleFetchingLibrary(accountId, ascending);
+        }
+      });
     }
 
     setLoading(true);
-    if (account !== null) {
-      handleFetchingLibrary(account.id, ascending);
-    }
 
     setLoading(false);
   }, [loadLibrary, ascending, contentFilter]);

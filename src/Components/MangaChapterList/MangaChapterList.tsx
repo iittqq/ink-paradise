@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Grid, Button, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Reading } from "../../interfaces/ReadingInterfaces";
-import { Account } from "../../interfaces/AccountInterfaces";
 import { getReadingByUserId } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
@@ -85,13 +84,9 @@ const MangaChapterList = (props: Props) => {
       setXsValue(6);
     }
     setUserProgress(0);
-    const account = window.localStorage.getItem("account") as string | null;
-    let accountData: Account | null = null;
+    const account = window.localStorage.getItem("accountId") as string | null;
     if (account !== null) {
-      accountData = JSON.parse(account);
-    }
-    if (accountData !== null) {
-      getReadingByUserId(accountData.id).then((data: Reading[]) => {
+      getReadingByUserId(parseInt(account)).then((data: Reading[]) => {
         data
           .filter((reading: Reading) => reading.mangaId === mangaId)
           .map((reading: Reading) => {
