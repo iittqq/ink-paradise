@@ -27,6 +27,7 @@ const Library = () => {
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
     string[]
   >([]);
+  const [groupedLibrary, setGroupedLibrary] = useState<Manga[][] | null>(null);
 
   const [accountData, setAccountData] = useState<Account | null>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
@@ -86,7 +87,8 @@ const Library = () => {
       });
 
       Promise.all(promises)
-        .then((data) => {
+        .then((data: Manga[]) => {
+          console.log(data);
           if (contentFilter === "Recently Updated") {
             if (ascending) {
               data = data
@@ -106,7 +108,90 @@ const Library = () => {
                   a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
                 );
             }
+          } else if (contentFilter === "Release Date") {
+            if (ascending) {
+              data = data
+                .map(function (e) {
+                  return e;
+                })
+                .sort((a, b) =>
+                  a.attributes.year < b.attributes.year ? 1 : -1,
+                );
+            } else {
+              data = data
+                .map(function (e) {
+                  return e;
+                })
+                .sort((a, b) =>
+                  a.attributes.year > b.attributes.year ? 1 : -1,
+                );
+            }
+          } else if (contentFilter === "Content Rating") {
+            if (ascending) {
+              const typedData = Object.values(
+                data.reduce(
+                  (accumulator: { [key: string]: Manga[] }, current) => {
+                    const currentContentRating =
+                      current.attributes.contentRating;
+                    (accumulator[currentContentRating] =
+                      accumulator[currentContentRating as keyof Manga] ||
+                      []).push(current);
+                    return accumulator;
+                  },
+                  {},
+                ),
+              );
+              setGroupedLibrary(typedData);
+            } else {
+              const typedData = Object.values(
+                data.reduce(
+                  (accumulator: { [key: string]: Manga[] }, current) => {
+                    const currentContentRating =
+                      current.attributes.contentRating;
+                    (accumulator[currentContentRating] =
+                      accumulator[currentContentRating as keyof Manga] ||
+                      []).push(current);
+                    return accumulator;
+                  },
+                  {},
+                ),
+              );
+              setGroupedLibrary(typedData.reverse());
+            }
+          } else if (contentFilter === "Publication Demographic") {
+            if (ascending) {
+              const typedData = Object.values(
+                data.reduce(
+                  (accumulator: { [key: string]: Manga[] }, current) => {
+                    const currentContentRating =
+                      current.attributes.publicationDemographic;
+                    (accumulator[currentContentRating] =
+                      accumulator[currentContentRating as keyof Manga] ||
+                      []).push(current);
+                    return accumulator;
+                  },
+                  {},
+                ),
+              );
+              setGroupedLibrary(typedData);
+            } else {
+              const typedData = Object.values(
+                data.reduce(
+                  (accumulator: { [key: string]: Manga[] }, current) => {
+                    const currentContentRating =
+                      current.attributes.publicationDemographic;
+                    (accumulator[currentContentRating] =
+                      accumulator[currentContentRating as keyof Manga] ||
+                      []).push(current);
+                    return accumulator;
+                  },
+                  {},
+                ),
+              );
+              setGroupedLibrary(typedData.reverse());
+            }
           }
+
           setLibrary(data);
           setLoading(false);
         })
@@ -208,9 +293,11 @@ const Library = () => {
         <LibraryContents
           libraryManga={library}
           handleLibraryEntryClick={handleLibraryEntryClick}
+          currentMetric={contentFilter}
           checked={checked}
           libraryEntriesToDelete={libraryEntriesToDelete}
           selectAll={selectAll}
+          groupedLibraryManga={groupedLibrary}
         />
       )}
     </div>

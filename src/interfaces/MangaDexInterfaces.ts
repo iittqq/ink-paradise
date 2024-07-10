@@ -32,6 +32,8 @@ export interface Manga {
     tags: { id: string; type: string; attributes: { name: { en: string } } }[];
     createdAt: string;
     updatedAt: string;
+    year: number;
+    publicationDemographic: string;
   };
   relationships: {
     id: string;

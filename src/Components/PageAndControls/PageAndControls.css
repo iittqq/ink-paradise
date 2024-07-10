@@ -9,7 +9,7 @@
   background-color: transparent;
   width: 50%;
   height: 100%;
-  color: #ffffff;
+  color: #fff !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }

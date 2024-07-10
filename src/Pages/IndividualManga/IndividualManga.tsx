@@ -139,6 +139,14 @@ const IndividualManga = () => {
     }
   };
 
+  const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
+    fetchSimilarManga(25, [category.id]).then((data: Manga[]) => {
+      navigate("/mangaCoverList", {
+        state: { listType: category.attributes.name.en, manga: data },
+      });
+    });
+  };
+
   const handleShowMore = () => {
     setSelectedScanlationGroup(undefined);
     setCurrentOffset(currentOffset + 100);
@@ -273,6 +281,7 @@ const IndividualManga = () => {
           handleClose={handleClose}
           mangaContentRating={mangaContentRating}
           mangaAddedAlert={mangaAddedAlert}
+          handleMangaCategoryClicked={handleMangaCategoryClicked}
         />{" "}
       </div>
 

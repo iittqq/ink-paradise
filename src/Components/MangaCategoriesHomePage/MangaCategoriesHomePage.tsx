@@ -122,6 +122,7 @@ const MangaCategoriesHomePage = (props: Props) => {
           {mangaFromTag.map((current) => (
             <>
               <Grid item className="home-category-manga-grid-item">
+                {" "}
                 <Button
                   disableRipple
                   className="home-category-manga-button"
@@ -129,6 +130,7 @@ const MangaCategoriesHomePage = (props: Props) => {
                     handleClick(current.id, coverUrlsMangaFromTag[current.id]);
                   }}
                 >
+                  {" "}
                   <Card
                     sx={{
                       width: "80px",
@@ -143,11 +145,11 @@ const MangaCategoriesHomePage = (props: Props) => {
                       image={coverUrlsMangaFromTag[current.id]}
                     />
                   </Card>
-                </Button>
-                <div className="home-category-manga-text">
-                  <Typography>{current.attributes.title.en}</Typography>
-                </div>
-              </Grid>
+                  <div className="home-category-manga-text">
+                    <Typography>{current.attributes.title.en}</Typography>
+                  </div>
+                </Button>{" "}
+              </Grid>{" "}
               <Divider variant="fullWidth" className="divider" />
             </>
           ))}
@@ -190,10 +192,10 @@ const MangaCategoriesHomePage = (props: Props) => {
                     image={coverUrlsRecentlyUpdated[current.id]}
                   />
                 </Card>
+                <div className="home-category-manga-text">
+                  <Typography>{current.attributes.title.en}</Typography>
+                </div>
               </Button>
-              <div className="home-category-manga-text">
-                <Typography>{current.attributes.title.en}</Typography>
-              </div>
             </Grid>
             <Divider variant="fullWidth" className="divider" />
           </>
@@ -234,10 +236,10 @@ const MangaCategoriesHomePage = (props: Props) => {
                     image={coverUrlsRecentlyAdded[current.id]}
                   />
                 </Card>
+                <div className="home-category-manga-text">
+                  <Typography>{current.attributes.title.en}</Typography>
+                </div>
               </Button>
-              <div className="home-category-manga-text">
-                <Typography>{current.attributes.title.en}</Typography>
-              </div>
             </Grid>
             <Divider variant="fullWidth" className="divider" />
           </>

@@ -5,8 +5,7 @@ import {
   PasswordChange,
 } from "../interfaces/AccountInterfaces";
 
-const BASE_URL = "https://ink-paradise-api.com";
-//const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 async function fetchAccountData(id: number): Promise<Account | null> {
   try {
@@ -31,7 +30,7 @@ async function createAccount(account: object): Promise<Account> {
   }
 }
 
-async function login(email: string, password: string): Promise<Account> {
+async function login(email: string, password: string): Promise<number> {
   try {
     const response = await axios.post(`${BASE_URL}/api/v1/accounts/login`, {
       email: email,

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
@@ -7,6 +8,8 @@ import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 
 type Props = {
   libraryManga: Manga[];
+  groupedLibraryManga: Manga[][] | null;
+  currentMetric: string | null;
   handleLibraryEntryClick: (manga: Manga) => void;
   checked: boolean;
   libraryEntriesToDelete: string[];
@@ -16,11 +19,14 @@ type Props = {
 const LibraryContents = (props: Props) => {
   const {
     libraryManga,
+    groupedLibraryManga,
+    currentMetric,
     handleLibraryEntryClick,
     checked,
     libraryEntriesToDelete,
     selectAll,
   } = props;
+  const navigate = useNavigate();
 
   const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{
     [key: string]: string;
@@ -54,31 +60,116 @@ const LibraryContents = (props: Props) => {
         alignItems={"center"}
       >
         {libraryManga.length === 0 ? (
-          <Typography fontFamily={"Figtree"} sx={{ marginTop: "20px" }}>
-            Empty...
-          </Typography>
+          <Button
+            className="redirect-button"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <Typography fontFamily="Figtree">Start Browsing</Typography>
+          </Button>
         ) : null}
-        {libraryManga.map((manga: Manga) => (
-          <Grid item>
-            <Button
-              className="manga-entry-overlay-button"
-              onClick={() => {
-                handleLibraryEntryClick(manga);
-              }}
-              sx={{
-                opacity: libraryEntriesToDelete.includes(manga.id) ? 0.2 : 1,
-              }}
-            >
-              <MangaClickable
-                id={manga.id}
-                title={manga.attributes.title.en}
-                coverUrl={coverUrlsLibrary[manga.id]}
-                updatedAt={manga.attributes.updatedAt}
-                disabled={checked || selectAll}
-              />
-            </Button>
-          </Grid>
-        ))}
+        {groupedLibraryManga !== null
+          ? currentMetric === "Content Rating"
+            ? groupedLibraryManga.map((currentRating: Manga[]) => (
+                <>
+                  <Typography
+                    fontFamily={"Figtree"}
+                    sx={{
+                      marginTop: "20px",
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {currentRating[0].attributes.contentRating}
+                  </Typography>
+                  {currentRating.map((manga: Manga) => (
+                    <Grid item key={manga.id}>
+                      <Button
+                        className="manga-entry-overlay-button"
+                        onClick={() => handleLibraryEntryClick(manga)}
+                        sx={{
+                          opacity: libraryEntriesToDelete.includes(manga.id)
+                            ? 0.2
+                            : 1,
+                        }}
+                      >
+                        <MangaClickable
+                          id={manga.id}
+                          title={manga.attributes.title.en}
+                          coverUrl={coverUrlsLibrary[manga.id]}
+                          updatedAt={manga.attributes.updatedAt}
+                          disabled={checked || selectAll}
+                        />
+                      </Button>
+                    </Grid>
+                  ))}
+                </>
+              ))
+            : groupedLibraryManga.map((demographic: Manga[]) => (
+                <>
+                  <Typography
+                    fontFamily={"Figtree"}
+                    sx={{
+                      marginTop: "20px",
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {demographic[0].attributes.publicationDemographic !== null
+                      ? demographic[0].attributes.publicationDemographic
+                      : "unknown"}
+                  </Typography>
+                  {demographic.map((manga: Manga) => (
+                    <Grid item key={manga.id}>
+                      <Button
+                        className="manga-entry-overlay-button"
+                        onClick={() => handleLibraryEntryClick(manga)}
+                        sx={{
+                          opacity: libraryEntriesToDelete.includes(manga.id)
+                            ? 0.2
+                            : 1,
+                        }}
+                      >
+                        <MangaClickable
+                          id={manga.id}
+                          title={manga.attributes.title.en}
+                          coverUrl={coverUrlsLibrary[manga.id]}
+                          updatedAt={manga.attributes.updatedAt}
+                          disabled={checked || selectAll}
+                        />
+                      </Button>
+                    </Grid>
+                  ))}
+                </>
+              ))
+          : libraryManga.map((manga: Manga) => (
+              <Grid item>
+                <Button
+                  className="manga-entry-overlay-button"
+                  onClick={() => {
+                    handleLibraryEntryClick(manga);
+                  }}
+                  sx={{
+                    opacity: libraryEntriesToDelete.includes(manga.id)
+                      ? 0.2
+                      : 1,
+                  }}
+                >
+                  <MangaClickable
+                    id={manga.id}
+                    title={manga.attributes.title.en}
+                    coverUrl={coverUrlsLibrary[manga.id]}
+                    updatedAt={manga.attributes.updatedAt}
+                    disabled={checked || selectAll}
+                  />
+                </Button>
+              </Grid>
+            ))}
       </Grid>
     </div>
   );

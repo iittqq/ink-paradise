@@ -83,6 +83,15 @@
   }
 }
 
+.toggle-password-visibility-button-login {
+  color: #ffffff !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .result-group {
   display: flex;
   flex-direction: row;

@@ -38,6 +38,11 @@
 }
 
 .home-category-manga-button {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -45,12 +50,15 @@
 
 .home-category-manga-text {
   font-family: "Figtree", sans-serif !important;
+  text-transform: none !important;
+  color: #fff !important;
   font-size: 20px !important;
-  width: 80%;
+  width: 75%;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   overflow: hidden;
+  text-align: left;
 }
 
 .divider {

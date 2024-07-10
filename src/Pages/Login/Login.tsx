@@ -101,8 +101,9 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (email !== "" || password !== "") {
-      login(email, password).then((response: Account | string) => {
-        if (typeof response !== "string") {
+      login(email, password).then((response: number) => {
+        console.log(response);
+        if (response !== -1) {
           window.localStorage.setItem("accountId", JSON.stringify(response));
           setAttemptedLogin(false);
           navigate("/");
@@ -354,7 +355,7 @@ const Login = () => {
               Password
             </Typography>
             <input
-              type="password"
+              type={togglePasswordVisibility ? "text" : "password"}
               className="login-input-fields"
               placeholder="Password"
               value={password}
@@ -374,7 +375,20 @@ const Login = () => {
                 Forgot Password?
               </Typography>
             </Button>
+            <Button
+              className="toggle-password-visibility-button-login"
+              onClick={() =>
+                setTogglePasswordVisibility(!togglePasswordVisibility)
+              }
+            >
+              {togglePasswordVisibility ? (
+                <VisibilityOffIcon />
+              ) : (
+                <VisibilityIcon />
+              )}
+            </Button>{" "}
           </div>
+
           <Button
             variant="contained"
             className="login-button"

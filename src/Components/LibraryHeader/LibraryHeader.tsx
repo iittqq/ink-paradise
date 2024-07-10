@@ -4,6 +4,7 @@ import {
   Button,
   Dialog,
   DialogTitle,
+  Grid,
   DialogContent,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -198,40 +199,84 @@ const LibraryHeader = (props: Props) => {
             <DialogContent
               sx={{
                 backgroundColor: "#121212",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
               }}
             >
-              <Button
-                onClick={() => {
-                  handleContentFilter("Alphabetical Order");
-                  setOpenFilterDialog(false);
-                }}
-                className="filter-button"
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
               >
-                Alphabetical Order
-              </Button>
-
-              <Button
-                onClick={() => {
-                  handleContentFilter("Continue Reading");
-                  setOpenFilterDialog(false);
-                }}
-                className="filter-button"
-              >
-                Continue Reading
-              </Button>
-              <Button
-                onClick={() => {
-                  handleContentFilter("Recently Updated");
-                  setOpenFilterDialog(false);
-                }}
-                className="filter-button"
-              >
-                Recently Updated
-              </Button>
+                <Grid>
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Alphabetical Order");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Alphabetical Order
+                  </Button>
+                </Grid>{" "}
+                <Grid>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Continue Reading");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Continue Reading
+                  </Button>
+                </Grid>{" "}
+                <Grid>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Recently Updated");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Recently Updated
+                  </Button>
+                </Grid>{" "}
+                <Grid>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Release Date");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Release Date
+                  </Button>
+                </Grid>{" "}
+                <Grid>
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Content Rating");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Content Rating
+                  </Button>
+                </Grid>
+                <Grid>
+                  <Button
+                    onClick={() => {
+                      handleContentFilter("Publication Demographic");
+                      setOpenFilterDialog(false);
+                    }}
+                    className="filter-button"
+                  >
+                    Publication Demographic
+                  </Button>
+                </Grid>
+              </Grid>
             </DialogContent>
           </Dialog>
         </div>

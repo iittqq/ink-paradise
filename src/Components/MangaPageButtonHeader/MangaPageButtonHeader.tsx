@@ -34,6 +34,7 @@ type Props = {
   mangaExistsError: boolean;
   mangaContentRating: string;
   mangaAddedAlert: boolean;
+  handleMangaCategoryClicked: (category: MangaTagsInterface) => void;
 };
 
 const MangaPageButtonHeader = (props: Props) => {
@@ -56,6 +57,7 @@ const MangaPageButtonHeader = (props: Props) => {
     mangaExistsError,
     mangaContentRating,
     mangaAddedAlert,
+    handleMangaCategoryClicked,
   } = props;
 
   return (
@@ -146,7 +148,12 @@ const MangaPageButtonHeader = (props: Props) => {
           >
             {mangaTags.map((current: MangaTagsInterface) => (
               <Grid item>
-                <Button className="folder-button" onClick={() => {}}>
+                <Button
+                  className="folder-button"
+                  onClick={() => {
+                    handleMangaCategoryClicked(current);
+                  }}
+                >
                   <Typography noWrap color="#ffffff">
                     {current.attributes.name.en}
                   </Typography>
@@ -216,12 +223,7 @@ const MangaPageButtonHeader = (props: Props) => {
           >
             {mangaAltTitles.map((current) => (
               <Grid item>
-                <Typography
-                  noWrap
-                  color="#ffffff"
-                  fontFamily="Figtree"
-                  fontSize={16}
-                >
+                <Typography color="#ffffff" fontFamily="Figtree" fontSize={16}>
                   {Object.values(current)} /
                 </Typography>
               </Grid>
