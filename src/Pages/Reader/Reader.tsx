@@ -127,7 +127,7 @@ const Reader = () => {
               id: reading.id,
               userId: reading.userId,
               mangaId: reading.mangaId,
-              chapter: state.chapter,
+              chapter: state.chapterNumber,
               mangaName: reading.mangaName,
               timestamp: date.toISOString(),
             });
@@ -154,6 +154,7 @@ const Reader = () => {
       });
       getBookmarksByUserId(parseInt(account)).then((data: Bookmark[]) => {
         console.log(data);
+        console.log(state);
         data.forEach((bookmark: Bookmark) => {
           if (
             bookmark.mangaId === state.mangaId &&
@@ -164,8 +165,8 @@ const Reader = () => {
               userId: parseInt(account),
               mangaId: bookmark.mangaId,
               mangaName: bookmark.mangaName,
-              chapterNumber: parseFloat(state.chapter),
-              chapterId: bookmark.chapterId,
+              chapterNumber: parseFloat(state.chapterNumber),
+              chapterId: state.chapterId,
               continueReading: true,
             });
             bookmarkExists = true;
@@ -289,7 +290,7 @@ const Reader = () => {
                   sx={{ width: "100%" }}
                   noWrap
                 >
-                  {"Volume " + state.volume + " Chapter " + state.chapter}
+                  {"Volume " + state.volume + " Chapter " + state.chapterNumber}
                 </Typography>
               }
             />
@@ -317,7 +318,7 @@ const Reader = () => {
           chapters={chapters}
           pages={pages}
           hash={hash}
-          currentChapter={state.chapter}
+          currentChapter={state.chapterNumber}
           mangaId={state.mangaId}
           mangaName={state.mangaName}
           scanlationGroup={state.scanlationGroup}

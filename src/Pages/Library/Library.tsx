@@ -304,6 +304,7 @@ const Library = () => {
 
   const handleFetchingBookmarks = async (userId: number) => {
     setLoading(true);
+    console.log(userId);
 
     try {
       const bookmarks: Bookmark[] = await getBookmarksByUserId(userId);

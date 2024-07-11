@@ -65,12 +65,17 @@ const PageAndControls = (props: Props) => {
   };
   const handleNextChapter = () => {
     setCurrentPage(0);
+    console.log(chapters);
     for (let index = 0; index < chapters.length; index++) {
       const current = chapters[index];
+      console.log(index);
+      console.log(current);
+
       if (
         parseFloat(current.attributes.chapter) === parseFloat(currentChapter) &&
         chapters[index].attributes.externalUrl === null
       ) {
+        console.log("nav");
         handleClick(
           mangaId,
           chapters[index + 1].id,
@@ -162,7 +167,7 @@ const PageAndControls = (props: Props) => {
     chapterId: string,
     title: string,
     volume: string,
-    chapter: string,
+    chapterNumber: string,
     mangaName: string,
     scanlationGroup: string,
   ) => {
@@ -172,7 +177,7 @@ const PageAndControls = (props: Props) => {
         chapterId: chapterId,
         title: title,
         volume: volume,
-        chapter: chapter,
+        chapterNumber: chapterNumber,
         mangaName: mangaName,
         scanlationGroup: scanlationGroup,
       },

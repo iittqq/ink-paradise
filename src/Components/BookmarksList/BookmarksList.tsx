@@ -27,6 +27,7 @@ const BookmarksList = (props: Props) => {
   const handleBookmarkClick = (
     mangaId: string,
     chapterId: string,
+    chapterNumber: number,
     mangaName: string,
     coverUrl: string,
   ) => {
@@ -39,9 +40,8 @@ const BookmarksList = (props: Props) => {
           chapterId: chapterId,
           title: response.attributes.title,
           volume: response.attributes.volume,
-          chapter: response.attributes.chapter,
           mangaName: mangaName,
-          chapterNumber: response.attributes.chapter,
+          chapterNumber: chapterNumber,
           externalUrl: response.attributes.externalUrl,
           scanlationGroup:
             response.relationships[0].type === "scanlation_group"
@@ -54,6 +54,7 @@ const BookmarksList = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log(bookmarks);
     const fetchCoverImages = async () => {
       const coverUrls: { [key: string]: string } = {};
       for (const manga of bookmarks) {
@@ -101,6 +102,7 @@ const BookmarksList = (props: Props) => {
                   : handleBookmarkClick(
                       manga.id,
                       manga.chapterId!,
+                      manga.chapterNumber!,
                       manga.attributes.title.en,
                       bookmarkCoverUrls[manga.id]!,
                     );
