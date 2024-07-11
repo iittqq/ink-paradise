@@ -9,6 +9,7 @@ import {
   MangaChapter,
   ScanlationGroup,
   MangaFeedScanlationGroup,
+  ChapterDetails,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
@@ -22,7 +23,7 @@ async function fetchRecentlyUpdated(
         offset: offset,
       },
     });
-    return response.data["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -40,7 +41,7 @@ async function fetchRecentlyAdded(
         offset: offset,
       },
     });
-    return response.data["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -51,7 +52,7 @@ async function fetchMangaTags(): Promise<MangaTagsInterface[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/tags`);
 
-    return response.data["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -65,7 +66,7 @@ async function fetchMangaById(mangaId: string): Promise<Manga> {
         id: mangaId,
       },
     });
-    return response.data["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -83,7 +84,7 @@ async function fetchMangaByTitle(
         title: title,
       },
     });
-    return response.data["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -103,7 +104,7 @@ async function fetchMangaByTag(
         includedTags: [tagId],
       },
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -118,7 +119,7 @@ async function fetchMangaCover(coverId: string): Promise<CoverFile> {
       },
     });
 
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -142,7 +143,7 @@ async function fetchMangaFeed(
         translatedLanguage: language,
       },
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -156,7 +157,7 @@ async function fetchScanlationGroup(id: string): Promise<ScanlationGroup> {
         id: id,
       },
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -176,7 +177,7 @@ async function fetchMangaByAuthor(
         authors: authorName,
       },
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -191,7 +192,21 @@ async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
       },
     });
 
-    return response["data"];
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function fetchChapterDetails(chapterId: string): Promise<ChapterDetails> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/chapter-details`, {
+      params: {
+        id: chapterId,
+      },
+    });
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -211,7 +226,7 @@ async function fetchSimilarManga(
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-similar`, {
       params,
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -225,7 +240,7 @@ async function fetchPopularManga(limit: number): Promise<Manga[]> {
         limit: limit,
       },
     });
-    return response["data"]["data"];
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -286,4 +301,5 @@ export {
   fetchPopularManga,
   fetchMangaCoverBackend,
   fetchPageImageBackend,
+  fetchChapterDetails,
 };

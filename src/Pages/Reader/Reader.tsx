@@ -24,6 +24,7 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import "./Reader.css";
+import { Bookmark } from "../../interfaces/BookmarkInterfaces";
 
 import {
   updateReading,
@@ -42,6 +43,11 @@ import {
   fetchAccountDetails,
   updateAccountDetails,
 } from "../../api/AccountDetails";
+import {
+  addBookmark,
+  getBookmarksByUserId,
+  updateBookmark,
+} from "../../api/Bookmarks";
 
 const Reader = () => {
   const navigate = useNavigate();
@@ -108,9 +114,11 @@ const Reader = () => {
       setHash(data.chapter.hash);
     });
     const date = dayjs();
+    console.log(state);
 
     const account = window.localStorage.getItem("accountId") as string | null;
     let readingExists = false;
+    let bookmarkExists = false;
     if (account !== null) {
       getReadingByUserId(parseInt(account)).then((data: Reading[]) => {
         data.forEach((reading: Reading) => {
@@ -142,6 +150,36 @@ const Reader = () => {
               timestamp: date.toISOString(),
             });
           }
+        }
+      });
+      getBookmarksByUserId(parseInt(account)).then((data: Bookmark[]) => {
+        console.log(data);
+        data.forEach((bookmark: Bookmark) => {
+          if (
+            bookmark.mangaId === state.mangaId &&
+            bookmark.continueReading === true
+          ) {
+            updateBookmark({
+              id: bookmark.id,
+              userId: parseInt(account),
+              mangaId: bookmark.mangaId,
+              mangaName: bookmark.mangaName,
+              chapterNumber: parseFloat(state.chapter),
+              chapterId: bookmark.chapterId,
+              continueReading: true,
+            });
+            bookmarkExists = true;
+          }
+        });
+        if (bookmarkExists === false) {
+          addBookmark({
+            userId: parseInt(account),
+            mangaId: state.mangaId,
+            mangaName: state.mangaName,
+            chapterNumber: state.chapterNumber,
+            chapterId: state.chapterId,
+            continueReading: true,
+          });
         }
       });
     }

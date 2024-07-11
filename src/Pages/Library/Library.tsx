@@ -15,6 +15,9 @@ import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { fetchAccountData } from "../../api/Account";
+import BookmarksList from "../../Components/BookmarksList/BookmarksList";
+import { Bookmark } from "../../interfaces/BookmarkInterfaces";
+import { getBookmarksByUserId, deleteBookmark } from "../../api/Bookmarks";
 
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
@@ -31,6 +34,10 @@ const Library = () => {
 
   const [accountData, setAccountData] = useState<Account | null>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+
+  const [bookmarksVisible, setBookmarksVisible] = useState<boolean>(false);
+  const [bookmarks, setBookmarks] = useState<Manga[]>([]);
+  const [bookmarksToDelete, setBookmarksToDelete] = useState<number[]>([]);
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -199,6 +206,10 @@ const Library = () => {
     });
   };
 
+  const handleBookmarkClick = () => {
+    setBookmarksVisible(!bookmarksVisible);
+  };
+
   const handleAscendingChange = () => {
     setAscending(!ascending);
   };
@@ -210,6 +221,7 @@ const Library = () => {
   const toggleLibraryEntries = (value: boolean) => {
     setChecked(value);
     setLibraryEntriesToDelete([]);
+    setBookmarksToDelete([]);
   };
 
   const toggleSelectAll = () => {
@@ -221,6 +233,15 @@ const Library = () => {
     }
   };
 
+  const toggleSelectAllBookmarks = () => {
+    setSelectAll(!selectAll);
+    if (selectAll) {
+      setBookmarksToDelete([]);
+    } else {
+      setBookmarksToDelete(bookmarks.map((bookmark) => bookmark.bookmarkId!));
+    }
+  };
+
   const handleLibraryEntryClick = async (manga: Manga) => {
     if (checked || selectAll) {
       if (libraryEntriesToDelete.includes(manga.id)) {
@@ -229,6 +250,23 @@ const Library = () => {
         );
       } else {
         setLibraryEntriesToDelete([...libraryEntriesToDelete, manga.id]);
+      }
+      if (selectAll) {
+        setSelectAll(false);
+        setChecked(true);
+      }
+    }
+  };
+
+  const handleBookmarkEntryClick = async (bookmarkId: number) => {
+    console.log(bookmarkId);
+    if (checked || selectAll) {
+      if (bookmarksToDelete.includes(bookmarkId)) {
+        setBookmarksToDelete(
+          bookmarksToDelete.filter((id) => id !== bookmarkId),
+        );
+      } else {
+        setBookmarksToDelete([...bookmarksToDelete, bookmarkId]);
       }
       if (selectAll) {
         setSelectAll(false);
@@ -251,6 +289,44 @@ const Library = () => {
     }
   };
 
+  const handleDeleteBookmarks = async () => {
+    setChecked(false);
+    setSelectAll(false);
+    if (accountData !== null) {
+      bookmarksToDelete.forEach((id) => {
+        deleteBookmark(id).then(() => {
+          setBookmarksToDelete([]);
+          handleFetchingBookmarks(accountData.id);
+        });
+      });
+    }
+  };
+
+  const handleFetchingBookmarks = async (userId: number) => {
+    setLoading(true);
+
+    try {
+      const bookmarks: Bookmark[] = await getBookmarksByUserId(userId);
+      const promises = bookmarks.map(async (bookmark: Bookmark) => {
+        return fetchMangaById(bookmark.mangaId).then((manga: Manga) => {
+          return {
+            ...manga,
+            chapterNumber: bookmark.chapterNumber,
+            chapterId: bookmark.chapterId,
+            bookmarkId: bookmark.id,
+          };
+        });
+      });
+
+      const enrichedBookmarks = await Promise.all(promises);
+      console.log(enrichedBookmarks);
+      setBookmarks(enrichedBookmarks);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const accountId = window.localStorage.getItem("accountId") as number | null;
     if (accountId !== null) {
@@ -259,13 +335,10 @@ const Library = () => {
         setAccountData(data);
         if (data !== null) {
           handleFetchingLibrary(accountId, ascending);
+          handleFetchingBookmarks(accountId);
         }
       });
     }
-
-    setLoading(true);
-
-    setLoading(false);
   }, [loadLibrary, ascending, contentFilter]);
 
   return (
@@ -280,15 +353,27 @@ const Library = () => {
         checked={checked}
         toggleLibraryEntries={toggleLibraryEntries}
         handleDeleteLibraryEntries={handleDeleteLibraryEntries}
-        toggleSelectAll={toggleSelectAll}
+        toggleSelectAll={
+          bookmarksVisible ? toggleSelectAllBookmarks : toggleSelectAll
+        }
         selectAll={selectAll}
-        header={contentFilter}
+        header={bookmarksVisible ? "Bookmarks" : contentFilter}
         libraryEntriesToDelete={libraryEntriesToDelete}
+        bookmarksToDelete={bookmarksToDelete}
+        handleBookmarkClick={handleBookmarkClick}
+        handleDeleteBookmarks={handleDeleteBookmarks}
       />
       {loading === true ? (
         <div className="loading-indicator-container">
           <CircularProgress size={25} sx={{ color: "#ffffff" }} />
         </div>
+      ) : bookmarksVisible === true ? (
+        <BookmarksList
+          bookmarks={bookmarks}
+          bookmarksToDelete={bookmarksToDelete}
+          handleBookmarkEntryClick={handleBookmarkEntryClick}
+          checked={checked}
+        />
       ) : (
         <LibraryContents
           libraryManga={library}

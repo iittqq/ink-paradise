@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import "./LibraryHeader.css";
 
@@ -29,6 +30,9 @@ type Props = {
   selectAll: boolean;
   header: string;
   libraryEntriesToDelete: string[];
+  bookmarksToDelete: number[];
+  handleBookmarkClick: () => void;
+  handleDeleteBookmarks: () => void;
 };
 
 const LibraryHeader = (props: Props) => {
@@ -43,6 +47,9 @@ const LibraryHeader = (props: Props) => {
     selectAll,
     header,
     libraryEntriesToDelete,
+    bookmarksToDelete,
+    handleBookmarkClick,
+    handleDeleteBookmarks,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
@@ -112,6 +119,14 @@ const LibraryHeader = (props: Props) => {
               <SearchIcon />
             </Button>
           )}
+          <Button
+            className="library-header-button"
+            onClick={() => {
+              handleBookmarkClick();
+            }}
+          >
+            <BookmarkIcon />
+          </Button>
           {selectAll ? (
             <Button
               className="library-header-button"
@@ -139,11 +154,13 @@ const LibraryHeader = (props: Props) => {
               className="library-header-button"
               sx={{
                 backgroundColor:
-                  libraryEntriesToDelete.length !== 0
+                  libraryEntriesToDelete.length !== 0 ||
+                  bookmarksToDelete.length !== 0
                     ? "#ff7597"
                     : "transparent",
               }}
               onClick={() => {
+                handleDeleteBookmarks();
                 handleDeleteLibraryEntries();
                 toggleLibraryEntries(false);
               }}

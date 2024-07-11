@@ -41,6 +41,9 @@ export interface Manga {
     attributes: { fileName: string };
   }[];
   status?: string;
+  bookmarkId?: number;
+  chapterNumber?: number;
+  chapterId?: string;
 }
 
 export interface MangaChapter {
@@ -101,6 +104,27 @@ export interface MangaFeedScanlationGroup {
       publishDelay: string | null;
       created_at: string;
       updated_at: string;
+    };
+  }[];
+}
+
+export interface ChapterDetails {
+  id: string;
+  attributes: {
+    title: string;
+    volume: string;
+    chapter: string;
+    translatedLanguage: string;
+    version: number;
+    createdAt: string;
+    updatedAt: string;
+    externalUrl: string;
+  };
+  relationships: {
+    id: string;
+    type: string;
+    attributes: {
+      name: string;
     };
   }[];
 }

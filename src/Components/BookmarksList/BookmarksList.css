@@ -1,0 +1,10 @@
+.chapter-number-overlay {
+  font-family: "Figtree" !important;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 15%;
+  z-index: 1;
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 5px;
+}
