@@ -68,7 +68,9 @@ const Reader = () => {
 
   function handleClickTitle() {
     const encodedCoverUrl = encodeURIComponent(state.coverUrl);
-    navigate(`/individualView/${state.mangaId}/${encodedCoverUrl}`);
+    navigate(`/individualView/${state.mangaId}/${encodedCoverUrl}`, {
+      state: { accountId: state.accountId === null ? null : state.accountId },
+    });
   }
 
   const handleScrollPosition = () => {
