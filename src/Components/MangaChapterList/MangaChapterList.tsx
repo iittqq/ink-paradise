@@ -45,7 +45,10 @@ const MangaChapterList = (props: Props) => {
     externalUrl: string,
     scanlationGroup: string,
     coverUrl: string,
+    mangaFeed: MangaFeedScanlationGroup[],
+    index: number,
   ) => {
+    console.log(index);
     if (insideReader) {
       navigate("/reader", {
         state: {
@@ -58,6 +61,8 @@ const MangaChapterList = (props: Props) => {
           scanlationGroup: scanlationGroup,
           coverUrl: coverUrl,
           accountId: accountId,
+          mangaFeed: mangaFeed,
+          chapterIndex: index,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -74,6 +79,8 @@ const MangaChapterList = (props: Props) => {
           scanlationGroup: scanlationGroup,
           coverUrl: coverUrl,
           accountId: accountId,
+          mangaFeed: mangaFeed,
+          chapterIndex: index,
         },
       });
     }
@@ -107,7 +114,7 @@ const MangaChapterList = (props: Props) => {
         alignItems="center"
         className="chapters-list"
       >
-        {mangaFeed.map((current: MangaFeedScanlationGroup) =>
+        {mangaFeed.map((current: MangaFeedScanlationGroup, index: number) =>
           current.attributes.translatedLanguage === selectedLanguage ? (
             <Grid item xs={xsValue} className="chapter-button-container">
               <Button
@@ -139,6 +146,8 @@ const MangaChapterList = (props: Props) => {
                         ? current.relationships[0].attributes.name
                         : "Unknown",
                       coverUrl,
+                      mangaFeed,
+                      index,
                     );
                   }
                 }}

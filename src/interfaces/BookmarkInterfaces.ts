@@ -5,5 +5,6 @@ export interface Bookmark {
   mangaName: string;
   chapterNumber: number;
   chapterId: string;
+  chapterIndex: number;
   continueReading: boolean;
 }

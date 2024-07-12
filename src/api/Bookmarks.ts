@@ -32,6 +32,7 @@ async function addBookmark(bookmark: {
   mangaName: string;
   chapterNumber: number;
   chapterId: string;
+  chapterIndex: number;
   continueReading: boolean;
 }): Promise<Bookmark> {
   try {

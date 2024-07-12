@@ -314,11 +314,13 @@ const Library = () => {
             chapterNumber: bookmark.chapterNumber,
             chapterId: bookmark.chapterId,
             bookmarkId: bookmark.id,
+            index: bookmark.chapterIndex,
           };
         });
       });
 
       const enrichedBookmarks = await Promise.all(promises);
+      console.log(enrichedBookmarks);
       setBookmarks(enrichedBookmarks);
       setLoading(false);
     } catch (error) {

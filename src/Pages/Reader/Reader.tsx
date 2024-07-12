@@ -32,7 +32,7 @@ import {
   getReadingByUserId,
 } from "../../api/Reading";
 
-import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
+import { fetchChapterData } from "../../api/MangaDexApi";
 
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
@@ -54,13 +54,15 @@ const Reader = () => {
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
-  const [chapters, setChapters] = useState<MangaFeedScanlationGroup[]>([]);
   const [selectedLanguage] = useState<string>("en");
   const [open, setOpen] = useState<boolean>(false);
   const [order] = useState<string>("asc");
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [readerMode, setReaderMode] = useState<string>("");
   const [readerInteger, setReaderInteger] = useState<number>(1);
+  const [mangaFeedState, setMangaFeedState] = useState<
+    MangaFeedScanlationGroup[]
+  >(state.mangaFeed);
 
   const handleOpenChapters = () => {
     setOpen(!open);
@@ -166,6 +168,7 @@ const Reader = () => {
                 mangaName: bookmark.mangaName,
                 chapterNumber: parseFloat(state.chapterNumber),
                 chapterId: state.chapterId,
+                chapterIndex: state.chapterIndex,
                 continueReading: true,
               });
               bookmarkExists = true;
@@ -178,19 +181,16 @@ const Reader = () => {
               mangaName: state.mangaName,
               chapterNumber: state.chapterNumber,
               chapterId: state.chapterId,
+              chapterIndex: state.chapterIndex,
               continueReading: true,
             });
           }
         },
       );
     }
-    fetchMangaFeed(state.mangaId, 100, 0, order, selectedLanguage).then(
-      (data: MangaFeedScanlationGroup[]) => {
-        setChapters(data);
-      },
-    );
+
     handleScrollPosition();
-  }, [state, order, selectedLanguage]);
+  }, [state, order, selectedLanguage, mangaFeedState]);
 
   return (
     <div className="reader-page">
@@ -305,7 +305,7 @@ const Reader = () => {
           <Collapse className="reader-feed-collapse" in={open} timeout="auto">
             <MangaChapterList
               mangaId={state.mangaId}
-              mangaFeed={chapters}
+              mangaFeed={mangaFeedState}
               mangaName={state.mangaName}
               selectedLanguage={selectedLanguage}
               insideReader={true}
@@ -318,7 +318,6 @@ const Reader = () => {
       </div>
       {open === true ? null : (
         <PageAndControls
-          chapters={chapters}
           pages={pages}
           hash={hash}
           currentChapter={state.chapterNumber}
@@ -327,6 +326,11 @@ const Reader = () => {
           scanlationGroup={state.scanlationGroup}
           readerMode={readerInteger}
           accountId={state.accountId === undefined ? null : state.accountId}
+          order={order}
+          selectedLanguage={selectedLanguage}
+          chapterIndex={state.chapterIndex}
+          setMangaFeedState={setMangaFeedState}
+          mangaFeedState={mangaFeedState}
         />
       )}
     </div>

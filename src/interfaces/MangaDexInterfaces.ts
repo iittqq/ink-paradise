@@ -44,6 +44,7 @@ export interface Manga {
   bookmarkId?: number;
   chapterNumber?: number;
   chapterId?: string;
+  index?: number;
 }
 
 export interface MangaChapter {

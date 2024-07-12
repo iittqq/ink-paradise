@@ -8,10 +8,9 @@ import { useNavigate } from "react-router-dom";
 import "./PageAndControls.css";
 
 import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
-import { fetchPageImageBackend } from "../../api/MangaDexApi";
+import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
 
 type Props = {
-  chapters: MangaFeedScanlationGroup[];
   pages: string[];
   hash: string;
   currentChapter: string;
@@ -20,11 +19,17 @@ type Props = {
   scanlationGroup: string;
   readerMode: number;
   accountId: number;
+  order: string;
+  selectedLanguage: string;
+  chapterIndex: number;
+  setMangaFeedState: React.Dispatch<
+    React.SetStateAction<MangaFeedScanlationGroup[]>
+  >;
+  mangaFeedState: MangaFeedScanlationGroup[];
 };
 
 const PageAndControls = (props: Props) => {
   const {
-    chapters,
     pages,
     hash,
     currentChapter,
@@ -33,11 +38,17 @@ const PageAndControls = (props: Props) => {
     scanlationGroup,
     readerMode,
     accountId,
+    order,
+    selectedLanguage,
+    chapterIndex,
+    setMangaFeedState,
+    mangaFeedState,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
     Array(pages.length).fill(false),
   );
+
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -67,45 +78,81 @@ const PageAndControls = (props: Props) => {
   };
   const handleNextChapter = () => {
     setCurrentPage(0);
-    for (let index = 0; index < chapters.length; index++) {
-      const current = chapters[index];
+    let chapterFound = false;
+
+    for (let index = 0; index < mangaFeedState.length; index++) {
+      const current = mangaFeedState[index];
       if (
         parseFloat(current.attributes.chapter) > parseFloat(currentChapter) &&
-        chapters[index].attributes.externalUrl === null
+        mangaFeedState[index].attributes.externalUrl === null
       ) {
+        console.log("found");
+        console.log(current);
+        chapterFound = true;
         handleClick(
           mangaId,
-          chapters[index].id,
-          chapters[index].attributes.title,
-          chapters[index].attributes.volume,
-          chapters[index].attributes.chapter,
+          mangaFeedState[index].id,
+          mangaFeedState[index].attributes.title,
+          mangaFeedState[index].attributes.volume,
+          mangaFeedState[index].attributes.chapter,
           mangaName,
           scanlationGroup,
+          chapterIndex + 1,
         );
         break;
       }
+    }
+    if (!chapterFound) {
+      fetchMangaFeed(
+        mangaId,
+        100,
+        mangaFeedState.length,
+        order,
+        selectedLanguage,
+      ).then((data: MangaFeedScanlationGroup[]) => {
+        console.log(data);
+        console.log([...mangaFeedState, ...data]);
+        setMangaFeedState([...mangaFeedState, ...data]);
+      });
     }
   };
 
   const handlePreviousChapter = () => {
     setCurrentPage(0);
-    for (let index = chapters.length - 1; index >= 0; index--) {
-      const current = chapters[index];
+    let chapterFound = false;
+    for (let index = mangaFeedState.length - 1; index >= 0; index--) {
+      const current = mangaFeedState[index];
       if (
         parseFloat(current.attributes.chapter) < parseFloat(currentChapter) &&
-        chapters[index].attributes.externalUrl === null
+        mangaFeedState[index].attributes.externalUrl === null
       ) {
+        console.log("found");
+        chapterFound = true;
         handleClick(
           mangaId,
-          chapters[index].id,
-          chapters[index].attributes.title,
-          chapters[index].attributes.volume,
-          chapters[index].attributes.chapter,
+          mangaFeedState[index].id,
+          mangaFeedState[index].attributes.title,
+          mangaFeedState[index].attributes.volume,
+          mangaFeedState[index].attributes.chapter,
           mangaName,
           scanlationGroup,
+          chapterIndex - 1,
         );
         break;
       }
+    }
+    if (!chapterFound) {
+      fetchMangaFeed(
+        mangaId,
+        100,
+        mangaFeedState.length - 100,
+        order,
+        selectedLanguage,
+      ).then((data: MangaFeedScanlationGroup[]) => {
+        console.log(data);
+        console.log([...data, ...mangaFeedState]);
+        setMangaFeedState(data);
+      });
     }
   };
 
@@ -169,6 +216,7 @@ const PageAndControls = (props: Props) => {
     chapterNumber: string,
     mangaName: string,
     scanlationGroup: string,
+    chapterIndex: number,
   ) => {
     navigate("/reader", {
       state: {
@@ -180,11 +228,14 @@ const PageAndControls = (props: Props) => {
         mangaName: mangaName,
         scanlationGroup: scanlationGroup,
         accountId: accountId,
+        mangaFeed: mangaFeedState,
+        chapterIndex: chapterIndex,
       },
     });
   };
 
   useEffect(() => {
+    console.log(chapterIndex);
     setImageBlob({});
     handleLoadImage(hash, pages).catch((error) => {
       throw error;

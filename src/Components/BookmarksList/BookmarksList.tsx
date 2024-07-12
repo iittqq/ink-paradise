@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Button } from "@mui/material";
-import { ChapterDetails, Manga } from "../../interfaces/MangaDexInterfaces";
+import {
+  ChapterDetails,
+  Manga,
+  MangaFeedScanlationGroup,
+} from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import {
   fetchChapterDetails,
   fetchMangaCoverBackend,
+  fetchMangaFeed,
 } from "../../api/MangaDexApi";
 import "./BookmarksList.css";
 
@@ -36,29 +41,39 @@ const BookmarksList = (props: Props) => {
     chapterNumber: number,
     mangaName: string,
     coverUrl: string,
+    index: number,
   ) => {
-    fetchChapterDetails(chapterId).then((response: ChapterDetails) => {
-      navigate("/reader", {
-        state: {
-          mangaId: mangaId,
-          chapterId: chapterId,
-          title: response.attributes.title,
-          volume: response.attributes.volume,
-          mangaName: mangaName,
-          chapterNumber: chapterNumber,
-          externalUrl: response.attributes.externalUrl,
-          scanlationGroup:
-            response.relationships[0].type === "scanlation_group"
-              ? response.relationships[0].attributes.name
-              : "Unknown",
-          coverUrl: coverUrl,
-          accountId: accountId,
-        },
-      });
-    });
+    console.log(index);
+    fetchMangaFeed(mangaId, 100, index, "asc", "en").then(
+      (mangaFeed: MangaFeedScanlationGroup[]) => {
+        console.log(mangaFeed);
+        fetchChapterDetails(chapterId).then((response: ChapterDetails) => {
+          navigate("/reader", {
+            state: {
+              mangaId: mangaId,
+              chapterId: chapterId,
+              title: response.attributes.title,
+              volume: response.attributes.volume,
+              mangaName: mangaName,
+              chapterNumber: chapterNumber,
+              externalUrl: response.attributes.externalUrl,
+              scanlationGroup:
+                response.relationships[0].type === "scanlation_group"
+                  ? response.relationships[0].attributes.name
+                  : "Unknown",
+              coverUrl: coverUrl,
+              accountId: accountId,
+              chapterIndex: index,
+              mangaFeed: mangaFeed,
+            },
+          });
+        });
+      },
+    );
   };
 
   useEffect(() => {
+    console.log(bookmarks);
     const fetchCoverImages = async () => {
       const coverUrls: { [key: string]: string } = {};
       for (const manga of bookmarks) {
@@ -108,6 +123,7 @@ const BookmarksList = (props: Props) => {
                       manga.chapterNumber!,
                       manga.attributes.title.en,
                       bookmarkCoverUrls[manga.id]!,
+                      manga.index!,
                     );
               }}
               sx={{
