@@ -14,6 +14,7 @@ type Props = {
   checked: boolean;
   libraryEntriesToDelete: string[];
   selectAll: boolean;
+  accountId: number;
 };
 
 const LibraryContents = (props: Props) => {
@@ -25,6 +26,7 @@ const LibraryContents = (props: Props) => {
     checked,
     libraryEntriesToDelete,
     selectAll,
+    accountId,
   } = props;
   const navigate = useNavigate();
 
@@ -63,7 +65,7 @@ const LibraryContents = (props: Props) => {
           <Button
             className="redirect-button"
             onClick={() => {
-              navigate("/");
+              navigate("/", { state: { accountId: accountId } });
             }}
           >
             <Typography fontFamily="Figtree">Start Browsing</Typography>
@@ -102,6 +104,7 @@ const LibraryContents = (props: Props) => {
                           coverUrl={coverUrlsLibrary[manga.id]}
                           updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
+                          accountId={accountId}
                         />
                       </Button>
                     </Grid>
@@ -141,6 +144,7 @@ const LibraryContents = (props: Props) => {
                           coverUrl={coverUrlsLibrary[manga.id]}
                           updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
+                          accountId={accountId}
                         />
                       </Button>
                     </Grid>
@@ -166,6 +170,7 @@ const LibraryContents = (props: Props) => {
                     coverUrl={coverUrlsLibrary[manga.id]}
                     updatedAt={manga.attributes.updatedAt}
                     disabled={checked || selectAll}
+                    accountId={accountId}
                   />
                 </Button>
               </Grid>

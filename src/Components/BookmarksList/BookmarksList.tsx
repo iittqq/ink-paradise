@@ -14,11 +14,17 @@ type Props = {
   bookmarksToDelete: number[];
   handleBookmarkEntryClick: (bookmarkId: number) => void;
   checked: boolean;
+  accountId: number;
 };
 
 const BookmarksList = (props: Props) => {
-  const { bookmarks, bookmarksToDelete, handleBookmarkEntryClick, checked } =
-    props;
+  const {
+    bookmarks,
+    bookmarksToDelete,
+    handleBookmarkEntryClick,
+    checked,
+    accountId,
+  } = props;
   const [bookmarkCoverUrls, setBookmarkCoverUrls] = useState<{
     [key: string]: string;
   }>({});
@@ -31,9 +37,7 @@ const BookmarksList = (props: Props) => {
     mangaName: string,
     coverUrl: string,
   ) => {
-    console.log(chapterId);
     fetchChapterDetails(chapterId).then((response: ChapterDetails) => {
-      console.log(response);
       navigate("/reader", {
         state: {
           mangaId: mangaId,
@@ -48,13 +52,13 @@ const BookmarksList = (props: Props) => {
               ? response.relationships[0].attributes.name
               : "Unknown",
           coverUrl: coverUrl,
+          accountId: accountId,
         },
       });
     });
   };
 
   useEffect(() => {
-    console.log(bookmarks);
     const fetchCoverImages = async () => {
       const coverUrls: { [key: string]: string } = {};
       for (const manga of bookmarks) {
@@ -96,7 +100,6 @@ const BookmarksList = (props: Props) => {
             <Button
               className="manga-entry-overlay-button"
               onClick={() => {
-                console.log(manga);
                 checked
                   ? handleBookmarkEntryClick(manga.bookmarkId!)
                   : handleBookmarkClick(
@@ -119,6 +122,7 @@ const BookmarksList = (props: Props) => {
                 coverUrl={bookmarkCoverUrls[manga.id]}
                 updatedAt={manga.attributes.updatedAt}
                 disabled={true}
+                accountId={accountId}
               />
             </Button>
           </Grid>

@@ -10,17 +10,20 @@ type Props = {
   coverUrl?: string;
   updatedAt?: string;
   disabled?: boolean;
+  accountId: number;
 };
 
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
   //const [showDetails, setShowDetails] = useState(false);
 
-  const { id, title, coverUrl, updatedAt, disabled } = props;
+  const { id, title, coverUrl, updatedAt, disabled, accountId } = props;
 
   function handleClick() {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+      state: { accountId: accountId },
+    });
   }
 
   return (

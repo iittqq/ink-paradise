@@ -55,7 +55,9 @@ const MangaCoverList = () => {
   return (
     <>
       <div className="header">
-        <Header />
+        <Header
+          accountId={state.accountId === undefined ? null : state.accountId}
+        />
       </div>
       <Typography className="title">{state.listType}</Typography>
       <div>
@@ -73,6 +75,9 @@ const MangaCoverList = () => {
                 id={element.id}
                 title={element.attributes.title.en}
                 coverUrl={coverUrls[element.id]}
+                accountId={
+                  state.accountId === undefined ? null : state.accountId
+                }
               />
             </Grid>
           ))}

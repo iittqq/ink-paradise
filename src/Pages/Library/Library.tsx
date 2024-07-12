@@ -18,6 +18,7 @@ import { fetchAccountData } from "../../api/Account";
 import BookmarksList from "../../Components/BookmarksList/BookmarksList";
 import { Bookmark } from "../../interfaces/BookmarkInterfaces";
 import { getBookmarksByUserId, deleteBookmark } from "../../api/Bookmarks";
+import { useLocation } from "react-router-dom";
 
 const Library = () => {
   const [library, setLibrary] = useState<Manga[]>([]);
@@ -38,6 +39,7 @@ const Library = () => {
   const [bookmarksVisible, setBookmarksVisible] = useState<boolean>(false);
   const [bookmarks, setBookmarks] = useState<Manga[]>([]);
   const [bookmarksToDelete, setBookmarksToDelete] = useState<number[]>([]);
+  const { state } = useLocation();
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -63,9 +65,9 @@ const Library = () => {
 
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
+    setGroupedLibrary(null);
 
     getReadingByUserId(userId).then((data: Reading[]) => {
-      console.log(data);
       if (contentFilter === "Continue Reading") {
         if (ascending) {
           data = data
@@ -95,7 +97,6 @@ const Library = () => {
 
       Promise.all(promises)
         .then((data: Manga[]) => {
-          console.log(data);
           if (contentFilter === "Recently Updated") {
             if (ascending) {
               data = data
@@ -259,7 +260,6 @@ const Library = () => {
   };
 
   const handleBookmarkEntryClick = async (bookmarkId: number) => {
-    console.log(bookmarkId);
     if (checked || selectAll) {
       if (bookmarksToDelete.includes(bookmarkId)) {
         setBookmarksToDelete(
@@ -304,7 +304,6 @@ const Library = () => {
 
   const handleFetchingBookmarks = async (userId: number) => {
     setLoading(true);
-    console.log(userId);
 
     try {
       const bookmarks: Bookmark[] = await getBookmarksByUserId(userId);
@@ -320,7 +319,6 @@ const Library = () => {
       });
 
       const enrichedBookmarks = await Promise.all(promises);
-      console.log(enrichedBookmarks);
       setBookmarks(enrichedBookmarks);
       setLoading(false);
     } catch (error) {
@@ -329,14 +327,12 @@ const Library = () => {
   };
 
   useEffect(() => {
-    const accountId = window.localStorage.getItem("accountId") as number | null;
-    if (accountId !== null) {
-      fetchAccountData(accountId).then((data: Account | null) => {
-        console.log(data);
+    if (state.accountId !== null) {
+      fetchAccountData(state.accountId).then((data: Account | null) => {
         setAccountData(data);
         if (data !== null) {
-          handleFetchingLibrary(accountId, ascending);
-          handleFetchingBookmarks(accountId);
+          handleFetchingLibrary(state.accountId, ascending);
+          handleFetchingBookmarks(state.accountId);
         }
       });
     }
@@ -345,7 +341,9 @@ const Library = () => {
   return (
     <div className="library-page-container">
       <div>
-        <Header />
+        <Header
+          accountId={state.accountId === undefined ? null : state.accountId}
+        />
       </div>
       <LibraryHeader
         searchFavorites={searchFavorites}
@@ -374,6 +372,7 @@ const Library = () => {
           bookmarksToDelete={bookmarksToDelete}
           handleBookmarkEntryClick={handleBookmarkEntryClick}
           checked={checked}
+          accountId={state.accountId === undefined ? null : state.accountId}
         />
       ) : (
         <LibraryContents
@@ -384,6 +383,7 @@ const Library = () => {
           libraryEntriesToDelete={libraryEntriesToDelete}
           selectAll={selectAll}
           groupedLibraryManga={groupedLibrary}
+          accountId={state.accountId === undefined ? null : state.accountId}
         />
       )}
     </div>

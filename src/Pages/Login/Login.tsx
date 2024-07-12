@@ -104,9 +104,8 @@ const Login = () => {
       login(email, password).then((response: number) => {
         console.log(response);
         if (response !== -1) {
-          window.localStorage.setItem("accountId", JSON.stringify(response));
           setAttemptedLogin(false);
-          navigate("/");
+          navigate("/", { state: { accountId: response } });
         } else {
           setEmail("");
           setPassword("");
@@ -132,8 +131,7 @@ const Login = () => {
         verificationCode: "",
         verified: false,
       }).then((response: Account) => {
-        window.localStorage.setItem("accountId", String(response.id));
-        navigate("/");
+        navigate("/", { state: { accountId: response.id } });
 
         createAccountDetails({
           accountId: response.id,

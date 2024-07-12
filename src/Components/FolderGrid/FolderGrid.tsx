@@ -18,6 +18,7 @@ type Props = {
   folderMangaData: Manga[] | null;
   mangaEntriesToDelete: string[];
   selectAll: boolean;
+  accountId: number;
 };
 
 const FolderGrid = (props: Props) => {
@@ -33,6 +34,7 @@ const FolderGrid = (props: Props) => {
     folderMangaData,
     mangaEntriesToDelete,
     selectAll,
+    accountId,
   } = props;
 
   const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{
@@ -49,7 +51,6 @@ const FolderGrid = (props: Props) => {
 
   useEffect(() => {
     const fetchCoverImagesFolderGrid = async () => {
-      const coverUrlsFolderGrid: { [key: string]: string } = {};
       if (folderMangaData) {
         for (const manga of folderMangaData) {
           const fileName = manga.relationships.find(
@@ -57,11 +58,14 @@ const FolderGrid = (props: Props) => {
           )?.attributes?.fileName;
           if (fileName) {
             const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
-            coverUrlsFolderGrid[manga.id] = URL.createObjectURL(imageBlob);
+            const imageUrl = URL.createObjectURL(imageBlob);
+            setCoverUrlsFolderGrid((prevCoverUrls) => ({
+              ...prevCoverUrls,
+              [manga.id]: imageUrl,
+            }));
           }
         }
       }
-      setCoverUrlsFolderGrid(coverUrlsFolderGrid);
     };
 
     if (folderMangaData) {
@@ -115,7 +119,7 @@ const FolderGrid = (props: Props) => {
           <Button
             className="redirect-button"
             onClick={() => {
-              navigate("/");
+              navigate("/", { state: { accountId: accountId } });
             }}
           >
             <Typography fontFamily="Figtree">Start Browsing</Typography>
@@ -139,6 +143,7 @@ const FolderGrid = (props: Props) => {
                 coverUrl={coverUrlsFolderGrid[element.id]}
                 updatedAt={element.attributes.updatedAt}
                 disabled={checked || selectAll}
+                accountId={accountId}
               />
             </Button>
           </Grid>

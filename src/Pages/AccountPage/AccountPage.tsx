@@ -67,9 +67,9 @@ const AccountPage = () => {
   const [mangaFoldersToDelete, setMangaFoldersToDelete] = useState<number[]>(
     [],
   );
-  const [accountData, setAccountData] = useState<Account>(
-    window.localStorage.getItem("account") as unknown as Account,
-  );
+
+  const [accountData, setAccountData] = useState<Account | null>(null);
+
   const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
     null,
   );
@@ -93,26 +93,26 @@ const AccountPage = () => {
     setContentFilter(event.target.value as string);
   };
   const handleEditAccountInfo = () => {
-    const accountId: number = accountData.id!;
     if (
       newPassword !== "" &&
       oldPassword !== "" &&
       newPassword === confirmNewPassword
     ) {
       updateAccountPassword({
-        id: accountId,
+        id: state.accountId,
         oldPassword: oldPassword,
         newPassword: newPassword,
       }).then((data: Account) => {
         setAccountData(data);
+        if (username !== data.username) {
+          updateAccountUsername({
+            id: state.accountId,
+            username: username,
+          }).then((data: Account) => {
+            setAccountData(data);
+          });
+        }
       });
-    }
-    if (username !== accountData.username) {
-      updateAccountUsername({ id: accountId, username: username }).then(
-        (data: Account) => {
-          setAccountData(data);
-        },
-      );
     }
     if (
       bio !== accountDetails?.bio ||
@@ -121,7 +121,7 @@ const AccountPage = () => {
       contentFilter !== accountDetails?.contentFilter.toString()
     ) {
       updateAccountDetails(accountDetailsId!, {
-        accountId,
+        accountId: state.accountId,
         bio,
         profilePicture,
         headerPicture,
@@ -372,7 +372,9 @@ const AccountPage = () => {
 
   return (
     <div className="user-page-container">
-      <Header />
+      <Header
+        accountId={state.accountId === undefined ? null : state.accountId}
+      />
       <div className="utility-buttons">
         <Button
           className="info-open-button"
@@ -437,7 +439,6 @@ const AccountPage = () => {
               <Button
                 className="logout-options"
                 onClick={() => {
-                  window.localStorage.clear();
                   navigate("/");
                 }}
               >
@@ -666,6 +667,7 @@ const AccountPage = () => {
           folderMangaData={folderMangaData}
           mangaEntriesToDelete={mangaEntriesToDelete}
           selectAll={selectAll}
+          accountId={state.accountId}
         />
       </div>
     </div>

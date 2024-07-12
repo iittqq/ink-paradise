@@ -6,9 +6,9 @@ import "./SimilarManga.css";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 import { useEffect, useState } from "react";
 
-type Props = { manga: Manga[] };
+type Props = { manga: Manga[]; accountId: number };
 const SimilarManga = (props: Props) => {
-  const { manga } = props;
+  const { manga, accountId } = props;
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const SimilarManga = (props: Props) => {
                 title={current.attributes.title.en}
                 coverUrl={coverUrls[current.id]}
                 updatedAt={current.attributes.updatedAt}
+                accountId={accountId}
               />
             </div>
             <div className="info-column">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
@@ -63,6 +63,7 @@ const IndividualManga = () => {
   const [previousLanguage, setPreviousLanguage] = useState<string>("en");
   const [previousId, setPreviousId] = useState<string>("");
   const [mangaAddedAlert, setMangaAddedAlert] = useState<boolean>(false);
+  const { state } = useLocation();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -142,7 +143,11 @@ const IndividualManga = () => {
   const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
     fetchSimilarManga(25, [category.id]).then((data: Manga[]) => {
       navigate("/mangaCoverList", {
-        state: { listType: category.attributes.name.en, manga: data },
+        state: {
+          listType: category.attributes.name.en,
+          manga: data,
+          accountId: state.accountId,
+        },
       });
     });
   };
@@ -153,11 +158,12 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
-    const account = window.localStorage.getItem("accountId");
-    if (account !== null) {
+    console.log(state);
+    if (state.accountId !== null) {
       getMangaFolders().then((response) => {
+        console.log(response);
         setFolders(
-          response.filter((folder) => folder.userId === parseInt(account)),
+          response.filter((folder) => folder.userId === state.accountId),
         );
       });
     }
@@ -243,7 +249,7 @@ const IndividualManga = () => {
     }
     setPreviousLanguage(selectedLanguage);
     if (!id || !coverUrl) {
-      navigate("/");
+      navigate("/", { state: { accountId: state.accountId } });
     } else {
       setPreviousId(id);
     }
@@ -259,7 +265,9 @@ const IndividualManga = () => {
   return (
     <div className="individual-page-container">
       <div className="header">
-        <Header />
+        <Header
+          accountId={state.accountId === undefined ? null : state.accountId}
+        />
       </div>
       <div>
         <MangaPageButtonHeader
@@ -318,6 +326,7 @@ const IndividualManga = () => {
               coverUrl={
                 coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""
               }
+              accountId={state.accountId === undefined ? null : state.accountId}
             />
             {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
               <Button
@@ -336,7 +345,12 @@ const IndividualManga = () => {
               Similar Manga
             </Typography>{" "}
             <div className="similar-manga">
-              <SimilarManga manga={similarManga} />
+              <SimilarManga
+                manga={similarManga}
+                accountId={
+                  state.accountId === undefined ? null : state.accountId
+                }
+              />
             </div>
           </div>
         </div>

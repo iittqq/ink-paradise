@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import "./Home.css";
 import {
@@ -25,6 +26,8 @@ const Home = () => {
     null,
   );
   const [openTags, setOpenTags] = useState(false);
+  const { state } = useLocation();
+  const accountId = state?.accountId ?? null;
 
   useEffect(() => {
     fetchPopularManga(10).then((data: Manga[]) => {
@@ -63,7 +66,7 @@ const Home = () => {
 
   return (
     <div>
-      <Header />
+      <Header accountId={accountId === null ? null : state.accountId} />
       <div className="home-title-and-dialog-button">
         <Typography className="popular-manga-header"> Popular Manga</Typography>
         <MangaTagsHome
@@ -78,13 +81,17 @@ const Home = () => {
           <StyleIcon />
         </Button>
       </div>
-      <TrendingMangaCarousel manga={popularManga} />
+      <TrendingMangaCarousel
+        manga={popularManga}
+        accountId={accountId === null ? null : state.accountId}
+      />
       <div className="bottom-home-page">
         <MangaCategoriesHomePage
           recentlyUpdatedManga={recentlyUpdatedManga}
           recentlyAddedManga={recentlyAddedManga}
           mangaFromTag={mangaFromTag ? mangaFromTag : undefined}
           tag={selectedTag !== null ? selectedTag : undefined}
+          accountId={accountId === null ? null : state.accountId}
         />
       </div>
     </div>

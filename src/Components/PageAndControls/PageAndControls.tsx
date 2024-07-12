@@ -19,6 +19,7 @@ type Props = {
   mangaName: string;
   scanlationGroup: string;
   readerMode: number;
+  accountId: number;
 };
 
 const PageAndControls = (props: Props) => {
@@ -31,6 +32,7 @@ const PageAndControls = (props: Props) => {
     mangaName,
     scanlationGroup,
     readerMode,
+    accountId,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
@@ -65,47 +67,44 @@ const PageAndControls = (props: Props) => {
   };
   const handleNextChapter = () => {
     setCurrentPage(0);
-    console.log(chapters);
     for (let index = 0; index < chapters.length; index++) {
       const current = chapters[index];
-      console.log(index);
-      console.log(current);
-
       if (
-        parseFloat(current.attributes.chapter) === parseFloat(currentChapter) &&
+        parseFloat(current.attributes.chapter) > parseFloat(currentChapter) &&
         chapters[index].attributes.externalUrl === null
       ) {
-        console.log("nav");
         handleClick(
           mangaId,
-          chapters[index + 1].id,
-          chapters[index + 1].attributes.title,
-          chapters[index + 1].attributes.volume,
-          chapters[index + 1].attributes.chapter,
+          chapters[index].id,
+          chapters[index].attributes.title,
+          chapters[index].attributes.volume,
+          chapters[index].attributes.chapter,
           mangaName,
           scanlationGroup,
         );
+        break;
       }
     }
   };
 
   const handlePreviousChapter = () => {
     setCurrentPage(0);
-    for (let index = 0; index < chapters.length; index++) {
+    for (let index = chapters.length - 1; index >= 0; index--) {
       const current = chapters[index];
       if (
-        parseFloat(current.attributes.chapter) === parseFloat(currentChapter) &&
+        parseFloat(current.attributes.chapter) < parseFloat(currentChapter) &&
         chapters[index].attributes.externalUrl === null
       ) {
         handleClick(
           mangaId,
-          chapters[index - 1].id,
-          chapters[index - 1].attributes.title,
-          chapters[index - 1].attributes.volume,
-          chapters[index - 1].attributes.chapter,
+          chapters[index].id,
+          chapters[index].attributes.title,
+          chapters[index].attributes.volume,
+          chapters[index].attributes.chapter,
           mangaName,
           scanlationGroup,
         );
+        break;
       }
     }
   };
@@ -180,15 +179,14 @@ const PageAndControls = (props: Props) => {
         chapterNumber: chapterNumber,
         mangaName: mangaName,
         scanlationGroup: scanlationGroup,
+        accountId: accountId,
       },
     });
   };
 
   useEffect(() => {
     setImageBlob({});
-    console.log(pages);
     handleLoadImage(hash, pages).catch((error) => {
-      console.error("Error loading image:", error);
       throw error;
     });
   }, [hash, pages]);

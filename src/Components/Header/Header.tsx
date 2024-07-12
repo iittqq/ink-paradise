@@ -13,7 +13,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { Account } from "../../interfaces/AccountInterfaces";
 import PetsIcon from "@mui/icons-material/Pets";
-const Header = () => {
+
+type Props = {
+  accountId: number | null;
+};
+const Header = (props: Props) => {
+  const { accountId } = props;
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
@@ -21,23 +26,18 @@ const Header = () => {
   const [showAlertAccount, setShowAlertAccount] = useState(false);
 
   const handleClickAccount = () => {
-    const account = window.localStorage.getItem("accountId");
-    const accountData = JSON.parse(account as string);
-    console.log(accountData);
-    console.log(account);
-    if (account !== null) {
-      fetchAccountData(accountData).then((data: Account | null) => {
-        if (data === null) {
-          window.localStorage.removeItem("accountId");
+    console.log(accountId);
+    if (accountId !== null) {
+      fetchAccountData(accountId).then((data: Account | null) => {
+        if (data !== null && data.verified === true) {
+          navigate("/account", {
+            state: { accountId: accountId, account: data },
+          });
         } else {
-          if (data.verified === true) {
-            navigate("/account", { state: { account: data } });
-          } else {
-            setShowAlert(true);
-            setTimeout(() => {
-              setShowAlert(false);
-            }, 3000);
-          }
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000);
         }
       });
     } else {
@@ -50,22 +50,17 @@ const Header = () => {
   };
 
   const handleClickLibrary = async () => {
-    const account = window.localStorage.getItem("accountId");
-    const accountData = JSON.parse(account as string);
-    console.log(accountData);
-    if (account !== null) {
-      fetchAccountData(accountData).then((data: Account | null) => {
-        if (data === null) {
-          window.localStorage.removeItem("accountId");
+    if (accountId !== null) {
+      fetchAccountData(accountId).then((data: Account | null) => {
+        if (data !== null && data.verified === true) {
+          navigate("/library", {
+            state: { accountId: accountId, account: data },
+          });
         } else {
-          if (data.verified === true) {
-            navigate("/library", { state: { account: data } });
-          } else {
-            setShowAlert(true);
-            setTimeout(() => {
-              setShowAlert(false);
-            }, 3000);
-          }
+          setShowAlert(true);
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000);
         }
       });
     } else {
@@ -76,7 +71,7 @@ const Header = () => {
     }
   };
   const handleClickLogo = async () => {
-    navigate("/");
+    navigate("/", { state: { accountId: accountId } });
   };
 
   const handleClick = async () =>
@@ -84,7 +79,11 @@ const Header = () => {
       ? null
       : fetchMangaByTitle(searchInput, 25).then((data: Manga[]) => {
           navigate("/mangaCoverList", {
-            state: { listType: "Search Results", manga: data },
+            state: {
+              listType: "Search Results",
+              manga: data,
+              accountId: accountId,
+            },
           });
         });
 

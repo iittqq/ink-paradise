@@ -17,6 +17,7 @@ type Props = {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
   coverUrl: string;
+  accountId: number;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -27,6 +28,7 @@ const MangaChapterList = (props: Props) => {
     insideReader,
     setOpen,
     coverUrl,
+    accountId,
   } = props;
   const [xsValue, setXsValue] = useState(6);
   const [userProgress, setUserProgress] = useState<number>(0);
@@ -55,6 +57,7 @@ const MangaChapterList = (props: Props) => {
           mangaName: mangaName,
           scanlationGroup: scanlationGroup,
           coverUrl: coverUrl,
+          accountId: accountId,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -70,6 +73,7 @@ const MangaChapterList = (props: Props) => {
           externalUrl: externalUrl,
           scanlationGroup: scanlationGroup,
           coverUrl: coverUrl,
+          accountId: accountId,
         },
       });
     }
@@ -82,9 +86,9 @@ const MangaChapterList = (props: Props) => {
       setXsValue(6);
     }
     setUserProgress(0);
-    const account = window.localStorage.getItem("accountId") as string | null;
-    if (account !== null) {
-      getReadingByUserId(parseInt(account)).then((data: Reading[]) => {
+    if (accountId !== null) {
+      getReadingByUserId(accountId).then((data: Reading[]) => {
+        console.log(data);
         data
           .filter((reading: Reading) => reading.mangaId === mangaId)
           .map((reading: Reading) => {

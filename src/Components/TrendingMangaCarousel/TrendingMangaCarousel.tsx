@@ -6,17 +6,19 @@ import { useHorizontalScroll } from "./HorizontalScroll";
 import { useEffect, useState } from "react";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 
-type Props = { manga: Manga[] };
+type Props = { manga: Manga[]; accountId: number | null };
 
 const TrendingMangaCarousel = (props: Props) => {
   const scrollRef = useHorizontalScroll();
-  const { manga } = props;
+  const { manga, accountId } = props;
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   const handleClick = (id: string, coverUrl: string) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+      state: { accountId: accountId === null ? null : accountId },
+    });
   };
 
   useEffect(() => {

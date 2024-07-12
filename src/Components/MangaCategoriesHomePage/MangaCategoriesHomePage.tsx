@@ -26,11 +26,18 @@ type Props = {
   recentlyAddedManga: Manga[];
   mangaFromTag?: Manga[];
   tag?: MangaTagsInterface;
+  accountId: number | null;
 };
 
 const MangaCategoriesHomePage = (props: Props) => {
   const navigate = useNavigate();
-  const { recentlyUpdatedManga, recentlyAddedManga, mangaFromTag, tag } = props;
+  const {
+    recentlyUpdatedManga,
+    recentlyAddedManga,
+    mangaFromTag,
+    tag,
+    accountId,
+  } = props;
   const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{
     [key: string]: string;
   }>({});
@@ -43,11 +50,19 @@ const MangaCategoriesHomePage = (props: Props) => {
 
   const handleClick = (id: string, coverUrl: string) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`);
+    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+      state: { accountId: accountId === null ? null : accountId },
+    });
   };
 
   const handleClickedShowMore = (title: string, manga: Manga[]) => {
-    navigate("/mangaCoverList", { state: { listType: title, manga: manga } });
+    navigate("/mangaCoverList", {
+      state: {
+        listType: title,
+        manga: manga,
+        accountId: accountId === null ? null : accountId,
+      },
+    });
   };
 
   useEffect(() => {

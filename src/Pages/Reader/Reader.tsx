@@ -80,19 +80,20 @@ const Reader = () => {
   };
 
   const handleEditAccountInfo = () => {
-    const account = window.localStorage.getItem("accountId") as string | null;
-    if (account !== null) {
-      if (account !== null) {
-        fetchAccountDetails(parseInt(account)).then((data: AccountDetails) => {
-          updateAccountDetails(parseInt(account), {
-            accountId: data.accountId,
-            bio: data.bio,
-            profilePicture: data.profilePicture,
-            headerPicture: data.headerPicture,
-            contentFilter: data.contentFilter,
-            readerMode: readerInteger,
-          });
-        });
+    if (state.accountId !== null) {
+      if (state.accountId !== null) {
+        fetchAccountDetails(parseInt(state.accountId)).then(
+          (data: AccountDetails) => {
+            updateAccountDetails(parseInt(state.accountId), {
+              accountId: data.accountId,
+              bio: data.bio,
+              profilePicture: data.profilePicture,
+              headerPicture: data.headerPicture,
+              contentFilter: data.contentFilter,
+              readerMode: readerInteger,
+            });
+          },
+        );
       }
     }
     setOpenSettings(false);
@@ -116,11 +117,10 @@ const Reader = () => {
     const date = dayjs();
     console.log(state);
 
-    const account = window.localStorage.getItem("accountId") as string | null;
     let readingExists = false;
     let bookmarkExists = false;
-    if (account !== null) {
-      getReadingByUserId(parseInt(account)).then((data: Reading[]) => {
+    if (state.accountId !== null) {
+      getReadingByUserId(parseInt(state.accountId)).then((data: Reading[]) => {
         data.forEach((reading: Reading) => {
           if (reading.mangaId === state.mangaId) {
             updateReading({
@@ -135,15 +135,11 @@ const Reader = () => {
           }
         });
         if (readingExists === false) {
-          const account = window.localStorage.getItem("accountId") as
-            | string
-            | null;
-
-          if (account !== null) {
+          if (state.accountId !== null) {
             const simpleMangaName = state.mangaName.replace(/[^a-zA-Z]/g, " ");
             console.log(simpleMangaName);
             addReading({
-              userId: parseInt(account),
+              userId: parseInt(state.accountId),
               mangaId: state.mangaId,
               chapter: state.chapterNumber,
               mangaName: simpleMangaName,
@@ -152,37 +148,39 @@ const Reader = () => {
           }
         }
       });
-      getBookmarksByUserId(parseInt(account)).then((data: Bookmark[]) => {
-        console.log(data);
-        console.log(state);
-        data.forEach((bookmark: Bookmark) => {
-          if (
-            bookmark.mangaId === state.mangaId &&
-            bookmark.continueReading === true
-          ) {
-            updateBookmark({
-              id: bookmark.id,
-              userId: parseInt(account),
-              mangaId: bookmark.mangaId,
-              mangaName: bookmark.mangaName,
-              chapterNumber: parseFloat(state.chapterNumber),
+      getBookmarksByUserId(parseInt(state.accountId)).then(
+        (data: Bookmark[]) => {
+          console.log(data);
+          console.log(state);
+          data.forEach((bookmark: Bookmark) => {
+            if (
+              bookmark.mangaId === state.mangaId &&
+              bookmark.continueReading === true
+            ) {
+              updateBookmark({
+                id: bookmark.id,
+                userId: parseInt(state.accountId),
+                mangaId: bookmark.mangaId,
+                mangaName: bookmark.mangaName,
+                chapterNumber: parseFloat(state.chapterNumber),
+                chapterId: state.chapterId,
+                continueReading: true,
+              });
+              bookmarkExists = true;
+            }
+          });
+          if (bookmarkExists === false) {
+            addBookmark({
+              userId: parseInt(state.accountId),
+              mangaId: state.mangaId,
+              mangaName: state.mangaName,
+              chapterNumber: state.chapterNumber,
               chapterId: state.chapterId,
               continueReading: true,
             });
-            bookmarkExists = true;
           }
-        });
-        if (bookmarkExists === false) {
-          addBookmark({
-            userId: parseInt(account),
-            mangaId: state.mangaId,
-            mangaName: state.mangaName,
-            chapterNumber: state.chapterNumber,
-            chapterId: state.chapterId,
-            continueReading: true,
-          });
-        }
-      });
+        },
+      );
     }
     fetchMangaFeed(state.mangaId, 100, 0, order, selectedLanguage).then(
       (data: MangaFeedScanlationGroup[]) => {
@@ -195,7 +193,9 @@ const Reader = () => {
   return (
     <div className="reader-page">
       <div className="header">
-        <Header />
+        <Header
+          accountId={state.accountId === undefined ? null : state.accountId}
+        />
       </div>
       <div className="settings-icon">
         <Button
@@ -309,6 +309,7 @@ const Reader = () => {
               insideReader={true}
               setOpen={setOpen}
               coverUrl={state.coverUrl}
+              accountId={state.accountId === undefined ? null : state.accountId}
             />
           </Collapse>
         </List>
@@ -323,6 +324,7 @@ const Reader = () => {
           mangaName={state.mangaName}
           scanlationGroup={state.scanlationGroup}
           readerMode={readerInteger}
+          accountId={state.accountId === undefined ? null : state.accountId}
         />
       )}
     </div>
