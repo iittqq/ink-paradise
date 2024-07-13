@@ -340,7 +340,7 @@ const Login = () => {
           </Button>
         </Card>
       ) : passwordReset === true ? (
-        <Card className="login-card" elevation={5}>
+        <Card className="password-reset-card" elevation={5}>
           <div className="header-back-button-container">
             <Button
               onClick={() => setPasswordReset(false)}
