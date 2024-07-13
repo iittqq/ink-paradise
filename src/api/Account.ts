@@ -74,10 +74,50 @@ async function updateAccountPassword(
   }
 }
 
+async function resetPassword(email: string): Promise<void> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/accounts/reset/password/${email}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function getAccountByEmail(email: string): Promise<Account> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/accounts/email/${email}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function updateAccountDetails(accountDetails: Account): Promise<Account> {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/v1/accounts/update/${accountDetails.id}`,
+      accountDetails,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
 export {
   fetchAccountData,
   createAccount,
   login,
   updateAccountUsername,
   updateAccountPassword,
+  resetPassword,
+  getAccountByEmail,
+  updateAccountDetails,
 };

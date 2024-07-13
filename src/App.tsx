@@ -7,6 +7,7 @@ import MangaCoverList from "./Pages/MangaCoverList/MangaCoverList";
 import Library from "./Pages/Library/Library";
 import AccountPage from "./Pages/AccountPage/AccountPage";
 import Login from "./Pages/Login/Login";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
 //#121212
 
@@ -20,6 +21,7 @@ function App() {
             path="/individualView/:id/:coverUrl"
             element={<IndividualManga />}
           />
+          <Route path="/reset/password/:email" element={<ResetPassword />} />
           <Route path="/mangaCoverList" element={<MangaCoverList />} />
           <Route path="/reader" element={<Reader />} />
           <Route path="/library" element={<Library />} />

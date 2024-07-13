@@ -2,7 +2,7 @@ import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, login } from "../../api/Account";
+import { createAccount, login, resetPassword } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
@@ -31,6 +31,7 @@ const Login = () => {
   const [togglePasswordVisibility, setTogglePasswordVisibility] =
     useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordReset, setPasswordReset] = useState<boolean>(false);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -112,6 +113,12 @@ const Login = () => {
           setAttemptedLogin(true);
         }
       });
+    }
+  };
+
+  const handleRecoverPassword = () => {
+    if (email !== "") {
+      resetPassword(email);
     }
   };
 
@@ -332,6 +339,40 @@ const Login = () => {
             Register
           </Button>
         </Card>
+      ) : passwordReset === true ? (
+        <Card className="login-card" elevation={5}>
+          <div className="header-back-button-container">
+            <Button
+              onClick={() => setPasswordReset(false)}
+              className="back-button"
+            >
+              <ArrowBackIcon />
+            </Button>
+            <Typography className="register-header">Reset</Typography>
+          </div>
+          <div className="login-section-container">
+            <Typography className="login-text-field-headers">Email</Typography>
+            <input
+              type="email"
+              className="login-input-fields"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </div>
+          <div className="register-button-and-message-container">
+            <Button
+              className="register-button"
+              onClick={() => {
+                handleRecoverPassword();
+              }}
+            >
+              <Typography fontFamily="Figtree" textTransform="none">
+                Recover Password
+              </Typography>
+            </Button>
+          </div>
+        </Card>
       ) : (
         <Card className="login-card" elevation={5}>
           <Typography className="login-header">Login</Typography>
@@ -364,7 +405,12 @@ const Login = () => {
                 Invalid Credentials. Retry
               </Typography>
             ) : null}
-            <Button className="forgot-password-button">
+            <Button
+              className="forgot-password-button"
+              onClick={() => {
+                setPasswordReset(true);
+              }}
+            >
               <Typography
                 textTransform="none"
                 fontSize={12}
