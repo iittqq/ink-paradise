@@ -15,6 +15,8 @@ import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
 import { Button, Typography } from "@mui/material";
 import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
 import StyleIcon from "@mui/icons-material/Style";
+import InfoIcon from "@mui/icons-material/Info";
+import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 
 const Home = () => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
@@ -26,6 +28,7 @@ const Home = () => {
     null,
   );
   const [openTags, setOpenTags] = useState(false);
+  const [openInfo, setOpenInfo] = useState(false);
   const { state } = useLocation();
   const accountId = state?.accountId ?? null;
 
@@ -64,11 +67,24 @@ const Home = () => {
     setOpenTags(false);
   };
 
+  const handleClickedOpenInfo = () => {
+    setOpenInfo(true);
+  };
+
+  const handleInfoDialogClose = () => {
+    setOpenInfo(false);
+  };
+
   return (
     <div>
       <Header accountId={accountId === null ? null : state.accountId} />
       <div className="home-title-and-dialog-button">
         <Typography className="popular-manga-header"> Popular Manga</Typography>
+        <InfoButtonHome
+          openInfo={openInfo}
+          handleInfoDialogClose={handleInfoDialogClose}
+        />
+
         <MangaTagsHome
           mangaTags={mangaTags}
           handleClickedTag={handleClickedTag}
@@ -77,9 +93,15 @@ const Home = () => {
           openTags={openTags}
           handleTagsDialogClose={handleTagsDialogClose}
         />
-        <Button onClick={handleClickedOpenTags} className="tags-button">
-          <StyleIcon />
-        </Button>
+
+        <div>
+          <Button onClick={handleClickedOpenInfo} className="tags-button">
+            <InfoIcon />
+          </Button>
+          <Button onClick={handleClickedOpenTags} className="tags-button">
+            <StyleIcon />
+          </Button>
+        </div>
       </div>
       <TrendingMangaCarousel
         manga={popularManga}
