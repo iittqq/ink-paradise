@@ -99,6 +99,10 @@ const BookmarksList = (props: Props) => {
 
   return (
     <div>
+      <Typography fontFamily={"Figtree"} sx={{ textAlign: "center" }}>
+        {" "}
+        Continue Reading
+      </Typography>
       <Grid
         container
         direction={"row"}
@@ -131,52 +135,59 @@ const BookmarksList = (props: Props) => {
                   >
                     {manga[0].attributes.contentRating}
                   </Typography>
-                  {manga.map((manga: Manga) => (
-                    <Grid item>
-                      <div className="chapter-number-overlay">
-                        <div className="bookmark-details-column">
-                          <Typography>{manga.chapterNumber}</Typography>
+                  {manga.map((manga: Manga) =>
+                    manga.bookmarkContinueReading === true ? (
+                      <Grid item>
+                        <div className="chapter-number-overlay">
+                          <div className="bookmark-details-column">
+                            <Typography
+                              sx={{
+                                fontSize: { xs: "14px", lg: "15px" },
+                                fontFamily: "Figtree",
+                              }}
+                            >
+                              Chapter: {manga.chapterNumber}
+                            </Typography>
+                          </div>
                         </div>
-                      </div>
-                      {manga.bookmarkContinueReading === false ? (
-                        <div className="page-number-overlay">
-                          <Typography>{manga.bookmarkPageNumber}</Typography>
-                        </div>
-                      ) : null}
-                      <Button
-                        className="manga-entry-overlay-button"
-                        onClick={() => {
-                          checked
-                            ? handleBookmarkEntryClick(manga.bookmarkId!)
-                            : handleBookmarkClick(
-                                manga.id,
-                                manga.chapterId!,
-                                manga.chapterNumber!,
-                                manga.attributes.title.en,
-                                bookmarkCoverUrls[manga.id]!,
-                                manga.index!,
-                                manga.bookmarkPageNumber! === 0
-                                  ? null
-                                  : manga.bookmarkPageNumber!,
-                              );
-                        }}
-                        sx={{
-                          opacity: bookmarksToDelete.includes(manga.bookmarkId!)
-                            ? 0.2
-                            : 1,
-                        }}
-                      >
-                        <MangaClickable
-                          id={manga.id}
-                          title={manga.attributes.title.en}
-                          coverUrl={bookmarkCoverUrls[manga.id]}
-                          updatedAt={manga.attributes.updatedAt}
-                          disabled={true}
-                          accountId={accountId}
-                        />
-                      </Button>
-                    </Grid>
-                  ))}
+
+                        <Button
+                          className="manga-entry-overlay-button"
+                          onClick={() => {
+                            checked
+                              ? handleBookmarkEntryClick(manga.bookmarkId!)
+                              : handleBookmarkClick(
+                                  manga.id,
+                                  manga.chapterId!,
+                                  manga.chapterNumber!,
+                                  manga.attributes.title.en,
+                                  bookmarkCoverUrls[manga.id]!,
+                                  manga.index!,
+                                  manga.bookmarkPageNumber! === 0
+                                    ? null
+                                    : manga.bookmarkPageNumber!,
+                                );
+                          }}
+                          sx={{
+                            opacity: bookmarksToDelete.includes(
+                              manga.bookmarkId!,
+                            )
+                              ? 0.2
+                              : 1,
+                          }}
+                        >
+                          <MangaClickable
+                            id={manga.id}
+                            title={manga.attributes.title.en}
+                            coverUrl={bookmarkCoverUrls[manga.id]}
+                            updatedAt={manga.attributes.updatedAt}
+                            disabled={true}
+                            accountId={accountId}
+                          />
+                        </Button>
+                      </Grid>
+                    ) : null,
+                  )}
                 </>
               ))
             : groupedBookmarks.map((manga: Manga[]) => (
@@ -195,100 +206,350 @@ const BookmarksList = (props: Props) => {
                       ? manga[0].attributes.publicationDemographic
                       : "unknown"}
                   </Typography>
-                  {manga.map((manga: Manga) => (
-                    <Grid item>
-                      <div className="chapter-number-overlay">
-                        <div className="bookmark-details-column">
-                          <Typography>{manga.chapterNumber}</Typography>
+                  {manga.map((manga: Manga) =>
+                    manga.bookmarkContinueReading === true ? (
+                      <Grid item>
+                        <div className="chapter-number-overlay">
+                          <div className="bookmark-details-column">
+                            <Typography
+                              sx={{
+                                fontSize: { xs: "14px", lg: "15px" },
+                                fontFamily: "Figtree",
+                              }}
+                            >
+                              Chapter: {manga.chapterNumber}
+                            </Typography>
+                          </div>
                         </div>
-                      </div>
-                      {manga.bookmarkContinueReading === false ? (
-                        <div className="page-number-overlay">
-                          <Typography>{manga.bookmarkPageNumber}</Typography>
-                        </div>
-                      ) : null}
-                      <Button
-                        className="manga-entry-overlay-button"
-                        onClick={() => {
-                          checked
-                            ? handleBookmarkEntryClick(manga.bookmarkId!)
-                            : handleBookmarkClick(
-                                manga.id,
-                                manga.chapterId!,
-                                manga.chapterNumber!,
-                                manga.attributes.title.en,
-                                bookmarkCoverUrls[manga.id]!,
-                                manga.index!,
-                                manga.bookmarkPageNumber! === 0
-                                  ? null
-                                  : manga.bookmarkPageNumber!,
-                              );
-                        }}
-                        sx={{
-                          opacity: bookmarksToDelete.includes(manga.bookmarkId!)
-                            ? 0.2
-                            : 1,
-                        }}
-                      >
-                        <MangaClickable
-                          id={manga.id}
-                          title={manga.attributes.title.en}
-                          coverUrl={bookmarkCoverUrls[manga.id]}
-                          updatedAt={manga.attributes.updatedAt}
-                          disabled={true}
-                          accountId={accountId}
-                        />
-                      </Button>
-                    </Grid>
-                  ))}
+
+                        <Button
+                          className="manga-entry-overlay-button"
+                          onClick={() => {
+                            checked
+                              ? handleBookmarkEntryClick(manga.bookmarkId!)
+                              : handleBookmarkClick(
+                                  manga.id,
+                                  manga.chapterId!,
+                                  manga.chapterNumber!,
+                                  manga.attributes.title.en,
+                                  bookmarkCoverUrls[manga.id]!,
+                                  manga.index!,
+                                  manga.bookmarkPageNumber! === 0
+                                    ? null
+                                    : manga.bookmarkPageNumber!,
+                                );
+                          }}
+                          sx={{
+                            opacity: bookmarksToDelete.includes(
+                              manga.bookmarkId!,
+                            )
+                              ? 0.2
+                              : 1,
+                          }}
+                        >
+                          <MangaClickable
+                            id={manga.id}
+                            title={manga.attributes.title.en}
+                            coverUrl={bookmarkCoverUrls[manga.id]}
+                            updatedAt={manga.attributes.updatedAt}
+                            disabled={true}
+                            accountId={accountId}
+                          />
+                        </Button>
+                      </Grid>
+                    ) : null,
+                  )}
                 </>
               ))
-          : bookmarks.map((manga: Manga) => (
-              <Grid item>
-                <div className="chapter-number-overlay">
-                  <div className="bookmark-details-column">
-                    <Typography>{manga.chapterNumber}</Typography>
+          : bookmarks.map((manga: Manga) =>
+              manga.bookmarkContinueReading === true ? (
+                <Grid item>
+                  <div className="chapter-number-overlay">
+                    <div className="bookmark-details-column">
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "14px", lg: "15px" },
+                          fontFamily: "Figtree",
+                        }}
+                      >
+                        Chapter: {manga.chapterNumber}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
-                {manga.bookmarkContinueReading === false ? (
-                  <div className="page-number-overlay">
-                    <Typography>{manga.bookmarkPageNumber}</Typography>
+                  <Button
+                    className="manga-entry-overlay-button"
+                    onClick={() => {
+                      checked
+                        ? handleBookmarkEntryClick(manga.bookmarkId!)
+                        : handleBookmarkClick(
+                            manga.id,
+                            manga.chapterId!,
+                            manga.chapterNumber!,
+                            manga.attributes.title.en,
+                            bookmarkCoverUrls[manga.id]!,
+                            manga.index!,
+                            manga.bookmarkPageNumber! === 0
+                              ? null
+                              : manga.bookmarkPageNumber!,
+                          );
+                    }}
+                    sx={{
+                      opacity: bookmarksToDelete.includes(manga.bookmarkId!)
+                        ? 0.2
+                        : 1,
+                    }}
+                  >
+                    <MangaClickable
+                      id={manga.id}
+                      title={manga.attributes.title.en}
+                      coverUrl={bookmarkCoverUrls[manga.id]}
+                      updatedAt={manga.attributes.updatedAt}
+                      disabled={true}
+                      accountId={accountId}
+                    />
+                  </Button>
+                </Grid>
+              ) : null,
+            )}
+      </Grid>
+      {contentFilter === "Continue Reading" ? null : (
+        <Typography
+          fontFamily={"Figtree"}
+          sx={{ marginTop: "20px", textAlign: "center" }}
+        >
+          Custom Bookmarks
+        </Typography>
+      )}
+      <Grid
+        container
+        direction={"row"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        {groupedBookmarks !== null
+          ? contentFilter === "Content Rating"
+            ? groupedBookmarks.map((manga: Manga[]) => (
+                <>
+                  <Typography
+                    fontFamily={"Figtree"}
+                    sx={{
+                      marginTop: "20px",
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {manga[0].attributes.contentRating}
+                  </Typography>
+                  {manga.map((manga: Manga) =>
+                    manga.bookmarkContinueReading === false ? (
+                      <Grid item>
+                        <div className="chapter-number-overlay">
+                          <div className="bookmark-details-column">
+                            <Typography
+                              sx={{
+                                fontSize: { xs: "14px", lg: "15px" },
+                                fontFamily: "Figtree",
+                              }}
+                            >
+                              Chapter: {manga.chapterNumber}
+                            </Typography>
+
+                            <div className="page-number-overlay">
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "14px", lg: "15px" },
+                                  fontFamily: "Figtree",
+                                }}
+                              >
+                                Page: {manga.bookmarkPageNumber}
+                              </Typography>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Button
+                          className="manga-entry-overlay-button"
+                          onClick={() => {
+                            checked
+                              ? handleBookmarkEntryClick(manga.bookmarkId!)
+                              : handleBookmarkClick(
+                                  manga.id,
+                                  manga.chapterId!,
+                                  manga.chapterNumber!,
+                                  manga.attributes.title.en,
+                                  bookmarkCoverUrls[manga.id]!,
+                                  manga.index!,
+                                  manga.bookmarkPageNumber! === 0
+                                    ? null
+                                    : manga.bookmarkPageNumber!,
+                                );
+                          }}
+                          sx={{
+                            opacity: bookmarksToDelete.includes(
+                              manga.bookmarkId!,
+                            )
+                              ? 0.2
+                              : 1,
+                          }}
+                        >
+                          <MangaClickable
+                            id={manga.id}
+                            title={manga.attributes.title.en}
+                            coverUrl={bookmarkCoverUrls[manga.id]}
+                            updatedAt={manga.attributes.updatedAt}
+                            disabled={true}
+                            accountId={accountId}
+                          />
+                        </Button>
+                      </Grid>
+                    ) : null,
+                  )}
+                </>
+              ))
+            : groupedBookmarks.map((manga: Manga[]) => (
+                <>
+                  <Typography
+                    fontFamily={"Figtree"}
+                    sx={{
+                      marginTop: "20px",
+                      width: "100%",
+                      justifyContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {manga[0].attributes.publicationDemographic !== null
+                      ? manga[0].attributes.publicationDemographic
+                      : "unknown"}
+                  </Typography>
+                  {manga.map((manga: Manga) =>
+                    manga.bookmarkContinueReading === false ? (
+                      <Grid item>
+                        <div className="chapter-number-overlay">
+                          <div className="bookmark-details-column">
+                            <Typography
+                              sx={{
+                                fontSize: { xs: "14px", lg: "15px" },
+                                fontFamily: "Figtree",
+                              }}
+                            >
+                              Chapter: {manga.chapterNumber}
+                            </Typography>
+
+                            <div className="page-number-overlay">
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "14px", lg: "15px" },
+                                  fontFamily: "Figtree",
+                                }}
+                              >
+                                Page: {manga.bookmarkPageNumber}
+                              </Typography>
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          className="manga-entry-overlay-button"
+                          onClick={() => {
+                            checked
+                              ? handleBookmarkEntryClick(manga.bookmarkId!)
+                              : handleBookmarkClick(
+                                  manga.id,
+                                  manga.chapterId!,
+                                  manga.chapterNumber!,
+                                  manga.attributes.title.en,
+                                  bookmarkCoverUrls[manga.id]!,
+                                  manga.index!,
+                                  manga.bookmarkPageNumber! === 0
+                                    ? null
+                                    : manga.bookmarkPageNumber!,
+                                );
+                          }}
+                          sx={{
+                            opacity: bookmarksToDelete.includes(
+                              manga.bookmarkId!,
+                            )
+                              ? 0.2
+                              : 1,
+                          }}
+                        >
+                          <MangaClickable
+                            id={manga.id}
+                            title={manga.attributes.title.en}
+                            coverUrl={bookmarkCoverUrls[manga.id]}
+                            updatedAt={manga.attributes.updatedAt}
+                            disabled={true}
+                            accountId={accountId}
+                          />
+                        </Button>
+                      </Grid>
+                    ) : null,
+                  )}
+                </>
+              ))
+          : bookmarks.map((manga: Manga) =>
+              manga.bookmarkContinueReading === false ? (
+                <Grid item>
+                  <div className="chapter-number-overlay">
+                    <div className="bookmark-details-column">
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "14px", lg: "15px" },
+                          fontFamily: "Figtree",
+                        }}
+                      >
+                        Chapter: {manga.chapterNumber}
+                      </Typography>
+
+                      <div className="page-number-overlay">
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "14px", lg: "15px" },
+                            fontFamily: "Figtree",
+                          }}
+                        >
+                          Page: {manga.bookmarkPageNumber}
+                        </Typography>{" "}
+                      </div>
+                    </div>
                   </div>
-                ) : null}
-                <Button
-                  className="manga-entry-overlay-button"
-                  onClick={() => {
-                    checked
-                      ? handleBookmarkEntryClick(manga.bookmarkId!)
-                      : handleBookmarkClick(
-                          manga.id,
-                          manga.chapterId!,
-                          manga.chapterNumber!,
-                          manga.attributes.title.en,
-                          bookmarkCoverUrls[manga.id]!,
-                          manga.index!,
-                          manga.bookmarkPageNumber! === 0
-                            ? null
-                            : manga.bookmarkPageNumber!,
-                        );
-                  }}
-                  sx={{
-                    opacity: bookmarksToDelete.includes(manga.bookmarkId!)
-                      ? 0.2
-                      : 1,
-                  }}
-                >
-                  <MangaClickable
-                    id={manga.id}
-                    title={manga.attributes.title.en}
-                    coverUrl={bookmarkCoverUrls[manga.id]}
-                    updatedAt={manga.attributes.updatedAt}
-                    disabled={true}
-                    accountId={accountId}
-                  />
-                </Button>
-              </Grid>
-            ))}
+                  <Button
+                    className="manga-entry-overlay-button"
+                    onClick={() => {
+                      checked
+                        ? handleBookmarkEntryClick(manga.bookmarkId!)
+                        : handleBookmarkClick(
+                            manga.id,
+                            manga.chapterId!,
+                            manga.chapterNumber!,
+                            manga.attributes.title.en,
+                            bookmarkCoverUrls[manga.id]!,
+                            manga.index!,
+                            manga.bookmarkPageNumber! === 0
+                              ? null
+                              : manga.bookmarkPageNumber!,
+                          );
+                    }}
+                    sx={{
+                      opacity: bookmarksToDelete.includes(manga.bookmarkId!)
+                        ? 0.2
+                        : 1,
+                    }}
+                  >
+                    <MangaClickable
+                      id={manga.id}
+                      title={manga.attributes.title.en}
+                      coverUrl={bookmarkCoverUrls[manga.id]}
+                      updatedAt={manga.attributes.updatedAt}
+                      disabled={true}
+                      accountId={accountId}
+                    />
+                  </Button>
+                </Grid>
+              ) : null,
+            )}
       </Grid>
     </div>
   );

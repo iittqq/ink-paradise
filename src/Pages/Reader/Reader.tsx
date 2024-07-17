@@ -174,7 +174,7 @@ const Reader = () => {
       getBookmarksByUserId(parseInt(state.accountId)).then(
         (data: Bookmark[]) => {
           data.forEach((bookmark: Bookmark) => {
-            if (state.pageNumber !== null || state.pageNumber !== undefined) {
+            if (state.pageNumber === null || state.pageNumber === undefined) {
               if (
                 bookmark.mangaId === state.mangaId &&
                 bookmark.continueReading === true
