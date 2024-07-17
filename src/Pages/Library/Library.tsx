@@ -39,6 +39,9 @@ const Library = () => {
   const [bookmarksVisible, setBookmarksVisible] = useState<boolean>(false);
   const [bookmarks, setBookmarks] = useState<Manga[]>([]);
   const [bookmarksToDelete, setBookmarksToDelete] = useState<number[]>([]);
+  const [groupedBookmarks, setGroupedBookmarks] = useState<Manga[][] | null>(
+    null,
+  );
   const { state } = useLocation();
 
   const searchFavorites = async (searchValue: string) => {
@@ -65,7 +68,6 @@ const Library = () => {
 
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
-    setGroupedLibrary(null);
 
     getReadingByUserId(userId).then((data: Reading[]) => {
       if (contentFilter === "Continue Reading") {
@@ -135,67 +137,40 @@ const Library = () => {
                 );
             }
           } else if (contentFilter === "Content Rating") {
+            const typedData = Object.values(
+              data.reduce(
+                (accumulator: { [key: string]: Manga[] }, current) => {
+                  const currentContentRating = current.attributes.contentRating;
+                  (accumulator[currentContentRating] =
+                    accumulator[currentContentRating as keyof Manga] ||
+                    []).push(current);
+                  return accumulator;
+                },
+                {},
+              ),
+            );
             if (ascending) {
-              const typedData = Object.values(
-                data.reduce(
-                  (accumulator: { [key: string]: Manga[] }, current) => {
-                    const currentContentRating =
-                      current.attributes.contentRating;
-                    (accumulator[currentContentRating] =
-                      accumulator[currentContentRating as keyof Manga] ||
-                      []).push(current);
-                    return accumulator;
-                  },
-                  {},
-                ),
-              );
               setGroupedLibrary(typedData);
             } else {
-              const typedData = Object.values(
-                data.reduce(
-                  (accumulator: { [key: string]: Manga[] }, current) => {
-                    const currentContentRating =
-                      current.attributes.contentRating;
-                    (accumulator[currentContentRating] =
-                      accumulator[currentContentRating as keyof Manga] ||
-                      []).push(current);
-                    return accumulator;
-                  },
-                  {},
-                ),
-              );
               setGroupedLibrary(typedData.reverse());
             }
           } else if (contentFilter === "Publication Demographic") {
+            const typedData = Object.values(
+              data.reduce(
+                (accumulator: { [key: string]: Manga[] }, current) => {
+                  const currentContentRating =
+                    current.attributes.publicationDemographic;
+                  (accumulator[currentContentRating] =
+                    accumulator[currentContentRating as keyof Manga] ||
+                    []).push(current);
+                  return accumulator;
+                },
+                {},
+              ),
+            );
             if (ascending) {
-              const typedData = Object.values(
-                data.reduce(
-                  (accumulator: { [key: string]: Manga[] }, current) => {
-                    const currentContentRating =
-                      current.attributes.publicationDemographic;
-                    (accumulator[currentContentRating] =
-                      accumulator[currentContentRating as keyof Manga] ||
-                      []).push(current);
-                    return accumulator;
-                  },
-                  {},
-                ),
-              );
               setGroupedLibrary(typedData);
             } else {
-              const typedData = Object.values(
-                data.reduce(
-                  (accumulator: { [key: string]: Manga[] }, current) => {
-                    const currentContentRating =
-                      current.attributes.publicationDemographic;
-                    (accumulator[currentContentRating] =
-                      accumulator[currentContentRating as keyof Manga] ||
-                      []).push(current);
-                    return accumulator;
-                  },
-                  {},
-                ),
-              );
               setGroupedLibrary(typedData.reverse());
             }
           }
@@ -217,6 +192,10 @@ const Library = () => {
 
   const handleContentFilter = (selection: string) => {
     setContentFilter(selection);
+    setLibrary([]);
+    setBookmarks([]);
+    setGroupedLibrary(null);
+    setGroupedBookmarks(null);
   };
 
   const toggleLibraryEntries = (value: boolean) => {
@@ -315,11 +294,117 @@ const Library = () => {
             chapterId: bookmark.chapterId,
             bookmarkId: bookmark.id,
             index: bookmark.chapterIndex,
-          };
+            bookmarkPageNumber: bookmark.pageNumber,
+            bookmarkContinueReading: bookmark.continueReading,
+          } as Manga;
         });
       });
 
-      const enrichedBookmarks = await Promise.all(promises);
+      let enrichedBookmarks = await Promise.all(promises);
+      if (contentFilter === "Continue Reading") {
+        if (ascending) {
+          enrichedBookmarks = enrichedBookmarks.filter(
+            (manga: Manga) => manga.bookmarkContinueReading === true,
+          );
+        } else {
+          enrichedBookmarks = enrichedBookmarks
+            .filter((manga: Manga) => manga.bookmarkContinueReading === true)
+            .reverse();
+        }
+      } else if (contentFilter === "Alphabetical Order") {
+        if (ascending) {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) =>
+              a.attributes.title.en.localeCompare(b.attributes.title.en),
+            );
+        } else {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort(
+              (a, b) =>
+                -1 * a.attributes.title.en.localeCompare(b.attributes.title.en),
+            );
+        }
+      } else if (contentFilter === "Recently Updated") {
+        if (ascending) {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) =>
+              a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+            );
+        } else {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort(
+              (a, b) =>
+                -1 *
+                a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+            );
+        }
+      } else if (contentFilter === "Release Date") {
+        if (ascending) {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) => (a.attributes.year < b.attributes.year ? 1 : -1));
+        } else {
+          enrichedBookmarks = enrichedBookmarks
+            .map(function (e) {
+              return e;
+            })
+            .sort((a, b) => (a.attributes.year > b.attributes.year ? 1 : -1));
+        }
+      } else if (contentFilter === "Content Rating") {
+        const typedData = Object.values(
+          enrichedBookmarks.reduce(
+            (accumulator: { [key: string]: Manga[] }, current) => {
+              const currentContentRating = current.attributes.contentRating;
+              (accumulator[currentContentRating] =
+                accumulator[currentContentRating as keyof Manga] || []).push(
+                current,
+              );
+              return accumulator;
+            },
+            {},
+          ),
+        );
+        if (ascending) {
+          setGroupedBookmarks(typedData);
+        } else {
+          setGroupedBookmarks(typedData.reverse());
+        }
+      } else if (contentFilter === "Publication Demographic") {
+        const typedData = Object.values(
+          enrichedBookmarks.reduce(
+            (accumulator: { [key: string]: Manga[] }, current) => {
+              const currentContentRating =
+                current.attributes.publicationDemographic;
+              (accumulator[currentContentRating] =
+                accumulator[currentContentRating as keyof Manga] || []).push(
+                current,
+              );
+              return accumulator;
+            },
+            {},
+          ),
+        );
+        if (ascending) {
+          setGroupedBookmarks(typedData);
+        } else {
+          setGroupedBookmarks(typedData.reverse());
+        }
+      }
+
       console.log(enrichedBookmarks);
       setBookmarks(enrichedBookmarks);
       setLoading(false);
@@ -358,11 +443,12 @@ const Library = () => {
           bookmarksVisible ? toggleSelectAllBookmarks : toggleSelectAll
         }
         selectAll={selectAll}
-        header={bookmarksVisible ? "Bookmarks" : contentFilter}
+        header={bookmarksVisible ? "Bookmarks" : "Library"}
         libraryEntriesToDelete={libraryEntriesToDelete}
         bookmarksToDelete={bookmarksToDelete}
         handleBookmarkClick={handleBookmarkClick}
         handleDeleteBookmarks={handleDeleteBookmarks}
+        contentFilter={contentFilter}
       />
       {loading === true ? (
         <div className="loading-indicator-container">
@@ -375,6 +461,8 @@ const Library = () => {
           handleBookmarkEntryClick={handleBookmarkEntryClick}
           checked={checked}
           accountId={state.accountId === undefined ? null : state.accountId}
+          groupedBookmarks={groupedBookmarks}
+          contentFilter={contentFilter}
         />
       ) : (
         <LibraryContents

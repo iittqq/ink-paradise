@@ -33,6 +33,7 @@ type Props = {
   bookmarksToDelete: number[];
   handleBookmarkClick: () => void;
   handleDeleteBookmarks: () => void;
+  contentFilter: string;
 };
 
 const LibraryHeader = (props: Props) => {
@@ -50,6 +51,7 @@ const LibraryHeader = (props: Props) => {
     bookmarksToDelete,
     handleBookmarkClick,
     handleDeleteBookmarks,
+    contentFilter,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
   const [searchBarValue, setSearchBarValue] = useState<string>("");
@@ -73,6 +75,9 @@ const LibraryHeader = (props: Props) => {
       <div className="library-contents-header">
         <Typography fontFamily={"Figtree"} fontSize={20}>
           {header}
+        </Typography>
+        <Typography fontFamily={"Figtree"} fontSize={17}>
+          {contentFilter}
         </Typography>
       </div>{" "}
       <div className="library-header">

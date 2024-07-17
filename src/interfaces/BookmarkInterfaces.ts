@@ -7,4 +7,5 @@ export interface Bookmark {
   chapterId: string;
   chapterIndex: number;
   continueReading: boolean;
+  pageNumber?: number;
 }

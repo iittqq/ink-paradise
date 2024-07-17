@@ -33,7 +33,8 @@ import {
 } from "../../api/Reading";
 
 import { fetchChapterData } from "../../api/MangaDexApi";
-
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
   MangaChapter,
@@ -63,9 +64,19 @@ const Reader = () => {
   const [mangaFeedState, setMangaFeedState] = useState<
     MangaFeedScanlationGroup[]
   >(state.mangaFeed);
+  const [pageNumber, setPageNumber] = useState<number>(
+    state.pageNumber === null || state.pageNumber === undefined
+      ? 0
+      : state.pageNumber,
+  );
+  const [bookmarks, setBookmarks] = useState<number[]>([]);
 
   const handleOpenChapters = () => {
     setOpen(!open);
+  };
+
+  const handleChangePageNumber = (newPageNumber: number) => {
+    setPageNumber(newPageNumber);
   };
 
   function handleClickTitle() {
@@ -107,6 +118,10 @@ const Reader = () => {
     setOpenSettings(false);
   };
 
+  const handleBookmarksChange = (pages: number[]) => {
+    setBookmarks(pages);
+  };
+
   const handleChangeNewReaderMode = (event: SelectChangeEvent) => {
     console.log(event.target.value);
     setReaderInteger(parseInt(event.target.value));
@@ -114,15 +129,17 @@ const Reader = () => {
   };
 
   useEffect(() => {
+    setBookmarks([]);
     fetchChapterData(state.chapterId).then((data: MangaChapter) => {
       setPages(data.chapter.data);
       setHash(data.chapter.hash);
     });
+
     const date = dayjs();
     console.log(state);
-
     let readingExists = false;
     let bookmarkExists = false;
+    const tempBookmarks: number[] = [];
     if (state.accountId !== null) {
       getReadingByUserId(parseInt(state.accountId)).then((data: Reading[]) => {
         data.forEach((reading: Reading) => {
@@ -152,28 +169,41 @@ const Reader = () => {
           }
         }
       });
+      console.log(state.pageNumber);
+      console.log(pageNumber);
       getBookmarksByUserId(parseInt(state.accountId)).then(
         (data: Bookmark[]) => {
-          console.log(data);
-          console.log(state);
           data.forEach((bookmark: Bookmark) => {
+            if (state.pageNumber !== null || state.pageNumber !== undefined) {
+              if (
+                bookmark.mangaId === state.mangaId &&
+                bookmark.continueReading === true
+              ) {
+                updateBookmark({
+                  id: bookmark.id,
+                  userId: parseInt(state.accountId),
+                  mangaId: bookmark.mangaId,
+                  mangaName: bookmark.mangaName,
+                  chapterNumber: parseFloat(state.chapterNumber),
+                  chapterId: state.chapterId,
+                  chapterIndex: state.chapterIndex,
+                  continueReading: true,
+                });
+                bookmarkExists = true;
+              }
+            }
             if (
               bookmark.mangaId === state.mangaId &&
-              bookmark.continueReading === true
+              bookmark.continueReading === false &&
+              state.chapterId === bookmark.chapterId
             ) {
-              updateBookmark({
-                id: bookmark.id,
-                userId: parseInt(state.accountId),
-                mangaId: bookmark.mangaId,
-                mangaName: bookmark.mangaName,
-                chapterNumber: parseFloat(state.chapterNumber),
-                chapterId: state.chapterId,
-                chapterIndex: state.chapterIndex,
-                continueReading: true,
-              });
               bookmarkExists = true;
+              tempBookmarks.push(bookmark.pageNumber!);
+              console.log(bookmark.pageNumber);
             }
           });
+          console.log(tempBookmarks);
+          handleBookmarksChange(tempBookmarks);
           if (bookmarkExists === false) {
             addBookmark({
               userId: parseInt(state.accountId),
@@ -188,7 +218,9 @@ const Reader = () => {
         },
       );
     }
-
+    console.log(bookmarks);
+    console.log(pageNumber);
+    console.log(bookmarks.includes(pageNumber));
     handleScrollPosition();
   }, [state, order, selectedLanguage, mangaFeedState]);
 
@@ -200,6 +232,30 @@ const Reader = () => {
         />
       </div>
       <div className="settings-icon">
+        <Button
+          disabled={bookmarks.includes(pageNumber)}
+          onClick={() => {
+            addBookmark({
+              userId: parseInt(state.accountId),
+              mangaId: state.mangaId,
+              mangaName: state.mangaName,
+              chapterNumber: state.chapterNumber,
+              chapterId: state.chapterId,
+              chapterIndex: state.chapterIndex,
+              continueReading: false,
+              pageNumber: pageNumber + 1,
+            });
+            setBookmarks([...bookmarks, pageNumber]);
+          }}
+          sx={{ color: "white", minWidth: "40px" }}
+        >
+          {" "}
+          {bookmarks.includes(pageNumber) === true ? (
+            <BookmarkAddedIcon />
+          ) : (
+            <BookmarkAddIcon />
+          )}
+        </Button>
         <Button
           onClick={() => {
             setOpenSettings(true);
@@ -331,6 +387,13 @@ const Reader = () => {
           chapterIndex={state.chapterIndex}
           setMangaFeedState={setMangaFeedState}
           mangaFeedState={mangaFeedState}
+          handleChangePageNumber={handleChangePageNumber}
+          startPage={
+            state.pageNumber === null || state.pageNumber === undefined
+              ? 0
+              : state.pageNumber
+          }
+          bookmarks={bookmarks}
         />
       )}
     </div>

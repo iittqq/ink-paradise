@@ -34,6 +34,7 @@ async function addBookmark(bookmark: {
   chapterId: string;
   chapterIndex: number;
   continueReading: boolean;
+  pageNumber?: number;
 }): Promise<Bookmark> {
   try {
     const response = await axios.post(
