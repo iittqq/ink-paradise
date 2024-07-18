@@ -53,7 +53,9 @@ const TrendingMangaCarousel = (props: Props) => {
             <div className="popular-carousel-grid-item-text-container">
               {" "}
               <Typography className="popular-carousel-grid-item-title">
-                {current.attributes.title.en}
+                {current.attributes.title.en === undefined
+                  ? Object.values(current.attributes.title)[0]
+                  : current.attributes.title.en}
               </Typography>
               <Typography className="popular-carousel-grid-item-rank">
                 {index + 1}

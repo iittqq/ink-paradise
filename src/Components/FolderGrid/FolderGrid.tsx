@@ -139,7 +139,11 @@ const FolderGrid = (props: Props) => {
             >
               <MangaClickable
                 id={element.id}
-                title={element.attributes.title.en}
+                title={
+                  element.attributes.title.en === undefined
+                    ? Object.values(element.attributes.title)[0]
+                    : element.attributes.title.en
+                }
                 coverUrl={coverUrlsFolderGrid[element.id]}
                 updatedAt={element.attributes.updatedAt}
                 disabled={checked || selectAll}

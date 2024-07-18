@@ -161,7 +161,11 @@ const MangaCategoriesHomePage = (props: Props) => {
                     />
                   </Card>
                   <div className="home-category-manga-text">
-                    <Typography>{current.attributes.title.en}</Typography>
+                    <Typography>
+                      {current.attributes.title.en === undefined
+                        ? Object.values(current.attributes.title)[0]
+                        : current.attributes.title.en}
+                    </Typography>
                   </div>
                 </Button>{" "}
               </Grid>{" "}
@@ -208,7 +212,11 @@ const MangaCategoriesHomePage = (props: Props) => {
                   />
                 </Card>
                 <div className="home-category-manga-text">
-                  <Typography>{current.attributes.title.en}</Typography>
+                  <Typography>
+                    {current.attributes.title.en === undefined
+                      ? Object.values(current.attributes.title)[0]
+                      : current.attributes.title.en}
+                  </Typography>
                 </div>
               </Button>
             </Grid>
@@ -252,7 +260,11 @@ const MangaCategoriesHomePage = (props: Props) => {
                   />
                 </Card>
                 <div className="home-category-manga-text">
-                  <Typography>{current.attributes.title.en}</Typography>
+                  <Typography>
+                    {current.attributes.title.en === undefined
+                      ? Object.values(current.attributes.title)[0]
+                      : current.attributes.title.en}
+                  </Typography>
                 </div>
               </Button>
             </Grid>
