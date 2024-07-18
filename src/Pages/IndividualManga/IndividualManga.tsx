@@ -169,7 +169,11 @@ const IndividualManga = () => {
     }
     if (id !== undefined) {
       fetchMangaById(id).then((data: Manga) => {
-        setMangaName(data.attributes.title.en);
+        setMangaName(
+          data.attributes.title.en === undefined
+            ? Object.values(data.attributes.title)[0]
+            : data.attributes.title.en,
+        );
         setMangaDescription(data.attributes.description.en);
         setMangaAltTitles(data.attributes.altTitles);
         setMangaLanguages(data.attributes.availableTranslatedLanguages);

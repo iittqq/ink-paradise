@@ -73,7 +73,11 @@ const MangaCoverList = () => {
             <Grid item>
               <MangaClickable
                 id={element.id}
-                title={element.attributes.title.en}
+                title={
+                  element.attributes.title.en === undefined
+                    ? Object.values(element.attributes.title)[0]
+                    : element.attributes.title.en
+                }
                 coverUrl={coverUrls[element.id]}
                 accountId={
                   state.accountId === undefined ? null : state.accountId

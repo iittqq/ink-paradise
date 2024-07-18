@@ -318,16 +318,25 @@ const Library = () => {
               return e;
             })
             .sort((a, b) =>
-              a.attributes.title.en.localeCompare(b.attributes.title.en),
+              a.attributes.title.en === undefined
+                ? Object.values(a.attributes.title)[0].localeCompare(
+                    Object.values(b.attributes.title)[0],
+                  )
+                : a.attributes.title.en.localeCompare(b.attributes.title.en),
             );
         } else {
           enrichedBookmarks = enrichedBookmarks
             .map(function (e) {
               return e;
             })
-            .sort(
-              (a, b) =>
-                -1 * a.attributes.title.en.localeCompare(b.attributes.title.en),
+            .sort((a, b) =>
+              a.attributes.title.en === undefined
+                ? -1 *
+                  Object.values(a.attributes.title)[0].localeCompare(
+                    Object.values(b.attributes.title)[0],
+                  )
+                : -1 *
+                  a.attributes.title.en.localeCompare(b.attributes.title.en),
             );
         }
       } else if (contentFilter === "Recently Updated") {

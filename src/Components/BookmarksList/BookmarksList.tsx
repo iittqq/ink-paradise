@@ -160,7 +160,9 @@ const BookmarksList = (props: Props) => {
                                   manga.id,
                                   manga.chapterId!,
                                   manga.chapterNumber!,
-                                  manga.attributes.title.en,
+                                  manga.attributes.title.en === undefined
+                                    ? Object.values(manga.attributes.title)[0]
+                                    : manga.attributes.title.en,
                                   bookmarkCoverUrls[manga.id]!,
                                   manga.index!,
                                   manga.bookmarkPageNumber! === 0
@@ -178,7 +180,11 @@ const BookmarksList = (props: Props) => {
                         >
                           <MangaClickable
                             id={manga.id}
-                            title={manga.attributes.title.en}
+                            title={
+                              manga.attributes.title.en === undefined
+                                ? Object.values(manga.attributes.title)[0]
+                                : manga.attributes.title.en
+                            }
                             coverUrl={bookmarkCoverUrls[manga.id]}
                             updatedAt={manga.attributes.updatedAt}
                             disabled={true}
@@ -231,7 +237,9 @@ const BookmarksList = (props: Props) => {
                                   manga.id,
                                   manga.chapterId!,
                                   manga.chapterNumber!,
-                                  manga.attributes.title.en,
+                                  manga.attributes.title.en === undefined
+                                    ? Object.values(manga.attributes.title)[0]
+                                    : manga.attributes.title.en,
                                   bookmarkCoverUrls[manga.id]!,
                                   manga.index!,
                                   manga.bookmarkPageNumber! === 0
@@ -249,7 +257,11 @@ const BookmarksList = (props: Props) => {
                         >
                           <MangaClickable
                             id={manga.id}
-                            title={manga.attributes.title.en}
+                            title={
+                              manga.attributes.title.en === undefined
+                                ? Object.values(manga.attributes.title)[0]
+                                : manga.attributes.title.en
+                            }
                             coverUrl={bookmarkCoverUrls[manga.id]}
                             updatedAt={manga.attributes.updatedAt}
                             disabled={true}
@@ -285,7 +297,9 @@ const BookmarksList = (props: Props) => {
                             manga.id,
                             manga.chapterId!,
                             manga.chapterNumber!,
-                            manga.attributes.title.en,
+                            manga.attributes.title.en === undefined
+                              ? Object.values(manga.attributes.title)[0]
+                              : manga.attributes.title.en,
                             bookmarkCoverUrls[manga.id]!,
                             manga.index!,
                             manga.bookmarkPageNumber! === 0
@@ -301,7 +315,11 @@ const BookmarksList = (props: Props) => {
                   >
                     <MangaClickable
                       id={manga.id}
-                      title={manga.attributes.title.en}
+                      title={
+                        manga.attributes.title.en === undefined
+                          ? Object.values(manga.attributes.title)[0]
+                          : manga.attributes.title.en
+                      }
                       coverUrl={bookmarkCoverUrls[manga.id]}
                       updatedAt={manga.attributes.updatedAt}
                       disabled={true}
@@ -378,7 +396,9 @@ const BookmarksList = (props: Props) => {
                                   manga.id,
                                   manga.chapterId!,
                                   manga.chapterNumber!,
-                                  manga.attributes.title.en,
+                                  manga.attributes.title.en === undefined
+                                    ? Object.values(manga.attributes.title)[0]
+                                    : manga.attributes.title.en,
                                   bookmarkCoverUrls[manga.id]!,
                                   manga.index!,
                                   manga.bookmarkPageNumber! === 0
@@ -396,7 +416,11 @@ const BookmarksList = (props: Props) => {
                         >
                           <MangaClickable
                             id={manga.id}
-                            title={manga.attributes.title.en}
+                            title={
+                              manga.attributes.title.en === undefined
+                                ? Object.values(manga.attributes.title)[0]
+                                : manga.attributes.title.en
+                            }
                             coverUrl={bookmarkCoverUrls[manga.id]}
                             updatedAt={manga.attributes.updatedAt}
                             disabled={true}
@@ -459,7 +483,9 @@ const BookmarksList = (props: Props) => {
                                   manga.id,
                                   manga.chapterId!,
                                   manga.chapterNumber!,
-                                  manga.attributes.title.en,
+                                  manga.attributes.title.en === undefined
+                                    ? Object.values(manga.attributes.title)[0]
+                                    : manga.attributes.title.en,
                                   bookmarkCoverUrls[manga.id]!,
                                   manga.index!,
                                   manga.bookmarkPageNumber! === 0
@@ -477,7 +503,11 @@ const BookmarksList = (props: Props) => {
                         >
                           <MangaClickable
                             id={manga.id}
-                            title={manga.attributes.title.en}
+                            title={
+                              manga.attributes.title.en === undefined
+                                ? Object.values(manga.attributes.title)[0]
+                                : manga.attributes.title.en
+                            }
                             coverUrl={bookmarkCoverUrls[manga.id]}
                             updatedAt={manga.attributes.updatedAt}
                             disabled={true}
@@ -524,7 +554,9 @@ const BookmarksList = (props: Props) => {
                             manga.id,
                             manga.chapterId!,
                             manga.chapterNumber!,
-                            manga.attributes.title.en,
+                            manga.attributes.title.en === undefined
+                              ? Object.values(manga.attributes.title)[0]
+                              : manga.attributes.title.en,
                             bookmarkCoverUrls[manga.id]!,
                             manga.index!,
                             manga.bookmarkPageNumber! === 0
@@ -540,7 +572,11 @@ const BookmarksList = (props: Props) => {
                   >
                     <MangaClickable
                       id={manga.id}
-                      title={manga.attributes.title.en}
+                      title={
+                        manga.attributes.title.en === undefined
+                          ? Object.values(manga.attributes.title)[0]
+                          : manga.attributes.title.en
+                      }
                       coverUrl={bookmarkCoverUrls[manga.id]}
                       updatedAt={manga.attributes.updatedAt}
                       disabled={true}

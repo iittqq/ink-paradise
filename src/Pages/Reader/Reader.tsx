@@ -205,10 +205,11 @@ const Reader = () => {
           console.log(tempBookmarks);
           handleBookmarksChange(tempBookmarks);
           if (bookmarkExists === false) {
+            const simpleMangaName = state.mangaName.replace(/[^a-zA-Z]/g, " ");
             addBookmark({
               userId: parseInt(state.accountId),
               mangaId: state.mangaId,
-              mangaName: state.mangaName,
+              mangaName: simpleMangaName,
               chapterNumber: state.chapterNumber,
               chapterId: state.chapterId,
               chapterIndex: state.chapterIndex,
@@ -233,12 +234,13 @@ const Reader = () => {
       </div>
       <div className="settings-icon">
         <Button
-          disabled={bookmarks.includes(pageNumber)}
+          disabled={bookmarks.includes(pageNumber) || state.accountId === null}
           onClick={() => {
+            const simpleMangaName = state.mangaName.replace(/[^a-zA-Z]/g, " ");
             addBookmark({
               userId: parseInt(state.accountId),
               mangaId: state.mangaId,
-              mangaName: state.mangaName,
+              mangaName: simpleMangaName,
               chapterNumber: state.chapterNumber,
               chapterId: state.chapterId,
               chapterIndex: state.chapterIndex,

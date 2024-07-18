@@ -100,7 +100,11 @@ const LibraryContents = (props: Props) => {
                       >
                         <MangaClickable
                           id={manga.id}
-                          title={manga.attributes.title.en}
+                          title={
+                            manga.attributes.title.en === undefined
+                              ? Object.values(manga.attributes.title)[0]
+                              : manga.attributes.title.en
+                          }
                           coverUrl={coverUrlsLibrary[manga.id]}
                           updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
@@ -140,7 +144,11 @@ const LibraryContents = (props: Props) => {
                       >
                         <MangaClickable
                           id={manga.id}
-                          title={manga.attributes.title.en}
+                          title={
+                            manga.attributes.title.en === undefined
+                              ? Object.values(manga.attributes.title)[0]
+                              : manga.attributes.title.en
+                          }
                           coverUrl={coverUrlsLibrary[manga.id]}
                           updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
@@ -166,7 +174,11 @@ const LibraryContents = (props: Props) => {
                 >
                   <MangaClickable
                     id={manga.id}
-                    title={manga.attributes.title.en}
+                    title={
+                      manga.attributes.title.en === undefined
+                        ? Object.values(manga.attributes.title)[0]
+                        : manga.attributes.title.en
+                    }
                     coverUrl={coverUrlsLibrary[manga.id]}
                     updatedAt={manga.attributes.updatedAt}
                     disabled={checked || selectAll}
