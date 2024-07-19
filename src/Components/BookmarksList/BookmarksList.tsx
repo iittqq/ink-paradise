@@ -142,12 +142,7 @@ const BookmarksList = (props: Props) => {
                       <Grid item>
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "14px", lg: "15px" },
-                                fontFamily: "Figtree",
-                              }}
-                            >
+                            <Typography className="overlay-text-bookmark">
                               Chapter: {manga.chapterNumber}
                             </Typography>
                           </div>
@@ -219,12 +214,7 @@ const BookmarksList = (props: Props) => {
                       <Grid item>
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "14px", lg: "15px" },
-                                fontFamily: "Figtree",
-                              }}
-                            >
+                            <Typography className="overlay-text-bookmark">
                               Chapter: {manga.chapterNumber}
                             </Typography>
                           </div>
@@ -280,12 +270,7 @@ const BookmarksList = (props: Props) => {
                 <Grid item>
                   <div className="chapter-number-overlay">
                     <div className="bookmark-details-column">
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "14px", lg: "15px" },
-                          fontFamily: "Figtree",
-                        }}
-                      >
+                      <Typography className="overlay-text-bookmark">
                         Chapter: {manga.chapterNumber}
                       </Typography>
                     </div>
@@ -369,22 +354,12 @@ const BookmarksList = (props: Props) => {
                       <Grid item>
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "14px", lg: "15px" },
-                                fontFamily: "Figtree",
-                              }}
-                            >
+                            <Typography className="overlay-text-bookmark">
                               Chapter: {manga.chapterNumber}
                             </Typography>
 
                             <div className="page-number-overlay">
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "14px", lg: "15px" },
-                                  fontFamily: "Figtree",
-                                }}
-                              >
+                              <Typography className="overlay-text-bookmark">
                                 Page: {manga.bookmarkPageNumber}
                               </Typography>
                             </div>
@@ -457,22 +432,12 @@ const BookmarksList = (props: Props) => {
                       <Grid item>
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
-                            <Typography
-                              sx={{
-                                fontSize: { xs: "14px", lg: "15px" },
-                                fontFamily: "Figtree",
-                              }}
-                            >
+                            <Typography className="overlay-text-bookmark">
                               Chapter: {manga.chapterNumber}
                             </Typography>
 
                             <div className="page-number-overlay">
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "14px", lg: "15px" },
-                                  fontFamily: "Figtree",
-                                }}
-                              >
+                              <Typography className="overlay-text-bookmark">
                                 Page: {manga.bookmarkPageNumber}
                               </Typography>
                             </div>
@@ -528,22 +493,12 @@ const BookmarksList = (props: Props) => {
                 <Grid item>
                   <div className="chapter-number-overlay">
                     <div className="bookmark-details-column">
-                      <Typography
-                        sx={{
-                          fontSize: { xs: "14px", lg: "15px" },
-                          fontFamily: "Figtree",
-                        }}
-                      >
+                      <Typography className="overlay-text-bookmark">
                         Chapter: {manga.chapterNumber}
                       </Typography>
 
                       <div className="page-number-overlay">
-                        <Typography
-                          sx={{
-                            fontSize: { xs: "14px", lg: "15px" },
-                            fontFamily: "Figtree",
-                          }}
-                        >
+                        <Typography className="overlay-text-bookmark">
                           Page: {manga.bookmarkPageNumber}
                         </Typography>{" "}
                       </div>
