@@ -1,5 +1,6 @@
 .manga-entry-overlay-button {
   background-color: transparent !important;
+  padding: 0px !important;
 
   &.MuiButtonBase-root:hover {
     background-color: transparent;

@@ -54,12 +54,14 @@ const LibraryContents = (props: Props) => {
   }, [libraryManga]);
 
   return (
-    <div>
+    <div className="library-entries-container">
       <Grid
         container
         direction={"row"}
         justifyContent={"center"}
         alignItems={"center"}
+        wrap={"wrap"}
+        spacing={1}
       >
         {libraryManga.length === 0 ? (
           <Button
