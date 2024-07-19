@@ -108,6 +108,8 @@ const BookmarksList = (props: Props) => {
         direction={"row"}
         justifyContent={"center"}
         alignItems={"center"}
+        wrap={"wrap"}
+        spacing={1}
       >
         {bookmarks.length === 0 ? (
           <Button
@@ -343,6 +345,8 @@ const BookmarksList = (props: Props) => {
         direction={"row"}
         justifyContent={"center"}
         alignItems={"center"}
+        wrap={"wrap"}
+        spacing={1}
       >
         {groupedBookmarks !== null
           ? contentFilter === "Content Rating"
