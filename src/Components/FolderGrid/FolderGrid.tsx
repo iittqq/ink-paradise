@@ -109,6 +109,7 @@ const FolderGrid = (props: Props) => {
               <Typography
                 textTransform="none"
                 fontFamily="Figtree"
+                color="white"
                 sx={{
                   backgroundColor:
                     folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",
