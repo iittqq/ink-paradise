@@ -147,6 +147,7 @@ const Login = () => {
           headerPicture: null,
           contentFilter: 1,
           readerMode: 1,
+          theme: 0,
         });
       });
     } else {

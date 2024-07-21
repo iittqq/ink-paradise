@@ -27,7 +27,6 @@
 }
 
 .reader-page-text {
-  color: #fff;
   font-family: "Figtree", sans-serif !important;
 }
 
@@ -36,7 +35,6 @@
     width: 95dvw;
   }
   width: 80dvw;
-
   height: 100%;
   justify-content: center;
   display: flex;
@@ -56,6 +54,14 @@
   width: 100%;
   color: #121212;
   background-color: transparent;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.manga-name-button {
+  text-transform: none !important;
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }

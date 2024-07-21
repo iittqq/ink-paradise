@@ -127,7 +127,7 @@ const MangaChapterList = (props: Props) => {
                       : Number(current.attributes.chapter) ===
                           Number(userProgress)
                         ? "#ff7597"
-                        : "#333333",
+                        : "unset",
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {
@@ -163,7 +163,6 @@ const MangaChapterList = (props: Props) => {
                   </Typography>
                   <Typography
                     fontFamily="Figtree"
-                    color="#fff"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 13 },
                     }}

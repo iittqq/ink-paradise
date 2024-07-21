@@ -32,8 +32,7 @@
   text-transform: none !important;
   width: 50%;
   height: 50px;
-  color: #fff !important;
-  background-color: #191919 !important;
+  color: unset !important;
 }
 
 .page-header {

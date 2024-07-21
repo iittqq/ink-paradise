@@ -6,4 +6,5 @@ export interface AccountDetails {
   headerPicture: string | null;
   contentFilter: number;
   readerMode: number;
+  theme: number;
 }

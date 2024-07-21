@@ -106,6 +106,7 @@ const Reader = () => {
               headerPicture: data.headerPicture,
               contentFilter: data.contentFilter,
               readerMode: readerInteger,
+              theme: data.theme,
             });
           },
         );
@@ -249,7 +250,7 @@ const Reader = () => {
             });
             setBookmarks([...bookmarks, pageNumber]);
           }}
-          sx={{ color: "white", minWidth: "40px" }}
+          sx={{ color: "unset", minWidth: "40px" }}
         >
           {" "}
           {bookmarks.includes(pageNumber) === true ? (
@@ -262,7 +263,7 @@ const Reader = () => {
           onClick={() => {
             setOpenSettings(true);
           }}
-          sx={{ color: "white", minWidth: "40px" }}
+          sx={{ minWidth: "40px", color: "unset" }}
         >
           {" "}
           <SettingsIcon />{" "}
@@ -324,7 +325,7 @@ const Reader = () => {
       </div>
       <div className="current-manga-details">
         <Button
-          sx={{ textTransform: "none" }}
+          className="manga-name-button"
           onClick={() => {
             handleClickTitle();
           }}

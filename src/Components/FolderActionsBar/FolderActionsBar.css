@@ -41,7 +41,7 @@ input[type="text"]:focus {
   max-width: 50px !important;
   min-width: 30px !important;
 
-  color: #ffffff !important;
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -67,8 +67,7 @@ input[type="text"]:focus {
 }
 
 .back-button-account-page {
-  color: #ffffff !important;
-  background-color: #121212 !important;
+  color: unset !important;
   max-width: 50px !important;
   min-width: 30px !important;
   &.MuiButtonBase-root:hover {
@@ -88,7 +87,7 @@ input[type="text"]:focus {
 }
 
 .folder-header-button {
-  color: #ffffff !important;
+  color: unset !important;
   max-width: 30px !important;
   min-width: 30px !important;
   height: 30px;

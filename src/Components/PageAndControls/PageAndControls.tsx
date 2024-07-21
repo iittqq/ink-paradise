@@ -312,7 +312,7 @@ const PageAndControls = (props: Props) => {
 
       <div className="centered">
         <Button
-          sx={{ color: "white" }}
+          className="chapter-page-traversal-buttons"
           onClick={() => {
             if (readerMode === 1) {
               handleNextChapter();
@@ -324,7 +324,7 @@ const PageAndControls = (props: Props) => {
           <KeyboardDoubleArrowLeftIcon />
         </Button>
         <Button
-          sx={{ color: "white" }}
+          className="chapter-page-traversal-buttons"
           onClick={() => {
             if (readerMode === 1) {
               handleNextPage();
@@ -336,7 +336,7 @@ const PageAndControls = (props: Props) => {
           <KeyboardArrowLeftIcon />
         </Button>
         <Button
-          sx={{ color: "white" }}
+          className="chapter-page-traversal-buttons"
           onClick={() => {
             if (readerMode === 1) {
               handlePreviousPage();
@@ -348,7 +348,7 @@ const PageAndControls = (props: Props) => {
           <KeyboardArrowRightIcon />
         </Button>
         <Button
-          sx={{ color: "white" }}
+          className="chapter-page-traversal-buttons"
           onClick={() => {
             if (readerMode === 1) {
               handlePreviousChapter();
@@ -361,7 +361,7 @@ const PageAndControls = (props: Props) => {
         </Button>
       </div>
 
-      <Typography color="white" fontFamily="Figtree" align="center">
+      <Typography fontFamily="Figtree" align="center">
         {currentPage + 1} / {pages.length}
       </Typography>
     </div>

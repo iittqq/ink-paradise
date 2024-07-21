@@ -10,7 +10,7 @@
 }
 
 .library-header-button {
-  color: #ffffff !important;
+  color: unset !important;
   padding: 3px 4px !important;
   max-width: 60px !important;
   min-width: 40px !important;

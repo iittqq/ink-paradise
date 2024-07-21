@@ -35,12 +35,10 @@
 }
 
 .manga-name {
-  color: #ffffff;
   font-family: "Figtree" !important;
 }
 
 .manga-alt-name {
-  color: #ffffff;
   font-family: "Figtree" !important;
   display: -webkit-box;
   overflow: hidden;
@@ -52,7 +50,6 @@
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  color: white;
 }
 
 .show-button {

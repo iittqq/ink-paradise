@@ -68,14 +68,8 @@ const MangaControls = (props: Props) => {
               handleOpenTranslators();
             }}
           >
-            <Typography sx={{ color: "#fff", fontFamily: "Figtree" }}>
-              Scan Groups
-            </Typography>
-            {openTranslators ? (
-              <ExpandLess sx={{ color: "#fff" }} />
-            ) : (
-              <ExpandMore sx={{ color: "#fff" }} />
-            )}
+            <Typography sx={{ fontFamily: "Figtree" }}>Scan Groups</Typography>
+            {openTranslators ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
         </List>
         <Button
@@ -92,14 +86,8 @@ const MangaControls = (props: Props) => {
             className="list-button"
             onClick={() => handleOpenLanguages()}
           >
-            <Typography sx={{ color: "#fff", fontFamily: "Figtree" }}>
-              Languages
-            </Typography>{" "}
-            {open ? (
-              <ExpandLess sx={{ color: "#fff" }} />
-            ) : (
-              <ExpandMore sx={{ color: "#fff" }} />
-            )}
+            <Typography sx={{ fontFamily: "Figtree" }}>Languages</Typography>{" "}
+            {open ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
         </List>
       </div>

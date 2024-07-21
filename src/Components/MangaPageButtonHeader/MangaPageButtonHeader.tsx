@@ -63,7 +63,7 @@ const MangaPageButtonHeader = (props: Props) => {
   return (
     <div className="manga-details-buttons-container">
       <Button className="individual-details-button" href={mangaRaw}>
-        <RawOnIcon sx={{ color: "#ffffff" }} />
+        <RawOnIcon />
       </Button>
 
       <Button
@@ -73,7 +73,7 @@ const MangaPageButtonHeader = (props: Props) => {
           handleClickOpen();
         }}
       >
-        <FolderIcon sx={{ color: "#ffffff" }} />
+        <FolderIcon />
       </Button>
       <Dialog open={open} onClose={handleClose} id="folder-dialog">
         <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>
@@ -128,7 +128,7 @@ const MangaPageButtonHeader = (props: Props) => {
           handleOpenCategories();
         }}
       >
-        <CategoryIcon sx={{ color: "#ffffff" }} />
+        <CategoryIcon />
       </Button>
       <Dialog
         open={showCategoriesToggled}
@@ -170,7 +170,7 @@ const MangaPageButtonHeader = (props: Props) => {
         }}
       >
         {" "}
-        <InfoIcon sx={{ color: "#ffffff" }} />
+        <InfoIcon />
       </Button>
       <Dialog
         open={showInfoToggled}

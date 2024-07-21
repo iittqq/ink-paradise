@@ -20,7 +20,7 @@
 .folder {
   height: 100px;
   width: 200px;
-  background-color: #222222 !important;
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -34,8 +34,7 @@
 }
 
 .redirect-button {
-  color: #ffffff !important;
-  background-color: #333 !important;
+  color: unset !important;
   text-transform: none !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;

@@ -99,10 +99,12 @@ const BookmarksList = (props: Props) => {
 
   return (
     <div>
-      <Typography fontFamily={"Figtree"} sx={{ textAlign: "center" }}>
-        {" "}
-        Continue Reading
-      </Typography>
+      {bookmarks.length === 0 ? null : (
+        <Typography fontFamily={"Figtree"} sx={{ textAlign: "center" }}>
+          {" "}
+          Continue Reading
+        </Typography>
+      )}
       <Grid
         container
         direction={"row"}
@@ -317,11 +319,12 @@ const BookmarksList = (props: Props) => {
               ) : null,
             )}
       </Grid>
-      {contentFilter === "Continue Reading" ? null : (
+      {bookmarks.length === 0 ? null : (
         <Typography
           fontFamily={"Figtree"}
-          sx={{ marginTop: "20px", textAlign: "center" }}
+          sx={{ textAlign: "center", paddingTop: "10px" }}
         >
+          {" "}
           Custom Bookmarks
         </Typography>
       )}

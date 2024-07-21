@@ -43,6 +43,7 @@
   justify-content: space-between !important;
   align-items: center !important;
   width: 100% !important;
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -51,7 +52,6 @@
 .home-category-manga-text {
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
-  color: #fff !important;
   font-size: 20px !important;
   width: 75%;
   -webkit-box-orient: vertical;
@@ -73,6 +73,6 @@
   font-family: "Figtree", sans-serif !important;
   font-size: 15px !important;
   background-color: transparent !important;
-  color: #fff !important;
+  color: unset !important;
   text-transform: none !important;
 }

@@ -218,7 +218,7 @@ input[type="file"] {
 .info-open-button {
   width: 30px !important;
   min-width: 30px !important;
-  color: #ffffff !important;
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }

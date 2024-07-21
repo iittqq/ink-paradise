@@ -103,11 +103,7 @@ const FolderGrid = (props: Props) => {
               }}
             >
               <div>
-                <Typography
-                  textTransform="none"
-                  color="#ffffff"
-                  fontFamily="Figtree"
-                >
+                <Typography textTransform="none" fontFamily="Figtree">
                   {folder.folderName} <br />
                 </Typography>
               </div>

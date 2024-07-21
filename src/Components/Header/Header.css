@@ -1,5 +1,5 @@
 .logo-header-button {
-  color: #ffffff !important;
+  color: unset !important;
   max-height: 40px !important;
   max-width: 40px !important;
   min-width: 40px !important;
@@ -31,17 +31,13 @@
 
 input[type="search"]:focus {
   font-family: "Figtree" !important;
-  border: 2px solid #ffffff !important;
 }
 
 .input-field {
   border-radius: 25px !important;
   font-family: "Figtree" !important;
-  &:focus {
-    border: 2px solid #ffffff !important;
-  }
+
   input {
-    color: white;
     text-align: center;
   }
 
@@ -86,7 +82,7 @@ input[type="search"]:focus {
 }
 
 .header-buttons {
-  color: #ffffff !important;
+  color: unset !important;
   background-color: transparent !important;
   padding: 0px !important;
   height: 40px !important;
@@ -111,13 +107,6 @@ input[type="search"]:focus {
   align-items: center;
 }
 
-.account-details-submit-button {
-  color: #ffffff !important;
-  background-color: #444444 !important;
-  margin-bottom: -10px;
-  text-transform: none;
-}
-
 .header-nav-dialog-columns {
   display: flex;
   flex-direction: column;
@@ -127,7 +116,6 @@ input[type="search"]:focus {
 }
 
 .header-nav-label {
-  color: #ffffff !important;
   font-family: "Figtree" !important;
   font-size: 12px !important;
   text-transform: none !important;

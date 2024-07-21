@@ -9,11 +9,16 @@ import AccountPage from "./Pages/AccountPage/AccountPage";
 import Login from "./Pages/Login/Login";
 import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
+import { ThemeProvider } from "./contexts/ThemeContext";
+
+import GlobalStyle from "./styles/global";
+
 //#121212
 
 function App() {
   return (
-    <div>
+    <ThemeProvider>
+      <GlobalStyle />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -30,7 +35,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </ThemeProvider>
   );
 }
 

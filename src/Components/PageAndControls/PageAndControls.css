@@ -47,3 +47,7 @@
   height: 100%;
   width: 100%;
 }
+
+.chapter-page-traversal-buttons {
+  color: unset !important;
+}
