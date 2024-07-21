@@ -355,11 +355,7 @@ const Reader = () => {
                 </Typography>
               }
             />
-            {open ? (
-              <ExpandLess sx={{ color: "white" }} />
-            ) : (
-              <ExpandMore sx={{ color: "white" }} />
-            )}
+            {open ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse className="reader-feed-collapse" in={open} timeout="auto">
             <MangaChapterList

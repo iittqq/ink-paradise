@@ -461,7 +461,7 @@ const Library = () => {
       />
       {loading === true ? (
         <div className="loading-indicator-container">
-          <CircularProgress size={25} sx={{ color: "#ffffff" }} />
+          <CircularProgress className="loading-icon" size={25} />
         </div>
       ) : bookmarksVisible === true ? (
         <BookmarksList

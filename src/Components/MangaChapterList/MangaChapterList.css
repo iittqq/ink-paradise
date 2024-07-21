@@ -72,7 +72,6 @@
 }
 .chapter-details {
   font-family: "Figtree" !important;
-  text-transform: none;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;

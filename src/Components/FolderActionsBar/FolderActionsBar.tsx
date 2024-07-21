@@ -39,6 +39,9 @@ type Props = {
   toggleSelectAll: () => void;
   mangaFoldersToDelete: number[];
   mangaEntriesToDelete: string[];
+  handleFolderBackgroundChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => void;
 };
 
 const FolderActionsBar = (props: Props) => {
@@ -62,6 +65,7 @@ const FolderActionsBar = (props: Props) => {
     toggleSelectAll,
     mangaFoldersToDelete,
     mangaEntriesToDelete,
+    handleFolderBackgroundChange,
   } = props;
   const [searching, setSearching] = useState<boolean>(false);
   const [showAddedFolderAlert, setShowAddedFolderAlert] =
@@ -231,6 +235,22 @@ const FolderActionsBar = (props: Props) => {
                 }
               }}
             />
+            <Typography fontFamily={"Figtree"}>Background Url</Typography>
+            <input
+              type="text"
+              id="folderBackground"
+              placeholder="Folder Background Url"
+              className="folder-inputs"
+              onChange={(e) => handleFolderBackgroundChange(e)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (newFolderName !== "") {
+                    handleCreateFolder();
+                  }
+                }
+              }}
+            />
+
             <Button
               className="create-button"
               onClick={() => {

@@ -100,13 +100,28 @@ const FolderGrid = (props: Props) => {
                       ? 0.2
                       : 1
                     : undefined,
+                backgroundImage:
+                  folder.folderCover !== ""
+                    ? `url(${folder.folderCover})`
+                    : "none",
               }}
             >
-              <div>
-                <Typography textTransform="none" fontFamily="Figtree">
-                  {folder.folderName} <br />
-                </Typography>
-              </div>
+              <Typography
+                textTransform="none"
+                fontFamily="Figtree"
+                sx={{
+                  backgroundColor:
+                    folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "5px",
+                  height: "100%",
+                  width: "100%",
+                }}
+              >
+                {folder.folderName}{" "}
+              </Typography>
             </Button>
           </Grid>
         ))

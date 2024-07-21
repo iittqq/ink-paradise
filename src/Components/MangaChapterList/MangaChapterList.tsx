@@ -121,13 +121,14 @@ const MangaChapterList = (props: Props) => {
                 className="chapter-button"
                 disableRipple
                 sx={{
-                  backgroundColor:
+                  outline:
+                    Number(current.attributes.chapter) === Number(userProgress)
+                      ? "2px solid #000000"
+                      : "none",
+                  opacity:
                     Number(current.attributes.chapter) < Number(userProgress)
-                      ? "#191919"
-                      : Number(current.attributes.chapter) ===
-                          Number(userProgress)
-                        ? "#ff7597"
-                        : "unset",
+                      ? ".7"
+                      : "unset",
                   "&:hover": { backgroundColor: "transparent" },
                 }}
                 onClick={() => {
@@ -157,12 +158,14 @@ const MangaChapterList = (props: Props) => {
                     className="chapter-details"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 13 },
+                      textTransform: "none",
                     }}
                   >
                     Chapter {current.attributes.chapter}
                   </Typography>
                   <Typography
                     fontFamily="Figtree"
+                    className="chapter-details"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 13 },
                     }}
@@ -180,6 +183,7 @@ const MangaChapterList = (props: Props) => {
                     className="chapter-details"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 13 },
+                      textTransform: "none",
                     }}
                   >
                     {current.relationships[0].type === "scanlation_group"
@@ -191,6 +195,7 @@ const MangaChapterList = (props: Props) => {
                     className="chapter-details"
                     sx={{
                       fontSize: { xs: 10, sm: 10, lg: 13 },
+                      textTransform: "none",
                     }}
                   >
                     {dayjs(current.attributes.createdAt).format("DD/MM/YYYY")}

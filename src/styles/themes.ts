@@ -1,43 +1,41 @@
 export interface ThemeProps {
   body: string;
   text: string;
-  toggleBorder: string;
-  background: string;
   elevatedSection: string;
+  elevatedSectionLight: string;
 }
 
 export const lightTheme = {
   body: "#fffae0 ",
   text: "#363537",
-  elevatedSection: "#999999",
-  toggleBorder: "#FFF",
-  background: "#fff",
+  elevatedSection: "#cca284 ",
+  elevatedSectionLight: "#d5e3d8",
 };
 
 export const darkTheme = {
   body: "#191919",
   text: "#FAFAFA",
-  toggleBorder: "#6B8096",
-  background: "#191919",
+  elevatedSection: "#403025",
+  elevatedSectionLight: "#cca284",
 };
 
 export const lightPastelTheme = {
-  body: "red",
-  text: "#FAFAFA",
-  toggleBorder: "#6B8096",
-  background: "#999",
+  body: "#B0B5ED",
+  text: "#191919",
+  elevatedSection: "#cbcbe7",
+  elevatedSectionLight: "#dadaf1",
 };
 
 export const darkPastelTheme = {
-  body: "#363537",
+  body: "#191919",
   text: "#FAFAFA",
-  toggleBorder: "#6B8096",
-  background: "#999",
+  elevatedSection: "#9095d6",
+  elevatedSectionLight: "#e9a7b9",
 };
 
 export const devTheme = {
-  body: "#363537",
+  body: "#131313",
   text: "#FAFAFA",
-  toggleBorder: "#6B8096",
-  background: "#999",
+  elevatedSection: "#705f8c",
+  elevatedSectionLight: "#2a2a2a",
 };

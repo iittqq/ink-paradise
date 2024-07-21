@@ -36,6 +36,10 @@ const globalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.elevatedSection};
   }
 
+  .chapter-details {
+    color: ${({ theme }) => theme.text};
+  }
+
   .folder{
     background-color: ${({ theme }) => theme.elevatedSection};
   }
@@ -43,7 +47,29 @@ const globalStyle = createGlobalStyle`
   .redirect-button {
     background-color: ${({ theme }) => theme.elevatedSection};
   }
+  
+  .scanlation-button, .language-button {
+    background-color: ${({ theme }) => theme.elevatedSection};
+  }
+  
+  .asc-desc-button {
+    background-color: ${({ theme }) => theme.elevatedSection};
+    color: ${({ theme }) => theme.text};
+  }
 
+  .home-category-manga-button{
+    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .loading-icon{
+    color: ${({ theme }) => theme.text};
+  }
+  
+  .folder{
+    &.MuiButtonBase-root:hover {
+      background-color: ${({ theme }) => theme.elevatedSectionLight};
+    }
+  }
 
   /* Add other global styles as needed */
 `;

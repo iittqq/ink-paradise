@@ -23,6 +23,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 import ThemeButton from "../../Components/ThemeButton/ThemeButton";
 import { useTheme } from "../../contexts/ThemeContext";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const Home = () => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
@@ -65,6 +66,15 @@ const Home = () => {
     const localTheme = window.localStorage.getItem("theme");
     if (localTheme) {
       toggleTheme(parseInt(localTheme));
+    } else {
+      if (accountId !== null) {
+        fetchAccountDetails(accountId).then((data) => {
+          if (data !== null) {
+            const theme = data.theme;
+            toggleTheme(theme);
+          }
+        });
+      }
     }
   }, [selectedTag]);
 
@@ -138,7 +148,7 @@ const Home = () => {
 
         <div>
           <Button onClick={handleClickedOpenThemes} className="tags-button">
-            <StyleIcon />
+            <DarkModeIcon />
           </Button>
           <Button onClick={handleClickedOpenInfo} className="tags-button">
             <InfoIcon />

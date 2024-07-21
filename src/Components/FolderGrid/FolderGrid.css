@@ -2,9 +2,6 @@
   background-color: transparent !important;
   padding: 0px !important;
 
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
   .MuiTouchRipple-child {
     background-color: #121212 !important;
   }
@@ -17,13 +14,15 @@
   align-items: center;
   width: 60dvw;
 }
+
 .folder {
   height: 100px;
   width: 200px;
   color: unset !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }

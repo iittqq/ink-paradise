@@ -3,4 +3,5 @@ export interface MangaFolder {
   userId: number;
   folderName: string;
   folderDescription: string;
+  folderCover: string;
 }

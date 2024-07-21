@@ -273,7 +273,7 @@ const PageAndControls = (props: Props) => {
       >
         {loadingStates[currentPage] ? (
           <div className="loading">
-            <CircularProgress size={25} sx={{ color: "#ffffff" }} />
+            <CircularProgress size={25} className="loading-icon" />
           </div>
         ) : (
           <>

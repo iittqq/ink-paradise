@@ -10,10 +10,8 @@
 .asc-desc-button {
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
-  color: #fff !important;
   height: 30px;
   min-width: 20px !important;
-  background-color: #191919 !important;
 }
 
 .arrow-button {
@@ -21,10 +19,9 @@
 }
 
 .scanlation-button {
-  background-color: #191919 !important;
   width: 100px;
   height: 30px;
-
+  color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -34,22 +31,9 @@
 }
 
 .language-button {
-  background-color: #191919 !important;
   width: 60px;
   height: 25px;
-
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-  .MuiTouchRipple-child {
-    background-color: #fff !important;
-  }
-}
-
-.translator-button {
-  background-color: #191919 !important;
-  width: 55px;
-  height: 45px;
+  color: unset !important;
 
   &.MuiButtonBase-root:hover {
     background-color: transparent;
@@ -91,7 +75,6 @@
 .scanlation-text {
   text-transform: none;
   font-family: "Figtree", sans-serif !important;
-  color: #fff !important;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -100,6 +83,4 @@
 
 .language-text {
   font-family: "Figtree", sans-serif !important;
-  color: #fff !important;
-  background-color: #191919 !important;
 }

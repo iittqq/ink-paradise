@@ -88,6 +88,7 @@ const AccountPage = () => {
   const [viableBio, setViableBio] = useState<boolean>(true);
   const [openLogout, setOpenLogout] = useState<boolean>(false);
   const [readerMode, setReaderMode] = useState<number>(0);
+  const [folderBackground, setFolderBackground] = useState<string>("");
 
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
@@ -127,6 +128,7 @@ const AccountPage = () => {
         headerPicture,
         contentFilter: Number(contentFilter),
         readerMode,
+        theme: accountDetails!.theme,
       }).then((data) => {
         setAccountDetails(data);
       });
@@ -240,6 +242,7 @@ const AccountPage = () => {
   const handleCreateFolder = async () => {
     (document.getElementById("folderName") as HTMLInputElement).value = "";
     setNewFolderName("");
+    setFolderBackground("");
     (document.getElementById("folderDescription") as HTMLInputElement).value =
       "";
     setNewFolderDescription("");
@@ -249,6 +252,7 @@ const AccountPage = () => {
           userId: accountData.id,
           folderName: newFolderName,
           folderDescription: newFolderDescription,
+          folderCover: folderBackground,
         });
         setNewFolder(!newFolder);
       }
@@ -328,6 +332,12 @@ const AccountPage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewFolderDescription(event.target.value);
+  };
+
+  const handleFolderBackgroundChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFolderBackground(event.target.value);
   };
 
   const toggleSelectAll = () => {
@@ -641,6 +651,7 @@ const AccountPage = () => {
         toggleSelectAll={toggleSelectAll}
         mangaFoldersToDelete={mangaFoldersToDelete}
         mangaEntriesToDelete={mangaEntriesToDelete}
+        handleFolderBackgroundChange={handleFolderBackgroundChange}
       />
       <div className="personal-folders">
         {selectedFolder !== null ? (
