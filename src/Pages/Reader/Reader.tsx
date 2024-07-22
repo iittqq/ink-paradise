@@ -112,6 +112,7 @@ const Reader = () => {
         );
       }
     }
+    window.localStorage.setItem("readerMode", readerInteger.toString());
     setOpenSettings(false);
   };
 
@@ -135,6 +136,9 @@ const Reader = () => {
       setPages(data.chapter.data);
       setHash(data.chapter.hash);
     });
+
+    const readerMode = window.localStorage.getItem("readerMode");
+    setReaderInteger(readerMode === null ? 1 : parseInt(readerMode));
 
     const date = dayjs();
     console.log(state);

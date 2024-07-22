@@ -58,7 +58,7 @@ const Home = () => {
     });
 
     if (selectedTag !== null) {
-      fetchSimilarManga(5, [selectedTag.id]).then((data: Manga[]) => {
+      fetchSimilarManga(5, 0, [selectedTag.id]).then((data: Manga[]) => {
         setMangaFromTag(data);
       });
     }

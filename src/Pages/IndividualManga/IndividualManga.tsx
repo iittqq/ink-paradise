@@ -141,7 +141,7 @@ const IndividualManga = () => {
   };
 
   const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
-    fetchSimilarManga(25, [category.id]).then((data: Manga[]) => {
+    fetchSimilarManga(25, 0, [category.id]).then((data: Manga[]) => {
       navigate("/mangaCoverList", {
         state: {
           listType: category.attributes.name.en,
@@ -185,7 +185,7 @@ const IndividualManga = () => {
 
         setMangaTags(data["attributes"].tags);
         const tagIds = data["attributes"].tags.map((tag) => tag.id);
-        fetchSimilarManga(10, tagIds).then((data: Manga[]) => {
+        fetchSimilarManga(10, 0, tagIds).then((data: Manga[]) => {
           setSimilarManga(data);
         });
       });

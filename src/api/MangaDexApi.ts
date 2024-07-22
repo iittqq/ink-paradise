@@ -215,11 +215,13 @@ async function fetchChapterDetails(chapterId: string): Promise<ChapterDetails> {
 
 async function fetchSimilarManga(
   limit: number,
+  offset: number,
   tags: string[],
 ): Promise<Manga[]> {
   try {
     const params = new URLSearchParams();
     params.append("limit", limit.toString());
+    params.append("offset", offset.toString());
     tags.forEach((tag) => {
       params.append("tags", tag);
     });

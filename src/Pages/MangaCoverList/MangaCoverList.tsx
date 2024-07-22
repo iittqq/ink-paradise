@@ -1,25 +1,31 @@
 import { useState, useEffect, useRef } from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 import Header from "../../Components/Header/Header";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { useLocation } from "react-router-dom";
 import "./MangaCoverList.css";
 
-import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
+import {
+  fetchMangaCoverBackend,
+  fetchSimilarManga,
+  fetchRecentlyUpdated,
+  fetchRecentlyAdded,
+} from "../../api/MangaDexApi";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 
 const MangaCoverList = () => {
   const { state } = useLocation();
-  const [mangaDetails, setMangaDetails] = useState<Manga[]>([]);
+  const [mangaDetails, setMangaDetails] = useState<Manga[]>(state.manga);
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const abortControllerRef = useRef<AbortController | null>(null);
+  const [offset, setOffset] = useState<number>(100);
 
-  const fetchCoverImages = async () => {
+  const fetchCoverImages = async (mangaList: Manga[]) => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
     abortControllerRef.current = new AbortController();
-    for (const mangaCurrent of state.manga) {
+    for (const mangaCurrent of mangaList) {
       const fileName = mangaCurrent.relationships.find(
         (i: Relationship) => i.type === "cover_art",
       )?.attributes?.fileName;
@@ -37,10 +43,36 @@ const MangaCoverList = () => {
     }
   };
 
+  const handleShowMore = () => {
+    console.log(state.tagId);
+    console.log(offset);
+    console.log(state.tagId !== undefined);
+
+    if (state.tagId !== undefined) {
+      fetchSimilarManga(100, offset, [state.tagId]).then(
+        (response: Manga[]) => {
+          setMangaDetails([...mangaDetails, ...response]);
+          fetchCoverImages(response);
+        },
+      );
+    } else if (state.listType === "Recently Updated") {
+      fetchRecentlyUpdated(100, offset).then((response: Manga[]) => {
+        setMangaDetails([...mangaDetails, ...response]);
+        fetchCoverImages(response);
+      });
+    } else if (state.listType === "Recently Added") {
+      fetchRecentlyAdded(100, offset).then((response: Manga[]) => {
+        setMangaDetails([...mangaDetails, ...response]);
+        fetchCoverImages(response);
+      });
+    }
+    setOffset(offset + 100);
+  };
+
   useEffect(() => {
     setMangaDetails(state.manga);
     if (state.manga.length > 0) {
-      fetchCoverImages();
+      fetchCoverImages(state.manga);
     }
     return () => {
       if (abortControllerRef.current) {
@@ -57,7 +89,13 @@ const MangaCoverList = () => {
         />
       </div>
       <Typography className="title">{state.listType}</Typography>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Grid
           container
           direction="row"
@@ -83,6 +121,14 @@ const MangaCoverList = () => {
             </Grid>
           ))}
         </Grid>
+        <Button
+          className="show-more-manga-cover-list"
+          onClick={() => {
+            handleShowMore();
+          }}
+        >
+          Show more
+        </Button>{" "}
       </div>
     </>
   );

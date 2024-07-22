@@ -37,3 +37,13 @@
   align-items: center;
   height: 100%;
 }
+
+.show-more-manga-cover-list {
+  color: unset !important;
+  text-transform: none !important;
+  width: 100px;
+  background-color: unset !important;
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
+}

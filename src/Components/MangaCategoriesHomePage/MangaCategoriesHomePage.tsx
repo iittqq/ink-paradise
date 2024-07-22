@@ -55,12 +55,17 @@ const MangaCategoriesHomePage = (props: Props) => {
     });
   };
 
-  const handleClickedShowMore = (title: string, manga: Manga[]) => {
+  const handleClickedShowMore = (
+    title: string,
+    manga: Manga[],
+    tagId?: string,
+  ) => {
     navigate("/mangaCoverList", {
       state: {
         listType: title,
         manga: manga,
         accountId: accountId === null ? null : accountId,
+        tagId: tagId,
       },
     });
   };
@@ -175,8 +180,8 @@ const MangaCategoriesHomePage = (props: Props) => {
           <Button
             className="more-button"
             onClick={() => {
-              fetchSimilarManga(50, [tag.id]).then((data: Manga[]) => {
-                handleClickedShowMore(tag.attributes.name.en, data);
+              fetchSimilarManga(100, 0, [tag.id]).then((data: Manga[]) => {
+                handleClickedShowMore(tag.attributes.name.en, data, tag.id);
               });
             }}
           >
@@ -226,7 +231,7 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Button
           className="more-button"
           onClick={() => {
-            fetchRecentlyUpdated(50, 0).then((data: Manga[]) => {
+            fetchRecentlyUpdated(100, 0).then((data: Manga[]) => {
               handleClickedShowMore("Recently Updated", data);
             });
           }}
@@ -274,7 +279,7 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Button
           className="more-button"
           onClick={() => {
-            fetchRecentlyAdded(50, 0).then((data: Manga[]) => {
+            fetchRecentlyAdded(100, 0).then((data: Manga[]) => {
               handleClickedShowMore("Recently Updated", data);
             });
           }}
