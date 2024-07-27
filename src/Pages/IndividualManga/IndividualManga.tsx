@@ -257,6 +257,7 @@ const IndividualManga = () => {
     } else {
       setPreviousId(id);
     }
+    console.log(mangaFeed.length);
   }, [
     id,
     coverUrl,
@@ -316,6 +317,9 @@ const IndividualManga = () => {
         />
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">
+            <Typography fontSize={20} fontFamily="Figtree" align="center">
+              Chapters
+            </Typography>
             <MangaChapterList
               mangaFeed={
                 selectedScanlationGroup !== undefined &&
@@ -332,17 +336,24 @@ const IndividualManga = () => {
               }
               accountId={state.accountId === undefined ? null : state.accountId}
             />
+
             {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
-              <Button
-                className="show-more-button"
-                onClick={() => {
-                  handleShowMore();
-                }}
-              >
-                {" "}
-                Show More
-              </Button>
-            ) : null}
+              mangaFeed.length < 100 ? null : (
+                <Button
+                  className="show-more-button"
+                  onClick={() => {
+                    handleShowMore();
+                  }}
+                >
+                  {" "}
+                  Show More
+                </Button>
+              )
+            ) : (
+              <Typography fontSize={18} fontFamily="Figtree" align="center">
+                Empty...
+              </Typography>
+            )}
           </div>
           <div className="similar-manga-section">
             <Typography fontSize={22} fontFamily="Figtree" align="center">

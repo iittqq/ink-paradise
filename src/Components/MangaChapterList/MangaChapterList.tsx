@@ -31,7 +31,7 @@ const MangaChapterList = (props: Props) => {
     accountId,
   } = props;
   const [xsValue, setXsValue] = useState(6);
-  const [userProgress, setUserProgress] = useState<number>(0);
+  const [userProgress, setUserProgress] = useState<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ const MangaChapterList = (props: Props) => {
     } else {
       setXsValue(6);
     }
-    setUserProgress(0);
+    setUserProgress(null);
     if (accountId !== null) {
       getReadingByUserId(accountId).then((data: Reading[]) => {
         console.log(data);
@@ -122,7 +122,8 @@ const MangaChapterList = (props: Props) => {
                 disableRipple
                 sx={{
                   outline:
-                    Number(current.attributes.chapter) === Number(userProgress)
+                    Number(current.attributes.chapter) ===
+                      Number(userProgress) && userProgress !== null
                       ? "2px solid #000000"
                       : "none",
                   opacity:
