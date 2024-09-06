@@ -28,7 +28,6 @@ type Props = {
   mangaFeedState: MangaFeedScanlationGroup[];
   handleChangePageNumber: (pageNumber: number) => void;
   startPage: number;
-  bookmarks: number[];
 };
 
 const PageAndControls = (props: Props) => {
@@ -48,7 +47,6 @@ const PageAndControls = (props: Props) => {
     mangaFeedState,
     handleChangePageNumber,
     startPage,
-    bookmarks,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
@@ -94,8 +92,6 @@ const PageAndControls = (props: Props) => {
         parseFloat(current.attributes.chapter) > parseFloat(currentChapter) &&
         mangaFeedState[index].attributes.externalUrl === null
       ) {
-        console.log("found");
-        console.log(current);
         chapterFound = true;
         handleClick(
           mangaId,
@@ -118,8 +114,6 @@ const PageAndControls = (props: Props) => {
         order,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
-        console.log(data);
-        console.log([...mangaFeedState, ...data]);
         setMangaFeedState([...mangaFeedState, ...data]);
       });
     }
@@ -136,7 +130,6 @@ const PageAndControls = (props: Props) => {
         parseFloat(current.attributes.chapter) < parseFloat(currentChapter) &&
         mangaFeedState[index].attributes.externalUrl === null
       ) {
-        console.log("found");
         chapterFound = true;
         handleClick(
           mangaId,
@@ -167,26 +160,23 @@ const PageAndControls = (props: Props) => {
   };
 
   const handlePreviousPage = () => {
-    console.log(currentPage);
-    if (currentPage === 0) {
+    if (currentPage === 0 || readerMode === 3) {
       handlePreviousChapter();
     } else {
       setCurrentPage(currentPage - 1);
       handleChangePageNumber(currentPage - 1);
     }
-    console.log(bookmarks);
     window.localStorage.setItem("position", window.scrollY.toString());
   };
 
   const handleNextPage = () => {
     console.log(currentPage);
-    if (currentPage === pages.length - 1) {
+    if (currentPage === pages.length - 1 || readerMode === 3) {
       handleNextChapter();
     } else {
       setCurrentPage(currentPage + 1);
       handleChangePageNumber(currentPage + 1);
     }
-    console.log(bookmarks);
     window.localStorage.setItem("position", window.scrollY.toString());
   };
 
@@ -256,15 +246,13 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log(chapterIndex);
-    console.log(currentPage);
     setImageBlob({});
     handleLoadImage(hash, pages).catch((error) => {
       throw error;
     });
   }, [hash, pages]);
   return (
-    <div className="page-and-controls-container">
+    <div>
       <div
         className="page-container"
         onTouchStart={onTouchStart}
@@ -277,18 +265,28 @@ const PageAndControls = (props: Props) => {
           </div>
         ) : (
           <>
-            {imageBlob[pages[currentPage]] && (
-              <img
-                className="page"
-                src={URL.createObjectURL(imageBlob[pages[currentPage]])}
-                alt=""
-              />
-            )}
+            {readerMode === 3
+              ? pages.map((page, index) =>
+                  imageBlob[page] ? (
+                    <img
+                      key={index}
+                      className="page"
+                      src={URL.createObjectURL(imageBlob[page])}
+                    />
+                  ) : null,
+                )
+              : imageBlob[pages[currentPage]] && (
+                  <img
+                    className="page"
+                    src={URL.createObjectURL(imageBlob[pages[currentPage]])}
+                    alt=""
+                  />
+                )}
             <div className="overlay-buttons">
               <Button
                 className="chapter-page-traversal"
                 onClick={() => {
-                  if (readerMode === 1) {
+                  if (readerMode === 1 || readerMode === 3) {
                     handleNextPage();
                   } else if (readerMode === 2) {
                     handlePreviousPage();
@@ -298,7 +296,7 @@ const PageAndControls = (props: Props) => {
               <Button
                 className="chapter-page-traversal"
                 onClick={() => {
-                  if (readerMode === 1) {
+                  if (readerMode === 1 || readerMode === 3) {
                     handlePreviousPage();
                   } else if (readerMode === 2) {
                     handleNextPage();
@@ -314,7 +312,7 @@ const PageAndControls = (props: Props) => {
         <Button
           className="chapter-page-traversal-buttons"
           onClick={() => {
-            if (readerMode === 1) {
+            if (readerMode === 1 || readerMode === 3) {
               handleNextChapter();
             } else if (readerMode === 2) {
               handlePreviousChapter();
@@ -326,7 +324,7 @@ const PageAndControls = (props: Props) => {
         <Button
           className="chapter-page-traversal-buttons"
           onClick={() => {
-            if (readerMode === 1) {
+            if (readerMode === 1 || readerMode === 3) {
               handleNextPage();
             } else if (readerMode === 2) {
               handlePreviousPage();
@@ -338,7 +336,7 @@ const PageAndControls = (props: Props) => {
         <Button
           className="chapter-page-traversal-buttons"
           onClick={() => {
-            if (readerMode === 1) {
+            if (readerMode === 1 || readerMode === 3) {
               handlePreviousPage();
             } else if (readerMode === 2) {
               handleNextPage();
@@ -350,7 +348,7 @@ const PageAndControls = (props: Props) => {
         <Button
           className="chapter-page-traversal-buttons"
           onClick={() => {
-            if (readerMode === 1) {
+            if (readerMode === 1 || readerMode === 3) {
               handlePreviousChapter();
             } else if (readerMode === 2) {
               handleNextChapter();
@@ -360,10 +358,15 @@ const PageAndControls = (props: Props) => {
           <KeyboardDoubleArrowRightIcon />
         </Button>
       </div>
-
-      <Typography fontFamily="Figtree" align="center">
-        {currentPage + 1} / {pages.length}
-      </Typography>
+      {readerMode === 3 ? (
+        <Typography fontFamily="Figtree" align="center">
+          {pages.length} pages
+        </Typography>
+      ) : (
+        <Typography fontFamily="Figtree" align="center">
+          {currentPage + 1} / {pages.length}
+        </Typography>
+      )}
     </div>
   );
 };

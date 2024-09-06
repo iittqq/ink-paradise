@@ -1,5 +1,7 @@
 .individual-page-container {
-  height: 100%;
+  height: 98dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -23,7 +25,9 @@
   align-items: center;
   flex-direction: column;
   position: relative;
+  flex-grow: 1;
   margin-top: 20px;
+  overflow: hidden;
 }
 
 .show-more-button {
@@ -46,7 +50,7 @@
   align-items: center;
   flex-direction: column;
   width: 50%;
-  height: 50dvh;
+  height: 100%;
   -ms-overflow-style: none;
   scrollbar-width: none;
 
@@ -67,17 +71,34 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  align-items: flex-end;
+  align-items: flex-start;
+  flex-grow: 1;
+  overflow: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .similar-manga-section {
+  height: 100%;
+  overflow: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   @media (width <= 1600px) {
     display: none;
   }
 }
 
+.empty-chapters-text {
+  @media (width >= 1600px) {
+    display: none;
+  }
+}
+
 .similar-manga {
-  height: 50dvh;
   overflow: scroll;
   scrollbar-width: none;
 }

@@ -148,5 +148,6 @@ input[type="search"]:focus {
   flex-direction: row;
   justify-content: center;
   font-family: "Figtree" !important;
-  min-width: 200px;
+  min-width: 100px;
+  font-size: 12px;
 }

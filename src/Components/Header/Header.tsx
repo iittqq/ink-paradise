@@ -16,9 +16,10 @@ import PetsIcon from "@mui/icons-material/Pets";
 
 type Props = {
   accountId: number | null;
+  contentFilter: number;
 };
 const Header = (props: Props) => {
-  const { accountId } = props;
+  const { accountId, contentFilter } = props;
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searching, setSearching] = useState(false);
@@ -77,15 +78,18 @@ const Header = (props: Props) => {
   const handleClick = async () =>
     searchInput === ""
       ? null
-      : fetchMangaByTitle(searchInput, 25).then((data: Manga[]) => {
-          navigate("/mangaCoverList", {
-            state: {
-              listType: "Search Results",
-              manga: data,
-              accountId: accountId,
-            },
-          });
-        });
+      : fetchMangaByTitle(searchInput, 25, contentFilter).then(
+          (data: Manga[]) => {
+            navigate("/mangaCoverList", {
+              state: {
+                listType: "Search Results",
+                manga: data,
+                accountId: accountId,
+                contentFilter: contentFilter,
+              },
+            });
+          },
+        );
 
   return (
     <>

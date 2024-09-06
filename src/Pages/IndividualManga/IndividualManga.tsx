@@ -141,15 +141,17 @@ const IndividualManga = () => {
   };
 
   const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
-    fetchSimilarManga(25, 0, [category.id]).then((data: Manga[]) => {
-      navigate("/mangaCoverList", {
-        state: {
-          listType: category.attributes.name.en,
-          manga: data,
-          accountId: state.accountId,
-        },
-      });
-    });
+    fetchSimilarManga(25, 0, [category.id], state.contentFilter).then(
+      (data: Manga[]) => {
+        navigate("/mangaCoverList", {
+          state: {
+            listType: category.attributes.name.en,
+            manga: data,
+            accountId: state.accountId,
+          },
+        });
+      },
+    );
   };
 
   const handleShowMore = () => {
@@ -185,9 +187,11 @@ const IndividualManga = () => {
 
         setMangaTags(data["attributes"].tags);
         const tagIds = data["attributes"].tags.map((tag) => tag.id);
-        fetchSimilarManga(10, 0, tagIds).then((data: Manga[]) => {
-          setSimilarManga(data);
-        });
+        fetchSimilarManga(10, 0, tagIds, state.contentFilter).then(
+          (data: Manga[]) => {
+            setSimilarManga(data);
+          },
+        );
       });
 
       if (
@@ -272,6 +276,7 @@ const IndividualManga = () => {
       <div className="header">
         <Header
           accountId={state.accountId === undefined ? null : state.accountId}
+          contentFilter={state.contentFilter}
         />
       </div>
       <div>
@@ -317,26 +322,42 @@ const IndividualManga = () => {
         />
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">
-            <Typography fontSize={20} fontFamily="Figtree" align="center">
-              Chapters
-            </Typography>
-            <MangaChapterList
-              mangaFeed={
-                selectedScanlationGroup !== undefined &&
-                filteredMangaFeed !== undefined
-                  ? filteredMangaFeed
-                  : mangaFeed
-              }
-              mangaName={mangaName}
-              selectedLanguage={selectedLanguage}
-              mangaId={id !== undefined ? id : ""}
-              insideReader={false}
-              coverUrl={
-                coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""
-              }
-              accountId={state.accountId === undefined ? null : state.accountId}
-            />
+            {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
+              <>
+                <Typography fontSize={20} fontFamily="Figtree" align="center">
+                  Chapters
+                </Typography>
 
+                <MangaChapterList
+                  mangaFeed={
+                    selectedScanlationGroup !== undefined &&
+                    filteredMangaFeed !== undefined
+                      ? filteredMangaFeed
+                      : mangaFeed
+                  }
+                  mangaName={mangaName}
+                  selectedLanguage={selectedLanguage}
+                  mangaId={id !== undefined ? id : ""}
+                  insideReader={false}
+                  coverUrl={
+                    coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""
+                  }
+                  accountId={
+                    state.accountId === undefined ? null : state.accountId
+                  }
+                  contentFilter={state.contentFilter}
+                />
+              </>
+            ) : (
+              <Typography
+                fontSize={18}
+                fontFamily="Figtree"
+                align="center"
+                className="empty-chapters-text"
+              >
+                Empty...
+              </Typography>
+            )}
             {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
               mangaFeed.length < 100 ? null : (
                 <Button
@@ -349,11 +370,7 @@ const IndividualManga = () => {
                   Show More
                 </Button>
               )
-            ) : (
-              <Typography fontSize={18} fontFamily="Figtree" align="center">
-                Empty...
-              </Typography>
-            )}
+            ) : null}
           </div>
           <div className="similar-manga-section">
             <Typography fontSize={22} fontFamily="Figtree" align="center">

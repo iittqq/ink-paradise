@@ -40,6 +40,9 @@
 .page {
   width: 100%;
   object-fit: contain;
+  @media (width >= 600px) {
+    height: 90dvh;
+  }
 }
 
 .overlay-buttons {

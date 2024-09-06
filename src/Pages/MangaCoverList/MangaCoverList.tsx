@@ -47,24 +47,29 @@ const MangaCoverList = () => {
     console.log(state.tagId);
     console.log(offset);
     console.log(state.tagId !== undefined);
+    console.log(state.contentFilter);
 
     if (state.tagId !== undefined) {
-      fetchSimilarManga(100, offset, [state.tagId]).then(
+      fetchSimilarManga(100, offset, [state.tagId], state.contentFilter).then(
         (response: Manga[]) => {
           setMangaDetails([...mangaDetails, ...response]);
           fetchCoverImages(response);
         },
       );
     } else if (state.listType === "Recently Updated") {
-      fetchRecentlyUpdated(100, offset).then((response: Manga[]) => {
-        setMangaDetails([...mangaDetails, ...response]);
-        fetchCoverImages(response);
-      });
+      fetchRecentlyUpdated(100, offset, state.contentFilter).then(
+        (response: Manga[]) => {
+          setMangaDetails([...mangaDetails, ...response]);
+          fetchCoverImages(response);
+        },
+      );
     } else if (state.listType === "Recently Added") {
-      fetchRecentlyAdded(100, offset).then((response: Manga[]) => {
-        setMangaDetails([...mangaDetails, ...response]);
-        fetchCoverImages(response);
-      });
+      fetchRecentlyAdded(100, offset, state.contentFilter).then(
+        (response: Manga[]) => {
+          setMangaDetails([...mangaDetails, ...response]);
+          fetchCoverImages(response);
+        },
+      );
     }
     setOffset(offset + 100);
   };
@@ -86,6 +91,7 @@ const MangaCoverList = () => {
       <div className="header">
         <Header
           accountId={state.accountId === undefined ? null : state.accountId}
+          contentFilter={state.contentFilter}
         />
       </div>
       <Typography className="title">{state.listType}</Typography>

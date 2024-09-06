@@ -18,6 +18,7 @@ type Props = {
   insideReader: boolean;
   coverUrl: string;
   accountId: number;
+  contentFilter: number;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -29,6 +30,7 @@ const MangaChapterList = (props: Props) => {
     setOpen,
     coverUrl,
     accountId,
+    contentFilter,
   } = props;
   const [xsValue, setXsValue] = useState(6);
   const [userProgress, setUserProgress] = useState<number | null>(null);
@@ -63,6 +65,7 @@ const MangaChapterList = (props: Props) => {
           accountId: accountId,
           mangaFeed: mangaFeed,
           chapterIndex: index,
+          contentFilter: contentFilter,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -81,6 +84,7 @@ const MangaChapterList = (props: Props) => {
           accountId: accountId,
           mangaFeed: mangaFeed,
           chapterIndex: index,
+          contentFilter: contentFilter,
         },
       });
     }

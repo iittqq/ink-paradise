@@ -439,6 +439,7 @@ const Library = () => {
       <div>
         <Header
           accountId={state.accountId === undefined ? null : state.accountId}
+          contentFilter={parseInt(contentFilter)}
         />
       </div>
       <LibraryHeader

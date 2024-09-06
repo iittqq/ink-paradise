@@ -27,6 +27,7 @@ type Props = {
   mangaFromTag?: Manga[];
   tag?: MangaTagsInterface;
   accountId: number | null;
+  contentFilter: number;
 };
 
 const MangaCategoriesHomePage = (props: Props) => {
@@ -37,6 +38,7 @@ const MangaCategoriesHomePage = (props: Props) => {
     mangaFromTag,
     tag,
     accountId,
+    contentFilter,
   } = props;
   const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{
     [key: string]: string;
@@ -66,6 +68,7 @@ const MangaCategoriesHomePage = (props: Props) => {
         manga: manga,
         accountId: accountId === null ? null : accountId,
         tagId: tagId,
+        contentFilter: contentFilter,
       },
     });
   };
@@ -180,9 +183,11 @@ const MangaCategoriesHomePage = (props: Props) => {
           <Button
             className="more-button"
             onClick={() => {
-              fetchSimilarManga(100, 0, [tag.id]).then((data: Manga[]) => {
-                handleClickedShowMore(tag.attributes.name.en, data, tag.id);
-              });
+              fetchSimilarManga(100, 0, [tag.id], contentFilter).then(
+                (data: Manga[]) => {
+                  handleClickedShowMore(tag.attributes.name.en, data, tag.id);
+                },
+              );
             }}
           >
             Show More
@@ -231,9 +236,11 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Button
           className="more-button"
           onClick={() => {
-            fetchRecentlyUpdated(100, 0).then((data: Manga[]) => {
-              handleClickedShowMore("Recently Updated", data);
-            });
+            fetchRecentlyUpdated(100, 0, contentFilter).then(
+              (data: Manga[]) => {
+                handleClickedShowMore("Recently Updated", data);
+              },
+            );
           }}
         >
           Show More
@@ -279,7 +286,7 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Button
           className="more-button"
           onClick={() => {
-            fetchRecentlyAdded(100, 0).then((data: Manga[]) => {
+            fetchRecentlyAdded(100, 0, contentFilter).then((data: Manga[]) => {
               handleClickedShowMore("Recently Updated", data);
             });
           }}

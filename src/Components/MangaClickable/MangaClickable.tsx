@@ -1,6 +1,8 @@
 import { Card, CardMedia, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { fetchAccountDetails } from "../../api/AccountDetails";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 
 import "./MangaClickable.css";
 
@@ -21,9 +23,21 @@ const MangaClickable = (props: Props) => {
 
   function handleClick() {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
-      state: { accountId: accountId },
-    });
+    if (accountId !== null) {
+      fetchAccountDetails(accountId).then((response: AccountDetails) => {
+        console.log(response);
+        navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+          state: {
+            accountId: accountId,
+            contentFilter: response.contentFilter,
+          },
+        });
+      });
+    } else {
+      navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+        state: { accountId: accountId, contentFilter: 3 },
+      });
+    }
   }
 
   return (

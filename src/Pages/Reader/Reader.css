@@ -5,6 +5,12 @@
   width: 100%;
 }
 
+.active-page-area {
+  min-height: 99dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 .settings-icon {
   width: 100%;
   display: flex;

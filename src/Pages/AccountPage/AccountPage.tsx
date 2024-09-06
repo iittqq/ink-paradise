@@ -384,6 +384,7 @@ const AccountPage = () => {
     <div className="user-page-container">
       <Header
         accountId={state.accountId === undefined ? null : state.accountId}
+        contentFilter={parseInt(contentFilter)}
       />
       <div className="utility-buttons">
         <Button

@@ -20,10 +20,10 @@ import { Button, Typography } from "@mui/material";
 import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
 import StyleIcon from "@mui/icons-material/Style";
 import InfoIcon from "@mui/icons-material/Info";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 import ThemeButton from "../../Components/ThemeButton/ThemeButton";
 import { useTheme } from "../../contexts/ThemeContext";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const Home = () => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
@@ -38,11 +38,58 @@ const Home = () => {
   const [openInfo, setOpenInfo] = useState(false);
   const [openThemes, setOpenThemes] = useState(false);
   const [newTheme, setNewTheme] = useState<number>(0);
+  const [contentFilterState, setContentFilterState] = useState<number>(3);
   const { state } = useLocation();
   const accountId = state?.accountId ?? null;
   const { toggleTheme } = useTheme();
 
   useEffect(() => {
+    if (accountId !== null) {
+      fetchAccountDetails(accountId).then((data) => {
+        console.log(data);
+        setContentFilterState(data.contentFilter);
+        if (data !== null) {
+          console.log(data);
+          fetchPopularManga(10, data.contentFilter).then((data: Manga[]) => {
+            setPopularManga(data);
+          });
+          fetchRecentlyUpdated(5, 0, data.contentFilter).then(
+            (data: Manga[]) => {
+              setRecentlyUpdatedManga(data);
+            },
+          );
+          fetchRecentlyAdded(5, 0, data.contentFilter).then((data: Manga[]) => {
+            setRecentlyAddedManga(data);
+          });
+          if (selectedTag !== null) {
+            fetchSimilarManga(5, 0, [selectedTag.id], data.contentFilter).then(
+              (data: Manga[]) => {
+                setMangaFromTag(data);
+              },
+            );
+          }
+        }
+      });
+    } else {
+      console.log("no account");
+      fetchPopularManga(10, 3).then((data: Manga[]) => {
+        setPopularManga(data);
+      });
+      fetchRecentlyUpdated(5, 0, 3).then((data: Manga[]) => {
+        setRecentlyUpdatedManga(data);
+      });
+      fetchRecentlyAdded(5, 0, 3).then((data: Manga[]) => {
+        setRecentlyAddedManga(data);
+      });
+
+      if (selectedTag !== null) {
+        fetchSimilarManga(5, 0, [selectedTag.id], 3).then((data: Manga[]) => {
+          setMangaFromTag(data);
+        });
+      }
+    }
+    {
+      /**
     fetchPopularManga(10).then((data: Manga[]) => {
       setPopularManga(data);
     });
@@ -52,15 +99,19 @@ const Home = () => {
     fetchRecentlyAdded(5, 0).then((data: Manga[]) => {
       setRecentlyAddedManga(data);
     });
-
+*/
+    }
     fetchMangaTags().then((data: MangaTagsInterface[]) => {
       setMangaTags(data);
     });
-
+    {
+      /**
     if (selectedTag !== null) {
       fetchSimilarManga(5, 0, [selectedTag.id]).then((data: Manga[]) => {
         setMangaFromTag(data);
       });
+    }
+    */
     }
 
     const localTheme = window.localStorage.getItem("theme");
@@ -124,7 +175,10 @@ const Home = () => {
 
   return (
     <div>
-      <Header accountId={accountId === null ? null : state.accountId} />
+      <Header
+        accountId={accountId === null ? null : state.accountId}
+        contentFilter={contentFilterState}
+      />
       <div className="home-title-and-dialog-button">
         <Typography className="popular-manga-header"> Popular Manga</Typography>
         <InfoButtonHome
@@ -169,6 +223,7 @@ const Home = () => {
           mangaFromTag={mangaFromTag ? mangaFromTag : undefined}
           tag={selectedTag !== null ? selectedTag : undefined}
           accountId={accountId === null ? null : state.accountId}
+          contentFilter={contentFilterState}
         />
       </div>
     </div>

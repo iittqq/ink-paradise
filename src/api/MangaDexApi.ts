@@ -15,12 +15,14 @@ import {
 async function fetchRecentlyUpdated(
   limit: number,
   offset: number,
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/recently-updated`, {
       params: {
         limit: limit,
         offset: offset,
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
@@ -33,12 +35,14 @@ async function fetchRecentlyUpdated(
 async function fetchRecentlyAdded(
   limit: number,
   offset: number,
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/recently-added`, {
       params: {
         limit: limit,
         offset: offset,
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
@@ -76,12 +80,14 @@ async function fetchMangaById(mangaId: string): Promise<Manga> {
 async function fetchMangaByTitle(
   title: string,
   limit: number,
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-title`, {
       params: {
         limit: limit,
         title: title,
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
@@ -95,6 +101,7 @@ async function fetchMangaByTag(
   tagId: string,
   limit: number,
   offset: number,
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-tag`, {
@@ -102,6 +109,7 @@ async function fetchMangaByTag(
         limit: limit,
         offset: offset,
         includedTags: [tagId],
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
@@ -168,6 +176,7 @@ async function fetchMangaByAuthor(
   authorName: string,
   limit: number,
   offset: number,
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-author`, {
@@ -175,6 +184,7 @@ async function fetchMangaByAuthor(
         limit: limit,
         offset: offset,
         authors: authorName,
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
@@ -217,6 +227,7 @@ async function fetchSimilarManga(
   limit: number,
   offset: number,
   tags: string[],
+  contentFilter: number,
 ): Promise<Manga[]> {
   try {
     const params = new URLSearchParams();
@@ -225,6 +236,7 @@ async function fetchSimilarManga(
     tags.forEach((tag) => {
       params.append("tags", tag);
     });
+    params.append("contentFilter", contentFilter.toString());
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-similar`, {
       params,
     });
@@ -235,11 +247,15 @@ async function fetchSimilarManga(
   }
 }
 
-async function fetchPopularManga(limit: number): Promise<Manga[]> {
+async function fetchPopularManga(
+  limit: number,
+  contentFilter: number,
+): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/popular-manga`, {
       params: {
         limit: limit,
+        contentFilter: contentFilter,
       },
     });
     return response.data.data;
