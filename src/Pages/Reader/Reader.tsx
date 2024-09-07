@@ -132,7 +132,6 @@ const Reader = () => {
   };
 
   const handleChangeNewReaderMode = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
     setReaderInteger(parseInt(event.target.value));
     setReaderMode(event.target.value as string);
   };
@@ -184,9 +183,6 @@ const Reader = () => {
       getBookmarksByUserId(parseInt(state.accountId)).then(
         (data: Bookmark[]) => {
           data.forEach((bookmark: Bookmark) => {
-            console.log(bookmark);
-            console.log(state.pageNumber);
-            console.log(state.chapterNumber);
             if (state.pageNumber === null || state.pageNumber === undefined) {
               if (
                 bookmark.mangaId === state.mangaId &&
@@ -217,7 +213,6 @@ const Reader = () => {
               } else {
                 tempBookmarks.push(bookmark.pageNumber!);
               }
-              console.log(tempBookmarks);
             }
           });
           handleBookmarksChange(tempBookmarks);
@@ -237,7 +232,6 @@ const Reader = () => {
       );
     }
 
-    console.log(readerMode === "3");
     handleScrollPosition();
   }, [state, order, selectedLanguage, mangaFeedState, newReaderMode]);
 

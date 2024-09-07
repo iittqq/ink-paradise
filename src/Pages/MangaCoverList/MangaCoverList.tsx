@@ -44,11 +44,6 @@ const MangaCoverList = () => {
   };
 
   const handleShowMore = () => {
-    console.log(state.tagId);
-    console.log(offset);
-    console.log(state.tagId !== undefined);
-    console.log(state.contentFilter);
-
     if (state.tagId !== undefined) {
       fetchSimilarManga(100, offset, [state.tagId], state.contentFilter).then(
         (response: Manga[]) => {

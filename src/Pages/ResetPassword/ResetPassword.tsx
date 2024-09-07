@@ -223,7 +223,6 @@ const ResetPassword = () => {
               )
             }
             onClick={() => {
-              console.log("clicked");
               handlePasswordChangeButton();
             }}
           >

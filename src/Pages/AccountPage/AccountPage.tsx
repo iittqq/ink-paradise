@@ -352,8 +352,6 @@ const AccountPage = () => {
   };
 
   useEffect(() => {
-    console.log(state);
-    console.log(state.account);
     if (state.account !== null) {
       setAccountData(state.account);
       if (state.account !== null) {

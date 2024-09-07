@@ -46,10 +46,8 @@ const Home = () => {
   useEffect(() => {
     if (accountId !== null) {
       fetchAccountDetails(accountId).then((data) => {
-        console.log(data);
         setContentFilterState(data.contentFilter);
         if (data !== null) {
-          console.log(data);
           fetchPopularManga(10, data.contentFilter).then((data: Manga[]) => {
             setPopularManga(data);
           });
@@ -71,7 +69,6 @@ const Home = () => {
         }
       });
     } else {
-      console.log("no account");
       fetchPopularManga(10, 3).then((data: Manga[]) => {
         setPopularManga(data);
       });

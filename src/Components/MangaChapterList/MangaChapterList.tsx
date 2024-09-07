@@ -50,7 +50,6 @@ const MangaChapterList = (props: Props) => {
     mangaFeed: MangaFeedScanlationGroup[],
     index: number,
   ) => {
-    console.log(index);
     if (insideReader) {
       navigate("/reader", {
         state: {
@@ -99,7 +98,6 @@ const MangaChapterList = (props: Props) => {
     setUserProgress(null);
     if (accountId !== null) {
       getReadingByUserId(accountId).then((data: Reading[]) => {
-        console.log(data);
         data
           .filter((reading: Reading) => reading.mangaId === mangaId)
           .map((reading: Reading) => {

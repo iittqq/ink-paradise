@@ -103,7 +103,6 @@ const Login = () => {
   const handleLogin = async () => {
     if (email !== "" || password !== "") {
       login(email, password).then((response: number) => {
-        console.log(response);
         if (response !== -1) {
           setAttemptedLogin(false);
           navigate("/", { state: { accountId: response } });

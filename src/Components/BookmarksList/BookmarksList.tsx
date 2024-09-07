@@ -48,10 +48,8 @@ const BookmarksList = (props: Props) => {
     index: number,
     pageNumber: number | null,
   ) => {
-    console.log(index);
     fetchMangaFeed(mangaId, 100, index, "asc", "en").then(
       (mangaFeed: MangaFeedScanlationGroup[]) => {
-        console.log(mangaFeed);
         fetchChapterDetails(chapterId).then((response: ChapterDetails) => {
           navigate("/reader", {
             state: {
@@ -79,7 +77,6 @@ const BookmarksList = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log(bookmarks);
     const fetchCoverImages = async () => {
       const coverUrls: { [key: string]: string } = {};
       for (const manga of bookmarks) {

@@ -25,7 +25,6 @@ const MangaClickable = (props: Props) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
     if (accountId !== null) {
       fetchAccountDetails(accountId).then((response: AccountDetails) => {
-        console.log(response);
         navigate(`/individualView/${id}/${encodedCoverUrl}`, {
           state: {
             accountId: accountId,

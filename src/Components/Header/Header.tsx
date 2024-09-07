@@ -27,7 +27,6 @@ const Header = (props: Props) => {
   const [showAlertAccount, setShowAlertAccount] = useState(false);
 
   const handleClickAccount = () => {
-    console.log(accountId);
     if (accountId !== null) {
       fetchAccountData(accountId).then((data: Account | null) => {
         if (data !== null && data.verified === true) {

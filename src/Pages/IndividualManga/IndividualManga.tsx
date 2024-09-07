@@ -160,10 +160,8 @@ const IndividualManga = () => {
   };
 
   useEffect(() => {
-    console.log(state);
     if (state.accountId !== null) {
       getMangaFolders().then((response) => {
-        console.log(response);
         setFolders(
           response.filter((folder) => folder.userId === state.accountId),
         );
@@ -261,7 +259,6 @@ const IndividualManga = () => {
     } else {
       setPreviousId(id);
     }
-    console.log(mangaFeed.length);
   }, [
     id,
     coverUrl,

@@ -414,7 +414,6 @@ const Library = () => {
         }
       }
 
-      console.log(enrichedBookmarks);
       setBookmarks(enrichedBookmarks);
       setLoading(false);
     } catch (error) {
