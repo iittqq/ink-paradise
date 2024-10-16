@@ -44,9 +44,12 @@ const LibraryContents = (props: Props) => {
         if (fileName) {
           const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
           coverUrlsLibrary[manga.id] = URL.createObjectURL(imageBlob);
+          setCoverUrlsLibrary((prevCoverUrls) => ({
+            ...prevCoverUrls,
+            [manga.id]: URL.createObjectURL(imageBlob),
+          }));
         }
       }
-      setCoverUrlsLibrary(coverUrlsLibrary);
     };
     if (libraryManga.length > 0) {
       fetchCoverImagesLibrary();

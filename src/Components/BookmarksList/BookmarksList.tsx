@@ -78,16 +78,17 @@ const BookmarksList = (props: Props) => {
 
   useEffect(() => {
     const fetchCoverImages = async () => {
-      const coverUrls: { [key: string]: string } = {};
       for (const manga of bookmarks) {
         const fileName = manga.relationships.find((i) => i.type === "cover_art")
           ?.attributes?.fileName;
         if (fileName) {
           const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
-          coverUrls[manga.id] = URL.createObjectURL(imageBlob);
+          setBookmarkCoverUrls((prevCoverUrls) => ({
+            ...prevCoverUrls,
+            [manga.id]: URL.createObjectURL(imageBlob),
+          }));
         }
       }
-      setBookmarkCoverUrls(coverUrls);
     };
     if (bookmarks.length > 0) {
       fetchCoverImages();

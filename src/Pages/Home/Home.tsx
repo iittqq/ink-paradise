@@ -13,6 +13,7 @@ import {
   fetchMangaTags,
   fetchSimilarManga,
 } from "../../api/MangaDexApi";
+import { useNavigate } from "react-router-dom";
 import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
 import MangaCategoriesHomePage from "../../Components/MangaCategoriesHomePage/MangaCategoriesHomePage";
 import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
@@ -26,14 +27,11 @@ import ThemeButton from "../../Components/ThemeButton/ThemeButton";
 import { useTheme } from "../../contexts/ThemeContext";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
   const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
   const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
-  const [mangaFromTag, setMangaFromTag] = useState<Manga[]>([]);
-  const [selectedTag, setSelectedTag] = useState<MangaTagsInterface | null>(
-    null,
-  );
   const [openTags, setOpenTags] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const [openThemes, setOpenThemes] = useState(false);
@@ -59,31 +57,18 @@ const Home = () => {
           fetchRecentlyAdded(5, 0, data.contentFilter).then((data: Manga[]) => {
             setRecentlyAddedManga(data);
           });
-          if (selectedTag !== null) {
-            fetchSimilarManga(5, 0, [selectedTag.id], data.contentFilter).then(
-              (data: Manga[]) => {
-                setMangaFromTag(data);
-              },
-            );
-          }
         }
       });
     } else {
       fetchPopularManga(10, 3).then((data: Manga[]) => {
         setPopularManga(data);
       });
-      fetchRecentlyUpdated(5, 0, 3).then((data: Manga[]) => {
+      fetchRecentlyUpdated(6, 0, 3).then((data: Manga[]) => {
         setRecentlyUpdatedManga(data);
       });
-      fetchRecentlyAdded(5, 0, 3).then((data: Manga[]) => {
+      fetchRecentlyAdded(6, 0, 3).then((data: Manga[]) => {
         setRecentlyAddedManga(data);
       });
-
-      if (selectedTag !== null) {
-        fetchSimilarManga(5, 0, [selectedTag.id], 3).then((data: Manga[]) => {
-          setMangaFromTag(data);
-        });
-      }
     }
     {
       /**
@@ -124,11 +109,25 @@ const Home = () => {
         });
       }
     }
-  }, [selectedTag]);
+  }, []);
 
   const handleClickedTag = (tag: MangaTagsInterface | null) => {
-    setSelectedTag(tag);
-    setOpenTags(false);
+    if (tag !== null) {
+      fetchSimilarManga(100, 0, [tag.id], contentFilterState).then(
+        (data: Manga[]) => {
+          navigate("/mangaCoverList", {
+            state: {
+              listType: tag.attributes.name.en,
+              manga: data,
+              accountId: accountId === null ? null : accountId,
+              tagId: tag.id,
+              contentFilter: contentFilterState,
+            },
+          });
+        },
+      );
+      setOpenTags(false);
+    }
   };
 
   const handleClickedOpenTags = () => {
@@ -191,7 +190,6 @@ const Home = () => {
         <MangaTagsHome
           mangaTags={mangaTags}
           handleClickedTag={handleClickedTag}
-          selectedTag={selectedTag !== null ? selectedTag : undefined}
           handleClickOpenTags={handleClickedOpenTags}
           openTags={openTags}
           handleTagsDialogClose={handleTagsDialogClose}
@@ -217,8 +215,6 @@ const Home = () => {
         <MangaCategoriesHomePage
           recentlyUpdatedManga={recentlyUpdatedManga}
           recentlyAddedManga={recentlyAddedManga}
-          mangaFromTag={mangaFromTag ? mangaFromTag : undefined}
-          tag={selectedTag !== null ? selectedTag : undefined}
           accountId={accountId === null ? null : state.accountId}
           contentFilter={contentFilterState}
         />
