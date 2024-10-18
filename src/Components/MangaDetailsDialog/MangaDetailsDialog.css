@@ -1,0 +1,124 @@
+#clicked-manga-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.clicked-manga-dialog-title {
+  font-family: "Figtree", sans-serif;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 20px !important;
+}
+
+.manga-details-dialog-contents {
+  display: flex;
+  flex-direction: column;
+  max-height: 50dvh;
+}
+
+.manga-details-cover-section {
+  align-self: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+.manga-details-stack {
+  font-family: "Figtree", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 10px;
+  min-width: 0px;
+  width: 90%;
+}
+
+.manga-details-header-text {
+  font-family: "Figtree", sans-serif;
+  font-size: 14px !important;
+  color: #fff;
+  padding-right: 10px;
+}
+
+.manga-details-header-text-author {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 18px !important;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+  max-width: 100%;
+  padding-bottom: 10px;
+}
+
+.manga-details-description {
+  width: 90%;
+  align-self: center;
+  padding-top: 10px;
+}
+
+.manga-details-description-text {
+  font-family: "Figtree", sans-serif;
+  font-size: 16px;
+  color: #fff;
+  text-align: left;
+}
+
+.manga-details-dialog-button {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  background-color: transparent !important;
+  width: 100px;
+  align-self: center;
+  padding-top: 20px !important;
+  bottom: 0px;
+}
+
+.manga-categories-dialog {
+  overflow: hidden;
+  max-height: 85px;
+}
+
+.manga-categories-dialog-text {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 15px !important;
+  color: #fff;
+}
+
+.details-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding-top: 10px;
+}
+
+.manga-description-header-text {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 18px !important;
+  color: #fff;
+}

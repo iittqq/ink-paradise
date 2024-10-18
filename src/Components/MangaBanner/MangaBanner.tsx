@@ -1,76 +1,76 @@
-import { Typography, Button } from "@mui/material";
-import { useState } from "react";
+import { Typography } from "@mui/material";
 import "./MangaBanner.css";
 
 type Props = {
   coverUrl: string;
   mangaDescription: string;
   mangaName: string;
+  author: string | undefined;
+  contentRating: string;
+  status: string | undefined;
 };
 
 const MangaBanner = (props: Props) => {
-  const [showMoreToggled, setShowMoreToggled] = useState(false);
-  const { coverUrl, mangaDescription, mangaName } = props;
+  const {
+    coverUrl,
+    mangaDescription,
+    mangaName,
+    author,
+    contentRating,
+    status,
+  } = props;
 
-  const handleShowMore = () => {
-    setShowMoreToggled(!showMoreToggled);
-  };
   return (
     <div className="banner-container">
-      <div className="cover-image">
+      <div className="cover-name-container">
         <img className="cover-image" src={coverUrl} alt="" />
+        <div className="header-details-stack">
+          <Typography
+            className="manga-name"
+            sx={{
+              fontSize: { xs: 20, sm: 25, lg: 30 },
+            }}
+          >
+            {mangaName}
+          </Typography>
+          {author !== undefined ? (
+            <Typography
+              className="manga-author"
+              sx={{
+                fontSize: { xs: 15, sm: 20, lg: 25 },
+              }}
+            >
+              {author}
+            </Typography>
+          ) : null}
+          <Typography
+            className="manga-author"
+            sx={{
+              fontSize: { xs: 15, sm: 20, lg: 25 },
+            }}
+          >
+            {contentRating}
+          </Typography>
+          <Typography
+            className="manga-author"
+            sx={{
+              fontSize: { xs: 15, sm: 20, lg: 25 },
+            }}
+          >
+            {status}
+          </Typography>
+        </div>
       </div>
       <div className="manga-details">
         <Typography
-          className="manga-name"
-          sx={{
-            fontSize: { xs: 20, sm: 25, lg: 30 },
-          }}
-        >
-          {mangaName}
-        </Typography>
-
-        <Typography
           className="manga-description"
           sx={{
-            WebkitLineClamp: showMoreToggled === true ? 6 : 5,
-            fontSize: { xs: 15, sm: 15, lg: 20 },
+            WebkitLineClamp: 5,
+            fontSize: { xs: 15, sm: 15, lg: 18 },
           }}
         >
           {mangaDescription}
         </Typography>
-
-        <Button
-          variant="text"
-          className="show-button"
-          disableRipple
-          sx={{
-            height: { xs: "20px", sm: "25px", lg: "30px" },
-          }}
-          onClick={handleShowMore}
-        >
-          {showMoreToggled === true ? (
-            <Typography
-              color="#333333"
-              fontFamily="Figtree"
-              sx={{
-                fontSize: { xs: 10, sm: 10, lg: 12 },
-              }}
-            >
-              Show less
-            </Typography>
-          ) : (
-            <Typography
-              color="#333333"
-              fontFamily="Figtree"
-              sx={{
-                fontSize: { xs: 10, sm: 10, lg: 12 },
-              }}
-            >
-              Show more
-            </Typography>
-          )}
-        </Button>
       </div>
     </div>
   );

@@ -115,6 +115,7 @@ const MangaChapterList = (props: Props) => {
         justifyContent="center"
         alignItems="center"
         className="chapters-list"
+        spacing={1}
       >
         {mangaFeed.map((current: MangaFeedScanlationGroup, index: number) =>
           current.attributes.translatedLanguage === selectedLanguage ? (

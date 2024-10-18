@@ -63,6 +63,8 @@ const IndividualManga = () => {
   const [previousLanguage, setPreviousLanguage] = useState<string>("en");
   const [previousId, setPreviousId] = useState<string>("");
   const [mangaAddedAlert, setMangaAddedAlert] = useState<boolean>(false);
+  const [mangaAuthor, setMangaAuthor] = useState<string | undefined>("");
+  const [mangaStatus, setMangaStatus] = useState<string | undefined>("");
   const { state } = useLocation();
 
   const handleClickOpen = () => {
@@ -183,13 +185,23 @@ const IndividualManga = () => {
           data.attributes.links === null ? "" : data.attributes.links.raw,
         );
 
+        setMangaAuthor(
+          data.relationships.find((element) => element.type === "author")
+            ?.attributes.name,
+        );
+
+        setMangaStatus(data.attributes.status);
+
         setMangaTags(data.attributes.tags);
         const tagIds = data.attributes.tags.map((tag) => tag.id);
-        fetchSimilarManga(10, 0, tagIds, state.contentFilter).then(
-          (data: Manga[]) => {
-            setSimilarManga(data);
-          },
-        );
+        fetchSimilarManga(
+          10,
+          0,
+          tagIds,
+          state.contentFilter === undefined ? 3 : state.contentFilter,
+        ).then((data: Manga[]) => {
+          setSimilarManga(data);
+        });
       });
 
       if (
@@ -303,6 +315,9 @@ const IndividualManga = () => {
         coverUrl={coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""}
         mangaDescription={mangaDescription}
         mangaName={mangaName}
+        author={mangaAuthor}
+        contentRating={mangaContentRating}
+        status={mangaStatus}
       />
 
       <div className="controls-chapters-section">

@@ -33,7 +33,7 @@ const globalStyle = createGlobalStyle`
   }
 
   .chapter-button, .show-more-button {
-    background-color: ${({ theme }) => theme.elevatedSection};
+    outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
   .chapter-details {
@@ -49,7 +49,7 @@ const globalStyle = createGlobalStyle`
   }
   
   .scanlation-button, .language-button {
-    background-color: ${({ theme }) => theme.elevatedSection};
+    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
   
   .asc-desc-button {

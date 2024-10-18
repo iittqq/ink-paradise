@@ -7,8 +7,6 @@
 }
 
 .chapter-button-container {
-  height: 50px;
-  width: 25dvw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,10 +15,12 @@
 
 .chapter-button {
   color: unset !important;
-  width: 95%;
+  width: 90%;
   height: 90%;
   justify-content: space-between !important;
-
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
   .MuiTouchRipple-child {
     background-color: #fff !important;
   }
@@ -32,6 +32,7 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 20px !important;
 }
 
 .chapter-button-text {

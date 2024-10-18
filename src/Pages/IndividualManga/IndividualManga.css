@@ -31,12 +31,15 @@
 }
 
 .show-more-button {
-  margin-top: 10px !important;
+  margin-bottom: 20px !important;
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
   width: 50%;
   height: 50px;
   color: unset !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .page-header {
@@ -55,11 +58,7 @@
   scrollbar-width: none;
 
   @media (width <= 1600px) {
-    width: 90%;
-  }
-
-  @media (width <= 600px) {
-    width: 90dvw;
+    width: 100%;
   }
 }
 

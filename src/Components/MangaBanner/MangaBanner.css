@@ -4,26 +4,34 @@
   min-width: 100px;
   max-width: 200px;
   border-radius: 10px;
+  @media (width < 600px) {
+    min-width: 100px;
+    max-width: 120px;
+  }
+}
+
+.cover-name-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .banner-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
 
 .manga-details {
-  @media (width <= 600px) {
-    margin-left: 10px;
-  }
-
   flex-grow: 1;
   flex-shrink: 1;
   max-width: 100%;
   overflow: hidden;
-  margin-left: 10px;
+  padding-top: 20px;
 }
 
 .alt-name-container {
@@ -34,18 +42,33 @@
   overflow: scroll;
 }
 
+.header-details-stack {
+  overflow: hidden;
+}
+
 .manga-name {
   font-family: "Figtree" !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: break-word;
+  padding-left: 10px;
+}
+
+.manga-author {
+  font-family: "Figtree" !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+  padding-left: 10px;
 }
 
 .manga-description {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
+  font-family: "Figtree" !important;
 }
 
 .show-button {
