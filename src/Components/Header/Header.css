@@ -151,3 +151,20 @@ input[type="search"]:focus {
   min-width: 100px;
   font-size: 12px;
 }
+
+#header-menu {
+  & .MuiList-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    min-height: 300px;
+  }
+  & .MuiPaper-root {
+    background-color: #1f1f1f !important;
+    border-radius: 10px;
+  }
+}

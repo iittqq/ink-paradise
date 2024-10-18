@@ -18,11 +18,7 @@ const MangaBanner = (props: Props) => {
   return (
     <div className="banner-container">
       <div className="cover-image">
-        <img
-          style={{ width: "100%", height: "100%", borderRadius: "5px" }}
-          src={coverUrl}
-          alt=""
-        />
+        <img className="cover-image" src={coverUrl} alt="" />
       </div>
       <div className="manga-details">
         <Typography

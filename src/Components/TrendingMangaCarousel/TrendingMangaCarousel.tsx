@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useHorizontalScroll } from "./HorizontalScroll";
 import { useEffect, useState } from "react";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
+import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 
 type Props = { manga: Manga[]; accountId: number | null };
 
@@ -12,6 +13,9 @@ const TrendingMangaCarousel = (props: Props) => {
   const scrollRef = useHorizontalScroll();
   const { manga, accountId } = props;
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
+  const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
   const navigate = useNavigate();
 
   const handleClick = (id: string, coverUrl: string) => {
@@ -19,6 +23,16 @@ const TrendingMangaCarousel = (props: Props) => {
     navigate(`/individualView/${id}/${encodedCoverUrl}`, {
       state: { accountId: accountId === null ? null : accountId },
     });
+  };
+
+  const handleDetailsDialogClose = () => {
+    setOpenDetailsDialog(false);
+  };
+
+  const handleMangaClicked = (manga: Manga, cover: string) => {
+    setOpenDetailsDialog(true);
+    setMangaDetailsToDisplay(manga);
+    setMangaCoverToDisplay(cover);
   };
 
   useEffect(() => {
@@ -47,6 +61,17 @@ const TrendingMangaCarousel = (props: Props) => {
 
   return (
     <div ref={scrollRef} className="popular-carousel-container">
+      <>
+        {mangaDetailsToDisplay && (
+          <MangaDetailsDialog
+            mangaDetails={mangaDetailsToDisplay}
+            openDetailsDialog={openDetailsDialog}
+            handleDetailsDialogClose={handleDetailsDialogClose}
+            coverUrl={mangaCoverToDisplay!}
+            handleClick={handleClick}
+          />
+        )}
+      </>
       <Grid container className="popular-carousel-grid" wrap="nowrap">
         {manga.map((current: Manga, index: number) => (
           <Grid item className="popular-carousel-grid-item">
@@ -65,7 +90,7 @@ const TrendingMangaCarousel = (props: Props) => {
               disableRipple
               className="manga-button-trending-carousel"
               onClick={() => {
-                handleClick(current.id, coverUrls[current.id]);
+                handleMangaClicked(current, coverUrls[current.id]);
               }}
             >
               <Card

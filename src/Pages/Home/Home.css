@@ -19,11 +19,3 @@
   align-items: center;
   width: 100%;
 }
-
-.tags-button {
-  color: unset !important;
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px !important;
-  background-color: transparent !important;
-}

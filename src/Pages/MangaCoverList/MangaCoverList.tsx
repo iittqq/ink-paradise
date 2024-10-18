@@ -108,6 +108,7 @@ const MangaCoverList = () => {
           {mangaDetails.map((element: Manga) => (
             <Grid item>
               <MangaClickable
+                manga={element}
                 id={element.id}
                 title={
                   element.attributes.title.en === undefined

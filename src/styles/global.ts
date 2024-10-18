@@ -71,6 +71,10 @@ const globalStyle = createGlobalStyle`
     }
   }
 
+  .manga-details-dialog-button{
+    color: ${({ theme }) => theme.elevatedSectionLight};
+  }
+
   /* Add other global styles as needed */
 `;
 export default withTheme(globalStyle);

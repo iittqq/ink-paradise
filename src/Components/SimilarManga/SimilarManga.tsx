@@ -47,6 +47,7 @@ const SimilarManga = (props: Props) => {
           <Grid item className="similar-manga-item">
             <div>
               <MangaClickable
+                manga={current}
                 id={current.id}
                 title={current.attributes.title.en}
                 coverUrl={coverUrls[current.id]}

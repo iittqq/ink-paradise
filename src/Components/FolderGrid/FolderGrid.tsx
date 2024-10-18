@@ -150,6 +150,7 @@ const FolderGrid = (props: Props) => {
               }}
             >
               <MangaClickable
+                manga={element}
                 id={element.id}
                 title={
                   element.attributes.title.en === undefined

@@ -180,11 +180,11 @@ const IndividualManga = () => {
         setMangaContentRating(data.attributes.contentRating);
 
         setMangaRaw(
-          data["attributes"].links === null ? "" : data["attributes"].links.raw,
+          data.attributes.links === null ? "" : data.attributes.links.raw,
         );
 
-        setMangaTags(data["attributes"].tags);
-        const tagIds = data["attributes"].tags.map((tag) => tag.id);
+        setMangaTags(data.attributes.tags);
+        const tagIds = data.attributes.tags.map((tag) => tag.id);
         fetchSimilarManga(10, 0, tagIds, state.contentFilter).then(
           (data: Manga[]) => {
             setSimilarManga(data);
@@ -240,17 +240,16 @@ const IndividualManga = () => {
       }
     }
     if (selectedScanlationGroup !== undefined) {
-      const filteredFeed: MangaFeedScanlationGroup[] = [];
-      mangaFeed.map((current: MangaFeedScanlationGroup) => {
-        if (Array.isArray(current.relationships)) {
-          const hasMatchingGroup = current.relationships.some(
-            (rel: Relationship) => rel.id === selectedScanlationGroup.id,
-          );
-          if (hasMatchingGroup) {
-            filteredFeed.push(current);
+      const filteredFeed = mangaFeed.filter(
+        (current: MangaFeedScanlationGroup) => {
+          if (Array.isArray(current.relationships)) {
+            return current.relationships.some(
+              (rel: Relationship) => rel.id === selectedScanlationGroup.id,
+            );
           }
-        }
-      });
+          return false;
+        },
+      );
       setFilteredMangaFeed(filteredFeed);
     }
     setPreviousLanguage(selectedLanguage);

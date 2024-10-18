@@ -38,7 +38,7 @@ export interface Manga {
   relationships: {
     id: string;
     type: string;
-    attributes: { fileName: string };
+    attributes: { fileName: string; name: string };
   }[];
   status?: string;
   bookmarkId?: number;

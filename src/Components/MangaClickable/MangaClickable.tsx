@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Card, CardMedia, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { fetchAccountDetails } from "../../api/AccountDetails";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import { Manga } from "../../interfaces/MangaDexInterfaces";
+import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 
 import "./MangaClickable.css";
 
 type Props = {
+  manga: Manga;
   id?: string;
   title: string;
   coverUrl?: string;
@@ -17,12 +21,16 @@ type Props = {
 
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
-  //const [showDetails, setShowDetails] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
+  const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
-  const { id, title, coverUrl, updatedAt, disabled, accountId } = props;
+  const { manga, title, coverUrl, updatedAt, disabled, accountId } = props;
 
-  function handleClick() {
+  const handleClick = (id: string, coverUrl: string) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
+    console.log("id: ", id);
+    console.log("coverUrl", coverUrl);
     if (accountId !== null) {
       fetchAccountDetails(accountId).then((response: AccountDetails) => {
         navigate(`/individualView/${id}/${encodedCoverUrl}`, {
@@ -37,15 +45,34 @@ const MangaClickable = (props: Props) => {
         state: { accountId: accountId, contentFilter: 3 },
       });
     }
-  }
+  };
+  const handleDetailsDialogClose = () => {
+    setOpenDetailsDialog(false);
+  };
+
+  const handleMangaClicked = (mangaData: Manga, cover: string) => {
+    setOpenDetailsDialog(true);
+    setMangaDetailsToDisplay(mangaData);
+    setMangaCoverToDisplay(cover);
+  };
 
   return (
     <>
+      {mangaDetailsToDisplay && (
+        <MangaDetailsDialog
+          mangaDetails={mangaDetailsToDisplay}
+          openDetailsDialog={openDetailsDialog}
+          handleDetailsDialogClose={handleDetailsDialogClose}
+          coverUrl={mangaCoverToDisplay!}
+          handleClick={handleClick}
+        />
+      )}
+
       <Button
         className="manga-button"
         disabled={disabled && disabled != undefined ? true : false}
         onClick={() => {
-          handleClick();
+          handleMangaClicked(manga, coverUrl!);
         }}
       >
         <Card

@@ -11,6 +11,7 @@ import {
   fetchMangaCoverBackend,
 } from "../../api/MangaDexApi";
 import { useNavigate } from "react-router-dom";
+import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 import "./MangaCategoriesHomePage.css";
 
 type Props = {
@@ -31,6 +32,9 @@ const MangaCategoriesHomePage = (props: Props) => {
   const [coverUrlsRecentlyAdded, setCoverUrlsRecentlyAdded] = useState<{
     [key: string]: string;
   }>({});
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
+  const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
   const handleClick = (id: string, coverUrl: string) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl);
@@ -53,6 +57,16 @@ const MangaCategoriesHomePage = (props: Props) => {
         contentFilter: contentFilter,
       },
     });
+  };
+
+  const handleDetailsDialogClose = () => {
+    setOpenDetailsDialog(false);
+  };
+
+  const handleMangaClicked = (manga: Manga, cover: string) => {
+    setOpenDetailsDialog(true);
+    setMangaDetailsToDisplay(manga);
+    setMangaCoverToDisplay(cover);
   };
 
   useEffect(() => {
@@ -96,6 +110,15 @@ const MangaCategoriesHomePage = (props: Props) => {
 
   return (
     <div className="home-category-manga-container">
+      {mangaDetailsToDisplay && (
+        <MangaDetailsDialog
+          mangaDetails={mangaDetailsToDisplay}
+          openDetailsDialog={openDetailsDialog}
+          handleDetailsDialogClose={handleDetailsDialogClose}
+          coverUrl={mangaCoverToDisplay!}
+          handleClick={handleClick}
+        />
+      )}
       <div className="category-stack">
         <Typography className="category-stack-name">
           Recently Updated
@@ -111,8 +134,8 @@ const MangaCategoriesHomePage = (props: Props) => {
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
-                    handleClick(
-                      current.id,
+                    handleMangaClicked(
+                      current,
                       coverUrlsRecentlyUpdated[current.id],
                     );
                   }}
@@ -175,7 +198,10 @@ const MangaCategoriesHomePage = (props: Props) => {
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
-                    handleClick(current.id, coverUrlsRecentlyAdded[current.id]);
+                    handleMangaClicked(
+                      current,
+                      coverUrlsRecentlyAdded[current.id],
+                    );
                   }}
                 >
                   <Card

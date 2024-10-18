@@ -1,5 +1,6 @@
 import { Grid, Button, Dialog, DialogTitle } from "@mui/material";
 import "./InfoButtonHome.css";
+import { SocialIcon } from "react-social-icons";
 
 type Props = {
   openInfo: boolean;
@@ -30,7 +31,7 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              Discord
+              <SocialIcon network="discord" />
             </Button>
           </Grid>{" "}
           <Grid item>
@@ -41,18 +42,18 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              Reddit
+              <SocialIcon network="reddit" />{" "}
             </Button>
           </Grid>{" "}
           <Grid item>
             {" "}
             <Button
               onClick={() => {
-                window.location.href = "https://x.com/leafwhistle";
+                window.location.href = "https://x.com/iittqqq";
               }}
               className="info-button"
             >
-              Twitter
+              <SocialIcon network="twitter" />
             </Button>
           </Grid>{" "}
           <Grid item>
@@ -63,7 +64,7 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              Patreon
+              <SocialIcon network="patreon" />{" "}
             </Button>
           </Grid>{" "}
           <Grid item>
@@ -75,7 +76,7 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              Instagram
+              <SocialIcon network="instagram" />{" "}
             </Button>{" "}
           </Grid>{" "}
         </Grid>

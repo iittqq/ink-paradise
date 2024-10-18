@@ -176,6 +176,7 @@ const BookmarksList = (props: Props) => {
                           }}
                         >
                           <MangaClickable
+                            manga={manga}
                             id={manga.id}
                             title={
                               manga.attributes.title.en === undefined
@@ -248,6 +249,7 @@ const BookmarksList = (props: Props) => {
                           }}
                         >
                           <MangaClickable
+                            manga={manga}
                             id={manga.id}
                             title={
                               manga.attributes.title.en === undefined
@@ -301,6 +303,7 @@ const BookmarksList = (props: Props) => {
                     }}
                   >
                     <MangaClickable
+                      manga={manga}
                       id={manga.id}
                       title={
                         manga.attributes.title.en === undefined
@@ -395,6 +398,7 @@ const BookmarksList = (props: Props) => {
                           }}
                         >
                           <MangaClickable
+                            manga={manga}
                             id={manga.id}
                             title={
                               manga.attributes.title.en === undefined
@@ -472,6 +476,7 @@ const BookmarksList = (props: Props) => {
                           }}
                         >
                           <MangaClickable
+                            manga={manga}
                             id={manga.id}
                             title={
                               manga.attributes.title.en === undefined
@@ -531,6 +536,7 @@ const BookmarksList = (props: Props) => {
                     }}
                   >
                     <MangaClickable
+                      manga={manga}
                       id={manga.id}
                       title={
                         manga.attributes.title.en === undefined
