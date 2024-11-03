@@ -85,20 +85,22 @@ const PageAndControls = (props: Props) => {
     handleChangePageNumber(0);
 
     let chapterFound = false;
+    const tempMangaFeed =
+      order === "desc" ? mangaFeedState.reverse() : mangaFeedState;
 
-    for (let index = 0; index < mangaFeedState.length; index++) {
-      const current = mangaFeedState[index];
+    for (let index = 0; index < tempMangaFeed.length; index++) {
+      const current = tempMangaFeed[index];
       if (
         parseFloat(current.attributes.chapter) > parseFloat(currentChapter) &&
-        mangaFeedState[index].attributes.externalUrl === null
+        tempMangaFeed[index].attributes.externalUrl === null
       ) {
         chapterFound = true;
         handleClick(
           mangaId,
-          mangaFeedState[index].id,
-          mangaFeedState[index].attributes.title,
-          mangaFeedState[index].attributes.volume,
-          mangaFeedState[index].attributes.chapter,
+          tempMangaFeed[index].id,
+          tempMangaFeed[index].attributes.title,
+          tempMangaFeed[index].attributes.volume,
+          tempMangaFeed[index].attributes.chapter,
           mangaName,
           scanlationGroup,
           chapterIndex + 1,
@@ -123,20 +125,22 @@ const PageAndControls = (props: Props) => {
     setCurrentPage(0);
     handleChangePageNumber(0);
     let chapterFound = false;
+    const tempMangaFeed =
+      order === "desc" ? mangaFeedState.reverse() : mangaFeedState;
 
-    for (let index = mangaFeedState.length - 1; index >= 0; index--) {
-      const current = mangaFeedState[index];
+    for (let index = tempMangaFeed.length - 1; index >= 0; index--) {
+      const current = tempMangaFeed[index];
       if (
         parseFloat(current.attributes.chapter) < parseFloat(currentChapter) &&
-        mangaFeedState[index].attributes.externalUrl === null
+        tempMangaFeed[index].attributes.externalUrl === null
       ) {
         chapterFound = true;
         handleClick(
           mangaId,
-          mangaFeedState[index].id,
-          mangaFeedState[index].attributes.title,
-          mangaFeedState[index].attributes.volume,
-          mangaFeedState[index].attributes.chapter,
+          tempMangaFeed[index].id,
+          tempMangaFeed[index].attributes.title,
+          tempMangaFeed[index].attributes.volume,
+          tempMangaFeed[index].attributes.chapter,
           mangaName,
           scanlationGroup,
           chapterIndex - 1,
@@ -272,6 +276,7 @@ const PageAndControls = (props: Props) => {
                       key={index}
                       className="page"
                       src={URL.createObjectURL(imageBlob[page])}
+                      style={{ display: "block" }}
                     />
                   ) : null,
                 )

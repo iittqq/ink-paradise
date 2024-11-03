@@ -19,6 +19,7 @@ type Props = {
   coverUrl: string;
   accountId: number;
   contentFilter: number;
+  sortOrder: string;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -31,6 +32,7 @@ const MangaChapterList = (props: Props) => {
     coverUrl,
     accountId,
     contentFilter,
+    sortOrder,
   } = props;
   const [xsValue, setXsValue] = useState(6);
   const [userProgress, setUserProgress] = useState<number | null>(null);
@@ -65,6 +67,7 @@ const MangaChapterList = (props: Props) => {
           mangaFeed: mangaFeed,
           chapterIndex: index,
           contentFilter: contentFilter,
+          sortOrder: sortOrder,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -84,6 +87,7 @@ const MangaChapterList = (props: Props) => {
           mangaFeed: mangaFeed,
           chapterIndex: index,
           contentFilter: contentFilter,
+          sortOrder: sortOrder,
         },
       });
     }

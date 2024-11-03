@@ -7,6 +7,11 @@ export interface Account {
   verified: boolean;
 }
 
+export interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface UsernameChange {
   id: number;
   username: string;

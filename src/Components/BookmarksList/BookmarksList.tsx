@@ -139,7 +139,7 @@ const BookmarksList = (props: Props) => {
                   </Typography>
                   {manga.map((manga: Manga) =>
                     manga.bookmarkContinueReading === true ? (
-                      <Grid item>
+                      <Grid item className="bookmark-overlay-grid-item">
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
                             <Typography className="overlay-text-bookmark">
@@ -184,7 +184,6 @@ const BookmarksList = (props: Props) => {
                                 : manga.attributes.title.en
                             }
                             coverUrl={bookmarkCoverUrls[manga.id]}
-                            updatedAt={manga.attributes.updatedAt}
                             disabled={true}
                             accountId={accountId}
                           />
@@ -212,7 +211,7 @@ const BookmarksList = (props: Props) => {
                   </Typography>
                   {manga.map((manga: Manga) =>
                     manga.bookmarkContinueReading === true ? (
-                      <Grid item>
+                      <Grid item className="bookmark-overlay-grid-item">
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
                             <Typography className="overlay-text-bookmark">
@@ -257,7 +256,6 @@ const BookmarksList = (props: Props) => {
                                 : manga.attributes.title.en
                             }
                             coverUrl={bookmarkCoverUrls[manga.id]}
-                            updatedAt={manga.attributes.updatedAt}
                             disabled={true}
                             accountId={accountId}
                           />
@@ -269,7 +267,7 @@ const BookmarksList = (props: Props) => {
               ))
           : bookmarks.map((manga: Manga) =>
               manga.bookmarkContinueReading === true ? (
-                <Grid item>
+                <Grid item className="bookmark-overlay-grid-item">
                   <div className="chapter-number-overlay">
                     <div className="bookmark-details-column">
                       <Typography className="overlay-text-bookmark">
@@ -311,7 +309,6 @@ const BookmarksList = (props: Props) => {
                           : manga.attributes.title.en
                       }
                       coverUrl={bookmarkCoverUrls[manga.id]}
-                      updatedAt={manga.attributes.updatedAt}
                       disabled={true}
                       accountId={accountId}
                     />
@@ -355,7 +352,7 @@ const BookmarksList = (props: Props) => {
                   </Typography>
                   {manga.map((manga: Manga) =>
                     manga.bookmarkContinueReading === false ? (
-                      <Grid item>
+                      <Grid item className="bookmark-overlay-grid-item">
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
                             <Typography className="overlay-text-bookmark">
@@ -406,7 +403,6 @@ const BookmarksList = (props: Props) => {
                                 : manga.attributes.title.en
                             }
                             coverUrl={bookmarkCoverUrls[manga.id]}
-                            updatedAt={manga.attributes.updatedAt}
                             disabled={true}
                             accountId={accountId}
                           />
@@ -434,7 +430,7 @@ const BookmarksList = (props: Props) => {
                   </Typography>
                   {manga.map((manga: Manga) =>
                     manga.bookmarkContinueReading === false ? (
-                      <Grid item>
+                      <Grid item className="bookmark-overlay-grid-item">
                         <div className="chapter-number-overlay">
                           <div className="bookmark-details-column">
                             <Typography className="overlay-text-bookmark">
@@ -484,7 +480,6 @@ const BookmarksList = (props: Props) => {
                                 : manga.attributes.title.en
                             }
                             coverUrl={bookmarkCoverUrls[manga.id]}
-                            updatedAt={manga.attributes.updatedAt}
                             disabled={true}
                             accountId={accountId}
                           />
@@ -496,7 +491,7 @@ const BookmarksList = (props: Props) => {
               ))
           : bookmarks.map((manga: Manga) =>
               manga.bookmarkContinueReading === false ? (
-                <Grid item>
+                <Grid item className="bookmark-overlay-grid-item">
                   <div className="chapter-number-overlay">
                     <div className="bookmark-details-column">
                       <Typography className="overlay-text-bookmark">
@@ -544,7 +539,6 @@ const BookmarksList = (props: Props) => {
                           : manga.attributes.title.en
                       }
                       coverUrl={bookmarkCoverUrls[manga.id]}
-                      updatedAt={manga.attributes.updatedAt}
                       disabled={true}
                       accountId={accountId}
                     />

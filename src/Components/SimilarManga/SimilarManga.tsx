@@ -51,7 +51,6 @@ const SimilarManga = (props: Props) => {
                 id={current.id}
                 title={current.attributes.title.en}
                 coverUrl={coverUrls[current.id]}
-                updatedAt={current.attributes.updatedAt}
                 accountId={accountId}
               />
             </div>

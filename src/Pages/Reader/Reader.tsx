@@ -57,7 +57,6 @@ const Reader = () => {
   const [hash, setHash] = useState<string>("");
   const [selectedLanguage] = useState<string>("en");
   const [open, setOpen] = useState<boolean>(false);
-  const [order] = useState<string>("asc");
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [readerMode, setReaderMode] = useState<string>("");
   const [readerInteger, setReaderInteger] = useState<number>(1);
@@ -233,14 +232,16 @@ const Reader = () => {
     }
 
     handleScrollPosition();
-  }, [state, order, selectedLanguage, mangaFeedState, newReaderMode]);
+  }, [state, selectedLanguage, mangaFeedState, newReaderMode]);
 
   return (
     <div className="reader-page">
       <div className="header">
         <Header
           accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={state.contentFilter}
+          contentFilter={
+            state.contentFilter === undefined ? 3 : state.contentFilter
+          }
         />
       </div>
       <div className="active-page-area">
@@ -401,6 +402,7 @@ const Reader = () => {
                   state.accountId === undefined ? null : state.accountId
                 }
                 contentFilter={state.contentFilter}
+                sortOrder={state.sortOrder}
               />
             </Collapse>
           </List>
@@ -415,7 +417,7 @@ const Reader = () => {
             scanlationGroup={state.scanlationGroup}
             readerMode={readerInteger}
             accountId={state.accountId === undefined ? null : state.accountId}
-            order={order}
+            order={state.sortOrder}
             selectedLanguage={selectedLanguage}
             chapterIndex={state.chapterIndex}
             setMangaFeedState={setMangaFeedState}

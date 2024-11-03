@@ -8,7 +8,6 @@ async function fetchAccountDetails(accountId: number): Promise<AccountDetails> {
     const response = await axios.get(
       `${BASE_URL}/api/v1/account-details/find-by-accountId/${accountId}`,
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);

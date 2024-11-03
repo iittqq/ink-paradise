@@ -12,7 +12,11 @@ import {
   fetchAccountDetails,
   updateAccountDetails,
 } from "../../api/AccountDetails";
-import { fetchAccountData } from "../../api/Account";
+import {
+  fetchAccountData,
+  isTokenExpired,
+  refreshTokenFunction,
+} from "../../api/Account";
 import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
 import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 import ThemeButton from "../../Components/ThemeButton/ThemeButton";
@@ -49,7 +53,34 @@ const Header = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { toggleTheme } = useTheme();
 
-  const handleClickAccount = () => {
+  const handleClickAccount = async () => {
+    let accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (accessToken !== null) {
+      // Check if the access token is expired
+      if (isTokenExpired(accessToken)) {
+        console.error("Access token is expired. Attempting to refresh.");
+
+        // Attempt to refresh the access token
+        if (refreshToken) {
+          try {
+            accessToken = await refreshTokenFunction(refreshToken);
+            localStorage.setItem("accessToken", accessToken); // Update local storage
+          } catch (error) {
+            console.error("Refresh token failed. Please log in again.");
+            navigate("/login"); // Redirect to login page if refreshing fails
+            return;
+          }
+        } else {
+          console.error("No refresh token found. Please log in again.");
+          navigate("/login"); // Redirect to login if no refresh token is found
+          return;
+        }
+      }
+    }
+
+    // If account ID is present, fetch account data
     if (accountId !== null) {
       fetchAccountData(accountId).then((data: Account | null) => {
         if (data !== null && data.verified === true) {
@@ -64,10 +95,9 @@ const Header = (props: Props) => {
         }
       });
     } else {
-      navigate("/login");
+      navigate("/login"); // If no account ID, prompt login
     }
   };
-
   const handleClickSearchIcon = async () => {
     setSearching(!searching);
   };
@@ -131,11 +161,20 @@ const Header = (props: Props) => {
   };
 
   const handleClickLibrary = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken !== null) {
+      if (isTokenExpired(accessToken)) {
+        console.error("Access token is expired. Please log in again.");
+        // Redirect to login page or show a modal
+        navigate("/login");
+        return;
+      }
+    }
     if (accountId !== null) {
       fetchAccountData(accountId).then((data: Account | null) => {
         if (data !== null && data.verified === true) {
           navigate("/library", {
-            state: { accountId: accountId, account: data },
+            state: { accountId: accountId, contentFilter: contentFilter },
           });
         } else {
           setShowAlert(true);

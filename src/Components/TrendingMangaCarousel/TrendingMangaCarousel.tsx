@@ -72,11 +72,16 @@ const TrendingMangaCarousel = (props: Props) => {
           />
         )}
       </>
-      <Grid container className="popular-carousel-grid" wrap="nowrap">
+      <Grid
+        container
+        spacing={1}
+        className="popular-carousel-grid"
+        wrap="nowrap"
+      >
+        <Grid item />
         {manga.map((current: Manga, index: number) => (
           <Grid item className="popular-carousel-grid-item">
             <div className="popular-carousel-grid-item-text-container">
-              {" "}
               <Typography className="popular-carousel-grid-item-title">
                 {current.attributes.title.en === undefined
                   ? Object.values(current.attributes.title)[0]
@@ -84,7 +89,7 @@ const TrendingMangaCarousel = (props: Props) => {
               </Typography>
               <Typography className="popular-carousel-grid-item-rank">
                 {index + 1}
-              </Typography>{" "}
+              </Typography>
             </div>
             <Button
               disableRipple
@@ -116,6 +121,7 @@ const TrendingMangaCarousel = (props: Props) => {
             </Button>
           </Grid>
         ))}
+        <Grid item />
       </Grid>
     </div>
   );

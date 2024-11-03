@@ -55,14 +55,18 @@ const MangaDetailsDialog = (props: Props) => {
               />
             </Card>
             <div className="manga-details-stack">
-              <Typography className="manga-details-header-text-author">
-                Author:{" "}
-                {
-                  mangaDetails.relationships.find(
-                    (element) => element.type === "author",
-                  )?.attributes.name
-                }
-              </Typography>
+              <div className="author-container">
+                <Typography className="manga-details-header-text-author">
+                  Author:&nbsp;
+                </Typography>
+                <Typography className="manga-details-header-text-author-name">
+                  {
+                    mangaDetails.relationships.find(
+                      (element) => element.type === "author",
+                    )?.attributes.name
+                  }
+                </Typography>
+              </div>
               <Grid
                 container
                 direction="row"
@@ -77,7 +81,7 @@ const MangaDetailsDialog = (props: Props) => {
                         noWrap
                         className="manga-categories-dialog-text"
                       >
-                        {current.attributes.name.en} /{" "}
+                        {current.attributes.name.en}&nbsp;/&nbsp;
                       </Typography>
                     </Grid>
                   ),
@@ -111,7 +115,7 @@ const MangaDetailsDialog = (props: Props) => {
               handleClick(mangaDetails.id, coverUrl);
             }}
           >
-            Visit Page
+            Start Reading
           </Button>
         </div>
       </Dialog>

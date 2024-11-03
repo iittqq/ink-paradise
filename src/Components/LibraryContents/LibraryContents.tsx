@@ -112,7 +112,6 @@ const LibraryContents = (props: Props) => {
                               : manga.attributes.title.en
                           }
                           coverUrl={coverUrlsLibrary[manga.id]}
-                          updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
                           accountId={accountId}
                         />
@@ -157,7 +156,6 @@ const LibraryContents = (props: Props) => {
                               : manga.attributes.title.en
                           }
                           coverUrl={coverUrlsLibrary[manga.id]}
-                          updatedAt={manga.attributes.updatedAt}
                           disabled={checked || selectAll}
                           accountId={accountId}
                         />
@@ -188,7 +186,6 @@ const LibraryContents = (props: Props) => {
                         : manga.attributes.title.en
                     }
                     coverUrl={coverUrlsLibrary[manga.id]}
-                    updatedAt={manga.attributes.updatedAt}
                     disabled={checked || selectAll}
                     accountId={accountId}
                   />

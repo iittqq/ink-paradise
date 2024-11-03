@@ -8,7 +8,7 @@ export interface ThemeProps {
 export const lightTheme = {
   body: "#fffae0 ",
   text: "#363537",
-  elevatedSection: "#cca284 ",
+  elevatedSection: "#8ab192 ",
   elevatedSectionLight: "#d5e3d8",
 };
 
@@ -22,7 +22,7 @@ export const darkTheme = {
 export const lightPastelTheme = {
   body: "#B0B5ED",
   text: "#191919",
-  elevatedSection: "#cbcbe7",
+  elevatedSection: "#B8DBE5",
   elevatedSectionLight: "#dadaf1",
 };
 
@@ -37,5 +37,5 @@ export const devTheme = {
   body: "#131313",
   text: "#FAFAFA",
   elevatedSection: "#705f8c",
-  elevatedSectionLight: "#2a2a2a",
+  elevatedSectionLight: "#3a3a3a",
 };

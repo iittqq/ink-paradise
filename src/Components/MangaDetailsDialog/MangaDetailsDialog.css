@@ -61,7 +61,15 @@
   padding-right: 10px;
 }
 
-.manga-details-header-text-author {
+.author-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.manga-details-header-text-author,
+.manga-details-header-text-author-name {
   font-family: "Figtree", sans-serif !important;
   font-size: 18px !important;
   color: #fff;
@@ -77,6 +85,12 @@
   width: 90%;
   align-self: center;
   padding-top: 10px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  word-break: break-word;
 }
 
 .manga-details-description-text {
@@ -91,15 +105,14 @@
   font-size: 16px !important;
   text-transform: none !important;
   background-color: transparent !important;
-  width: 100px;
+  width: 150px;
   align-self: center;
-  padding-top: 20px !important;
   bottom: 0px;
 }
 
 .manga-categories-dialog {
   overflow: hidden;
-  max-height: 85px;
+  max-height: 90px;
 }
 
 .manga-categories-dialog-text {

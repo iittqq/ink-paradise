@@ -61,6 +61,7 @@ const MangaTagsHome = (props: Props) => {
               className="tag-button"
               onClick={() => {
                 handleClickedTag(null);
+                handleTagsDialogClose();
               }}
             >
               None

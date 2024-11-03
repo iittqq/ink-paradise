@@ -2,6 +2,8 @@
   display: flex;
   overflow-x: scroll;
   scrollbar-width: none;
+  scroll-padding-right: 50px;
+  scroll-behavior: smooth;
 }
 
 .popular-carousel-container::-webkit-scrollbar {
@@ -19,7 +21,9 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 10px;
+  min-width: 100% !important;
+  margin: 0 0 0 0 !important;
+  padding: 10px 0 20px 0 !important;
 }
 
 .popular-carousel-grid-item {

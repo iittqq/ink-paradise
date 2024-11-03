@@ -40,7 +40,7 @@ const MangaBanner = (props: Props) => {
                 fontSize: { xs: 15, sm: 20, lg: 25 },
               }}
             >
-              {author}
+              Author: <span className="manga-details-color-text">{author}</span>
             </Typography>
           ) : null}
           <Typography
@@ -49,7 +49,8 @@ const MangaBanner = (props: Props) => {
               fontSize: { xs: 15, sm: 20, lg: 25 },
             }}
           >
-            {contentRating}
+            Content Rating:{" "}
+            <span className="manga-details-color-text">{contentRating}</span>
           </Typography>
           <Typography
             className="manga-author"
@@ -57,7 +58,7 @@ const MangaBanner = (props: Props) => {
               fontSize: { xs: 15, sm: 20, lg: 25 },
             }}
           >
-            {status}
+            Status: <span className="manga-details-color-text"> {status}</span>
           </Typography>
         </div>
       </div>

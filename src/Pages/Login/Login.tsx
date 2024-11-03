@@ -101,17 +101,25 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    if (email !== "" || password !== "") {
-      login(email, password).then((response: number) => {
-        if (response !== -1) {
+    if (email !== "" && password !== "") {
+      try {
+        const response = await login(email, password); // Login returns tokens
+        if (response) {
           setAttemptedLogin(false);
-          navigate("/", { state: { accountId: response } });
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
+          navigate("/");
         } else {
           setEmail("");
           setPassword("");
           setAttemptedLogin(true);
         }
-      });
+      } catch (error) {
+        console.error("Login failed:", error);
+        setEmail("");
+        setPassword("");
+        setAttemptedLogin(true);
+      }
     }
   };
 
@@ -137,7 +145,7 @@ const Login = () => {
         verificationCode: "",
         verified: false,
       }).then((response: Account) => {
-        navigate("/", { state: { accountId: response.id } });
+        navigate("/");
 
         createAccountDetails({
           accountId: response.id,
@@ -247,7 +255,7 @@ const Login = () => {
             <div className="register-section">
               <div className="password-strength-container">
                 <Typography className="password-strength-text">
-                  Password Strength:{" "}
+                  Password Strength:&nbsp;
                   {passwordStrength > 3
                     ? "Strong"
                     : passwordStrength > 2

@@ -31,10 +31,8 @@
   align-self: left;
   border-radius: 25px !important;
   font-family: "Figtree" !important;
-  background-color: #3f51b5 !important;
-  color: #ffffff !important;
   &.MuiButtonBase-root:hover {
-    background-color: transparent;
+    color: #fff !important;
   }
 }
 .password-util-container {
@@ -60,7 +58,6 @@
 
 .register-header {
   font-size: 30px !important;
-  color: #879ebf !important;
   font-family: "Figtree" !important;
   position: absolute !important;
   left: 50% !important;
@@ -68,11 +65,9 @@
 }
 .login-header {
   font-size: 30px !important;
-  color: #879ebf !important;
   font-family: "Figtree" !important;
 }
 .password-strength-text {
-  color: #ffffff !important;
   font-family: "Figtree" !important;
   font-size: 14px !important;
 }
@@ -83,7 +78,6 @@
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  color: #ffffff !important;
 }
 .toggle-password-visibility-button {
   color: #ffffff !important;
@@ -135,24 +129,9 @@ input.register-input-fields:focus {
   outline: 2px solid #ffffff;
 }
 
-.mal-login-button {
-  width: 100%;
-  border-radius: 25px !important;
-  font-family: "Figtree" !important;
-  height: 34px;
-  border: 1px solid #75747a !important;
-  background-color: #333333 !important;
-  text-transform: none !important;
-  color: #ffffff !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-}
-
 .login-text-field-headers,
 .register-text-field-headers {
   padding-bottom: 10px;
-  color: #879ebf !important;
   font-family: "Figtree" !important;
 }
 
@@ -184,7 +163,6 @@ input.register-input-fields:focus {
 .forgot-password-button {
   position: relative !important;
   float: right !important;
-  color: #3f51b5 !important;
   font-family: "Figtree" !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
@@ -196,8 +174,6 @@ input.register-input-fields:focus {
   width: 80%;
   border-radius: 25px !important;
   font-family: "Figtree" !important;
-  background-color: #3f51b5 !important;
-  color: #ffffff !important;
 
   &.MuiButtonBase-root:hover {
     background-color: transparent;

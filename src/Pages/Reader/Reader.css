@@ -34,6 +34,11 @@
 
 .reader-page-text {
   font-family: "Figtree", sans-serif !important;
+  overflow: hidden;
+  max-height: 60px;
+  word-break: break-word;
+  white-space: word-wrap;
+  text-overflow: ellipsis;
 }
 
 .reader-feed {
@@ -68,11 +73,11 @@
 .manga-name-button {
   text-transform: none !important;
   color: unset !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
 }
-
 #settings-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;

@@ -449,6 +449,8 @@ const AccountPage = () => {
                 className="logout-options"
                 onClick={() => {
                   navigate("/");
+                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("refreshToken");
                 }}
               >
                 Yes

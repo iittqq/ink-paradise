@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, CardMedia, Button, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { fetchAccountDetails } from "../../api/AccountDetails";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
@@ -14,7 +13,6 @@ type Props = {
   id?: string;
   title: string;
   coverUrl?: string;
-  updatedAt?: string;
   disabled?: boolean;
   accountId: number;
 };
@@ -25,7 +23,7 @@ const MangaClickable = (props: Props) => {
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
   const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
-  const { manga, title, coverUrl, updatedAt, disabled, accountId } = props;
+  const { manga, title, coverUrl, disabled, accountId } = props;
 
   const handleClick = (id: string, coverUrl: string) => {
     const encodedCoverUrl = encodeURIComponent(coverUrl!);
@@ -77,8 +75,8 @@ const MangaClickable = (props: Props) => {
       >
         <Card
           sx={{
-            width: { xs: "100px", sm: "130px", md: "130px", lg: "130px" },
-            height: { xs: "150px", sm: "200px", md: "200px", lg: "200px" },
+            width: { xs: "90px", sm: "130px", md: "130px", lg: "130px" },
+            height: { xs: "140px", sm: "200px", md: "200px", lg: "200px" },
             position: "relative",
           }}
         >
@@ -98,11 +96,6 @@ const MangaClickable = (props: Props) => {
             className="overlay-title"
           >
             {title}
-          </Typography>
-          <Typography color="white" className="overlay-date">
-            {updatedAt === undefined
-              ? null
-              : dayjs(updatedAt).format("DD/MM/YYYY ")}
           </Typography>
         </div>
       </Button>

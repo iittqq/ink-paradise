@@ -17,7 +17,19 @@ const InfoButtonHome = (props: Props) => {
         open={openInfo}
         onClose={handleInfoDialogClose}
       >
-        <DialogTitle className="open-info-dialog-title">Links</DialogTitle>
+        <DialogTitle className="open-info-dialog-title">
+          Welcome to ink-paradise
+        </DialogTitle>
+        <div className="info-dialog-text-content">
+          <p>Developer:</p>
+          <p>iittqq - i'm in the discord</p>
+          <p>Objective:</p>
+          <p>
+            Provide an enjoyable manga reading experience for anyone interested
+            :)
+          </p>
+          <h2>Links:</h2>
+        </div>
         <Grid
           container
           direction="row"

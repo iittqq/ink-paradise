@@ -158,7 +158,6 @@ const FolderGrid = (props: Props) => {
                     : element.attributes.title.en
                 }
                 coverUrl={coverUrlsFolderGrid[element.id]}
-                updatedAt={element.attributes.updatedAt}
                 disabled={checked || selectAll}
                 accountId={accountId}
               />

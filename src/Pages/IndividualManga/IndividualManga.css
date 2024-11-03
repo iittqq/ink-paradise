@@ -73,6 +73,7 @@
   align-items: flex-start;
   flex-grow: 1;
   overflow: hidden;
+  width: 100%;
   &::-webkit-scrollbar {
     display: none;
   }

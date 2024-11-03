@@ -3,8 +3,9 @@ import {
   Account,
   UsernameChange,
   PasswordChange,
+  Tokens,
 } from "../interfaces/AccountInterfaces";
-
+import { jwtDecode } from "jwt-decode";
 const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 async function fetchAccountData(id: number): Promise<Account | null> {
@@ -30,13 +31,89 @@ async function createAccount(account: object): Promise<Account> {
   }
 }
 
-async function login(email: string, password: string): Promise<number> {
+async function refreshTokenFunction(refreshToken: string): Promise<string> {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/v1/accounts/refresh`, {
+      refreshToken: refreshToken,
+    });
+
+    const { accessToken } = response.data;
+
+    // Update the access token in local storage
+    localStorage.setItem("accessToken", accessToken);
+    return accessToken;
+  } catch (error) {
+    console.error("Refresh token failed:", error);
+    throw error; // Throw error to be caught in getUserDetails
+  }
+}
+const isTokenExpired = (token: string) => {
+  if (!token) return true; // If there's no token, consider it expired
+
+  try {
+    const decodedToken: { exp: number } = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // Current time in seconds
+    console.log(decodedToken.exp);
+    console.log(Math.floor(currentTime));
+
+    return decodedToken.exp < currentTime; // True if token is expired
+  } catch (error) {
+    console.error("Failed to decode token:", error);
+    return true; // If decoding fails, consider the token expired
+  }
+};
+
+async function getUserDetails(): Promise<Account | undefined> {
+  let accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  // If the access token is expired, try to refresh it
+  if (isTokenExpired(accessToken || "")) {
+    if (refreshToken) {
+      try {
+        accessToken = await refreshTokenFunction(refreshToken);
+        // Update the access token in local storage
+        localStorage.setItem("accessToken", accessToken);
+      } catch (error) {
+        console.error("Failed to refresh access token:", error);
+        // Redirect to login page or handle token refresh failure
+        // E.g., navigate("/login") if using React Router
+        return;
+      }
+    } else {
+      console.error("No refresh token found. Please log in again.");
+      // Redirect to login page or handle as appropriate
+      return;
+    }
+  }
+
+  // Decode the access token to get the accountId
+  const decodedToken = jwtDecode(accessToken || "");
+  const accountId = Number(decodedToken.sub);
+
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/accounts/${accountId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    // Return the user details from the response
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+  }
+}
+
+async function login(email: string, password: string): Promise<Tokens> {
   try {
     const response = await axios.post(`${BASE_URL}/api/v1/accounts/login`, {
       email: email,
       password: password,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching manga:", error);
@@ -114,6 +191,9 @@ async function updateAccountDetails(accountDetails: Account): Promise<Account> {
 export {
   fetchAccountData,
   createAccount,
+  refreshTokenFunction,
+  getUserDetails,
+  isTokenExpired,
   login,
   updateAccountUsername,
   updateAccountPassword,

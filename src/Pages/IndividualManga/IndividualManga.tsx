@@ -284,7 +284,9 @@ const IndividualManga = () => {
       <div className="header">
         <Header
           accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={state.contentFilter}
+          contentFilter={
+            state.contentFilter === undefined ? 3 : state.contentFilter
+          }
         />
       </div>
       <div>
@@ -357,6 +359,7 @@ const IndividualManga = () => {
                     state.accountId === undefined ? null : state.accountId
                   }
                   contentFilter={state.contentFilter}
+                  sortOrder={currentOrder}
                 />
               </>
             ) : (
