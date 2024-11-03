@@ -78,7 +78,12 @@ const BookmarksList = (props: Props) => {
 
   useEffect(() => {
     const fetchCoverImages = async () => {
-      for (const manga of bookmarks) {
+      // Flatten grouped bookmarks into a single array if groupedBookmarks exist, otherwise use bookmarks directly
+      const allBookmarks = groupedBookmarks
+        ? groupedBookmarks.flat()
+        : bookmarks;
+
+      for (const manga of allBookmarks) {
         const fileName = manga.relationships.find((i) => i.type === "cover_art")
           ?.attributes?.fileName;
         if (fileName) {
@@ -90,10 +95,15 @@ const BookmarksList = (props: Props) => {
         }
       }
     };
-    if (bookmarks.length > 0) {
+
+    // Only fetch if we have either bookmarks or groupedBookmarks
+    if (
+      (bookmarks && bookmarks.length > 0) ||
+      (groupedBookmarks && groupedBookmarks.length > 0)
+    ) {
       fetchCoverImages();
     }
-  }, [bookmarks]);
+  }, [bookmarks, groupedBookmarks]);
 
   return (
     <div>
@@ -111,7 +121,7 @@ const BookmarksList = (props: Props) => {
         wrap={"wrap"}
         spacing={1}
       >
-        {bookmarks.length === 0 ? (
+        {bookmarks.length === 0 && groupedBookmarks?.length === 0 ? (
           <Button
             className="redirect-button"
             onClick={() => {

@@ -125,8 +125,7 @@ input[type="search"]:focus {
   background-color: #1f1f1f !important;
   color: #ffffff !important;
   font-family: "Figtree" !important;
-  font-size: 12px;
-  max-width: 400px;
+  font-size: 14px !important;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

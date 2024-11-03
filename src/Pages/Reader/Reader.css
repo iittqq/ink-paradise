@@ -23,6 +23,8 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .current-manga-details {

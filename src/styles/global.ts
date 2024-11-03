@@ -6,11 +6,12 @@ type GlobalThemeProps = {
 };
 
 const globalStyle = createGlobalStyle`
-   body {
+  body {
     background-color: ${({ theme }: GlobalThemeProps) => theme.body};
     color: ${({ theme }: GlobalThemeProps) => theme.text} !important;
-    font-family: 'Arial', sans-serif;
-    transition: background-color 0.5s linear, color 0.5s linear;
+    font-family: 'Figtree', sans-serif;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   a {

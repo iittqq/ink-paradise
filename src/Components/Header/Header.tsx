@@ -27,7 +27,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { Account } from "../../interfaces/AccountInterfaces";
-import PetsIcon from "@mui/icons-material/Pets";
+import ErrorIcon from "@mui/icons-material/Error";
 import StyleIcon from "@mui/icons-material/Style";
 import InfoIcon from "@mui/icons-material/Info";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -49,7 +49,7 @@ const Header = (props: Props) => {
   const [openTags, setOpenTags] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
   const [openThemes, setOpenThemes] = useState(false);
-  const [newTheme, setNewTheme] = useState<number>(0);
+  const [newTheme, setNewTheme] = useState<number | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { toggleTheme } = useTheme();
 
@@ -128,19 +128,24 @@ const Header = (props: Props) => {
   const handleThemeChange = (newTheme: number) => {
     setNewTheme(newTheme);
     toggleTheme(newTheme);
+    console.log(newTheme);
   };
 
   const handleThemeDialogClose = () => {
     setOpenThemes(false);
-    window.localStorage.setItem("theme", newTheme.toString());
-    if (accountId !== null) {
-      fetchAccountDetails(accountId).then((data) => {
-        if (data !== null) {
-          const updatedAccount = data;
-          updatedAccount.theme = newTheme;
-          updateAccountDetails(accountId, updatedAccount);
-        }
-      });
+    if (newTheme !== null) {
+      window.localStorage.setItem("theme", newTheme.toString());
+      if (accountId !== null) {
+        fetchAccountDetails(accountId).then((data) => {
+          if (data !== null) {
+            const updatedAccount = data;
+            updatedAccount.theme = newTheme;
+            console.log(newTheme);
+            console.log(updatedAccount.theme);
+            updateAccountDetails(accountId, updatedAccount);
+          }
+        });
+      }
     }
   };
 
@@ -397,22 +402,22 @@ const Header = (props: Props) => {
       {showAlert == true ? (
         <div className="alert-container">
           <Alert
-            icon={<PetsIcon className="account-verification-alert-icon" />}
+            icon={<ErrorIcon className="account-verification-alert-icon" />}
             severity="info"
             className="account-verification-alert"
           >
-            Please verify your account before proceeding
+            Please verify your account via email
           </Alert>
         </div>
       ) : null}
       {showAlertAccount == true ? (
         <div className="alert-container">
           <Alert
-            icon={<PetsIcon className="account-verification-alert-icon" />}
+            icon={<ErrorIcon className="account-verification-alert-icon" />}
             severity="info"
             className="account-verification-alert"
           >
-            Please create and verify your account before proceeding
+            Please create and verify your account
           </Alert>
         </div>
       ) : null}{" "}

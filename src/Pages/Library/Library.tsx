@@ -69,117 +69,104 @@ const Library = () => {
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
 
-    getReadingByUserId(userId).then((data: Reading[]) => {
-      if (contentFilter === "Continue Reading") {
-        if (ascending) {
-          data = data
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
-        } else {
-          data = data
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
-        }
-      } else {
-        if (ascending) {
-          data = data.sort((a, b) => a.mangaName.localeCompare(b.mangaName));
-        } else {
-          data = data.sort(
-            (a, b) => -1 * a.mangaName.localeCompare(b.mangaName),
-          );
-        }
-      }
-      const promises = data.map((mangaData: Reading) => {
-        return fetchMangaById(mangaData.mangaId);
-      });
+    try {
+      const data: Reading[] = await getReadingByUserId(userId);
+      const sortedData = sortLibraryData(data, contentFilter, ascending);
 
-      Promise.all(promises)
-        .then((data: Manga[]) => {
-          if (contentFilter === "Recently Updated") {
-            if (ascending) {
-              data = data
-                .map(function (e) {
-                  return e;
-                })
-                .sort((a, b) =>
-                  a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
-                )
-                .reverse();
-            } else {
-              data = data
-                .map(function (e) {
-                  return e;
-                })
-                .sort((a, b) =>
-                  a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
-                );
-            }
-          } else if (contentFilter === "Release Date") {
-            if (ascending) {
-              data = data
-                .map(function (e) {
-                  return e;
-                })
-                .sort((a, b) =>
-                  a.attributes.year < b.attributes.year ? 1 : -1,
-                );
-            } else {
-              data = data
-                .map(function (e) {
-                  return e;
-                })
-                .sort((a, b) =>
-                  a.attributes.year > b.attributes.year ? 1 : -1,
-                );
-            }
-          } else if (contentFilter === "Content Rating") {
-            const typedData = Object.values(
-              data.reduce(
-                (accumulator: { [key: string]: Manga[] }, current) => {
-                  const currentContentRating = current.attributes.contentRating;
-                  (accumulator[currentContentRating] =
-                    accumulator[currentContentRating as keyof Manga] ||
-                    []).push(current);
-                  return accumulator;
-                },
-                {},
-              ),
-            );
-            if (ascending) {
-              setGroupedLibrary(typedData);
-            } else {
-              setGroupedLibrary(typedData.reverse());
-            }
-          } else if (contentFilter === "Publication Demographic") {
-            const typedData = Object.values(
-              data.reduce(
-                (accumulator: { [key: string]: Manga[] }, current) => {
-                  const currentContentRating =
-                    current.attributes.publicationDemographic;
-                  (accumulator[currentContentRating] =
-                    accumulator[currentContentRating as keyof Manga] ||
-                    []).push(current);
-                  return accumulator;
-                },
-                {},
-              ),
-            );
-            if (ascending) {
-              setGroupedLibrary(typedData);
-            } else {
-              setGroupedLibrary(typedData.reverse());
-            }
-          }
+      const mangaPromises = sortedData.map((entry: Reading) =>
+        fetchMangaById(entry.mangaId),
+      );
+      const mangaData: Manga[] = await Promise.all(mangaPromises);
 
-          setLibrary(data);
-          setLoading(false);
-        })
-        .catch((error) => console.log(error));
-    });
+      const sortedMangaData = sortMangaData(
+        mangaData,
+        contentFilter,
+        ascending,
+      );
+      setLibrary(sortedMangaData);
+      setGroupedLibrary(
+        groupLibraryData(sortedMangaData, contentFilter, ascending),
+      );
+    } catch (error) {
+      console.error("Error fetching library data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper function to sort library data based on contentFilter and ascending
+  const sortLibraryData = (
+    data: Reading[],
+    filter: string,
+    ascending: boolean,
+  ): Reading[] => {
+    return filter === "Continue Reading"
+      ? data.sort((a, b) =>
+          ascending
+            ? Date.parse(b.timestamp) - Date.parse(a.timestamp)
+            : Date.parse(a.timestamp) - Date.parse(b.timestamp),
+        )
+      : data.sort((a, b) =>
+          ascending
+            ? a.mangaName.localeCompare(b.mangaName)
+            : b.mangaName.localeCompare(a.mangaName),
+        );
+  };
+
+  // Helper function to sort manga data based on contentFilter and ascending
+  const sortMangaData = (
+    data: Manga[],
+    filter: string,
+    ascending: boolean,
+  ): Manga[] => {
+    switch (filter) {
+      case "Recently Updated":
+        return data.sort((a, b) =>
+          ascending
+            ? b.attributes.updatedAt.localeCompare(a.attributes.updatedAt)
+            : a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+        );
+      case "Release Date":
+        return data.sort((a, b) =>
+          ascending
+            ? b.attributes.year - a.attributes.year
+            : a.attributes.year - b.attributes.year,
+        );
+      default:
+        return data;
+    }
+  };
+
+  const groupLibraryData = (
+    data: Manga[],
+    filter: string,
+    ascending: boolean,
+  ): Manga[][] | null => {
+    let groupedData: Manga[][] | null = null;
+
+    if (filter === "Content Rating") {
+      groupedData = Object.values(
+        data.reduce((acc: { [key: string]: Manga[] }, manga) => {
+          const rating = manga.attributes.contentRating;
+          (acc[rating] = acc[rating] || []).push(manga);
+          return acc;
+        }, {}),
+      );
+    } else if (filter === "Publication Demographic") {
+      groupedData = Object.values(
+        data.reduce((acc: { [key: string]: Manga[] }, manga) => {
+          const demographic = manga.attributes.publicationDemographic;
+          (acc[demographic] = acc[demographic] || []).push(manga);
+          return acc;
+        }, {}),
+      );
+    }
+
+    return groupedData
+      ? ascending
+        ? groupedData
+        : groupedData.reverse()
+      : null;
   };
 
   const handleBookmarkClick = () => {
@@ -286,138 +273,88 @@ const Library = () => {
 
     try {
       const bookmarks: Bookmark[] = await getBookmarksByUserId(userId);
-      const promises = bookmarks.map(async (bookmark: Bookmark) => {
-        return fetchMangaById(bookmark.mangaId).then((manga: Manga) => {
-          return {
-            ...manga,
-            chapterNumber: bookmark.chapterNumber,
-            chapterId: bookmark.chapterId,
-            bookmarkId: bookmark.id,
-            index: bookmark.chapterIndex,
-            bookmarkPageNumber: bookmark.pageNumber,
-            bookmarkContinueReading: bookmark.continueReading,
-          } as Manga;
-        });
+
+      const mangaPromises = bookmarks.map(async (bookmark) => {
+        const manga = await fetchMangaById(bookmark.mangaId);
+        return {
+          ...manga,
+          chapterNumber: bookmark.chapterNumber,
+          chapterId: bookmark.chapterId,
+          bookmarkId: bookmark.id,
+          index: bookmark.chapterIndex,
+          bookmarkPageNumber: bookmark.pageNumber,
+          bookmarkContinueReading: bookmark.continueReading,
+        } as Manga;
       });
 
-      let enrichedBookmarks = await Promise.all(promises);
-      if (contentFilter === "Continue Reading") {
-        if (ascending) {
-          enrichedBookmarks = enrichedBookmarks.filter(
-            (manga: Manga) => manga.bookmarkContinueReading === true,
-          );
-        } else {
-          enrichedBookmarks = enrichedBookmarks
-            .filter((manga: Manga) => manga.bookmarkContinueReading === true)
-            .reverse();
-        }
-      } else if (contentFilter === "Alphabetical Order") {
-        if (ascending) {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) =>
-              a.attributes.title.en === undefined
-                ? Object.values(a.attributes.title)[0].localeCompare(
-                    Object.values(b.attributes.title)[0],
-                  )
-                : a.attributes.title.en.localeCompare(b.attributes.title.en),
-            );
-        } else {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) =>
-              a.attributes.title.en === undefined
-                ? -1 *
-                  Object.values(a.attributes.title)[0].localeCompare(
-                    Object.values(b.attributes.title)[0],
-                  )
-                : -1 *
-                  a.attributes.title.en.localeCompare(b.attributes.title.en),
-            );
-        }
-      } else if (contentFilter === "Recently Updated") {
-        if (ascending) {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) =>
-              a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
-            );
-        } else {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort(
-              (a, b) =>
-                -1 *
-                a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
-            );
-        }
-      } else if (contentFilter === "Release Date") {
-        if (ascending) {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) => (a.attributes.year < b.attributes.year ? 1 : -1));
-        } else {
-          enrichedBookmarks = enrichedBookmarks
-            .map(function (e) {
-              return e;
-            })
-            .sort((a, b) => (a.attributes.year > b.attributes.year ? 1 : -1));
-        }
-      } else if (contentFilter === "Content Rating") {
-        const typedData = Object.values(
-          enrichedBookmarks.reduce(
-            (accumulator: { [key: string]: Manga[] }, current) => {
-              const currentContentRating = current.attributes.contentRating;
-              (accumulator[currentContentRating] =
-                accumulator[currentContentRating as keyof Manga] || []).push(
-                current,
-              );
-              return accumulator;
-            },
-            {},
-          ),
+      let enrichedBookmarks = await Promise.all(mangaPromises);
+      enrichedBookmarks = filterAndSortBookmarks(
+        enrichedBookmarks,
+        contentFilter,
+        ascending,
+      );
+
+      if (
+        contentFilter === "Content Rating" ||
+        contentFilter === "Publication Demographic"
+      ) {
+        setGroupedBookmarks(
+          groupLibraryData(enrichedBookmarks, contentFilter, ascending),
         );
-        if (ascending) {
-          setGroupedBookmarks(typedData);
-        } else {
-          setGroupedBookmarks(typedData.reverse());
-        }
-      } else if (contentFilter === "Publication Demographic") {
-        const typedData = Object.values(
-          enrichedBookmarks.reduce(
-            (accumulator: { [key: string]: Manga[] }, current) => {
-              const currentContentRating =
-                current.attributes.publicationDemographic;
-              (accumulator[currentContentRating] =
-                accumulator[currentContentRating as keyof Manga] || []).push(
-                current,
-              );
-              return accumulator;
-            },
-            {},
-          ),
-        );
-        if (ascending) {
-          setGroupedBookmarks(typedData);
-        } else {
-          setGroupedBookmarks(typedData.reverse());
-        }
+      } else {
+        setBookmarks(enrichedBookmarks);
       }
 
-      setBookmarks(enrichedBookmarks);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching bookmarks data:", error);
+    }
+  };
+
+  // Helper function to filter and sort bookmarks
+  const filterAndSortBookmarks = (
+    data: Manga[],
+    filter: string,
+    ascending: boolean,
+  ): Manga[] => {
+    switch (filter) {
+      case "Continue Reading":
+        return data
+          .filter((manga) => manga.bookmarkContinueReading === true)
+          .sort(
+            (a, b) =>
+              (ascending ? 1 : -1) *
+              (Date.parse(a.attributes.updatedAt) -
+                Date.parse(b.attributes.updatedAt)),
+          );
+
+      case "Alphabetical Order":
+        return data.sort((a, b) => {
+          const titleA =
+            a.attributes.title.en || Object.values(a.attributes.title)[0];
+          const titleB =
+            b.attributes.title.en || Object.values(b.attributes.title)[0];
+          return ascending
+            ? titleA.localeCompare(titleB)
+            : titleB.localeCompare(titleA);
+        });
+
+      case "Recently Updated":
+        return data.sort(
+          (a, b) =>
+            (ascending ? 1 : -1) *
+            a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
+        );
+
+      case "Release Date":
+        return data.sort((a, b) =>
+          ascending
+            ? b.attributes.year - a.attributes.year
+            : a.attributes.year - b.attributes.year,
+        );
+
+      default:
+        return data;
     }
   };
 
