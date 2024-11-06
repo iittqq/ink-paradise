@@ -18,9 +18,8 @@ const TrendingMangaCarousel = (props: Props) => {
   const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
   const navigate = useNavigate();
 
-  const handleClick = (id: string, coverUrl: string) => {
-    const encodedCoverUrl = encodeURIComponent(coverUrl);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+  const handleClick = (id: string) => {
+    navigate(`/manga/${id}`, {
       state: { accountId: accountId === null ? null : accountId },
     });
   };

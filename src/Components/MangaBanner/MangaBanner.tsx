@@ -1,5 +1,8 @@
 import { Typography } from "@mui/material";
 import "./MangaBanner.css";
+import MangaPageButtonHeader from "../MangaPageButtonHeader/MangaPageButtonHeader";
+import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
+import { MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
 
 type Props = {
   coverUrl: string;
@@ -8,6 +11,25 @@ type Props = {
   author: string | undefined;
   contentRating: string;
   status: string | undefined;
+  mangaRaw: string;
+  folders: MangaFolder[];
+  mangaAltTitles: object[];
+  mangaTags: MangaTagsInterface[];
+  id: string | undefined;
+  handleAddToFolder: (folderId: number, mangaId: string) => void;
+  handleClickOpen: () => void;
+  handleCloseCategories: () => void;
+  handleCloseInfo: () => void;
+  handleOpenCategories: () => void;
+  handleOpenInfo: () => void;
+  open: boolean;
+  showInfoToggled: boolean;
+  showCategoriesToggled: boolean;
+  mangaExistsError: boolean;
+  handleClose: () => void;
+  mangaContentRating: string;
+  mangaAddedAlert: boolean;
+  handleMangaCategoryClicked: (category: MangaTagsInterface) => void;
 };
 
 const MangaBanner = (props: Props) => {
@@ -18,6 +40,25 @@ const MangaBanner = (props: Props) => {
     author,
     contentRating,
     status,
+    mangaRaw,
+    folders,
+    mangaAltTitles,
+    mangaTags,
+    id,
+    handleAddToFolder,
+    handleClickOpen,
+    handleCloseCategories,
+    handleCloseInfo,
+    handleOpenCategories,
+    handleOpenInfo,
+    open,
+    showInfoToggled,
+    showCategoriesToggled,
+    mangaExistsError,
+    handleClose,
+    mangaContentRating,
+    mangaAddedAlert,
+    handleMangaCategoryClicked,
   } = props;
 
   return (
@@ -60,6 +101,27 @@ const MangaBanner = (props: Props) => {
           >
             Status: <span className="manga-details-color-text"> {status}</span>
           </Typography>
+          <MangaPageButtonHeader
+            mangaRaw={mangaRaw}
+            folders={folders}
+            mangaAltTitles={mangaAltTitles}
+            mangaTags={mangaTags}
+            id={id !== undefined ? id : ""}
+            handleAddToFolder={handleAddToFolder}
+            handleClickOpen={handleClickOpen}
+            handleCloseCategories={handleCloseCategories}
+            handleCloseInfo={handleCloseInfo}
+            handleOpenCategories={handleOpenCategories}
+            handleOpenInfo={handleOpenInfo}
+            open={open}
+            showInfoToggled={showInfoToggled}
+            showCategoriesToggled={showCategoriesToggled}
+            mangaExistsError={mangaExistsError}
+            handleClose={handleClose}
+            mangaContentRating={mangaContentRating}
+            mangaAddedAlert={mangaAddedAlert}
+            handleMangaCategoryClicked={handleMangaCategoryClicked}
+          />
         </div>
       </div>
       <div className="manga-details">

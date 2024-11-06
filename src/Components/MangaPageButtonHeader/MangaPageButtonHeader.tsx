@@ -62,10 +62,6 @@ const MangaPageButtonHeader = (props: Props) => {
 
   return (
     <div className="manga-details-buttons-container">
-      <Button className="individual-details-button" href={mangaRaw}>
-        <RawOnIcon />
-      </Button>
-
       <Button
         className="individual-details-button"
         disableFocusRipple
@@ -163,13 +159,15 @@ const MangaPageButtonHeader = (props: Props) => {
           </Grid>
         </DialogContent>
       </Dialog>
+      <Button className="individual-details-button" href={mangaRaw}>
+        <RawOnIcon />
+      </Button>
       <Button
         className="individual-details-button"
         onClick={() => {
           handleOpenInfo();
         }}
       >
-        {" "}
         <InfoIcon />
       </Button>
       <Dialog

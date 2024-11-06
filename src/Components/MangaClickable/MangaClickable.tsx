@@ -25,13 +25,11 @@ const MangaClickable = (props: Props) => {
 
   const { manga, title, coverUrl, disabled, accountId } = props;
 
-  const handleClick = (id: string, coverUrl: string) => {
-    const encodedCoverUrl = encodeURIComponent(coverUrl!);
+  const handleClick = (id: string) => {
     console.log("id: ", id);
-    console.log("coverUrl", coverUrl);
     if (accountId !== null) {
       fetchAccountDetails(accountId).then((response: AccountDetails) => {
-        navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+        navigate(`/manga/${id}`, {
           state: {
             accountId: accountId,
             contentFilter: response.contentFilter,
@@ -39,7 +37,7 @@ const MangaClickable = (props: Props) => {
         });
       });
     } else {
-      navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+      navigate(`/manga/${id}`, {
         state: { accountId: accountId, contentFilter: 3 },
       });
     }

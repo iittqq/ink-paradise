@@ -52,6 +52,9 @@ const PageAndControls = (props: Props) => {
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
     Array(pages.length).fill(false),
   );
+  const [chapterIndexState, setChapterIndexState] =
+    useState<number>(chapterIndex);
+  const [orderState] = useState<string>(order || "asc");
 
   const navigate = useNavigate();
 
@@ -86,7 +89,7 @@ const PageAndControls = (props: Props) => {
 
     let chapterFound = false;
     const tempMangaFeed =
-      order === "desc" ? mangaFeedState.reverse() : mangaFeedState;
+      orderState === "desc" ? mangaFeedState.reverse() : mangaFeedState;
 
     for (let index = 0; index < tempMangaFeed.length; index++) {
       const current = tempMangaFeed[index];
@@ -103,7 +106,7 @@ const PageAndControls = (props: Props) => {
           tempMangaFeed[index].attributes.chapter,
           mangaName,
           scanlationGroup,
-          chapterIndex + 1,
+          chapterIndexState + 1,
         );
         break;
       }
@@ -111,14 +114,15 @@ const PageAndControls = (props: Props) => {
     if (!chapterFound) {
       fetchMangaFeed(
         mangaId,
-        100,
-        chapterIndex - 1,
-        order,
+        10,
+        chapterIndexState - 1,
+        orderState,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
         setMangaFeedState([...mangaFeedState, ...data]);
       });
     }
+    setChapterIndexState(chapterIndexState + 1);
   };
 
   const handlePreviousChapter = () => {
@@ -126,7 +130,7 @@ const PageAndControls = (props: Props) => {
     handleChangePageNumber(0);
     let chapterFound = false;
     const tempMangaFeed =
-      order === "desc" ? mangaFeedState.reverse() : mangaFeedState;
+      orderState === "desc" ? mangaFeedState.reverse() : mangaFeedState;
 
     for (let index = tempMangaFeed.length - 1; index >= 0; index--) {
       const current = tempMangaFeed[index];
@@ -143,7 +147,7 @@ const PageAndControls = (props: Props) => {
           tempMangaFeed[index].attributes.chapter,
           mangaName,
           scanlationGroup,
-          chapterIndex - 1,
+          Math.max(0, chapterIndexState - 10),
         );
         break;
       }
@@ -151,9 +155,9 @@ const PageAndControls = (props: Props) => {
     if (!chapterFound) {
       fetchMangaFeed(
         mangaId,
-        100,
-        chapterIndex - 1,
-        order,
+        20,
+        Math.max(0, chapterIndexState - 10),
+        orderState,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
         console.log(data);
@@ -161,10 +165,11 @@ const PageAndControls = (props: Props) => {
         setMangaFeedState(data);
       });
     }
+    setChapterIndexState(chapterIndex - 1);
   };
 
   const handlePreviousPage = () => {
-    if (currentPage === 0 || readerMode === 3) {
+    if (currentPage === 0 || readerMode === 3 || readerMode === 4) {
       handlePreviousChapter();
     } else {
       setCurrentPage(currentPage - 1);
@@ -175,7 +180,11 @@ const PageAndControls = (props: Props) => {
 
   const handleNextPage = () => {
     console.log(currentPage);
-    if (currentPage === pages.length - 1 || readerMode === 3) {
+    if (
+      currentPage === pages.length - 1 ||
+      readerMode === 3 ||
+      readerMode === 4
+    ) {
       handleNextChapter();
     } else {
       setCurrentPage(currentPage + 1);
@@ -269,7 +278,7 @@ const PageAndControls = (props: Props) => {
           </div>
         ) : (
           <>
-            {readerMode === 3
+            {readerMode === 3 || readerMode === 4
               ? pages.map((page, index) =>
                   imageBlob[page] ? (
                     <img
@@ -293,7 +302,7 @@ const PageAndControls = (props: Props) => {
                 onClick={() => {
                   if (readerMode === 1 || readerMode === 3) {
                     handleNextPage();
-                  } else if (readerMode === 2) {
+                  } else if (readerMode === 2 || readerMode === 4) {
                     handlePreviousPage();
                   }
                 }}
@@ -303,7 +312,7 @@ const PageAndControls = (props: Props) => {
                 onClick={() => {
                   if (readerMode === 1 || readerMode === 3) {
                     handlePreviousPage();
-                  } else if (readerMode === 2) {
+                  } else if (readerMode === 2 || readerMode === 4) {
                     handleNextPage();
                   }
                 }}
@@ -319,7 +328,7 @@ const PageAndControls = (props: Props) => {
           onClick={() => {
             if (readerMode === 1 || readerMode === 3) {
               handleNextChapter();
-            } else if (readerMode === 2) {
+            } else if (readerMode === 2 || readerMode === 4) {
               handlePreviousChapter();
             }
           }}
@@ -331,7 +340,7 @@ const PageAndControls = (props: Props) => {
           onClick={() => {
             if (readerMode === 1 || readerMode === 3) {
               handleNextPage();
-            } else if (readerMode === 2) {
+            } else if (readerMode === 2 || readerMode === 4) {
               handlePreviousPage();
             }
           }}
@@ -343,7 +352,7 @@ const PageAndControls = (props: Props) => {
           onClick={() => {
             if (readerMode === 1 || readerMode === 3) {
               handlePreviousPage();
-            } else if (readerMode === 2) {
+            } else if (readerMode === 2 || readerMode === 4) {
               handleNextPage();
             }
           }}
@@ -355,7 +364,7 @@ const PageAndControls = (props: Props) => {
           onClick={() => {
             if (readerMode === 1 || readerMode === 3) {
               handlePreviousChapter();
-            } else if (readerMode === 2) {
+            } else if (readerMode === 2 || readerMode === 4) {
               handleNextChapter();
             }
           }}
@@ -363,7 +372,7 @@ const PageAndControls = (props: Props) => {
           <KeyboardDoubleArrowRightIcon />
         </Button>
       </div>
-      {readerMode === 3 ? (
+      {readerMode === 3 || readerMode === 4 ? (
         <Typography fontFamily="Figtree" align="center">
           {pages.length} pages
         </Typography>

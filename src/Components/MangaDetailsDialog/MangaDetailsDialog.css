@@ -27,7 +27,7 @@
 .manga-details-dialog-contents {
   display: flex;
   flex-direction: column;
-  max-height: 50dvh;
+  max-height: 60dvh;
 }
 
 .manga-details-cover-section {

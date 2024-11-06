@@ -48,7 +48,7 @@ const BookmarksList = (props: Props) => {
     index: number,
     pageNumber: number | null,
   ) => {
-    fetchMangaFeed(mangaId, 100, index, "asc", "en").then(
+    fetchMangaFeed(mangaId, 100, Math.max(0, index - 10), "asc", "en").then(
       (mangaFeed: MangaFeedScanlationGroup[]) => {
         fetchChapterDetails(chapterId).then((response: ChapterDetails) => {
           navigate("/reader", {
@@ -108,7 +108,10 @@ const BookmarksList = (props: Props) => {
   return (
     <div>
       {bookmarks.length === 0 ? null : (
-        <Typography fontFamily={"Figtree"} sx={{ textAlign: "center" }}>
+        <Typography
+          fontFamily={"Figtree"}
+          sx={{ textAlign: "center", paddingBottom: "5px" }}
+        >
           {" "}
           Continue Reading
         </Typography>
@@ -138,7 +141,7 @@ const BookmarksList = (props: Props) => {
                   <Typography
                     fontFamily={"Figtree"}
                     sx={{
-                      marginTop: "20px",
+                      paddingTop: "5px",
                       width: "100%",
                       justifyContent: "center",
                       display: "flex",
@@ -208,7 +211,7 @@ const BookmarksList = (props: Props) => {
                   <Typography
                     fontFamily={"Figtree"}
                     sx={{
-                      marginTop: "20px",
+                      paddingTop: "5px",
                       width: "100%",
                       justifyContent: "center",
                       display: "flex",
@@ -330,7 +333,7 @@ const BookmarksList = (props: Props) => {
       {bookmarks.length === 0 ? null : (
         <Typography
           fontFamily={"Figtree"}
-          sx={{ textAlign: "center", paddingTop: "10px" }}
+          sx={{ textAlign: "center", paddingTop: "5px", paddingBottom: "5px" }}
         >
           {" "}
           Custom Bookmarks
@@ -351,7 +354,7 @@ const BookmarksList = (props: Props) => {
                   <Typography
                     fontFamily={"Figtree"}
                     sx={{
-                      marginTop: "20px",
+                      paddingTop: "5px",
                       width: "100%",
                       justifyContent: "center",
                       display: "flex",
@@ -427,7 +430,7 @@ const BookmarksList = (props: Props) => {
                   <Typography
                     fontFamily={"Figtree"}
                     sx={{
-                      marginTop: "20px",
+                      paddingTop: "5px",
                       width: "100%",
                       justifyContent: "center",
                       display: "flex",

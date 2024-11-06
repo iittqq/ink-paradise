@@ -10,9 +10,11 @@ import {
 } from "../../api/MangaDexApi";
 import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
 import MangaCategoriesHomePage from "../../Components/MangaCategoriesHomePage/MangaCategoriesHomePage";
+import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { Typography } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { useTheme } from "../../contexts/ThemeContext";
+import InfoIcon from "@mui/icons-material/Info";
 
 const Home = () => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
@@ -20,8 +22,14 @@ const Home = () => {
   const [recentlyAddedManga, setRecentlyAddedManga] = useState<Manga[]>([]);
   const [accountId, setAccountId] = useState<number | null>(null);
   const [contentFilterState, setContentFilterState] = useState<number>(3);
+  const [openInfo, setOpenInfo] = useState(false);
   const { toggleTheme } = useTheme();
-
+  const handleClickedOpenInfo = () => {
+    setOpenInfo(true);
+  };
+  const handleInfoDialogClose = () => {
+    setOpenInfo(false);
+  };
   useEffect(() => {
     const fetchData = async () => {
       const account = await getUserDetails();
@@ -98,8 +106,17 @@ const Home = () => {
         accountId={accountId === null ? null : accountId}
         contentFilter={contentFilterState}
       />
+      <InfoButtonHome
+        openInfo={openInfo}
+        handleInfoDialogClose={handleInfoDialogClose}
+      />
       <div className="home-title-and-dialog-button">
         <Typography className="popular-manga-header"> Popular Manga</Typography>
+        <Button className="home-info-button" onClick={handleClickedOpenInfo}>
+          <div className="info-button-column">
+            <InfoIcon />{" "}
+          </div>
+        </Button>
       </div>
       <TrendingMangaCarousel
         manga={popularManga}

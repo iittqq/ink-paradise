@@ -80,8 +80,7 @@ const Reader = () => {
   };
 
   function handleClickTitle() {
-    const encodedCoverUrl = encodeURIComponent(state.coverUrl);
-    navigate(`/individualView/${state.mangaId}/${encodedCoverUrl}`, {
+    navigate(`/manga/${state.mangaId}`, {
       state: { accountId: state.accountId === null ? null : state.accountId },
     });
   }
@@ -90,7 +89,12 @@ const Reader = () => {
     const scrollPosition = sessionStorage.getItem("position");
     const readerMode = window.localStorage.getItem("readerMode");
 
-    if (scrollPosition && readerMode && parseInt(readerMode) !== 3) {
+    if (
+      scrollPosition &&
+      readerMode &&
+      parseInt(readerMode) !== 3 &&
+      parseInt(readerMode) !== 4
+    ) {
       window.scrollTo(0, parseInt(scrollPosition));
       sessionStorage.removeItem("position");
     } else {
@@ -194,7 +198,7 @@ const Reader = () => {
                   mangaName: bookmark.mangaName,
                   chapterNumber: parseFloat(state.chapterNumber),
                   chapterId: state.chapterId,
-                  chapterIndex: state.chapterIndex,
+                  chapterIndex: Math.trunc(state.chapterNumber),
                   continueReading: true,
                 });
                 bookmarkExists = true;
@@ -223,7 +227,7 @@ const Reader = () => {
               mangaName: simpleMangaName,
               chapterNumber: state.chapterNumber,
               chapterId: state.chapterId,
-              chapterIndex: state.chapterIndex,
+              chapterIndex: Math.trunc(state.chapterNumber),
               continueReading: true,
             });
           }
@@ -248,7 +252,7 @@ const Reader = () => {
         <div className="settings-icon">
           <Button
             disabled={
-              readerMode === "3"
+              readerMode === "3" || readerMode === "4"
                 ? bookmarks.includes(state.chapterNumber) ||
                   state.accountId === null
                 : bookmarks.includes(pageNumber + 1) || state.accountId === null
@@ -264,7 +268,7 @@ const Reader = () => {
                 mangaName: simpleMangaName,
                 chapterNumber: state.chapterNumber,
                 chapterId: state.chapterId,
-                chapterIndex: state.chapterIndex,
+                chapterIndex: Math.trunc(state.chapterNumber),
                 continueReading: false,
                 pageNumber: pageNumber + 1,
               });
@@ -273,7 +277,7 @@ const Reader = () => {
             sx={{ color: "unset", minWidth: "40px" }}
           >
             {" "}
-            {readerMode === "3" ? (
+            {readerMode === "3" || readerMode === "4" ? (
               bookmarks.includes(state.chapterNumber) === true ? (
                 <BookmarkAddedIcon />
               ) : (
@@ -335,7 +339,10 @@ const Reader = () => {
                     Left to Right
                   </MenuItem>
                   <MenuItem className="edit-reader-mode-item" value={3}>
-                    Vertical
+                    Vertical Right to Left
+                  </MenuItem>
+                  <MenuItem className="edit-reader-mode-item" value={4}>
+                    Vertical Left to Right
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -419,7 +426,7 @@ const Reader = () => {
             accountId={state.accountId === undefined ? null : state.accountId}
             order={state.sortOrder}
             selectedLanguage={selectedLanguage}
-            chapterIndex={state.chapterIndex}
+            chapterIndex={Math.trunc(state.chapterNumber)}
             setMangaFeedState={setMangaFeedState}
             mangaFeedState={mangaFeedState}
             handleChangePageNumber={handleChangePageNumber}

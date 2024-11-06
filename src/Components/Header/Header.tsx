@@ -18,7 +18,6 @@ import {
   refreshTokenFunction,
 } from "../../api/Account";
 import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
-import InfoButtonHome from "../../Components/InfoButtonHome/InfoButtonHome";
 import ThemeButton from "../../Components/ThemeButton/ThemeButton";
 import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
 import BookIcon from "@mui/icons-material/Book";
@@ -29,7 +28,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Account } from "../../interfaces/AccountInterfaces";
 import ErrorIcon from "@mui/icons-material/Error";
 import StyleIcon from "@mui/icons-material/Style";
-import InfoIcon from "@mui/icons-material/Info";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -47,7 +45,7 @@ const Header = (props: Props) => {
   const [showAlertAccount, setShowAlertAccount] = useState(false);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
   const [openTags, setOpenTags] = useState(false);
-  const [openInfo, setOpenInfo] = useState(false);
+
   const [openThemes, setOpenThemes] = useState(false);
   const [newTheme, setNewTheme] = useState<number | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -58,29 +56,26 @@ const Header = (props: Props) => {
     const refreshToken = localStorage.getItem("refreshToken");
 
     if (accessToken !== null) {
-      // Check if the access token is expired
       if (isTokenExpired(accessToken)) {
         console.error("Access token is expired. Attempting to refresh.");
 
-        // Attempt to refresh the access token
         if (refreshToken) {
           try {
             accessToken = await refreshTokenFunction(refreshToken);
-            localStorage.setItem("accessToken", accessToken); // Update local storage
+            localStorage.setItem("accessToken", accessToken);
           } catch (error) {
             console.error("Refresh token failed. Please log in again.");
-            navigate("/login"); // Redirect to login page if refreshing fails
+            navigate("/login");
             return;
           }
         } else {
           console.error("No refresh token found. Please log in again.");
-          navigate("/login"); // Redirect to login if no refresh token is found
+          navigate("/login");
           return;
         }
       }
     }
 
-    // If account ID is present, fetch account data
     if (accountId !== null) {
       fetchAccountData(accountId).then((data: Account | null) => {
         if (data !== null && data.verified === true) {
@@ -95,7 +90,7 @@ const Header = (props: Props) => {
         }
       });
     } else {
-      navigate("/login"); // If no account ID, prompt login
+      navigate("/login");
     }
   };
   const handleClickSearchIcon = async () => {
@@ -157,24 +152,31 @@ const Header = (props: Props) => {
     setOpenTags(false);
   };
 
-  const handleClickedOpenInfo = () => {
-    setOpenInfo(true);
-  };
-
-  const handleInfoDialogClose = () => {
-    setOpenInfo(false);
-  };
-
   const handleClickLibrary = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    let accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
     if (accessToken !== null) {
       if (isTokenExpired(accessToken)) {
-        console.error("Access token is expired. Please log in again.");
-        // Redirect to login page or show a modal
-        navigate("/login");
-        return;
+        console.error("Access token is expired. Attempting to refresh.");
+
+        if (refreshToken) {
+          try {
+            accessToken = await refreshTokenFunction(refreshToken);
+            localStorage.setItem("accessToken", accessToken);
+          } catch (error) {
+            console.error("Refresh token failed. Please log in again.");
+            navigate("/login");
+            return;
+          }
+        } else {
+          console.error("No refresh token found. Please log in again.");
+          navigate("/login");
+          return;
+        }
       }
     }
+
     if (accountId !== null) {
       fetchAccountData(accountId).then((data: Account | null) => {
         if (data !== null && data.verified === true) {
@@ -182,17 +184,14 @@ const Header = (props: Props) => {
             state: { accountId: accountId, contentFilter: contentFilter },
           });
         } else {
-          setShowAlert(true);
+          setShowAlertAccount(true);
           setTimeout(() => {
-            setShowAlert(false);
+            setShowAlertAccount(false);
           }, 3000);
         }
       });
     } else {
-      setShowAlertAccount(true);
-      setTimeout(() => {
-        setShowAlertAccount(false);
-      }, 3000);
+      navigate("/login");
     }
   };
 
@@ -285,10 +284,7 @@ const Header = (props: Props) => {
           ) : (
             <>
               <div className="manga-dex-credit">API by MangaDex </div>
-              <InfoButtonHome
-                openInfo={openInfo}
-                handleInfoDialogClose={handleInfoDialogClose}
-              />
+
               <ThemeButton
                 openThemes={openThemes}
                 handleThemeDialogClose={handleThemeDialogClose}
@@ -335,38 +331,18 @@ const Header = (props: Props) => {
                   }}
                 >
                   <Button
+                    onClick={() => {
+                      handleClickAccount();
+                    }}
                     className="header-buttons"
-                    onClick={handleClickedOpenThemes}
                   >
                     <div className="header-nav-dialog-columns">
-                      <DarkModeIcon />
+                      <AccountBoxIcon />
                       <Typography className="header-nav-label">
-                        Theme
+                        Account
                       </Typography>
                     </div>
                   </Button>
-                  <Button
-                    className="header-buttons"
-                    onClick={handleClickedOpenInfo}
-                  >
-                    <div className="header-nav-dialog-columns">
-                      <InfoIcon />{" "}
-                      <Typography className="header-nav-label">Info</Typography>
-                    </div>
-                  </Button>
-
-                  <Button
-                    className="header-buttons"
-                    onClick={handleClickedOpenTags}
-                  >
-                    <div className="header-nav-dialog-columns">
-                      <StyleIcon />
-                      <Typography className="header-nav-label">
-                        Genres
-                      </Typography>
-                    </div>
-                  </Button>
-
                   <Button
                     className="header-buttons"
                     onClick={() => {
@@ -381,15 +357,24 @@ const Header = (props: Props) => {
                     </div>
                   </Button>
                   <Button
-                    onClick={() => {
-                      handleClickAccount();
-                    }}
                     className="header-buttons"
+                    onClick={handleClickedOpenTags}
                   >
                     <div className="header-nav-dialog-columns">
-                      <AccountBoxIcon />
+                      <StyleIcon />
                       <Typography className="header-nav-label">
-                        Account
+                        Genres
+                      </Typography>
+                    </div>
+                  </Button>{" "}
+                  <Button
+                    className="header-buttons"
+                    onClick={handleClickedOpenThemes}
+                  >
+                    <div className="header-nav-dialog-columns">
+                      <DarkModeIcon />
+                      <Typography className="header-nav-label">
+                        Theme
                       </Typography>
                     </div>
                   </Button>

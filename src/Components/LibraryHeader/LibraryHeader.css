@@ -25,8 +25,8 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding-bottom: 10px;
   width: 30%;
+  padding-bottom: 5px;
   @media (width <= 800px) {
     width: 100%;
     justify-content: space-evenly;
@@ -85,5 +85,4 @@
   font-family: "Figtree";
   text-align: center;
   padding-bottom: 10px;
-  padding-top: 25px;
 }

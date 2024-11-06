@@ -3,8 +3,11 @@
 }
 
 .controls-container {
-  padding-bottom: 10px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .asc-desc-button {
@@ -12,6 +15,9 @@
   text-transform: none !important;
   height: 30px;
   min-width: 20px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .arrow-button {
@@ -51,7 +57,7 @@
 .controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 
@@ -66,15 +72,22 @@
   align-items: center;
   flex-direction: column;
   border-radius: 25px;
+  padding: 8px 10px 8px 10px !important;
+  @media (width >= 900px) {
+    margin: 0 10px 0 10px !important;
+  }
 }
 
 .list-button {
   width: 150px;
-  background-color: transparent;
   justify-content: center !important;
   align-items: center !important;
   padding-left: 10px !important;
   padding-right: 10px !important;
+  border-radius: 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .scanlation-text {

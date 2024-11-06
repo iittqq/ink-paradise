@@ -131,7 +131,7 @@ const MangaChapterList = (props: Props) => {
                   outline:
                     Number(current.attributes.chapter) ===
                       Number(userProgress) && userProgress !== null
-                      ? "2px solid #000000"
+                      ? "2px solid #8E8E8E !important"
                       : "none",
                   opacity:
                     Number(current.attributes.chapter) < Number(userProgress)

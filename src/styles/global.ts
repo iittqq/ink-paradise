@@ -54,7 +54,7 @@ const globalStyle = createGlobalStyle`
   }
   
   .asc-desc-button {
-    background-color: ${({ theme }) => theme.elevatedSection};
+    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
     color: ${({ theme }) => theme.text};
   }
 
@@ -116,6 +116,10 @@ const globalStyle = createGlobalStyle`
 
   .login-text-field-headers, .register-text-field-headers{
     color: ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .list-button{
+    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
 

@@ -5,7 +5,6 @@ import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
-import MangaPageButtonHeader from "../../Components/MangaPageButtonHeader/MangaPageButtonHeader";
 import SimilarManga from "../../Components/SimilarManga/SimilarManga";
 import {
   Manga,
@@ -19,6 +18,7 @@ import {
   fetchMangaFeed,
   fetchMangaById,
   fetchSimilarManga,
+  fetchMangaCoverBackend,
 } from "../../api/MangaDexApi";
 
 import "./IndividualManga.css";
@@ -31,7 +31,7 @@ import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 
 const IndividualManga = () => {
-  const { id, coverUrl } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [mangaName, setMangaName] = useState("");
@@ -54,6 +54,7 @@ const IndividualManga = () => {
   const [selectedScanlationGroup, setSelectedScanlationGroup] = useState<
     ScanlationGroup | undefined
   >();
+  const [coverUrl, setCoverUrl] = useState<string | undefined>("");
   const [folders, setFolders] = useState<MangaFolder[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
@@ -171,10 +172,23 @@ const IndividualManga = () => {
     }
     if (id !== undefined) {
       fetchMangaById(id).then((data: Manga) => {
+        fetchMangaCoverBackend(
+          id,
+          data.relationships.find((element) => element.type === "cover_art")!
+            .attributes.fileName,
+        ).then((imageBlob) => {
+          console.log(URL.createObjectURL(imageBlob));
+          setCoverUrl(URL.createObjectURL(imageBlob));
+        });
         setMangaName(
           data.attributes.title.en === undefined
             ? Object.values(data.attributes.title)[0]
             : data.attributes.title.en,
+        );
+
+        setCoverUrl(
+          data.relationships.find((element) => element.type === "cover_art")
+            ?.attributes.fileName,
         );
         setMangaDescription(data.attributes.description.en);
         setMangaAltTitles(data.attributes.altTitles);
@@ -265,14 +279,13 @@ const IndividualManga = () => {
       setFilteredMangaFeed(filteredFeed);
     }
     setPreviousLanguage(selectedLanguage);
-    if (!id || !coverUrl) {
+    if (!id) {
       navigate("/", { state: { accountId: state.accountId } });
     } else {
       setPreviousId(id);
     }
   }, [
     id,
-    coverUrl,
     selectedLanguage,
     currentOffset,
     currentOrder,
@@ -289,37 +302,33 @@ const IndividualManga = () => {
           }
         />
       </div>
-      <div>
-        <MangaPageButtonHeader
-          mangaRaw={mangaRaw}
-          folders={folders}
-          mangaAltTitles={mangaAltTitles}
-          mangaTags={mangaTags}
-          id={id !== undefined ? id : ""}
-          handleAddToFolder={handleAddToFolder}
-          handleClickOpen={handleClickOpen}
-          handleCloseCategories={handleCloseCategories}
-          handleCloseInfo={handleCloseInfo}
-          handleOpenCategories={handleOpenCategories}
-          handleOpenInfo={handleOpenInfo}
-          open={open}
-          showInfoToggled={showInfoToggled}
-          showCategoriesToggled={showCategoriesToggled}
-          mangaExistsError={mangaExistsError}
-          handleClose={handleClose}
-          mangaContentRating={mangaContentRating}
-          mangaAddedAlert={mangaAddedAlert}
-          handleMangaCategoryClicked={handleMangaCategoryClicked}
-        />{" "}
-      </div>
 
       <MangaBanner
-        coverUrl={coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""}
+        coverUrl={coverUrl !== undefined ? coverUrl : ""}
         mangaDescription={mangaDescription}
         mangaName={mangaName}
         author={mangaAuthor}
         contentRating={mangaContentRating}
         status={mangaStatus}
+        mangaRaw={mangaRaw}
+        folders={folders}
+        mangaAltTitles={mangaAltTitles}
+        mangaTags={mangaTags}
+        id={id !== undefined ? id : ""}
+        handleAddToFolder={handleAddToFolder}
+        handleClickOpen={handleClickOpen}
+        handleCloseCategories={handleCloseCategories}
+        handleCloseInfo={handleCloseInfo}
+        handleOpenCategories={handleOpenCategories}
+        handleOpenInfo={handleOpenInfo}
+        open={open}
+        showInfoToggled={showInfoToggled}
+        showCategoriesToggled={showCategoriesToggled}
+        mangaExistsError={mangaExistsError}
+        handleClose={handleClose}
+        mangaContentRating={mangaContentRating}
+        mangaAddedAlert={mangaAddedAlert}
+        handleMangaCategoryClicked={handleMangaCategoryClicked}
       />
 
       <div className="controls-chapters-section">

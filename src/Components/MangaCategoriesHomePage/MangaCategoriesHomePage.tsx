@@ -36,9 +36,8 @@ const MangaCategoriesHomePage = (props: Props) => {
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
   const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
-  const handleClick = (id: string, coverUrl: string) => {
-    const encodedCoverUrl = encodeURIComponent(coverUrl);
-    navigate(`/individualView/${id}/${encodedCoverUrl}`, {
+  const handleClick = (id: string) => {
+    navigate(`/manga/${id}`, {
       state: { accountId: accountId === null ? null : accountId },
     });
   };

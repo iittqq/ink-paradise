@@ -42,9 +42,15 @@ const MangaControls = (props: Props) => {
   } = props;
   const handleOpenLanguages = () => {
     setOpen(!open);
+    if (openTranslators === true) {
+      setOpenTranslators(false);
+    }
   };
   const handleOpenTranslators = () => {
     setOpenTranslators(!openTranslators);
+    if (open === true) {
+      setOpen(false);
+    }
   };
 
   const clickedTranslator = (translator: string | undefined) => {

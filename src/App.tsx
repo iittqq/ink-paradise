@@ -22,10 +22,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/individualView/:id/:coverUrl"
-            element={<IndividualManga />}
-          />
+          <Route path="/manga/:id" element={<IndividualManga />} />
           <Route path="/reset/password/:email" element={<ResetPassword />} />
           <Route path="/mangaCoverList" element={<MangaCoverList />} />
           <Route path="/reader" element={<Reader />} />
