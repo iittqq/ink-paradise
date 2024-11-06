@@ -9,7 +9,7 @@ const globalStyle = createGlobalStyle`
   body {
     background-color: ${({ theme }: GlobalThemeProps) => theme.body};
     color: ${({ theme }: GlobalThemeProps) => theme.text} !important;
-    font-family: 'Figtree', sans-serif;
+    font-family: 'Figtree', sans-serif !important;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -120,6 +120,10 @@ const globalStyle = createGlobalStyle`
 
   .list-button{
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .return-button{
+    color: ${({ theme }) => theme.elevatedSectionLight} !important;
   }
 
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import Header from "../../Components/Header/Header";
@@ -9,19 +9,16 @@ import SimilarManga from "../../Components/SimilarManga/SimilarManga";
 import {
   Manga,
   MangaTagsInterface,
-  Relationship,
   ScanlationGroup,
   MangaFeedScanlationGroup,
+  MangaInfo,
 } from "../../interfaces/MangaDexInterfaces";
-
 import {
   fetchMangaFeed,
   fetchMangaById,
   fetchSimilarManga,
   fetchMangaCoverBackend,
 } from "../../api/MangaDexApi";
-
-import "./IndividualManga.css";
 import {
   addMangaFolderEntry,
   getMangaFolderEntries,
@@ -30,131 +27,191 @@ import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces"
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 
+import "./IndividualManga.css";
+
 const IndividualManga = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { state } = useLocation();
 
-  const [mangaName, setMangaName] = useState("");
-  const [mangaDescription, setMangaDescription] = useState("");
-  const [mangaAltTitles, setMangaAltTitles] = useState<object[]>([]);
-  const [mangaLanguages, setMangaLanguages] = useState<string[]>([]);
-  const [mangaContentRating, setMangaContentRating] = useState("");
-  const [mangaRaw, setMangaRaw] = useState("");
-  const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
+  // Consolidate related states
+  const [mangaInfo, setMangaInfo] = useState<MangaInfo>({
+    name: "",
+    description: "",
+    altTitles: [],
+    languages: [],
+    contentRating: "",
+    rawLink: "",
+    tags: [],
+    author: "",
+    status: "",
+    coverUrl: "",
+  });
+
   const [mangaFeed, setMangaFeed] = useState<MangaFeedScanlationGroup[]>([]);
   const [filteredMangaFeed, setFilteredMangaFeed] = useState<
     MangaFeedScanlationGroup[] | undefined
   >(undefined);
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
-  const [currentOffset, setCurrentOffset] = useState(0);
-  const [currentOrder, setCurrentOrder] = useState("asc");
+  const [folders, setFolders] = useState<MangaFolder[]>([]);
+  const [similarManga, setSimilarManga] = useState<Manga[]>([]);
   const [scanlationGroups, setScanlationGroups] = useState<ScanlationGroup[]>(
     [],
   );
+
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [currentOffset, setCurrentOffset] = useState(0);
+  const [currentOrder, setCurrentOrder] = useState("asc");
   const [selectedScanlationGroup, setSelectedScanlationGroup] = useState<
     ScanlationGroup | undefined
   >();
-  const [coverUrl, setCoverUrl] = useState<string | undefined>("");
-  const [folders, setFolders] = useState<MangaFolder[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [mangaExistsError, setMangaExistsError] = useState<boolean>(false);
-  const [showInfoToggled, setShowInfoToggled] = useState(false);
-  const [showCategoriesToggled, setShowCategoriesToggled] = useState(false);
-  const [similarManga, setSimilarManga] = useState<Manga[]>([]);
-  const [previousLanguage, setPreviousLanguage] = useState<string>("en");
-  const [previousId, setPreviousId] = useState<string>("");
-  const [mangaAddedAlert, setMangaAddedAlert] = useState<boolean>(false);
-  const [mangaAuthor, setMangaAuthor] = useState<string | undefined>("");
-  const [mangaStatus, setMangaStatus] = useState<string | undefined>("");
-  const { state } = useLocation();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // State for UI feedback
+  const [uiState, setUIState] = useState({
+    open: false,
+    mangaExistsError: false,
+    showInfoToggled: false,
+    showCategoriesToggled: false,
+    mangaAddedAlert: false,
+  });
 
-  const handleSwitchOrder = () => {
-    if (currentOrder === "asc") {
-      setCurrentOrder("desc");
-    } else {
-      setCurrentOrder("asc");
+  // Consolidate repetitive state update logic for manga information
+  const fetchAndSetMangaData = useCallback(async () => {
+    if (!id) return;
+
+    const mangaData = await fetchMangaById(id);
+    const coverArt = mangaData.relationships.find(
+      (element) => element.type === "cover_art",
+    )?.attributes.fileName;
+
+    const coverUrl = coverArt
+      ? URL.createObjectURL(await fetchMangaCoverBackend(id, coverArt))
+      : "";
+
+    setMangaInfo({
+      name: mangaData.attributes.title.en || "",
+      description: mangaData.attributes.description.en || "",
+      altTitles: mangaData.attributes.altTitles || [],
+      languages: mangaData.attributes.availableTranslatedLanguages || [],
+      contentRating: mangaData.attributes.contentRating || "",
+      rawLink: mangaData.attributes.links?.raw || "",
+      tags: mangaData.attributes.tags || [],
+      author:
+        mangaData.relationships.find((element) => element.type === "author")
+          ?.attributes.name || "",
+      status: mangaData.attributes.status || "",
+      coverUrl,
+    });
+  }, [id]);
+
+  const fetchFolders = useCallback(async () => {
+    if (state.accountId) {
+      const response = await getMangaFolders();
+      setFolders(
+        response.filter((folder) => folder.userId === state.accountId),
+      );
     }
-    setCurrentOffset(0);
-  };
+  }, [state.accountId]);
 
-  const handleCloseCategories = () => {
-    setShowCategoriesToggled(false);
-  };
+  const fetchFeedData = useCallback(async () => {
+    if (id) {
+      const data = await fetchMangaFeed(
+        id,
+        100,
+        0, // Initial offset to fetch all data on mount
+        currentOrder,
+        selectedLanguage,
+      );
 
-  const handleOpenCategories = () => {
-    setShowCategoriesToggled(true);
-  };
-
-  const handleOpenInfo = () => {
-    setShowInfoToggled(true);
-  };
-
-  const handleCloseInfo = () => {
-    setShowInfoToggled(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setMangaExistsError(false);
-  };
-
-  const handleFilterScanlationGroups = (
-    scanlationGroup: ScanlationGroup | undefined,
-  ) => {
-    if (scanlationGroup !== undefined) {
-      setSelectedScanlationGroup(scanlationGroup);
-    } else {
-      setSelectedScanlationGroup(undefined);
+      setMangaFeed(data); // Store the full feed data without filtering
+      setScanlationGroups([
+        ...new Set(
+          data.flatMap((item) =>
+            item.relationships.filter((rel) => rel.type === "scanlation_group"),
+          ),
+        ),
+      ]);
     }
-  };
+  }, [id, currentOrder, selectedLanguage]);
 
-  const handleClickedLanguageButton = (language: string) => {
-    setSelectedLanguage(language);
-    setSelectedScanlationGroup(undefined);
-    setCurrentOffset(0);
-  };
+  const fetchSimilarMangaByTags = useCallback(
+    async (tags: string[]) => {
+      if (tags.length === 0) return; // Exit if tags are empty
 
-  const handleAddToFolder = (folderId: number, mangaId: string) => {
-    if (folderId !== undefined) {
-      getMangaFolderEntries().then((response) => {
-        let exists = false;
-        response.map((current: MangaFolderEntry) => {
-          if (current.folderId === folderId && current.mangaId === mangaId) {
-            exists = true;
-          }
+      try {
+        const data = await fetchSimilarManga(
+          10,
+          0,
+          tags,
+          state.contentFilter ?? 3,
+        );
+        setSimilarManga(data);
+      } catch (error) {
+        console.error("Error fetching similar manga:", error);
+      }
+    },
+    [state.contentFilter],
+  );
+
+  // useEffect for initial fetch on mount
+  useEffect(() => {
+    fetchAndSetMangaData();
+    fetchFolders();
+    fetchFeedData();
+  }, [fetchAndSetMangaData, fetchFolders, fetchFeedData]);
+
+  useEffect(() => {
+    if (mangaInfo.tags && mangaInfo.tags.length > 0) {
+      const tagIds = mangaInfo.tags.map((tag) => tag.id);
+      fetchSimilarMangaByTags(tagIds); // Call only when tags are available
+    }
+  }, [mangaInfo.tags, fetchSimilarMangaByTags]);
+
+  useEffect(() => {
+    let filteredData = mangaFeed;
+
+    if (selectedLanguage) {
+      filteredData = filteredData.filter(
+        (item) => item.attributes.translatedLanguage === selectedLanguage,
+      );
+    }
+
+    if (selectedScanlationGroup) {
+      filteredData = filteredData.filter((item) => {
+        const hasScanlationGroup = item.relationships.some((rel) => {
+          const isMatch =
+            rel.type === "scanlation_group" &&
+            rel.id === selectedScanlationGroup.id;
+          return isMatch;
         });
-        if (!exists) {
-          addMangaFolderEntry({ folderId, mangaId });
-          setMangaAddedAlert(true);
-          setTimeout(() => {
-            setMangaAddedAlert(false);
-          }, 3000);
-        } else {
-          setMangaExistsError(true);
-          setTimeout(() => {
-            setMangaExistsError(false);
-          }, 3000);
-        }
+        return hasScanlationGroup;
       });
     }
-  };
 
-  const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
-    fetchSimilarManga(25, 0, [category.id], state.contentFilter).then(
-      (data: Manga[]) => {
-        navigate("/mangaCoverList", {
-          state: {
-            listType: category.attributes.name.en,
-            manga: data,
-            accountId: state.accountId,
-          },
-        });
-      },
-    );
+    setFilteredMangaFeed(filteredData);
+  }, [mangaFeed, selectedLanguage, selectedScanlationGroup]);
+
+  const handleAddToFolder = (folderId: number) => {
+    if (!folderId || !id) return;
+    getMangaFolderEntries().then((response) => {
+      const exists = response.some(
+        (entry: MangaFolderEntry) =>
+          entry.folderId === folderId && entry.mangaId === id,
+      );
+      if (!exists) {
+        addMangaFolderEntry({ folderId, mangaId: id });
+        setUIState((prev) => ({ ...prev, mangaAddedAlert: true }));
+        setTimeout(
+          () => setUIState((prev) => ({ ...prev, mangaAddedAlert: false })),
+          3000,
+        );
+      } else {
+        setUIState((prev) => ({ ...prev, mangaExistsError: true }));
+        setTimeout(
+          () => setUIState((prev) => ({ ...prev, mangaExistsError: false })),
+          3000,
+        );
+      }
+    });
   };
 
   const handleShowMore = () => {
@@ -162,251 +219,130 @@ const IndividualManga = () => {
     setCurrentOffset(currentOffset + 100);
   };
 
-  useEffect(() => {
-    if (state.accountId !== null) {
-      getMangaFolders().then((response) => {
-        setFolders(
-          response.filter((folder) => folder.userId === state.accountId),
-        );
-      });
-    }
-    if (id !== undefined) {
-      fetchMangaById(id).then((data: Manga) => {
-        fetchMangaCoverBackend(
-          id,
-          data.relationships.find((element) => element.type === "cover_art")!
-            .attributes.fileName,
-        ).then((imageBlob) => {
-          console.log(URL.createObjectURL(imageBlob));
-          setCoverUrl(URL.createObjectURL(imageBlob));
-        });
-        setMangaName(
-          data.attributes.title.en === undefined
-            ? Object.values(data.attributes.title)[0]
-            : data.attributes.title.en,
-        );
+  const handleFilterScanlationGroups = (
+    scanlationGroup: ScanlationGroup | undefined,
+  ) => {
+    setSelectedScanlationGroup(scanlationGroup || undefined);
+  };
 
-        setCoverUrl(
-          data.relationships.find((element) => element.type === "cover_art")
-            ?.attributes.fileName,
-        );
-        setMangaDescription(data.attributes.description.en);
-        setMangaAltTitles(data.attributes.altTitles);
-        setMangaLanguages(data.attributes.availableTranslatedLanguages);
-        setMangaContentRating(data.attributes.contentRating);
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+    setCurrentOffset(0);
+    setSelectedScanlationGroup(undefined);
+  };
 
-        setMangaRaw(
-          data.attributes.links === null ? "" : data.attributes.links.raw,
-        );
-
-        setMangaAuthor(
-          data.relationships.find((element) => element.type === "author")
-            ?.attributes.name,
-        );
-
-        setMangaStatus(data.attributes.status);
-
-        setMangaTags(data.attributes.tags);
-        const tagIds = data.attributes.tags.map((tag) => tag.id);
-        fetchSimilarManga(
-          10,
-          0,
-          tagIds,
-          state.contentFilter === undefined ? 3 : state.contentFilter,
-        ).then((data: Manga[]) => {
-          setSimilarManga(data);
-        });
-      });
-
-      if (
-        currentOffset <= mangaFeed.length &&
-        selectedScanlationGroup === undefined
-      ) {
-        fetchMangaFeed(
-          id,
-          100,
-          currentOffset,
-          currentOrder,
-          selectedLanguage,
-        ).then((data: MangaFeedScanlationGroup[]) => {
-          data.length === 0 ? setCurrentOffset(0) : null;
-          if (
-            previousLanguage !== selectedLanguage ||
-            id !== previousId ||
-            currentOffset === 0
-          ) {
-            setMangaFeed(data);
-          } else {
-            setMangaFeed((mangaFeed) => [...mangaFeed, ...data]);
-          }
-
-          const promises = data.map(
-            (current: MangaFeedScanlationGroup) =>
-              current.relationships.filter(
-                (rel: Relationship) => rel.type === "scanlation_group",
-              )[0],
-          );
-          Promise.all(promises).then((data) => {
-            if (
-              previousLanguage !== selectedLanguage ||
-              id !== previousId ||
-              currentOffset === 0
-            ) {
-              setScanlationGroups([
-                ...new Set(data.filter((element) => element !== undefined)),
-              ]);
-            } else {
-              setScanlationGroups((scanlationGroups) => [
-                ...scanlationGroups,
-                ...new Set(data.filter((element) => element !== undefined)),
-              ]);
-            }
-          });
-        });
-      }
-    }
-    if (selectedScanlationGroup !== undefined) {
-      const filteredFeed = mangaFeed.filter(
-        (current: MangaFeedScanlationGroup) => {
-          if (Array.isArray(current.relationships)) {
-            return current.relationships.some(
-              (rel: Relationship) => rel.id === selectedScanlationGroup.id,
-            );
-          }
-          return false;
+  const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
+    fetchSimilarMangaByTags([category.id]).then((data) =>
+      navigate("/mangaCoverList", {
+        state: {
+          listType: category.attributes.name.en,
+          manga: data,
+          accountId: state.accountId,
         },
-      );
-      setFilteredMangaFeed(filteredFeed);
-    }
-    setPreviousLanguage(selectedLanguage);
-    if (!id) {
-      navigate("/", { state: { accountId: state.accountId } });
-    } else {
-      setPreviousId(id);
-    }
-  }, [
-    id,
-    selectedLanguage,
-    currentOffset,
-    currentOrder,
-    selectedScanlationGroup,
-  ]);
+      }),
+    );
+  };
 
   return (
     <div className="individual-page-container">
-      <div className="header">
-        <Header
-          accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={
-            state.contentFilter === undefined ? 3 : state.contentFilter
-          }
-        />
-      </div>
+      <Header
+        accountId={state.accountId ?? null}
+        contentFilter={state.contentFilter ?? 3}
+      />
 
       <MangaBanner
-        coverUrl={coverUrl !== undefined ? coverUrl : ""}
-        mangaDescription={mangaDescription}
-        mangaName={mangaName}
-        author={mangaAuthor}
-        contentRating={mangaContentRating}
-        status={mangaStatus}
-        mangaRaw={mangaRaw}
+        coverUrl={mangaInfo.coverUrl}
+        mangaDescription={mangaInfo.description}
+        mangaName={mangaInfo.name}
+        author={mangaInfo.author}
+        contentRating={mangaInfo.contentRating}
+        status={mangaInfo.status}
+        mangaRaw={mangaInfo.rawLink}
         folders={folders}
-        mangaAltTitles={mangaAltTitles}
-        mangaTags={mangaTags}
-        id={id !== undefined ? id : ""}
+        mangaAltTitles={mangaInfo.altTitles}
+        mangaTags={mangaInfo.tags}
+        id={id ?? ""}
         handleAddToFolder={handleAddToFolder}
-        handleClickOpen={handleClickOpen}
-        handleCloseCategories={handleCloseCategories}
-        handleCloseInfo={handleCloseInfo}
-        handleOpenCategories={handleOpenCategories}
-        handleOpenInfo={handleOpenInfo}
-        open={open}
-        showInfoToggled={showInfoToggled}
-        showCategoriesToggled={showCategoriesToggled}
-        mangaExistsError={mangaExistsError}
-        handleClose={handleClose}
-        mangaContentRating={mangaContentRating}
-        mangaAddedAlert={mangaAddedAlert}
+        handleClickOpen={() => setUIState((prev) => ({ ...prev, open: true }))}
+        handleCloseCategories={() =>
+          setUIState((prev) => ({ ...prev, showCategoriesToggled: false }))
+        }
+        handleCloseInfo={() =>
+          setUIState((prev) => ({ ...prev, showInfoToggled: false }))
+        }
+        handleOpenCategories={() =>
+          setUIState((prev) => ({ ...prev, showCategoriesToggled: true }))
+        }
+        handleOpenInfo={() =>
+          setUIState((prev) => ({ ...prev, showInfoToggled: true }))
+        }
+        open={uiState.open}
+        showInfoToggled={uiState.showInfoToggled}
+        showCategoriesToggled={uiState.showCategoriesToggled}
+        mangaExistsError={uiState.mangaExistsError}
+        handleClose={() =>
+          setUIState((prev) => ({
+            ...prev,
+            open: false,
+            mangaExistsError: false,
+          }))
+        }
+        mangaContentRating={mangaInfo.contentRating}
+        mangaAddedAlert={uiState.mangaAddedAlert}
         handleMangaCategoryClicked={handleMangaCategoryClicked}
       />
 
       <div className="controls-chapters-section">
         <MangaControls
-          mangaLanguages={mangaLanguages}
+          mangaLanguages={mangaInfo.languages}
           selectedLanguage={selectedLanguage}
-          handleClickedLanguageButton={handleClickedLanguageButton}
+          handleClickedLanguageButton={handleLanguageChange}
           mangaTranslators={scanlationGroups}
           setTranslator={setScanlationGroups}
-          handleSwitchOrder={handleSwitchOrder}
+          handleSwitchOrder={() =>
+            setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
+          }
           handleFilterScanlationGroups={handleFilterScanlationGroups}
           selectedScanlationGroup={selectedScanlationGroup}
         />
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">
-            {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
+            {mangaFeed.length > 0 && (
               <>
                 <Typography fontSize={20} fontFamily="Figtree" align="center">
                   Chapters
                 </Typography>
-
                 <MangaChapterList
                   mangaFeed={
-                    selectedScanlationGroup !== undefined &&
-                    filteredMangaFeed !== undefined
+                    selectedScanlationGroup && filteredMangaFeed
                       ? filteredMangaFeed
                       : mangaFeed
                   }
-                  mangaName={mangaName}
+                  mangaName={mangaInfo.name}
                   selectedLanguage={selectedLanguage}
-                  mangaId={id !== undefined ? id : ""}
+                  mangaId={id ?? ""}
                   insideReader={false}
-                  coverUrl={
-                    coverUrl !== undefined ? decodeURIComponent(coverUrl) : ""
-                  }
-                  accountId={
-                    state.accountId === undefined ? null : state.accountId
-                  }
+                  coverUrl={decodeURIComponent(mangaInfo.coverUrl)}
+                  accountId={state.accountId ?? null}
                   contentFilter={state.contentFilter}
                   sortOrder={currentOrder}
                 />
               </>
-            ) : (
-              <Typography
-                fontSize={18}
-                fontFamily="Figtree"
-                align="center"
-                className="empty-chapters-text"
-              >
-                Empty...
-              </Typography>
             )}
-            {mangaFeed.length !== 0 && filteredMangaFeed?.length !== 0 ? (
-              mangaFeed.length < 100 ? null : (
-                <Button
-                  className="show-more-button"
-                  onClick={() => {
-                    handleShowMore();
-                  }}
-                >
-                  {" "}
-                  Show More
-                </Button>
-              )
-            ) : null}
+            {mangaFeed.length >= 100 && (
+              <Button className="show-more-button" onClick={handleShowMore}>
+                Show More
+              </Button>
+            )}
           </div>
           <div className="similar-manga-section">
             <Typography fontSize={22} fontFamily="Figtree" align="center">
               Similar Manga
-            </Typography>{" "}
-            <div className="similar-manga">
-              <SimilarManga
-                manga={similarManga}
-                accountId={
-                  state.accountId === undefined ? null : state.accountId
-                }
-              />
-            </div>
+            </Typography>
+            <SimilarManga
+              manga={similarManga}
+              accountId={state.accountId ?? null}
+            />
           </div>
         </div>
       </div>

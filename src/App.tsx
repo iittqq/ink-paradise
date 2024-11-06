@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import IndividualManga from "./Pages/IndividualManga/IndividualManga";
 import Reader from "./Pages/Reader/Reader";
@@ -8,12 +8,11 @@ import Library from "./Pages/Library/Library";
 import AccountPage from "./Pages/AccountPage/AccountPage";
 import Login from "./Pages/Login/Login";
 import ResetPassword from "./Pages/ResetPassword/ResetPassword";
+import NotFoundPage from "./Pages/NotFoundPage/NotFoundPage";
 
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 import GlobalStyle from "./styles/global";
-
-//#121212
 
 function App() {
   return (
@@ -29,7 +28,7 @@ function App() {
           <Route path="/library" element={<Library />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

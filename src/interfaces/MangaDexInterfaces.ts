@@ -72,6 +72,28 @@ export interface MangaFeed {
   };
 }
 
+interface Tag {
+  id: string;
+  type: string;
+  attributes: {
+    name: {
+      en: string;
+    };
+  };
+}
+export interface MangaInfo {
+  name: string;
+  description: string;
+  altTitles: object[];
+  languages: string[];
+  contentRating: string;
+  rawLink: string;
+  tags: Tag[];
+  author: string;
+  status: string;
+  coverUrl: string;
+}
+
 export interface MangaFeedScanlationGroup {
   id: string;
   attributes: {
