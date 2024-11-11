@@ -32,7 +32,7 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 20px !important;
+  padding-bottom: 10px;
 }
 
 .chapter-button-text {

@@ -117,12 +117,15 @@ const IndividualManga = () => {
       const data = await fetchMangaFeed(
         id,
         100,
-        0, // Initial offset to fetch all data on mount
+        currentOffset,
         currentOrder,
         selectedLanguage,
       );
-
-      setMangaFeed(data); // Store the full feed data without filtering
+      if (currentOffset === 0) {
+        setMangaFeed(data);
+      } else {
+        setMangaFeed((previousFeed) => [...previousFeed, ...data]);
+      }
       setScanlationGroups([
         ...new Set(
           data.flatMap((item) =>
@@ -131,7 +134,7 @@ const IndividualManga = () => {
         ),
       ]);
     }
-  }, [id, currentOrder, selectedLanguage]);
+  }, [id, currentOrder, selectedLanguage, currentOffset]);
 
   const fetchSimilarMangaByTags = useCallback(
     async (tags: string[]) => {
@@ -217,6 +220,7 @@ const IndividualManga = () => {
   const handleShowMore = () => {
     setSelectedScanlationGroup(undefined);
     setCurrentOffset(currentOffset + 100);
+    console.log(currentOffset);
   };
 
   const handleFilterScanlationGroups = (
@@ -293,6 +297,9 @@ const IndividualManga = () => {
       />
 
       <div className="controls-chapters-section">
+        <Typography fontSize={20} fontFamily="Figtree" align="center">
+          Filters
+        </Typography>
         <MangaControls
           mangaLanguages={mangaInfo.languages}
           selectedLanguage={selectedLanguage}
@@ -306,12 +313,12 @@ const IndividualManga = () => {
           selectedScanlationGroup={selectedScanlationGroup}
         />
         <div className="bottom-desktop-container">
+          <Typography fontSize={20} fontFamily="Figtree" align="center">
+            Chapters
+          </Typography>
           <div className="manga-chapter-list">
             {mangaFeed.length > 0 && (
               <>
-                <Typography fontSize={20} fontFamily="Figtree" align="center">
-                  Chapters
-                </Typography>
                 <MangaChapterList
                   mangaFeed={
                     selectedScanlationGroup && filteredMangaFeed
@@ -329,20 +336,20 @@ const IndividualManga = () => {
                 />
               </>
             )}
-            {mangaFeed.length >= 100 && (
+            {mangaFeed.length >= currentOffset + 100 && (
               <Button className="show-more-button" onClick={handleShowMore}>
                 Show More
               </Button>
             )}
-          </div>
-          <div className="similar-manga-section">
-            <Typography fontSize={22} fontFamily="Figtree" align="center">
+            <Typography fontSize={20} fontFamily="Figtree" align="center">
               Similar Manga
-            </Typography>
-            <SimilarManga
-              manga={similarManga}
-              accountId={state.accountId ?? null}
-            />
+            </Typography>{" "}
+            <div className="similar-manga-section">
+              <SimilarManga
+                manga={similarManga}
+                accountId={state.accountId ?? null}
+              />
+            </div>
           </div>
         </div>
       </div>

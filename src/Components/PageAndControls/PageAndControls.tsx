@@ -1,4 +1,19 @@
-import { Button, Typography, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Typography,
+  CircularProgress,
+  List,
+  ListItemButton,
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormControl,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  Collapse,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -6,8 +21,15 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import { useNavigate } from "react-router-dom";
 import "./PageAndControls.css";
-
+import SettingsIcon from "@mui/icons-material/Settings";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
+import BookIcon from "@mui/icons-material/Book";
+import { addBookmark } from "../../api/Bookmarks";
+import MangaChapterList from "../MangaChapterList/MangaChapterList";
+import HomeIcon from "@mui/icons-material/Home";
 import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
 
 type Props = {
@@ -28,6 +50,20 @@ type Props = {
   mangaFeedState: MangaFeedScanlationGroup[];
   handleChangePageNumber: (pageNumber: number) => void;
   startPage: number;
+  volume: string;
+  chapterNumber: string;
+  bookmarks: number[];
+  setBookmarks: React.Dispatch<React.SetStateAction<number[]>>;
+  pageNumber: number;
+  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSettingsDialogClose: () => void;
+  handleChangeNewReaderMode: (event: SelectChangeEvent) => void;
+  handleEditAccountInfo: () => void;
+  chapterId: string;
+  openSettings: boolean;
+  readerModeString: string;
+  coverUrl: string;
+  contentFilter: number;
 };
 
 const PageAndControls = (props: Props) => {
@@ -47,17 +83,31 @@ const PageAndControls = (props: Props) => {
     mangaFeedState,
     handleChangePageNumber,
     startPage,
+    volume,
+    chapterNumber,
+    bookmarks,
+    setBookmarks,
+    pageNumber,
+    setOpenSettings,
+    handleSettingsDialogClose,
+    handleChangeNewReaderMode,
+    handleEditAccountInfo,
+    chapterId,
+    openSettings,
+    readerModeString,
+    coverUrl,
+    contentFilter,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
     Array(pages.length).fill(false),
   );
+  const [open, setOpen] = useState<boolean>(false);
   const [chapterIndexState, setChapterIndexState] =
     useState<number>(chapterIndex);
   const [orderState] = useState<string>(order || "asc");
 
   const navigate = useNavigate();
-
   const [currentPage, setCurrentPage] = useState<number>(startPage);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -179,7 +229,6 @@ const PageAndControls = (props: Props) => {
   };
 
   const handleNextPage = () => {
-    console.log(currentPage);
     if (
       currentPage === pages.length - 1 ||
       readerMode === 3 ||
@@ -231,6 +280,15 @@ const PageAndControls = (props: Props) => {
 
     await Promise.all(promises);
   };
+
+  const handleOpenChapters = () => {
+    setOpen(!open);
+  };
+
+  const handleClickLogo = async () => {
+    navigate("/", { state: { accountId: accountId } });
+  };
+
   const handleClick = (
     mangaId: string,
     chapterId: string,
@@ -259,127 +317,293 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
+    setCurrentPage(startPage);
     setImageBlob({});
     handleLoadImage(hash, pages).catch((error) => {
       throw error;
     });
   }, [hash, pages]);
   return (
-    <div>
-      <div
-        className="page-container"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {loadingStates[currentPage] ? (
-          <div className="loading">
-            <CircularProgress size={25} className="loading-icon" />
-          </div>
-        ) : (
-          <>
-            {readerMode === 3 || readerMode === 4
-              ? pages.map((page, index) =>
-                  imageBlob[page] ? (
-                    <img
-                      key={index}
-                      className="page"
-                      src={URL.createObjectURL(imageBlob[page])}
-                      style={{ display: "block" }}
-                    />
-                  ) : null,
-                )
-              : imageBlob[pages[currentPage]] && (
-                  <img
-                    className="page"
-                    src={URL.createObjectURL(imageBlob[pages[currentPage]])}
-                    alt=""
-                  />
-                )}
-            <div className="overlay-buttons">
-              <Button
-                className="chapter-page-traversal"
-                onClick={() => {
-                  if (readerMode === 1 || readerMode === 3) {
-                    handleNextPage();
-                  } else if (readerMode === 2 || readerMode === 4) {
-                    handlePreviousPage();
-                  }
-                }}
-              ></Button>
-              <Button
-                className="chapter-page-traversal"
-                onClick={() => {
-                  if (readerMode === 1 || readerMode === 3) {
-                    handlePreviousPage();
-                  } else if (readerMode === 2 || readerMode === 4) {
-                    handleNextPage();
-                  }
-                }}
-              ></Button>
-            </div>
-          </>
-        )}{" "}
-      </div>
+    <div className="reader-screen-container">
+      <List className="reader-feed">
+        <ListItemButton
+          className="reader-feed-button"
+          onClick={() => handleOpenChapters()}
+        >
+          <BookIcon />{" "}
+          <ListItemText
+            primary={
+              <Typography
+                className="reader-page-text"
+                sx={{ width: "100%" }}
+                noWrap
+              >
+                {volume + " : " + chapterNumber}
+              </Typography>
+            }
+          />
+          {open ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <div className="title-settings-row">
+          <div className="settings-icon">
+            <Button
+              className="home-button"
+              onClick={() => handleClickLogo()}
+              sx={{ minWidth: "40px", color: "unset" }}
+            >
+              <HomeIcon />
+            </Button>
 
-      <div className="centered">
-        <Button
-          className="chapter-page-traversal-buttons"
-          onClick={() => {
-            if (readerMode === 1 || readerMode === 3) {
-              handleNextChapter();
-            } else if (readerMode === 2 || readerMode === 4) {
-              handlePreviousChapter();
-            }
-          }}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </Button>
-        <Button
-          className="chapter-page-traversal-buttons"
-          onClick={() => {
-            if (readerMode === 1 || readerMode === 3) {
-              handleNextPage();
-            } else if (readerMode === 2 || readerMode === 4) {
-              handlePreviousPage();
-            }
-          }}
-        >
-          <KeyboardArrowLeftIcon />
-        </Button>
-        <Button
-          className="chapter-page-traversal-buttons"
-          onClick={() => {
-            if (readerMode === 1 || readerMode === 3) {
-              handlePreviousPage();
-            } else if (readerMode === 2 || readerMode === 4) {
-              handleNextPage();
-            }
-          }}
-        >
-          <KeyboardArrowRightIcon />
-        </Button>
-        <Button
-          className="chapter-page-traversal-buttons"
-          onClick={() => {
-            if (readerMode === 1 || readerMode === 3) {
-              handlePreviousChapter();
-            } else if (readerMode === 2 || readerMode === 4) {
-              handleNextChapter();
-            }
-          }}
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </Button>
-      </div>
-      {readerMode === 3 || readerMode === 4 ? (
-        <Typography fontFamily="Figtree" align="center">
-          {pages.length} pages
-        </Typography>
-      ) : (
-        <Typography fontFamily="Figtree" align="center">
-          {currentPage + 1} / {pages.length}
-        </Typography>
+            {readerMode === 3 || readerMode === 4 ? (
+              bookmarks.includes(parseInt(chapterNumber)) || accountId === null
+            ) : bookmarks.includes(pageNumber + 1) ||
+              accountId === null ? null : (
+              <Button
+                className="bookmark-button"
+                disabled={
+                  readerMode === 3 || readerMode === 4
+                    ? bookmarks.includes(parseInt(chapterNumber)) ||
+                      accountId === null
+                    : bookmarks.includes(pageNumber + 1) || accountId === null
+                }
+                onClick={() => {
+                  const simpleMangaName = mangaName.replace(/[^a-zA-Z]/g, " ");
+                  addBookmark({
+                    userId: accountId,
+                    mangaId: mangaId,
+                    mangaName: simpleMangaName,
+                    chapterNumber: parseInt(chapterNumber),
+                    chapterId: chapterId,
+                    chapterIndex: Math.trunc(parseInt(chapterNumber)),
+                    continueReading: false,
+                    pageNumber: pageNumber + 1,
+                  });
+                  setBookmarks([...bookmarks, pageNumber]);
+                }}
+                sx={{ color: "unset", minWidth: "40px" }}
+              >
+                {readerMode === 3 || readerMode === 4 ? (
+                  bookmarks.includes(parseInt(chapterNumber)) === true ? (
+                    <BookmarkAddedIcon />
+                  ) : (
+                    <BookmarkAddIcon />
+                  )
+                ) : bookmarks.includes(pageNumber + 1) === true ? (
+                  <BookmarkAddedIcon />
+                ) : (
+                  <BookmarkAddIcon />
+                )}
+              </Button>
+            )}
+            <Button
+              className="settings-button"
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ minWidth: "40px", color: "unset" }}
+            >
+              {" "}
+              <SettingsIcon />{" "}
+            </Button>
+            <Dialog
+              id="settings-dialog"
+              open={openSettings}
+              onClose={() => {
+                handleSettingsDialogClose();
+              }}
+            >
+              <DialogTitle
+                sx={{
+                  color: "#fff",
+                  textAlign: "center",
+                  fontFamily: "Figtree",
+                }}
+              >
+                Settings
+              </DialogTitle>
+              <DialogContent>
+                <Typography color="white" fontFamily="Figtree">
+                  Reader Mode
+                </Typography>
+                <FormControl fullWidth>
+                  <Select
+                    id="edit-reader-mode-select"
+                    className="edit-reader-mode-dropdown"
+                    value={readerModeString}
+                    label="Reader Mode"
+                    variant="standard"
+                    disableUnderline={true}
+                    onChange={handleChangeNewReaderMode}
+                    sx={{
+                      "& .MuiSvgIcon-root": {
+                        color: "white",
+                      },
+                    }}
+                    MenuProps={{
+                      PaperProps: { style: { backgroundColor: "#333333" } },
+                    }}
+                  >
+                    <MenuItem className="edit-reader-mode-item" value={1}>
+                      Right to Left
+                    </MenuItem>
+                    <MenuItem className="edit-reader-mode-item" value={2}>
+                      Left to Right
+                    </MenuItem>
+                    <MenuItem className="edit-reader-mode-item" value={3}>
+                      Vertical Right to Left
+                    </MenuItem>
+                    <MenuItem className="edit-reader-mode-item" value={4}>
+                      Vertical Left to Right
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+                <div className="edit-reader-mode-container">
+                  <Button
+                    className="save-reader-mode-button"
+                    onClick={() => {
+                      handleEditAccountInfo();
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+      </List>
+      <Collapse className="reader-feed-collapse" in={open} timeout="auto">
+        <MangaChapterList
+          mangaId={mangaId}
+          mangaFeed={mangaFeedState}
+          mangaName={mangaName}
+          selectedLanguage={selectedLanguage}
+          insideReader={true}
+          setOpen={setOpen}
+          coverUrl={coverUrl}
+          accountId={accountId}
+          contentFilter={contentFilter}
+          sortOrder={orderState}
+        />
+      </Collapse>
+      {open === true ? null : (
+        <>
+          <div
+            className="page-container"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {loadingStates[currentPage] ? (
+              <div className="loading">
+                <CircularProgress size={25} className="loading-icon" />
+              </div>
+            ) : (
+              <>
+                {readerMode === 3 || readerMode === 4
+                  ? pages.map((page, index) =>
+                      imageBlob[page] ? (
+                        <img
+                          key={index}
+                          className="page"
+                          src={URL.createObjectURL(imageBlob[page])}
+                          style={{ display: "block" }}
+                        />
+                      ) : null,
+                    )
+                  : imageBlob[pages[currentPage]] && (
+                      <img
+                        className="page"
+                        src={URL.createObjectURL(imageBlob[pages[currentPage]])}
+                        alt=""
+                      />
+                    )}
+                <div className="overlay-buttons">
+                  <Button
+                    className="chapter-page-traversal"
+                    onClick={() => {
+                      if (readerMode === 1 || readerMode === 3) {
+                        handleNextPage();
+                      } else if (readerMode === 2 || readerMode === 4) {
+                        handlePreviousPage();
+                      }
+                    }}
+                  ></Button>
+                  <Button
+                    className="chapter-page-traversal"
+                    onClick={() => {
+                      if (readerMode === 1 || readerMode === 3) {
+                        handlePreviousPage();
+                      } else if (readerMode === 2 || readerMode === 4) {
+                        handleNextPage();
+                      }
+                    }}
+                  ></Button>
+                </div>
+              </>
+            )}{" "}
+          </div>
+
+          <div className="centered">
+            <Button
+              className="chapter-page-traversal-buttons"
+              onClick={() => {
+                if (readerMode === 1 || readerMode === 3) {
+                  handleNextChapter();
+                } else if (readerMode === 2 || readerMode === 4) {
+                  handlePreviousChapter();
+                }
+              }}
+            >
+              <KeyboardDoubleArrowLeftIcon />
+            </Button>
+            <Button
+              className="chapter-page-traversal-buttons"
+              onClick={() => {
+                if (readerMode === 1 || readerMode === 3) {
+                  handleNextPage();
+                } else if (readerMode === 2 || readerMode === 4) {
+                  handlePreviousPage();
+                }
+              }}
+            >
+              <KeyboardArrowLeftIcon />
+            </Button>
+            {readerMode === 3 || readerMode === 4 ? (
+              <Typography fontFamily="Figtree" align="center">
+                {pages.length} pages
+              </Typography>
+            ) : (
+              <Typography fontFamily="Figtree" align="center">
+                {currentPage + 1} / {pages.length}
+              </Typography>
+            )}
+            <Button
+              className="chapter-page-traversal-buttons"
+              onClick={() => {
+                if (readerMode === 1 || readerMode === 3) {
+                  handlePreviousPage();
+                } else if (readerMode === 2 || readerMode === 4) {
+                  handleNextPage();
+                }
+              }}
+            >
+              <KeyboardArrowRightIcon />
+            </Button>
+            <Button
+              className="chapter-page-traversal-buttons"
+              onClick={() => {
+                if (readerMode === 1 || readerMode === 3) {
+                  handlePreviousChapter();
+                } else if (readerMode === 2 || readerMode === 4) {
+                  handleNextChapter();
+                }
+              }}
+            >
+              <KeyboardDoubleArrowRightIcon />
+            </Button>
+          </div>
+        </>
       )}
     </div>
   );

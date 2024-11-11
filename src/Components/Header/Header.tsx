@@ -51,9 +51,58 @@ const Header = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { toggleTheme } = useTheme();
 
+  const handleClickLibrary = async () => {
+    let accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    console.log(accessToken);
+    console.log(refreshToken);
+
+    if (accessToken !== null) {
+      if (isTokenExpired(accessToken)) {
+        console.error("Access token is expired. Attempting to refresh.");
+
+        if (refreshToken) {
+          try {
+            accessToken = await refreshTokenFunction(refreshToken);
+            localStorage.setItem("accessToken", accessToken);
+          } catch (error) {
+            console.error("Refresh token failed. Please log in again.");
+            navigate("/login");
+            return;
+          }
+        } else {
+          console.error("No refresh token found. Please log in again.");
+          navigate("/login");
+          return;
+        }
+      }
+    }
+
+    if (accountId !== null) {
+      fetchAccountData(accountId).then((data: Account | null) => {
+        if (data !== null && data.verified === true) {
+          navigate("/library", {
+            state: { accountId: accountId, contentFilter: contentFilter },
+          });
+        } else {
+          setShowAlertAccount(true);
+          setTimeout(() => {
+            setShowAlertAccount(false);
+          }, 3000);
+        }
+      });
+    } else {
+      navigate("/login");
+    }
+  };
+
   const handleClickAccount = async () => {
     let accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
+
+    console.log(accessToken);
+    console.log(refreshToken);
 
     if (accessToken !== null) {
       if (isTokenExpired(accessToken)) {
@@ -152,49 +201,6 @@ const Header = (props: Props) => {
     setOpenTags(false);
   };
 
-  const handleClickLibrary = async () => {
-    let accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    if (accessToken !== null) {
-      if (isTokenExpired(accessToken)) {
-        console.error("Access token is expired. Attempting to refresh.");
-
-        if (refreshToken) {
-          try {
-            accessToken = await refreshTokenFunction(refreshToken);
-            localStorage.setItem("accessToken", accessToken);
-          } catch (error) {
-            console.error("Refresh token failed. Please log in again.");
-            navigate("/login");
-            return;
-          }
-        } else {
-          console.error("No refresh token found. Please log in again.");
-          navigate("/login");
-          return;
-        }
-      }
-    }
-
-    if (accountId !== null) {
-      fetchAccountData(accountId).then((data: Account | null) => {
-        if (data !== null && data.verified === true) {
-          navigate("/library", {
-            state: { accountId: accountId, contentFilter: contentFilter },
-          });
-        } else {
-          setShowAlertAccount(true);
-          setTimeout(() => {
-            setShowAlertAccount(false);
-          }, 3000);
-        }
-      });
-    } else {
-      navigate("/login");
-    }
-  };
-
   const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -264,6 +270,7 @@ const Header = (props: Props) => {
                 variant="outlined"
                 id="header-search-input"
                 focused
+                autoFocus
                 type="search"
                 size="small"
                 className="input-field"

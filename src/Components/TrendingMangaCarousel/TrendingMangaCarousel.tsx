@@ -68,6 +68,7 @@ const TrendingMangaCarousel = (props: Props) => {
             handleDetailsDialogClose={handleDetailsDialogClose}
             coverUrl={mangaCoverToDisplay!}
             handleClick={handleClick}
+            accountId={accountId}
           />
         )}
       </>

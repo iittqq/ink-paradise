@@ -6,16 +6,8 @@
 }
 
 .active-page-area {
-  min-height: 99dvh;
   display: flex;
   flex-direction: column;
-}
-
-.settings-icon {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  background-color: transparent;
 }
 
 .reader-page {
@@ -32,6 +24,16 @@
   align-items: center;
 }
 
+.manga-name-button {
+  text-transform: none !important;
+  color: unset !important;
+  align-self: center;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .reader-page-text {
   font-family: "Figtree", sans-serif !important;
   overflow: hidden;
@@ -39,99 +41,4 @@
   word-break: break-word;
   white-space: word-wrap;
   text-overflow: ellipsis;
-}
-
-.reader-feed {
-  @media (width <= 1200px) {
-    width: 95dvw;
-  }
-  width: 80dvw;
-  height: 100%;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.reader-feed::-webkit-scrollbar {
-  display: none;
-}
-.reader-feed-collapse {
-}
-
-.reader-feed-button {
-  width: 100%;
-  color: #121212;
-  background-color: transparent;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-}
-
-.manga-name-button {
-  text-transform: none !important;
-  color: unset !important;
-
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-}
-#settings-dialog {
-  & .MuiPaper-root {
-    background-color: #121212 !important;
-    border-radius: 25px !important;
-    width: 200px;
-  }
-  & .MuiDialogContent-root {
-    color: #ffffff !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-}
-
-.edit-reader-mode-dropdown {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
-  width: 100%;
-  margin: 5px 0px 5px 0px !important;
-  height: 30px !important;
-}
-
-#edit-reader-mode-select {
-  background-color: #333333 !important;
-  border-radius: 25px !important;
-  color: #ffffff !important;
-  padding-left: 10px;
-}
-
-.save-reader-mode-button {
-  width: 100%;
-  border-radius: 25px !important;
-  font-family: "Figtree" !important;
-  margin: 10px 0px 0px 0px !important;
-  height: 34px;
-  border: 1px solid #75747a !important;
-  background-color: #333333 !important;
-  text-transform: none !important;
-  color: #ffffff !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-}
-
-.edit-reader-mode-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.edit-reader-mode-item {
-  color: #ffffff !important;
-  font-family: "Figtree" !important;
 }

@@ -1,28 +1,11 @@
-import {
-  Typography,
-  List,
-  ListItemButton,
-  ListItemText,
-  Collapse,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  FormControl,
-  Select,
-  SelectChangeEvent,
-  MenuItem,
-} from "@mui/material";
+import { Typography, Button, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import dayjs from "dayjs";
 import { Reading } from "../../interfaces/ReadingInterfaces";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
-import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import "./Reader.css";
 import { Bookmark } from "../../interfaces/BookmarkInterfaces";
 
@@ -31,10 +14,7 @@ import {
   addReading,
   getReadingByUserId,
 } from "../../api/Reading";
-
 import { fetchChapterData } from "../../api/MangaDexApi";
-import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
-import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
   MangaChapter,
@@ -56,7 +36,6 @@ const Reader = () => {
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
   const [selectedLanguage] = useState<string>("en");
-  const [open, setOpen] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [readerMode, setReaderMode] = useState<string>("");
   const [readerInteger, setReaderInteger] = useState<number>(1);
@@ -71,10 +50,6 @@ const Reader = () => {
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [newReaderMode, setNewReaderMode] = useState<boolean>(false);
 
-  const handleOpenChapters = () => {
-    setOpen(!open);
-  };
-
   const handleChangePageNumber = (newPageNumber: number) => {
     setPageNumber(newPageNumber);
   };
@@ -86,7 +61,7 @@ const Reader = () => {
   }
 
   const handleScrollPosition = () => {
-    const scrollPosition = sessionStorage.getItem("position");
+    const scrollPosition = window.localStorage.getItem("position");
     const readerMode = window.localStorage.getItem("readerMode");
 
     if (
@@ -95,11 +70,12 @@ const Reader = () => {
       parseInt(readerMode) !== 3 &&
       parseInt(readerMode) !== 4
     ) {
+      console.log(scrollPosition);
       window.scrollTo(0, parseInt(scrollPosition));
-      sessionStorage.removeItem("position");
+      window.localStorage.removeItem("position");
     } else {
       window.scrollTo(0, 0);
-      sessionStorage.removeItem("position");
+      console.log("no scroll position");
     }
   };
 
@@ -145,7 +121,7 @@ const Reader = () => {
       setPages(data.chapter.data);
       setHash(data.chapter.hash);
     });
-
+    window.localStorage.setItem("position", window.scrollY.toString());
     const readerMode = window.localStorage.getItem("readerMode");
     setReaderMode(readerMode === null ? "1" : readerMode);
     setReaderInteger(readerMode === null ? 1 : parseInt(readerMode));
@@ -234,7 +210,6 @@ const Reader = () => {
         },
       );
     }
-
     handleScrollPosition();
   }, [state, selectedLanguage, mangaFeedState, newReaderMode]);
 
@@ -249,116 +224,6 @@ const Reader = () => {
         />
       </div>
       <div className="active-page-area">
-        <div className="settings-icon">
-          <Button
-            disabled={
-              readerMode === "3" || readerMode === "4"
-                ? bookmarks.includes(state.chapterNumber) ||
-                  state.accountId === null
-                : bookmarks.includes(pageNumber + 1) || state.accountId === null
-            }
-            onClick={() => {
-              const simpleMangaName = state.mangaName.replace(
-                /[^a-zA-Z]/g,
-                " ",
-              );
-              addBookmark({
-                userId: parseInt(state.accountId),
-                mangaId: state.mangaId,
-                mangaName: simpleMangaName,
-                chapterNumber: state.chapterNumber,
-                chapterId: state.chapterId,
-                chapterIndex: Math.trunc(state.chapterNumber),
-                continueReading: false,
-                pageNumber: pageNumber + 1,
-              });
-              setBookmarks([...bookmarks, pageNumber]);
-            }}
-            sx={{ color: "unset", minWidth: "40px" }}
-          >
-            {" "}
-            {readerMode === "3" || readerMode === "4" ? (
-              bookmarks.includes(state.chapterNumber) === true ? (
-                <BookmarkAddedIcon />
-              ) : (
-                <BookmarkAddIcon />
-              )
-            ) : bookmarks.includes(pageNumber + 1) === true ? (
-              <BookmarkAddedIcon />
-            ) : (
-              <BookmarkAddIcon />
-            )}
-          </Button>
-          <Button
-            onClick={() => {
-              setOpenSettings(true);
-            }}
-            sx={{ minWidth: "40px", color: "unset" }}
-          >
-            {" "}
-            <SettingsIcon />{" "}
-          </Button>
-          <Dialog
-            id="settings-dialog"
-            open={openSettings}
-            onClose={() => {
-              handleSettingsDialogClose();
-            }}
-          >
-            <DialogTitle
-              sx={{ color: "#fff", textAlign: "center", fontFamily: "Figtree" }}
-            >
-              Settings
-            </DialogTitle>
-            <DialogContent>
-              <Typography color="white" fontFamily="Figtree">
-                Reader Mode
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  id="edit-reader-mode-select"
-                  className="edit-reader-mode-dropdown"
-                  value={readerMode}
-                  label="Reader Mode"
-                  variant="standard"
-                  disableUnderline={true}
-                  onChange={handleChangeNewReaderMode}
-                  sx={{
-                    "& .MuiSvgIcon-root": {
-                      color: "white",
-                    },
-                  }}
-                  MenuProps={{
-                    PaperProps: { style: { backgroundColor: "#333333" } },
-                  }}
-                >
-                  <MenuItem className="edit-reader-mode-item" value={1}>
-                    Right to Left
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={2}>
-                    Left to Right
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={3}>
-                    Vertical Right to Left
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={4}>
-                    Vertical Left to Right
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <div className="edit-reader-mode-container">
-                <Button
-                  className="save-reader-mode-button"
-                  onClick={() => {
-                    handleEditAccountInfo();
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
         <div className="current-manga-details">
           <Button
             className="manga-name-button"
@@ -375,68 +240,42 @@ const Reader = () => {
             {" "}
             Scanlation Group: {state.scanlationGroup}
           </Typography>
-          <List className="reader-feed">
-            <ListItemButton
-              className="reader-feed-button"
-              onClick={() => handleOpenChapters()}
-            >
-              <ListItemText
-                primary={
-                  <Typography
-                    className="reader-page-text"
-                    sx={{ width: "100%" }}
-                    noWrap
-                  >
-                    {"Volume " +
-                      state.volume +
-                      " Chapter " +
-                      state.chapterNumber}
-                  </Typography>
-                }
-              />
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse className="reader-feed-collapse" in={open} timeout="auto">
-              <MangaChapterList
-                mangaId={state.mangaId}
-                mangaFeed={mangaFeedState}
-                mangaName={state.mangaName}
-                selectedLanguage={selectedLanguage}
-                insideReader={true}
-                setOpen={setOpen}
-                coverUrl={state.coverUrl}
-                accountId={
-                  state.accountId === undefined ? null : state.accountId
-                }
-                contentFilter={state.contentFilter}
-                sortOrder={state.sortOrder}
-              />
-            </Collapse>
-          </List>
         </div>
-        {open === true ? null : (
-          <PageAndControls
-            pages={pages}
-            hash={hash}
-            currentChapter={state.chapterNumber}
-            mangaId={state.mangaId}
-            mangaName={state.mangaName}
-            scanlationGroup={state.scanlationGroup}
-            readerMode={readerInteger}
-            accountId={state.accountId === undefined ? null : state.accountId}
-            order={state.sortOrder}
-            selectedLanguage={selectedLanguage}
-            chapterIndex={Math.trunc(state.chapterNumber)}
-            setMangaFeedState={setMangaFeedState}
-            mangaFeedState={mangaFeedState}
-            handleChangePageNumber={handleChangePageNumber}
-            startPage={
-              state.pageNumber === null || state.pageNumber === undefined
-                ? 0
-                : state.pageNumber
-            }
-          />
-        )}
+        <PageAndControls
+          pages={pages}
+          hash={hash}
+          currentChapter={state.chapterNumber}
+          mangaId={state.mangaId}
+          mangaName={state.mangaName}
+          scanlationGroup={state.scanlationGroup}
+          readerMode={readerInteger}
+          accountId={state.accountId === undefined ? null : state.accountId}
+          order={state.sortOrder}
+          selectedLanguage={selectedLanguage}
+          chapterIndex={Math.trunc(state.chapterNumber)}
+          setMangaFeedState={setMangaFeedState}
+          mangaFeedState={mangaFeedState}
+          handleChangePageNumber={handleChangePageNumber}
+          startPage={
+            state.pageNumber === null || state.pageNumber === undefined
+              ? 0
+              : state.pageNumber
+          }
+          volume={state.volume}
+          chapterNumber={state.chapterNumber}
+          bookmarks={bookmarks}
+          setBookmarks={setBookmarks}
+          pageNumber={pageNumber}
+          setOpenSettings={setOpenSettings}
+          handleSettingsDialogClose={handleSettingsDialogClose}
+          handleChangeNewReaderMode={handleChangeNewReaderMode}
+          handleEditAccountInfo={handleEditAccountInfo}
+          chapterId={state.chapterId}
+          openSettings={openSettings}
+          readerModeString={readerMode}
+          coverUrl={state.coverUrl}
+          contentFilter={state.contentFilter}
+        />
       </div>
     </div>
   );

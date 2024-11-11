@@ -34,7 +34,7 @@ const MangaChapterList = (props: Props) => {
     contentFilter,
     sortOrder,
   } = props;
-  const [xsValue, setXsValue] = useState(6);
+  const [xsValue] = useState(window.innerWidth > 900 ? 3 : 6);
   const [userProgress, setUserProgress] = useState<number | null>(null);
 
   const navigate = useNavigate();
@@ -53,6 +53,7 @@ const MangaChapterList = (props: Props) => {
     index: number,
   ) => {
     if (insideReader) {
+      console.log();
       navigate("/reader", {
         state: {
           mangaId: mangaId,
@@ -68,6 +69,7 @@ const MangaChapterList = (props: Props) => {
           chapterIndex: index,
           contentFilter: contentFilter,
           sortOrder: sortOrder,
+          pageNumber: 0,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -94,11 +96,6 @@ const MangaChapterList = (props: Props) => {
   };
 
   useEffect(() => {
-    if (mangaFeed.length === 1) {
-      setXsValue(12);
-    } else {
-      setXsValue(6);
-    }
     setUserProgress(null);
     if (accountId !== null) {
       getReadingByUserId(accountId).then((data: Reading[]) => {

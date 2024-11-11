@@ -94,7 +94,6 @@ const Library = () => {
     }
   };
 
-  // Helper function to sort library data based on contentFilter and ascending
   const sortLibraryData = (
     data: Reading[],
     filter: string,
@@ -113,7 +112,6 @@ const Library = () => {
         );
   };
 
-  // Helper function to sort manga data based on contentFilter and ascending
   const sortMangaData = (
     data: Manga[],
     filter: string,

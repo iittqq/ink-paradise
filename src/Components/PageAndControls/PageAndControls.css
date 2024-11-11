@@ -1,8 +1,14 @@
+.reader-screen-container {
+  min-height: 99vh;
+}
+
 .centered {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  bottom: 0;
+  position: fixed;
 }
 
 .chapter-page-traversal {
@@ -20,8 +26,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
   color: unset !important;
+  min-height: 600px;
 }
 
 .page-container {
@@ -30,13 +36,13 @@
   justify-content: center;
   align-items: center;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
-.page-container {
-  -webkit-scrollbar {
-    display: none;
-  }
-}
 .page {
   width: 100%;
   object-fit: contain;
@@ -50,6 +56,136 @@
   top: 0;
   height: 100%;
   width: 100%;
+}
+.reader-page-text {
+  font-family: "Figtree", sans-serif !important;
+  overflow: hidden;
+  max-height: 60px;
+  word-break: break-word;
+  white-space: word-wrap;
+  text-overflow: ellipsis;
+}
+
+.reader-feed {
+  width: 100%;
+  justify-content: space-between;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding: 5px 0px 5px 0px !important;
+}
+.reader-feed::-webkit-scrollbar {
+  display: none;
+}
+
+.reader-feed-button {
+  max-width: 120px !important;
+  color: #121212;
+  max-height: 30px;
+  padding: 0px !important;
+  margin: 0px 0px 0px 2px !important;
+  background-color: transparent;
+  border-radius: 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  text-align: center !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.bookmark-button,
+.settings-button,
+.home-button {
+  max-height: 30px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+#settings-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 25px !important;
+    width: 200px;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.edit-reader-mode-dropdown {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  width: 100%;
+  margin: 5px 0px 5px 0px !important;
+  height: 30px !important;
+}
+
+#edit-reader-mode-select {
+  background-color: #333333 !important;
+  border-radius: 25px !important;
+  color: #ffffff !important;
+  padding-left: 10px;
+}
+
+.save-reader-mode-button {
+  width: 100%;
+  border-radius: 25px !important;
+  font-family: "Figtree" !important;
+  margin: 10px 0px 0px 0px !important;
+  height: 34px;
+  border: 1px solid #75747a !important;
+  background-color: #333333 !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.edit-reader-mode-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.edit-reader-mode-item {
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+}
+
+.settings-icon {
+  background-color: transparent;
+  max-height: 30px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.title-settings-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 2px 0px 0px !important;
+  width: 150px;
 }
 
 .chapter-page-traversal-buttons {
