@@ -27,6 +27,18 @@
   padding: 10px 10px 10px 10px;
   background-size: cover;
   border-radius: 10px;
+  @media (width <= 600px) {
+    max-height: 150px;
+  }
+}
+
+.folder-bar-and-grid {
+  min-height: 99vh;
+  max-height: 99vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .utility-buttons {
@@ -119,11 +131,13 @@ input[type="file"] {
 }
 
 .user-details {
-  padding-left: 10px;
-  padding-right: 10px;
-  overflow-y: scroll;
+  overflow: scroll;
+  max-width: 100%;
+  word-wrap: break-word;
   font-family: "Figtree" !important;
   scrollbar-width: none;
+  max-height: 100px;
+
   -webkit-scrollbar {
     display: none;
   }
@@ -135,11 +149,13 @@ input[type="file"] {
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 1;
-  padding: 10px;
-
-  margin-left: 10px;
+  padding: 5px;
+  width: 100%;
+  overflow: hidden;
   background-color: rgb(18, 18, 18, 0.8);
-  border-radius: 10px;
+  border-radius: 4px;
+  max-height: 140px;
+  min-height: 140px;
 }
 
 .centered-content {
@@ -185,10 +201,15 @@ input[type="file"] {
 
 .personal-folders {
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-wrap: wrap;
+  overflow: scroll;
+  flex-grow: 1;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .current-folder-header {
@@ -196,6 +217,7 @@ input[type="file"] {
   font-family: "Figtree";
   padding-bottom: 10px;
   text-align: center;
+  width: 100%;
 }
 .folder-description {
   display: -webkit-box;

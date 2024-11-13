@@ -1,3 +1,9 @@
+.bookmarks-list-container {
+  max-height: 94vh;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
 .bookmark-overlay-grid-item {
   display: flex;
   flex-direction: column;

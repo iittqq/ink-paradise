@@ -105,14 +105,15 @@ const AccountPage = () => {
         newPassword: newPassword,
       }).then((data: Account) => {
         setAccountData(data);
-        if (username !== data.username) {
-          updateAccountUsername({
-            id: state.accountId,
-            username: username,
-          }).then((data: Account) => {
-            setAccountData(data);
-          });
-        }
+      });
+    }
+    if (username !== accountData?.username) {
+      console.log(username);
+      updateAccountUsername({
+        id: state.accountId,
+        username: username,
+      }).then((data: Account) => {
+        setAccountData(data);
       });
     }
     if (
@@ -419,11 +420,17 @@ const AccountPage = () => {
             alt="profile"
           ></img>
         ) : null}
-        <div className="account-details-section">
-          <Typography color="white" className="user-details">
+        <div
+          className="account-details-section"
+          style={{
+            marginLeft:
+              accountDetails?.profilePicture === null ? "0px" : "10px",
+          }}
+        >
+          <Typography color="white" className="user-details" fontSize={20}>
             {accountData?.username}
           </Typography>
-          <Typography color="white" className="user-details">
+          <Typography color="white" className="user-details" fontSize={14}>
             {accountDetails?.bio}
           </Typography>
         </div>
@@ -631,56 +638,57 @@ const AccountPage = () => {
           </Dialog>
         </div>
       </div>
-
-      <FolderActionsBar
-        handleInput={handleInput}
-        searchFolders={searchFolders}
-        handleClickBack={handleClickBack}
-        handleDeleteMangaEntries={handleDeleteMangaEntries}
-        handleDeleteMangaFolders={handleDeleteMangaFolders}
-        checked={checked}
-        toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-        handleClickAddFolderButton={handleClickAddFolderButton}
-        handleFolderDialogClose={handleFolderDialogClose}
-        handleCreateFolder={handleCreateFolder}
-        openAddFolder={openAddFolder}
-        selectedFolder={selectedFolder}
-        newFolderName={newFolderName}
-        handleFolderNameChange={handleFolderNameChange}
-        handleFolderDescriptionChange={handleFolderDescriptionChange}
-        selectAll={selectAll}
-        toggleSelectAll={toggleSelectAll}
-        mangaFoldersToDelete={mangaFoldersToDelete}
-        mangaEntriesToDelete={mangaEntriesToDelete}
-        handleFolderBackgroundChange={handleFolderBackgroundChange}
-      />
-      <div className="personal-folders">
-        {selectedFolder !== null ? (
-          <div className="current-folder-header">
-            {selectedFolder.folderName}
-            <div>
-              {selectedFolder.folderDescription !== null ? (
-                <Typography className="folder-description">
-                  {selectedFolder.folderDescription}
-                </Typography>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-
-        <FolderGrid
-          folderClick={handleFolderClick}
-          mangaEntryClick={handleMangaEntryClick}
-          loading={loading}
-          selectedFolder={selectedFolder}
+      <div className="folder-bar-and-grid">
+        <FolderActionsBar
+          handleInput={handleInput}
+          searchFolders={searchFolders}
+          handleClickBack={handleClickBack}
+          handleDeleteMangaEntries={handleDeleteMangaEntries}
+          handleDeleteMangaFolders={handleDeleteMangaFolders}
           checked={checked}
-          folders={folders}
-          mangaFoldersToDelete={mangaFoldersToDelete}
-          folderMangaData={folderMangaData}
-          mangaEntriesToDelete={mangaEntriesToDelete}
+          toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+          handleClickAddFolderButton={handleClickAddFolderButton}
+          handleFolderDialogClose={handleFolderDialogClose}
+          handleCreateFolder={handleCreateFolder}
+          openAddFolder={openAddFolder}
+          selectedFolder={selectedFolder}
+          newFolderName={newFolderName}
+          handleFolderNameChange={handleFolderNameChange}
+          handleFolderDescriptionChange={handleFolderDescriptionChange}
           selectAll={selectAll}
-          accountId={state.accountId}
+          toggleSelectAll={toggleSelectAll}
+          mangaFoldersToDelete={mangaFoldersToDelete}
+          mangaEntriesToDelete={mangaEntriesToDelete}
+          handleFolderBackgroundChange={handleFolderBackgroundChange}
         />
+        <div className="personal-folders">
+          {selectedFolder !== null ? (
+            <div className="current-folder-header">
+              {selectedFolder.folderName}
+              <div>
+                {selectedFolder.folderDescription !== null ? (
+                  <Typography className="folder-description">
+                    {selectedFolder.folderDescription}
+                  </Typography>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
+          <FolderGrid
+            folderClick={handleFolderClick}
+            mangaEntryClick={handleMangaEntryClick}
+            loading={loading}
+            selectedFolder={selectedFolder}
+            checked={checked}
+            folders={folders}
+            mangaFoldersToDelete={mangaFoldersToDelete}
+            folderMangaData={folderMangaData}
+            mangaEntriesToDelete={mangaEntriesToDelete}
+            selectAll={selectAll}
+            accountId={state.accountId}
+          />
+        </div>
       </div>
     </div>
   );

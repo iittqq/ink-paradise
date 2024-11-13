@@ -74,10 +74,24 @@ async function deleteBookmarkByMangaIdAndUserId(
   mangaId: string,
   userId: number,
 ): Promise<void> {
+  console.log(mangaId, userId);
   try {
     await axios.delete(
       `${BASE_URL}/api/v1/bookmarks/delete_by_manga_id_and_user_id/${mangaId}/${userId}`,
     );
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function updateOrCreateBookmark(bookmark: Bookmark): Promise<Bookmark> {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/bookmarks/update_or_create`,
+      bookmark,
+    );
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error;
@@ -91,4 +105,5 @@ export {
   updateBookmark,
   deleteBookmark,
   deleteBookmarkByMangaIdAndUserId,
+  updateOrCreateBookmark,
 };

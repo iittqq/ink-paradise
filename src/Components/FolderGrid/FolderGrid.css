@@ -15,20 +15,35 @@
   width: 60dvw;
 }
 
+.folder-grid {
+  margin-top: 0px !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 .folder {
   height: 100px;
-  width: 200px;
-  color: unset !important;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
 
+  @media screen and (min-width: 600px) {
+    min-width: 200px !important;
+    max-width: 200px !important;
+  }
+
   @media screen and (max-width: 600px) {
-    width: 170px;
+    min-width: 45vw !important;
+    max-width: 45vw !important;
   }
 }
 

@@ -42,7 +42,8 @@ const globalStyle = createGlobalStyle`
   }
 
   .folder{
-    background-color: ${({ theme }) => theme.elevatedSection};
+    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+    color: ${({ theme }) => theme.text};
   }
 
   .redirect-button {
@@ -55,7 +56,7 @@ const globalStyle = createGlobalStyle`
   
   .asc-desc-button {
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
-    color: ${({ theme }) => theme.text};
+    color: ${({ theme }) => theme.text} !important;
   }
 
   .home-category-manga-button{
@@ -131,7 +132,7 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   }
 
-  .reader-feed-button, .bookmark-button, .settings-button, .home-button{
+  .reader-feed-button, .bookmark-button, .settings-button, .home-button, .library-button-reader{
     outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
@@ -141,6 +142,10 @@ const globalStyle = createGlobalStyle`
 
   .similar-manga-button{
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .bookmark-clicked-dialog-option{
+    color: ${({ theme }) => theme.elevatedSectionLight};
   }
 
 

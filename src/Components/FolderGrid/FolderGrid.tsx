@@ -77,9 +77,10 @@ const FolderGrid = (props: Props) => {
     <Grid
       container
       justifyContent="center"
-      alignItems="center"
+      alignItems="flex-start"
       direction="row"
-      spacing={1}
+      spacing={2}
+      className="folder-grid"
     >
       {loading ? (
         <Grid item>
@@ -109,7 +110,6 @@ const FolderGrid = (props: Props) => {
               <Typography
                 textTransform="none"
                 fontFamily="Figtree"
-                color="white"
                 sx={{
                   backgroundColor:
                     folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",

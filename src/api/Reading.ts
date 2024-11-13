@@ -101,6 +101,19 @@ async function deleteReadingByMangaIdAndUserId(
   }
 }
 
+async function updateOrCreateReading(reading: Reading): Promise<Reading> {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/reading/update_or_create`,
+      reading,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export {
   getReading,
   addReading,
@@ -109,4 +122,5 @@ export {
   getReadingByUserId,
   getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
+  updateOrCreateReading,
 };

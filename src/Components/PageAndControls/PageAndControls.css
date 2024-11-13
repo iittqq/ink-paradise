@@ -1,5 +1,5 @@
 .reader-screen-container {
-  min-height: 99vh;
+  min-height: calc(var(--vh, 1vh) * 99);
 }
 
 .centered {
@@ -9,6 +9,7 @@
   align-items: center;
   bottom: 0;
   position: fixed;
+  left: 0;
 }
 
 .chapter-page-traversal {
@@ -100,17 +101,30 @@
 }
 
 .bookmark-button,
-.settings-button,
-.home-button {
+.home-button,
+.library-button-reader {
   max-height: 30px !important;
+  margin: 0 4px !important;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
+
+  &:hover {
+    background-color: transparent !important;
   }
 }
 
+.settings-button {
+  max-height: 30px !important;
+  margin: 0 2px 0 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
 #settings-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
@@ -184,8 +198,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: 0px 2px 0px 0px !important;
-  width: 150px;
 }
 
 .chapter-page-traversal-buttons {

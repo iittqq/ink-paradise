@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Header from "../../Components/Header/Header";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import "./Library.css";
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
@@ -15,9 +15,8 @@ import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { fetchAccountData } from "../../api/Account";
-import BookmarksList from "../../Components/BookmarksList/BookmarksList";
-import { Bookmark } from "../../interfaces/BookmarkInterfaces";
-import { getBookmarksByUserId, deleteBookmark } from "../../api/Bookmarks";
+
+import { deleteBookmarkByMangaIdAndUserId } from "../../api/Bookmarks";
 import { useLocation } from "react-router-dom";
 
 const Library = () => {
@@ -36,12 +35,6 @@ const Library = () => {
   const [accountData, setAccountData] = useState<Account | null>(null);
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
-  const [bookmarksVisible, setBookmarksVisible] = useState<boolean>(false);
-  const [bookmarks, setBookmarks] = useState<Manga[]>([]);
-  const [bookmarksToDelete, setBookmarksToDelete] = useState<number[]>([]);
-  const [groupedBookmarks, setGroupedBookmarks] = useState<Manga[][] | null>(
-    null,
-  );
   const { state } = useLocation();
 
   const searchFavorites = async (searchValue: string) => {
@@ -167,10 +160,6 @@ const Library = () => {
       : null;
   };
 
-  const handleBookmarkClick = () => {
-    setBookmarksVisible(!bookmarksVisible);
-  };
-
   const handleAscendingChange = () => {
     setAscending(!ascending);
   };
@@ -178,15 +167,12 @@ const Library = () => {
   const handleContentFilter = (selection: string) => {
     setContentFilter(selection);
     setLibrary([]);
-    setBookmarks([]);
     setGroupedLibrary(null);
-    setGroupedBookmarks(null);
   };
 
   const toggleLibraryEntries = (value: boolean) => {
     setChecked(value);
     setLibraryEntriesToDelete([]);
-    setBookmarksToDelete([]);
   };
 
   const toggleSelectAll = () => {
@@ -195,15 +181,6 @@ const Library = () => {
       setLibraryEntriesToDelete([]);
     } else {
       setLibraryEntriesToDelete(library.map((manga) => manga.id));
-    }
-  };
-
-  const toggleSelectAllBookmarks = () => {
-    setSelectAll(!selectAll);
-    if (selectAll) {
-      setBookmarksToDelete([]);
-    } else {
-      setBookmarksToDelete(bookmarks.map((bookmark) => bookmark.bookmarkId!));
     }
   };
 
@@ -223,22 +200,6 @@ const Library = () => {
     }
   };
 
-  const handleBookmarkEntryClick = async (bookmarkId: number) => {
-    if (checked || selectAll) {
-      if (bookmarksToDelete.includes(bookmarkId)) {
-        setBookmarksToDelete(
-          bookmarksToDelete.filter((id) => id !== bookmarkId),
-        );
-      } else {
-        setBookmarksToDelete([...bookmarksToDelete, bookmarkId]);
-      }
-      if (selectAll) {
-        setSelectAll(false);
-        setChecked(true);
-      }
-    }
-  };
-
   const handleDeleteLibraryEntries = async () => {
     setChecked(false);
     setSelectAll(false);
@@ -249,110 +210,8 @@ const Library = () => {
 
           handleFetchingLibrary(accountData.id, ascending);
         });
+        deleteBookmarkByMangaIdAndUserId(id, accountData.id);
       });
-    }
-  };
-
-  const handleDeleteBookmarks = async () => {
-    setChecked(false);
-    setSelectAll(false);
-    if (accountData !== null) {
-      bookmarksToDelete.forEach((id) => {
-        deleteBookmark(id).then(() => {
-          setBookmarksToDelete([]);
-          handleFetchingBookmarks(accountData.id);
-        });
-      });
-    }
-  };
-
-  const handleFetchingBookmarks = async (userId: number) => {
-    setLoading(true);
-
-    try {
-      const bookmarks: Bookmark[] = await getBookmarksByUserId(userId);
-
-      const mangaPromises = bookmarks.map(async (bookmark) => {
-        const manga = await fetchMangaById(bookmark.mangaId);
-        return {
-          ...manga,
-          chapterNumber: bookmark.chapterNumber,
-          chapterId: bookmark.chapterId,
-          bookmarkId: bookmark.id,
-          index: bookmark.chapterIndex,
-          bookmarkPageNumber: bookmark.pageNumber,
-          bookmarkContinueReading: bookmark.continueReading,
-        } as Manga;
-      });
-
-      let enrichedBookmarks = await Promise.all(mangaPromises);
-      enrichedBookmarks = filterAndSortBookmarks(
-        enrichedBookmarks,
-        contentFilter,
-        ascending,
-      );
-
-      if (
-        contentFilter === "Content Rating" ||
-        contentFilter === "Publication Demographic"
-      ) {
-        setGroupedBookmarks(
-          groupLibraryData(enrichedBookmarks, contentFilter, ascending),
-        );
-      } else {
-        setBookmarks(enrichedBookmarks);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching bookmarks data:", error);
-    }
-  };
-
-  // Helper function to filter and sort bookmarks
-  const filterAndSortBookmarks = (
-    data: Manga[],
-    filter: string,
-    ascending: boolean,
-  ): Manga[] => {
-    switch (filter) {
-      case "Continue Reading":
-        return data
-          .filter((manga) => manga.bookmarkContinueReading === true)
-          .sort(
-            (a, b) =>
-              (ascending ? 1 : -1) *
-              (Date.parse(a.attributes.updatedAt) -
-                Date.parse(b.attributes.updatedAt)),
-          );
-
-      case "Alphabetical Order":
-        return data.sort((a, b) => {
-          const titleA =
-            a.attributes.title.en || Object.values(a.attributes.title)[0];
-          const titleB =
-            b.attributes.title.en || Object.values(b.attributes.title)[0];
-          return ascending
-            ? titleA.localeCompare(titleB)
-            : titleB.localeCompare(titleA);
-        });
-
-      case "Recently Updated":
-        return data.sort(
-          (a, b) =>
-            (ascending ? 1 : -1) *
-            a.attributes.updatedAt.localeCompare(b.attributes.updatedAt),
-        );
-
-      case "Release Date":
-        return data.sort((a, b) =>
-          ascending
-            ? b.attributes.year - a.attributes.year
-            : a.attributes.year - b.attributes.year,
-        );
-
-      default:
-        return data;
     }
   };
 
@@ -362,7 +221,6 @@ const Library = () => {
         setAccountData(data);
         if (data !== null) {
           handleFetchingLibrary(state.accountId, ascending);
-          handleFetchingBookmarks(state.accountId);
         }
       });
     }
@@ -378,50 +236,43 @@ const Library = () => {
           }
         />
       </div>
-      <LibraryHeader
-        searchFavorites={searchFavorites}
-        handleAscendingChange={handleAscendingChange}
-        handleContentFilter={handleContentFilter}
-        checked={checked}
-        toggleLibraryEntries={toggleLibraryEntries}
-        handleDeleteLibraryEntries={handleDeleteLibraryEntries}
-        toggleSelectAll={
-          bookmarksVisible ? toggleSelectAllBookmarks : toggleSelectAll
-        }
-        selectAll={selectAll}
-        header={bookmarksVisible ? "Bookmarks" : "Library"}
-        libraryEntriesToDelete={libraryEntriesToDelete}
-        bookmarksToDelete={bookmarksToDelete}
-        handleBookmarkClick={handleBookmarkClick}
-        handleDeleteBookmarks={handleDeleteBookmarks}
-        contentFilter={contentFilter}
-      />
-      {loading === true ? (
-        <div className="loading-indicator-container">
-          <CircularProgress className="loading-icon" size={25} />
-        </div>
-      ) : bookmarksVisible === true ? (
-        <BookmarksList
-          bookmarks={bookmarks}
-          bookmarksToDelete={bookmarksToDelete}
-          handleBookmarkEntryClick={handleBookmarkEntryClick}
+      <div className="library-contents-header">
+        <Typography fontFamily={"Figtree"} fontSize={20}>
+          {"Library"}
+        </Typography>
+        <Typography fontFamily={"Figtree"} fontSize={17}>
+          {contentFilter}
+        </Typography>
+      </div>
+      <div className="library-header-and-contents">
+        <LibraryHeader
+          searchFavorites={searchFavorites}
+          handleAscendingChange={handleAscendingChange}
+          handleContentFilter={handleContentFilter}
           checked={checked}
-          accountId={state.accountId === undefined ? null : state.accountId}
-          groupedBookmarks={groupedBookmarks}
-          contentFilter={contentFilter}
-        />
-      ) : (
-        <LibraryContents
-          libraryManga={library}
-          handleLibraryEntryClick={handleLibraryEntryClick}
-          currentMetric={contentFilter}
-          checked={checked}
-          libraryEntriesToDelete={libraryEntriesToDelete}
+          toggleLibraryEntries={toggleLibraryEntries}
+          handleDeleteLibraryEntries={handleDeleteLibraryEntries}
+          toggleSelectAll={toggleSelectAll}
           selectAll={selectAll}
-          groupedLibraryManga={groupedLibrary}
-          accountId={state.accountId === undefined ? null : state.accountId}
+          libraryEntriesToDelete={libraryEntriesToDelete}
         />
-      )}
+        {loading === true ? (
+          <div className="loading-indicator-container">
+            <CircularProgress className="loading-icon" size={25} />
+          </div>
+        ) : (
+          <LibraryContents
+            libraryManga={library}
+            handleLibraryEntryClick={handleLibraryEntryClick}
+            currentMetric={contentFilter}
+            checked={checked}
+            libraryEntriesToDelete={libraryEntriesToDelete}
+            selectAll={selectAll}
+            groupedLibraryManga={groupedLibrary}
+            accountId={state.accountId === undefined ? null : state.accountId}
+          />
+        )}
+      </div>
     </div>
   );
 };

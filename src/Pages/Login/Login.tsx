@@ -4,7 +4,6 @@ import "./Login.css";
 import { useState } from "react";
 import { createAccount, login, resetPassword } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
-import { Account } from "../../interfaces/AccountInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { PasswordResults } from "../../interfaces/PasswordStrengthInterface";
@@ -103,7 +102,7 @@ const Login = () => {
   const handleLogin = async () => {
     if (email !== "" && password !== "") {
       try {
-        const response = await login(email, password); // Login returns tokens
+        const response = await login(email, password);
         if (response) {
           setAttemptedLogin(false);
           localStorage.setItem("accessToken", response.accessToken);
@@ -144,11 +143,11 @@ const Login = () => {
         password: password,
         verificationCode: "",
         verified: false,
-      }).then((response: Account) => {
+      }).then((id: number) => {
         navigate("/");
 
         createAccountDetails({
-          accountId: response.id,
+          accountId: id,
           bio: "Hello World",
           profilePicture: null,
           headerPicture: null,

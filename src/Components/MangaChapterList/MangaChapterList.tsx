@@ -52,6 +52,7 @@ const MangaChapterList = (props: Props) => {
     mangaFeed: MangaFeedScanlationGroup[],
     index: number,
   ) => {
+    console.log(mangaId);
     if (insideReader) {
       console.log();
       navigate("/reader", {

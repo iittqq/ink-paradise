@@ -14,6 +14,12 @@ import {
   SelectChangeEvent,
   Collapse,
 } from "@mui/material";
+import {
+  fetchAccountData,
+  isTokenExpired,
+  refreshTokenFunction,
+} from "../../api/Account";
+import { Account } from "../../interfaces/AccountInterfaces";
 import { useEffect, useState } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
@@ -27,10 +33,11 @@ import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import BookIcon from "@mui/icons-material/Book";
-import { addBookmark } from "../../api/Bookmarks";
+import { updateOrCreateBookmark } from "../../api/Bookmarks";
 import MangaChapterList from "../MangaChapterList/MangaChapterList";
 import HomeIcon from "@mui/icons-material/Home";
 import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 type Props = {
   pages: string[];
@@ -109,30 +116,7 @@ const PageAndControls = (props: Props) => {
 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(startPage);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const minSwipeDistance = 250;
 
-  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) =>
-    setTouchEnd(e.targetTouches[0].clientX);
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe) {
-      handlePreviousPage();
-    } else if (isRightSwipe) {
-      handleNextPage();
-    }
-    // add your conditional logic here
-  };
   const handleNextChapter = () => {
     setCurrentPage(0);
     handleChangePageNumber(0);
@@ -289,6 +273,47 @@ const PageAndControls = (props: Props) => {
     navigate("/", { state: { accountId: accountId } });
   };
 
+  const handleClickLibrary = async () => {
+    let accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    console.log(accessToken);
+    console.log(refreshToken);
+
+    if (accessToken !== null) {
+      if (isTokenExpired(accessToken)) {
+        console.error("Access token is expired. Attempting to refresh.");
+
+        if (refreshToken) {
+          try {
+            accessToken = await refreshTokenFunction(refreshToken);
+            localStorage.setItem("accessToken", accessToken);
+          } catch (error) {
+            console.error("Refresh token failed. Please log in again.");
+            navigate("/login");
+            return;
+          }
+        } else {
+          console.error("No refresh token found. Please log in again.");
+          navigate("/login");
+          return;
+        }
+      }
+    }
+
+    if (accountId !== null) {
+      fetchAccountData(accountId).then((data: Account | null) => {
+        if (data !== null && data.verified === true) {
+          navigate("/library", {
+            state: { accountId: accountId, contentFilter: contentFilter },
+          });
+        }
+      });
+    } else {
+      navigate("/login");
+    }
+  };
+
   const handleClick = (
     mangaId: string,
     chapterId: string,
@@ -330,7 +355,7 @@ const PageAndControls = (props: Props) => {
           className="reader-feed-button"
           onClick={() => handleOpenChapters()}
         >
-          <BookIcon />{" "}
+          <AutoStoriesIcon sx={{ paddingLeft: "4px" }} />
           <ListItemText
             primary={
               <Typography
@@ -349,26 +374,43 @@ const PageAndControls = (props: Props) => {
             <Button
               className="home-button"
               onClick={() => handleClickLogo()}
-              sx={{ minWidth: "40px", color: "unset" }}
+              sx={{
+                minWidth: "40px",
+                color: "unset",
+              }}
             >
               <HomeIcon />
             </Button>
-
+            {accountId === null ? null : (
+              <Button
+                className="library-button-reader"
+                onClick={() => {
+                  handleClickLibrary();
+                }}
+                sx={{
+                  minWidth: "40px",
+                  color: "unset",
+                }}
+              >
+                <BookIcon />
+              </Button>
+            )}
             {readerMode === 3 || readerMode === 4 ? (
               bookmarks.includes(parseInt(chapterNumber)) || accountId === null
             ) : bookmarks.includes(pageNumber + 1) ||
               accountId === null ? null : (
               <Button
                 className="bookmark-button"
+                sx={{ minWidth: "40px", color: "unset" }}
                 disabled={
                   readerMode === 3 || readerMode === 4
                     ? bookmarks.includes(parseInt(chapterNumber)) ||
                       accountId === null
-                    : bookmarks.includes(pageNumber + 1) || accountId === null
+                    : bookmarks.includes(pageNumber) || accountId === null
                 }
-                onClick={() => {
+                onClick={async () => {
                   const simpleMangaName = mangaName.replace(/[^a-zA-Z]/g, " ");
-                  addBookmark({
+                  const newBookmark = {
                     userId: accountId,
                     mangaId: mangaId,
                     mangaName: simpleMangaName,
@@ -377,11 +419,31 @@ const PageAndControls = (props: Props) => {
                     chapterIndex: Math.trunc(parseInt(chapterNumber)),
                     continueReading: false,
                     pageNumber: pageNumber + 1,
-                  });
-                  setBookmarks([...bookmarks, pageNumber]);
+                  };
+
+                  try {
+                    // Call the API to update or create the bookmark
+                    const response = await updateOrCreateBookmark(newBookmark);
+
+                    // Update the state with the new bookmark if the API call succeeds
+                    setBookmarks((prevBookmarks) => [
+                      ...prevBookmarks,
+                      pageNumber + 1,
+                    ]);
+
+                    console.log(
+                      "Bookmark updated or created successfully:",
+                      response,
+                    );
+                  } catch (error) {
+                    console.error(
+                      "Failed to update or create bookmark:",
+                      error,
+                    );
+                  }
                 }}
-                sx={{ color: "unset", minWidth: "40px" }}
               >
+                {" "}
                 {readerMode === 3 || readerMode === 4 ? (
                   bookmarks.includes(parseInt(chapterNumber)) === true ? (
                     <BookmarkAddedIcon />
@@ -488,12 +550,7 @@ const PageAndControls = (props: Props) => {
       </Collapse>
       {open === true ? null : (
         <>
-          <div
-            className="page-container"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-          >
+          <div className="page-container">
             {loadingStates[currentPage] ? (
               <div className="loading">
                 <CircularProgress size={25} className="loading-icon" />

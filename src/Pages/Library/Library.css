@@ -8,3 +8,7 @@
 .library-page-container {
   height: 100%;
 }
+
+.library-header-and-contents {
+  min-height: 98vh;
+}

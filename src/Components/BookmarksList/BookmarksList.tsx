@@ -106,7 +106,7 @@ const BookmarksList = (props: Props) => {
   }, [bookmarks, groupedBookmarks]);
 
   return (
-    <div>
+    <div className="bookmarks-list-container">
       {bookmarks.length === 0 ? null : (
         <Typography
           fontFamily={"Figtree"}

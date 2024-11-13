@@ -18,13 +18,13 @@ async function fetchAccountData(id: number): Promise<Account | null> {
   }
 }
 
-async function createAccount(account: object): Promise<Account> {
+async function createAccount(account: object): Promise<number> {
   try {
     const response = await axios.post(
       `${BASE_URL}/api/v1/accounts/new`,
       account,
     );
-    return response.data;
+    return response.data.id;
   } catch (error) {
     console.error("Error fetching manga:", error);
     throw error;
@@ -53,7 +53,6 @@ const isTokenExpired = (token: string) => {
   try {
     const decodedToken: { exp: number } = jwtDecode(token);
     const currentTime = Date.now() / 1000; // Current time in seconds
-    console.log(Math.floor(currentTime));
 
     return decodedToken.exp < currentTime; // True if token is expired
   } catch (error) {
@@ -66,27 +65,21 @@ async function getUserDetails(): Promise<Account | undefined> {
   let accessToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
 
-  // If the access token is expired, try to refresh it
   if (isTokenExpired(accessToken || "")) {
     if (refreshToken) {
       try {
         accessToken = await refreshTokenFunction(refreshToken);
-        // Update the access token in local storage
         localStorage.setItem("accessToken", accessToken);
       } catch (error) {
         console.error("Failed to refresh access token:", error);
-        // Redirect to login page or handle token refresh failure
-        // E.g., navigate("/login") if using React Router
         return;
       }
     } else {
       console.error("No refresh token found. Please log in again.");
-      // Redirect to login page or handle as appropriate
       return;
     }
   }
 
-  // Decode the access token to get the accountId
   const decodedToken = jwtDecode(accessToken || "");
   const accountId = Number(decodedToken.sub);
 
@@ -100,7 +93,6 @@ async function getUserDetails(): Promise<Account | undefined> {
         },
       },
     );
-    // Return the user details from the response
     return response.data;
   } catch (error) {
     console.error("Error fetching user details:", error);
