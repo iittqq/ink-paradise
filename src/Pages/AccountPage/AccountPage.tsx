@@ -93,6 +93,7 @@ const AccountPage = () => {
   const handleChangeNewContentFilter = (event: SelectChangeEvent) => {
     setContentFilter(event.target.value as string);
   };
+
   const handleEditAccountInfo = () => {
     if (
       newPassword !== "" &&
@@ -687,6 +688,7 @@ const AccountPage = () => {
             mangaEntriesToDelete={mangaEntriesToDelete}
             selectAll={selectAll}
             accountId={state.accountId}
+            contentFilter={Number(contentFilter)}
           />
         </div>
       </div>

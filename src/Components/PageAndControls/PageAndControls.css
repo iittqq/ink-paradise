@@ -8,8 +8,8 @@
   justify-content: space-evenly;
   align-items: center;
   bottom: 0;
-  position: fixed;
   left: 0;
+  z-index: -1;
 }
 
 .chapter-page-traversal {
@@ -84,7 +84,7 @@
 }
 
 .reader-feed-button {
-  max-width: 120px !important;
+  max-width: 190px !important;
   color: #121212;
   max-height: 30px;
   padding: 0px !important;

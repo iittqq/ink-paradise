@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 
-type Props = { manga: Manga[]; accountId: number | null };
+type Props = {
+  manga: Manga[];
+  accountId: number | null;
+  contentFilter: number;
+};
 
 const TrendingMangaCarousel = (props: Props) => {
   const scrollRef = useHorizontalScroll();
-  const { manga, accountId } = props;
+  const { manga, accountId, contentFilter } = props;
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
@@ -20,7 +24,10 @@ const TrendingMangaCarousel = (props: Props) => {
 
   const handleClick = (id: string) => {
     navigate(`/manga/${id}`, {
-      state: { accountId: accountId === null ? null : accountId },
+      state: {
+        accountId: accountId === null ? null : accountId,
+        contentFilter: contentFilter,
+      },
     });
   };
 
@@ -69,6 +76,7 @@ const TrendingMangaCarousel = (props: Props) => {
             coverUrl={mangaCoverToDisplay!}
             handleClick={handleClick}
             accountId={accountId}
+            contentFilter={contentFilter}
           />
         )}
       </>

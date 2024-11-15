@@ -74,7 +74,7 @@ const globalStyle = createGlobalStyle`
   }
 
   .manga-details-dialog-button, .manga-details-dialog-header{
-    color: ${({ theme }) => theme.elevatedSectionLight};
+    color: ${({ theme }) => theme.elevatedSection};
   }
 
   .manga-description-header-text{
@@ -146,6 +146,10 @@ const globalStyle = createGlobalStyle`
 
   .bookmark-clicked-dialog-option{
     color: ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .individual-details-button{
+    color: ${({ theme }) => theme.elevatedSection};
   }
 
 

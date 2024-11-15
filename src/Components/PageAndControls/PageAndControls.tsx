@@ -31,7 +31,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
-import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import BookIcon from "@mui/icons-material/Book";
 import { updateOrCreateBookmark } from "../../api/Bookmarks";
 import MangaChapterList from "../MangaChapterList/MangaChapterList";
@@ -336,7 +335,7 @@ const PageAndControls = (props: Props) => {
         accountId: accountId,
         mangaFeed: mangaFeedState,
         chapterIndex: chapterIndex,
-        pageNumber: null,
+        pageNumber: 0,
       },
     });
   };
@@ -363,7 +362,13 @@ const PageAndControls = (props: Props) => {
                 sx={{ width: "100%" }}
                 noWrap
               >
-                {volume + " : " + chapterNumber}
+                {volume +
+                  " : " +
+                  chapterNumber +
+                  " : " +
+                  (currentPage + 1) +
+                  " / " +
+                  pages.length}
               </Typography>
             }
           />
@@ -402,12 +407,6 @@ const PageAndControls = (props: Props) => {
               <Button
                 className="bookmark-button"
                 sx={{ minWidth: "40px", color: "unset" }}
-                disabled={
-                  readerMode === 3 || readerMode === 4
-                    ? bookmarks.includes(parseInt(chapterNumber)) ||
-                      accountId === null
-                    : bookmarks.includes(pageNumber) || accountId === null
-                }
                 onClick={async () => {
                   const simpleMangaName = mangaName.replace(/[^a-zA-Z]/g, " ");
                   const newBookmark = {
@@ -443,18 +442,7 @@ const PageAndControls = (props: Props) => {
                   }
                 }}
               >
-                {" "}
-                {readerMode === 3 || readerMode === 4 ? (
-                  bookmarks.includes(parseInt(chapterNumber)) === true ? (
-                    <BookmarkAddedIcon />
-                  ) : (
-                    <BookmarkAddIcon />
-                  )
-                ) : bookmarks.includes(pageNumber + 1) === true ? (
-                  <BookmarkAddedIcon />
-                ) : (
-                  <BookmarkAddIcon />
-                )}
+                <BookmarkAddIcon />
               </Button>
             )}
             <Button
@@ -601,7 +589,13 @@ const PageAndControls = (props: Props) => {
             )}{" "}
           </div>
 
-          <div className="centered">
+          <div
+            className="centered"
+            style={{
+              position:
+                readerMode === 1 || readerMode === 2 ? "fixed" : "relative",
+            }}
+          >
             <Button
               className="chapter-page-traversal-buttons"
               onClick={() => {
@@ -626,15 +620,6 @@ const PageAndControls = (props: Props) => {
             >
               <KeyboardArrowLeftIcon />
             </Button>
-            {readerMode === 3 || readerMode === 4 ? (
-              <Typography fontFamily="Figtree" align="center">
-                {pages.length} pages
-              </Typography>
-            ) : (
-              <Typography fontFamily="Figtree" align="center">
-                {currentPage + 1} / {pages.length}
-              </Typography>
-            )}
             <Button
               className="chapter-page-traversal-buttons"
               onClick={() => {

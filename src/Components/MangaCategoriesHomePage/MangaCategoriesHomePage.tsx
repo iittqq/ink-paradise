@@ -38,7 +38,10 @@ const MangaCategoriesHomePage = (props: Props) => {
 
   const handleClick = (id: string) => {
     navigate(`/manga/${id}`, {
-      state: { accountId: accountId === null ? null : accountId },
+      state: {
+        accountId: accountId === null ? null : accountId,
+        contentFilter: contentFilter,
+      },
     });
   };
 
@@ -117,6 +120,7 @@ const MangaCategoriesHomePage = (props: Props) => {
           coverUrl={mangaCoverToDisplay!}
           handleClick={handleClick}
           accountId={accountId}
+          contentFilter={contentFilter}
         />
       )}
       <div className="category-stack">

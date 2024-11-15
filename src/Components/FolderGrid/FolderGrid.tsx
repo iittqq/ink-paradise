@@ -19,6 +19,7 @@ type Props = {
   mangaEntriesToDelete: string[];
   selectAll: boolean;
   accountId: number;
+  contentFilter: number;
 };
 
 const FolderGrid = (props: Props) => {
@@ -35,6 +36,7 @@ const FolderGrid = (props: Props) => {
     mangaEntriesToDelete,
     selectAll,
     accountId,
+    contentFilter,
   } = props;
 
   const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{
@@ -160,6 +162,7 @@ const FolderGrid = (props: Props) => {
                 coverUrl={coverUrlsFolderGrid[element.id]}
                 disabled={checked || selectAll}
                 accountId={accountId}
+                contentFilter={contentFilter}
               />
             </Button>
           </Grid>

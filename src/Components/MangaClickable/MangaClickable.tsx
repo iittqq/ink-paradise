@@ -15,6 +15,7 @@ type Props = {
   coverUrl?: string;
   disabled?: boolean;
   accountId: number;
+  contentFilter: number;
 };
 
 const MangaClickable = (props: Props) => {
@@ -23,10 +24,11 @@ const MangaClickable = (props: Props) => {
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
   const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
-  const { manga, title, coverUrl, disabled, accountId } = props;
+  const { manga, title, coverUrl, disabled, accountId, contentFilter } = props;
 
   const handleClick = (id: string) => {
     console.log("id: ", id);
+    console.log(accountId);
     if (accountId !== null) {
       fetchAccountDetails(accountId).then((response: AccountDetails) => {
         navigate(`/manga/${id}`, {
@@ -62,6 +64,7 @@ const MangaClickable = (props: Props) => {
           coverUrl={mangaCoverToDisplay!}
           handleClick={handleClick}
           accountId={accountId}
+          contentFilter={contentFilter}
         />
       )}
 

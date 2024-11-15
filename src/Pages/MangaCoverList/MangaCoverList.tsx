@@ -120,6 +120,7 @@ const MangaCoverList = () => {
                 accountId={
                   state.accountId === undefined ? null : state.accountId
                 }
+                contentFilter={state.contentFilter}
               />
             </Grid>
           ))}

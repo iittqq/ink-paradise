@@ -34,15 +34,12 @@ const Home = () => {
     const fetchData = async () => {
       const account = await getUserDetails();
 
-      // Check if account is not null
       if (account) {
         setAccountId(account.id);
 
-        // Fetch account details since the user is logged in
         const accountDetails = await fetchAccountDetails(account.id);
         setContentFilterState(accountDetails.contentFilter);
 
-        // Get the theme from local storage or account details
         const localTheme = window.localStorage.getItem("theme");
         if (localTheme) {
           toggleTheme(parseInt(localTheme));
@@ -53,14 +50,12 @@ const Home = () => {
           }
         }
 
-        // Fetch popular manga based on user's content filter
         const popularManga = await fetchPopularManga(
-          10,
+          15,
           accountDetails.contentFilter,
         );
         setPopularManga(popularManga);
 
-        // Fetch recently updated manga
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
           6,
           0,
@@ -68,7 +63,6 @@ const Home = () => {
         );
         setRecentlyUpdatedManga(recentlyUpdatedManga);
 
-        // Fetch recently added manga
         const recentlyAddedManga = await fetchRecentlyAdded(
           6,
           0,
@@ -76,9 +70,8 @@ const Home = () => {
         );
         setRecentlyAddedManga(recentlyAddedManga);
       } else {
-        // If account is null, make the default calls
-        const defaultContentFilter = 3; // Or whatever default filter you want
-        const popularManga = await fetchPopularManga(10, defaultContentFilter);
+        const defaultContentFilter = 3;
+        const popularManga = await fetchPopularManga(15, defaultContentFilter);
         setPopularManga(popularManga);
 
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
@@ -121,6 +114,7 @@ const Home = () => {
       <TrendingMangaCarousel
         manga={popularManga}
         accountId={accountId === null ? null : accountId}
+        contentFilter={contentFilterState}
       />
       <div className="bottom-home-page">
         <MangaCategoriesHomePage

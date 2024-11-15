@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 import { useEffect, useState } from "react";
 
-type Props = { manga: Manga[]; accountId: number };
+type Props = { manga: Manga[]; accountId: number; contentFilter: number };
 const SimilarManga = (props: Props) => {
-  const { manga, accountId } = props;
+  const { manga, accountId, contentFilter } = props;
   const navigate = useNavigate();
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
@@ -66,6 +66,7 @@ const SimilarManga = (props: Props) => {
           coverUrl={mangaCoverToDisplay!}
           handleClick={handleClick}
           accountId={accountId}
+          contentFilter={contentFilter}
         />
       )}
 

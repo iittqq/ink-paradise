@@ -270,6 +270,7 @@ const Library = () => {
             selectAll={selectAll}
             groupedLibraryManga={groupedLibrary}
             accountId={state.accountId === undefined ? null : state.accountId}
+            contentFilter={state.contentFilter}
           />
         )}
       </div>

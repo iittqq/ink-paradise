@@ -15,6 +15,7 @@ type Props = {
   libraryEntriesToDelete: string[];
   selectAll: boolean;
   accountId: number;
+  contentFilter: number;
 };
 
 const LibraryContents = (props: Props) => {
@@ -27,6 +28,7 @@ const LibraryContents = (props: Props) => {
     libraryEntriesToDelete,
     selectAll,
     accountId,
+    contentFilter,
   } = props;
   const navigate = useNavigate();
 
@@ -114,6 +116,7 @@ const LibraryContents = (props: Props) => {
                           coverUrl={coverUrlsLibrary[manga.id]}
                           disabled={checked || selectAll}
                           accountId={accountId}
+                          contentFilter={contentFilter}
                         />
                       </Button>
                     </Grid>
@@ -158,6 +161,7 @@ const LibraryContents = (props: Props) => {
                           coverUrl={coverUrlsLibrary[manga.id]}
                           disabled={checked || selectAll}
                           accountId={accountId}
+                          contentFilter={contentFilter}
                         />
                       </Button>
                     </Grid>
@@ -188,6 +192,7 @@ const LibraryContents = (props: Props) => {
                     coverUrl={coverUrlsLibrary[manga.id]}
                     disabled={checked || selectAll}
                     accountId={accountId}
+                    contentFilter={contentFilter}
                   />
                 </Button>
               </Grid>

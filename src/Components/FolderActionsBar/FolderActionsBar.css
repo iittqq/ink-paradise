@@ -127,6 +127,10 @@ input[type="text"]:focus {
   & .MuiPaper-root {
     background-color: #121212 !important;
     border-radius: 25px !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 40vw;
+    }
   }
   & .MuiDialogContent-root {
     color: #ffffff !important;

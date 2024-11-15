@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Button,
   Typography,
@@ -17,6 +17,7 @@ import {
   MangaTagsInterface,
   MangaFeedScanlationGroup,
   ChapterDetails,
+  MangaInfo,
 } from "../../interfaces/MangaDexInterfaces";
 import { Bookmark } from "../../interfaces/BookmarkInterfaces";
 import {
@@ -24,12 +25,22 @@ import {
   fetchMangaCoverBackend,
   fetchMangaFeed,
   fetchChapterDetails,
+  fetchSimilarManga,
 } from "../../api/MangaDexApi";
 import { getBookmarksByUserId, deleteBookmark } from "../../api/Bookmarks";
 import { useNavigate } from "react-router-dom";
 import "./MangaDetailsDialog.css";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import {
+  addMangaFolderEntry,
+  getMangaFolderEntries,
+} from "../../api/MangaFolderEntry";
+import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
+import MangaPageButtonHeader from "../MangaPageButtonHeader/MangaPageButtonHeader";
+import { getMangaFolders } from "../../api/MangaFolder";
+import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 type Props = {
   mangaDetails: Manga;
@@ -38,6 +49,7 @@ type Props = {
   coverUrl: string;
   handleClick: (id: string) => void;
   accountId: number | null;
+  contentFilter: number;
 };
 
 const MangaDetailsDialog = (props: Props) => {
@@ -48,6 +60,7 @@ const MangaDetailsDialog = (props: Props) => {
     coverUrl,
     handleClick,
     accountId,
+    contentFilter,
   } = props;
   const navigate = useNavigate();
 
@@ -57,7 +70,53 @@ const MangaDetailsDialog = (props: Props) => {
   const [bookmarkCoverUrls, setBookmarkCoverUrls] = useState<{
     [key: string]: string;
   }>({});
+  const [uiState, setUIState] = useState({
+    open: false,
+    mangaExistsError: false,
+    showInfoToggled: false,
+    showCategoriesToggled: false,
+    mangaAddedAlert: false,
+  });
   const [loading, setLoading] = useState(false);
+
+  const [mangaInfo, setMangaInfo] = useState<MangaInfo>({
+    name: "",
+    description: "",
+    altTitles: [],
+    languages: [],
+    contentRating: "",
+    rawLink: "",
+    tags: [],
+    author: "",
+    status: "",
+    coverUrl: "",
+  });
+  const [folders, setFolders] = useState<MangaFolder[]>([]);
+
+  const fetchSimilarMangaByTags = useCallback(
+    async (tags: string[]) => {
+      if (tags.length === 0) return; // Exit if tags are empty
+
+      try {
+        const data = await fetchSimilarManga(10, 0, tags, contentFilter ?? 3);
+        return data;
+      } catch (error) {
+        console.error("Error fetching similar manga:", error);
+      }
+    },
+    [contentFilter],
+  );
+
+  const fetchFolders = useCallback(async () => {
+    if (accountId) {
+      const response = await getMangaFolders();
+      setFolders(response.filter((folder) => folder.userId === accountId));
+    }
+  }, [accountId]);
+
+  useEffect(() => {
+    fetchFolders();
+  }, [fetchFolders]);
 
   const handleDelete = async () => {
     console.log(selectedBookmark);
@@ -80,6 +139,42 @@ const MangaDetailsDialog = (props: Props) => {
     setDialogOpen(false);
     setSelectedBookmark(null);
   };
+  const handleMangaCategoryClicked = (category: MangaTagsInterface) => {
+    fetchSimilarMangaByTags([category.id]).then((data: Manga[] | undefined) =>
+      navigate("/mangaCoverList", {
+        state: {
+          listType: category.attributes.name.en,
+          manga: data,
+          accountId: accountId,
+        },
+      }),
+    );
+  };
+
+  const handleAddToFolder = (folderId: number) => {
+    if (!folderId || !mangaDetails.id) return;
+    getMangaFolderEntries().then((response) => {
+      const exists = response.some(
+        (entry: MangaFolderEntry) =>
+          entry.folderId === folderId && entry.mangaId === mangaDetails.id,
+      );
+      if (!exists) {
+        addMangaFolderEntry({ folderId, mangaId: mangaDetails.id });
+        setUIState((prev) => ({ ...prev, mangaAddedAlert: true }));
+        setTimeout(
+          () => setUIState((prev) => ({ ...prev, mangaAddedAlert: false })),
+          3000,
+        );
+      } else {
+        setUIState((prev) => ({ ...prev, mangaExistsError: true }));
+        setTimeout(
+          () => setUIState((prev) => ({ ...prev, mangaExistsError: false })),
+          3000,
+        );
+      }
+    });
+  };
+
   const handleStartReading = () => {
     if (selectedBookmark !== null && selectedBookmark.index !== undefined) {
       fetchMangaFeed(
@@ -93,6 +188,8 @@ const MangaDetailsDialog = (props: Props) => {
         if (selectedBookmark.chapterId !== undefined) {
           fetchChapterDetails(selectedBookmark.chapterId).then(
             (response: ChapterDetails) => {
+              console.log(response);
+              console.log(selectedBookmark);
               navigate("/reader", {
                 state: {
                   mangaId: selectedBookmark.id,
@@ -183,6 +280,20 @@ const MangaDetailsDialog = (props: Props) => {
     if (bookmarks && bookmarks.length > 0) {
       fetchCoverImages();
     }
+    setMangaInfo({
+      name: mangaDetails.attributes.title.en || "",
+      description: mangaDetails.attributes.description.en || "",
+      altTitles: mangaDetails.attributes.altTitles || [],
+      languages: mangaDetails.attributes.availableTranslatedLanguages || [],
+      contentRating: mangaDetails.attributes.contentRating || "",
+      rawLink: mangaDetails.attributes.links?.raw || "",
+      tags: mangaDetails.attributes.tags || [],
+      author:
+        mangaDetails.relationships.find((element) => element.type === "author")
+          ?.attributes.name || "",
+      status: mangaDetails.attributes.status || "",
+      coverUrl,
+    });
   }, [accountId, props]);
 
   return (
@@ -204,6 +315,7 @@ const MangaDetailsDialog = (props: Props) => {
                 ? Object.values(mangaDetails.attributes.title)[0]
                 : mangaDetails.attributes.title.en}
             </Typography>
+            <LaunchIcon sx={{ paddingLeft: "5px" }} />
           </Button>
         </DialogTitle>
         <div className="manga-details-dialog-contents">
@@ -257,20 +369,67 @@ const MangaDetailsDialog = (props: Props) => {
                 )}
               </Grid>
               <div className="details-row">
-                {" "}
-                <Typography className="manga-details-header-text">
-                  {mangaDetails.attributes.contentRating}
-                </Typography>
                 <Typography className="manga-details-header-text">
                   {mangaDetails.attributes.status}
                 </Typography>
                 <Typography className="manga-details-header-text">
                   {mangaDetails.attributes.publicationDemographic}
                 </Typography>
-              </div>{" "}
+              </div>
+              <div>
+                <MangaPageButtonHeader
+                  mangaRaw={mangaInfo.rawLink}
+                  folders={folders}
+                  mangaAltTitles={mangaInfo.altTitles}
+                  mangaTags={mangaInfo.tags}
+                  id={mangaDetails.id !== undefined ? mangaDetails.id : ""}
+                  handleAddToFolder={handleAddToFolder}
+                  handleClickOpen={() =>
+                    setUIState((prev) => ({ ...prev, open: true }))
+                  }
+                  handleCloseCategories={() =>
+                    setUIState((prev) => ({
+                      ...prev,
+                      showCategoriesToggled: false,
+                    }))
+                  }
+                  handleCloseInfo={() =>
+                    setUIState((prev) => ({ ...prev, showInfoToggled: false }))
+                  }
+                  handleOpenCategories={() =>
+                    setUIState((prev) => ({
+                      ...prev,
+                      showCategoriesToggled: true,
+                    }))
+                  }
+                  handleOpenInfo={() =>
+                    setUIState((prev) => ({ ...prev, showInfoToggled: true }))
+                  }
+                  open={uiState.open}
+                  showInfoToggled={uiState.showInfoToggled}
+                  showCategoriesToggled={uiState.showCategoriesToggled}
+                  mangaExistsError={uiState.mangaExistsError}
+                  handleClose={() =>
+                    setUIState((prev) => ({
+                      ...prev,
+                      open: false,
+                      mangaExistsError: false,
+                    }))
+                  }
+                  mangaContentRating={mangaInfo.contentRating}
+                  mangaAddedAlert={uiState.mangaAddedAlert}
+                  handleMangaCategoryClicked={handleMangaCategoryClicked}
+                />
+              </div>
             </div>
           </div>
-          <div className="manga-details-description">
+          <div
+            className="manga-details-description"
+            style={{
+              marginBottom:
+                accountId !== null && bookmarks.length > 0 ? "0px" : "10px",
+            }}
+          >
             <Typography className="manga-description-header-text">
               Description:
             </Typography>

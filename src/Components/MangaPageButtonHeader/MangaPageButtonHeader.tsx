@@ -196,17 +196,15 @@ const MangaPageButtonHeader = (props: Props) => {
             Content Rating:
           </DialogTitle>
 
-          <Button className="folder-button">
-            <Typography
-              noWrap
-              color="#ffffff"
-              fontFamily="Figtree"
-              fontSize={20}
-              sx={{ textAlign: "center" }}
-            >
-              {mangaContentRating}
-            </Typography>
-          </Button>
+          <Typography
+            noWrap
+            color="#ffffff"
+            fontFamily="Figtree"
+            fontSize={20}
+            sx={{ textAlign: "center" }}
+          >
+            {mangaContentRating}
+          </Typography>
         </div>
         <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>
           Alt Titles

@@ -3,11 +3,10 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 10px;
 }
 
 .individual-details-button {
-  color: unset !important;
+  color: unset;
   width: 30px !important;
   min-width: 30px !important;
   &.MuiButtonBase-root:hover {

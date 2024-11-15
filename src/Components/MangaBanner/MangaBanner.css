@@ -54,6 +54,7 @@
 
 .header-details-stack {
   overflow: hidden;
+  padding-left: 10px;
 }
 
 .manga-name {
@@ -61,7 +62,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
-  padding-left: 10px;
   max-height: 90px;
 }
 
@@ -71,7 +71,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: break-word;
-  padding-left: 10px;
 }
 
 .manga-description {

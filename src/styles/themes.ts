@@ -17,8 +17,8 @@ export const lightTheme = {
 export const darkTheme = {
   body: "#191919",
   text: "#FAFAFA",
-  elevatedSection: "#403025",
-  elevatedSectionLight: "#cca284",
+  elevatedSection: "#ABB896",
+  elevatedSectionLight: "#EEBEC6",
   highlighted: "#ff7e67",
 };
 

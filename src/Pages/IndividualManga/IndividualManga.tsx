@@ -348,6 +348,7 @@ const IndividualManga = () => {
               <SimilarManga
                 manga={similarManga}
                 accountId={state.accountId ?? null}
+                contentFilter={state.contentFilter}
               />
             </div>
           </div>
