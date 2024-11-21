@@ -17,9 +17,10 @@ type Props = {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   insideReader: boolean;
   coverUrl: string;
-  accountId: number;
+  accountId: number | null;
   contentFilter: number;
   sortOrder: string;
+  oneshot?: boolean;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -33,6 +34,7 @@ const MangaChapterList = (props: Props) => {
     accountId,
     contentFilter,
     sortOrder,
+    oneshot,
   } = props;
   const [xsValue] = useState(window.innerWidth > 900 ? 3 : 6);
   const [userProgress, setUserProgress] = useState<number | null>(null);
@@ -167,7 +169,9 @@ const MangaChapterList = (props: Props) => {
                       textTransform: "none",
                     }}
                   >
-                    Chapter {current.attributes.chapter}
+                    {oneshot === true
+                      ? "Oneshot"
+                      : "Chapter " + current.attributes.chapter}
                   </Typography>
                   <Typography
                     fontFamily="Figtree"

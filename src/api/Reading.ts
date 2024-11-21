@@ -86,6 +86,21 @@ async function deleteReading(uniqueId: number): Promise<Reading> {
   }
 }
 
+async function getReadingByUserIdAndMangaId(
+  id: number,
+  mangaId: string,
+): Promise<Reading> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/reading/find_by_user_id_and_manga_id/${id}/${mangaId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 async function deleteReadingByMangaIdAndUserId(
   mangaId: string,
   userId: number,
@@ -122,5 +137,6 @@ export {
   getReadingByUserId,
   getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
+  getReadingByUserIdAndMangaId,
   updateOrCreateReading,
 };

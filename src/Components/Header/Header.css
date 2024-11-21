@@ -10,6 +10,24 @@
   }
 }
 
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  min-height: 50px;
+}
+
+.header-container.hidden {
+  transform: translateY(-100%); /* Slide the header out of view */
+}
+
+.header-container.visible {
+  transform: translateY(0); /* Slide the header back into view */
+}
+
 .logo-home-icon {
   width: 40px;
   height: 40px;
@@ -99,6 +117,24 @@ input[type="search"]:focus {
   }
 }
 
+.header-buttons-option {
+  color: unset !important;
+  background-color: transparent !important;
+  padding: 0px !important;
+  height: 40px !important;
+  margin: 0px 5px 0px 5px !important;
+  @media screen and (max-width: 600px) {
+    min-width: 60px !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: white;
+  }
+}
+
 .header-buttons-right {
   width: 100%;
   display: flex;
@@ -166,4 +202,41 @@ input[type="search"]:focus {
     background-color: #1f1f1f !important;
     border-radius: 10px;
   }
+}
+
+.search-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px;
+    color: #ffffff !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 35vw;
+    }
+  }
+}
+
+.search-dialog-labels {
+  margin: 0px !important;
+  font-family: "Figtree" !important;
+}
+.search-dialog-option-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.search-dialog-title {
+  text-align: center;
+}
+
+.search-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px !important;
+  border-radius: 25px !important;
+  text-align: center;
 }

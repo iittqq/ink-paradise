@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Card, CardMedia, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { fetchAccountDetails } from "../../api/AccountDetails";
-import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 
@@ -29,20 +27,7 @@ const MangaClickable = (props: Props) => {
   const handleClick = (id: string) => {
     console.log("id: ", id);
     console.log(accountId);
-    if (accountId !== null) {
-      fetchAccountDetails(accountId).then((response: AccountDetails) => {
-        navigate(`/manga/${id}`, {
-          state: {
-            accountId: accountId,
-            contentFilter: response.contentFilter,
-          },
-        });
-      });
-    } else {
-      navigate(`/manga/${id}`, {
-        state: { accountId: accountId, contentFilter: 3 },
-      });
-    }
+    navigate(`/manga/${id}`);
   };
   const handleDetailsDialogClose = () => {
     setOpenDetailsDialog(false);

@@ -31,7 +31,7 @@ const Login = () => {
     useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const [passwordReset, setPasswordReset] = useState<boolean>(false);
-
+  const [accountExists, setAccountExists] = useState<boolean>(false);
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -137,16 +137,18 @@ const Login = () => {
       passwordStrength > 3 &&
       passwordResults.length === 1
     ) {
-      createAccount({
-        email: email,
-        username: username,
-        password: password,
-        verificationCode: "",
-        verified: false,
-      }).then((id: number) => {
+      try {
+        const id = await createAccount({
+          email: email,
+          username: username,
+          password: password,
+          verificationCode: "",
+          verified: false,
+        });
+
         navigate("/");
 
-        createAccountDetails({
+        await createAccountDetails({
           accountId: id,
           bio: "Hello World",
           profilePicture: null,
@@ -155,7 +157,17 @@ const Login = () => {
           readerMode: 1,
           theme: 0,
         });
-      });
+      } catch (error) {
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "response" in error
+        ) {
+          setAccountExists(true);
+        } else {
+          console.error("Unexpected error:", error);
+        }
+      }
     } else {
       setPassword("");
       setConfirmPassword("");
@@ -169,7 +181,13 @@ const Login = () => {
       {visible === true ? (
         <Card className="login-card" elevation={5}>
           <div className="header-back-button-container">
-            <Button onClick={() => setVisible(false)} className="back-button">
+            <Button
+              onClick={() => {
+                setVisible(false);
+                setAccountExists(false);
+              }}
+              className="back-button"
+            >
               <ArrowBackIcon />
             </Button>
             <Typography className="register-header">Register</Typography>
@@ -314,6 +332,11 @@ const Login = () => {
               </div>
             </div>
           </div>
+          {accountExists ? (
+            <Typography className="password-error-text">
+              Account Already Exists
+            </Typography>
+          ) : null}
           <Button
             variant="contained"
             className="register-button"
@@ -382,6 +405,16 @@ const Login = () => {
         </Card>
       ) : (
         <Card className="login-card" elevation={5}>
+          <div className="header-back-button-container">
+            <Button
+              onClick={() => {
+                navigate("/");
+              }}
+              className="back-button"
+            >
+              <ArrowBackIcon />
+            </Button>
+          </div>
           <Typography className="login-header">Login</Typography>
           <div className="login-section-container">
             <Typography className="login-text-field-headers">Email</Typography>
@@ -439,7 +472,6 @@ const Login = () => {
               )}
             </Button>{" "}
           </div>
-
           <Button
             variant="contained"
             className="login-button"

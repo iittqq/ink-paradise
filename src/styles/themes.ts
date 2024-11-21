@@ -3,7 +3,7 @@ export interface ThemeProps {
   text: string;
   elevatedSection: string;
   elevatedSectionLight: string;
-  hightlighted: string;
+  highlighted: string;
 }
 
 export const lightTheme = {
@@ -11,7 +11,7 @@ export const lightTheme = {
   text: "#363537",
   elevatedSection: "#8ab192 ",
   elevatedSectionLight: "#d5e3d8",
-  highlighted: "#ff7e67",
+  highlighted: "#a0a2a4",
 };
 
 export const darkTheme = {
@@ -19,7 +19,7 @@ export const darkTheme = {
   text: "#FAFAFA",
   elevatedSection: "#ABB896",
   elevatedSectionLight: "#EEBEC6",
-  highlighted: "#ff7e67",
+  highlighted: "#a0a2a4",
 };
 
 export const lightPastelTheme = {
@@ -27,7 +27,7 @@ export const lightPastelTheme = {
   text: "#191919",
   elevatedSection: "#B8DBE5",
   elevatedSectionLight: "#dadaf1",
-  highlighted: "#ff7e67",
+  highlighted: "#a0a2a4",
 };
 
 export const darkPastelTheme = {
@@ -35,7 +35,7 @@ export const darkPastelTheme = {
   text: "#FAFAFA",
   elevatedSection: "#9095d6",
   elevatedSectionLight: "#b6c0b9",
-  highlighted: "#ff7e67",
+  highlighted: "#a0a2a4",
 };
 
 export const devTheme = {
@@ -43,5 +43,5 @@ export const devTheme = {
   text: "#FAFAFA",
   elevatedSection: "#705f8c",
   elevatedSectionLight: "#3a3a3a",
-  highlighted: "#ff7e67",
+  highlighted: "#a0a2a4",
 };

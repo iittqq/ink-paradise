@@ -10,8 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Header from "../../Components/Header/Header";
+import { useNavigate } from "react-router-dom";
 import FolderGrid from "../../Components/FolderGrid/FolderGrid";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EditIcon from "@mui/icons-material/Edit";
@@ -46,9 +45,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 
-const AccountPage = () => {
+interface AccountPageProps {
+  account: Account | null;
+}
+
+const AccountPage: React.FC<AccountPageProps> = ({ account }) => {
   const navigate = useNavigate();
-  const { state } = useLocation();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");
   const [newFolderDescription, setNewFolderDescription] = useState<string>("");
@@ -68,7 +70,7 @@ const AccountPage = () => {
     [],
   );
 
-  const [accountData, setAccountData] = useState<Account | null>(null);
+  const [accountData, setAccountData] = useState<Account | null>(account);
 
   const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
     null,
@@ -101,17 +103,17 @@ const AccountPage = () => {
       newPassword === confirmNewPassword
     ) {
       updateAccountPassword({
-        id: state.accountId,
+        id: accountData!.id,
         oldPassword: oldPassword,
         newPassword: newPassword,
       }).then((data: Account) => {
         setAccountData(data);
       });
     }
-    if (username !== accountData?.username) {
+    if (username !== accountData!.username) {
       console.log(username);
       updateAccountUsername({
-        id: state.accountId,
+        id: accountData!.id,
         username: username,
       }).then((data: Account) => {
         setAccountData(data);
@@ -124,7 +126,7 @@ const AccountPage = () => {
       contentFilter !== accountDetails?.contentFilter.toString()
     ) {
       updateAccountDetails(accountDetailsId!, {
-        accountId: state.accountId,
+        accountId: accountData!.id,
         bio,
         profilePicture,
         headerPicture,
@@ -257,6 +259,7 @@ const AccountPage = () => {
           folderCover: folderBackground,
         });
         setNewFolder(!newFolder);
+        handleFolderDialogClose();
       }
     }
   };
@@ -354,22 +357,20 @@ const AccountPage = () => {
   };
 
   useEffect(() => {
-    if (state.account !== null) {
-      setAccountData(state.account);
-      if (state.account !== null) {
-        setUsername(state.account.username);
+    if (account !== null) {
+      setAccountData(account);
+      if (account !== null) {
+        setUsername(account.username);
       }
     }
 
-    if (state.account !== null) {
+    if (account !== null) {
       getMangaFolders().then((response) => {
-        setFolders(
-          response.filter((folder) => folder.userId === state.account!.id),
-        );
+        setFolders(response.filter((folder) => folder.userId === account!.id));
       });
     }
 
-    fetchAccountDetails(state.account!.id).then((data) => {
+    fetchAccountDetails(account!.id).then((data) => {
       setAccountDetails(data);
       setAccountDetailsId(data.id);
       setContentFilter(data.contentFilter.toString());
@@ -382,10 +383,6 @@ const AccountPage = () => {
 
   return (
     <div className="user-page-container">
-      <Header
-        accountId={state.accountId === undefined ? null : state.accountId}
-        contentFilter={parseInt(contentFilter)}
-      />
       <div className="utility-buttons">
         <Button
           className="info-open-button"
@@ -687,7 +684,7 @@ const AccountPage = () => {
             folderMangaData={folderMangaData}
             mangaEntriesToDelete={mangaEntriesToDelete}
             selectAll={selectAll}
-            accountId={state.accountId}
+            accountId={accountData!.id}
             contentFilter={Number(contentFilter)}
           />
         </div>

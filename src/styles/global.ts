@@ -78,11 +78,11 @@ const globalStyle = createGlobalStyle`
   }
 
   .manga-description-header-text{
-    color: ${({ theme }) => theme.elevatedSectionLight};
+    color: ${({ theme }) => theme.highlighted};
   }
   
   .manga-details-header-text-author{
-    color: ${({ theme }) => theme.elevatedSectionLight};
+    color: ${({ theme }) => theme.highlighted};
   }
   
   .manga-details-color-text{
@@ -150,6 +150,18 @@ const globalStyle = createGlobalStyle`
 
   .individual-details-button{
     color: ${({ theme }) => theme.elevatedSection};
+  }
+
+  .manga-categories-dialog-text, .manga-details-header-text{
+    color: ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .library-entry-exists-alert-icon{
+    color: ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .header-container{
+    background-color: ${({ theme }) => theme.body};
   }
 
 

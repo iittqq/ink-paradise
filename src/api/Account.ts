@@ -26,7 +26,7 @@ async function createAccount(account: object): Promise<number> {
     );
     return response.data.id;
   } catch (error) {
-    console.error("Error fetching manga:", error);
+    console.error("Error creating account:", error);
     throw error;
   }
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import Header from "../../Components/Header/Header";
 import { CircularProgress, Typography } from "@mui/material";
 import "./Library.css";
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
@@ -14,12 +13,16 @@ import {
 import { fetchMangaById } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { fetchAccountData } from "../../api/Account";
 
 import { deleteBookmarkByMangaIdAndUserId } from "../../api/Bookmarks";
-import { useLocation } from "react-router-dom";
 
-const Library = () => {
+interface LibraryProps {
+  account: Account | null;
+  accountDetails: AccountDetails | null;
+}
+const Library: React.FC<LibraryProps> = ({ account, accountDetails }) => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
@@ -32,10 +35,8 @@ const Library = () => {
   >([]);
   const [groupedLibrary, setGroupedLibrary] = useState<Manga[][] | null>(null);
 
-  const [accountData, setAccountData] = useState<Account | null>(null);
+  const [accountData, setAccountData] = useState<Account | null>(account);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-
-  const { state } = useLocation();
 
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
@@ -216,11 +217,11 @@ const Library = () => {
   };
 
   useEffect(() => {
-    if (state.accountId !== null) {
-      fetchAccountData(state.accountId).then((data: Account | null) => {
+    if (accountData !== null) {
+      fetchAccountData(accountData.id).then((data: Account | null) => {
         setAccountData(data);
         if (data !== null) {
-          handleFetchingLibrary(state.accountId, ascending);
+          handleFetchingLibrary(accountData.id, ascending);
         }
       });
     }
@@ -228,14 +229,6 @@ const Library = () => {
 
   return (
     <div className="library-page-container">
-      <div>
-        <Header
-          accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={
-            state.contentFilter === undefined ? null : state.contentFilter
-          }
-        />
-      </div>
       <div className="library-contents-header">
         <Typography fontFamily={"Figtree"} fontSize={20}>
           {"Library"}
@@ -269,8 +262,10 @@ const Library = () => {
             libraryEntriesToDelete={libraryEntriesToDelete}
             selectAll={selectAll}
             groupedLibraryManga={groupedLibrary}
-            accountId={state.accountId === undefined ? null : state.accountId}
-            contentFilter={state.contentFilter}
+            accountId={accountData!.id}
+            contentFilter={
+              accountDetails === null ? 3 : accountDetails.contentFilter
+            }
           />
         )}
       </div>

@@ -303,6 +303,73 @@ async function fetchPageImageBackend(
   }
 }
 
+async function fetchSearch(
+  mangaName: string,
+  authorName: string,
+  scanlationGroup: string,
+  contentFilter: number,
+  offset: number,
+): Promise<Manga[]> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-search`, {
+      params: {
+        mangaName: mangaName,
+        authorName: authorName,
+        scanlationGroup: scanlationGroup,
+        contentFilter: contentFilter,
+        offset: offset,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function fetchPopularNewManga(
+  limit: number,
+  offset: number,
+  contentFilter: number,
+): Promise<Manga[]> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/manga-dex/popular-new-manga`,
+      {
+        params: {
+          limit: limit,
+          offset: offset,
+          contentFilter: contentFilter,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function fetchMangaListById(ids: string[]): Promise<Manga[]> {
+  try {
+    const params = new URLSearchParams();
+    ids.forEach((id) => params.append("ids[]", id));
+
+    const response = await axios.get(`${BASE_URL}/manga-dex/manga-list-by-id`, {
+      params,
+    });
+
+    if (!response.data || !response.data.data) {
+      throw new Error("Invalid response format");
+    }
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
 export {
   fetchMangaById,
   fetchRecentlyUpdated,
@@ -320,4 +387,7 @@ export {
   fetchMangaCoverBackend,
   fetchPageImageBackend,
   fetchChapterDetails,
+  fetchSearch,
+  fetchPopularNewManga,
+  fetchMangaListById,
 };

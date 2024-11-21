@@ -41,6 +41,12 @@ import MangaPageButtonHeader from "../MangaPageButtonHeader/MangaPageButtonHeade
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import LaunchIcon from "@mui/icons-material/Launch";
+import {
+  updateOrCreateReading,
+  getReadingByUserIdAndMangaId,
+} from "../../api/Reading";
+import { updateOrCreateBookmark } from "../../api/Bookmarks";
+import { AxiosError } from "axios";
 
 type Props = {
   mangaDetails: Manga;
@@ -70,6 +76,11 @@ const MangaDetailsDialog = (props: Props) => {
   const [bookmarkCoverUrls, setBookmarkCoverUrls] = useState<{
     [key: string]: string;
   }>({});
+  const [oneshot] = useState<boolean>(
+    mangaDetails.attributes.tags.some(
+      (current: MangaTagsInterface) => current.attributes.name.en === "Oneshot",
+    ),
+  );
   const [uiState, setUIState] = useState({
     open: false,
     mangaExistsError: false,
@@ -78,6 +89,7 @@ const MangaDetailsDialog = (props: Props) => {
     mangaAddedAlert: false,
   });
   const [loading, setLoading] = useState(false);
+  const [libraryEntryExists, setLibraryEntryExists] = useState(false);
 
   const [mangaInfo, setMangaInfo] = useState<MangaInfo>({
     name: "",
@@ -145,7 +157,6 @@ const MangaDetailsDialog = (props: Props) => {
         state: {
           listType: category.attributes.name.en,
           manga: data,
-          accountId: accountId,
         },
       }),
     );
@@ -250,6 +261,9 @@ const MangaDetailsDialog = (props: Props) => {
         );
 
         setBookmarks(filteredBookmarks);
+        if (filteredBookmarks.length > 0) {
+          setLibraryEntryExists(true);
+        }
         console.log("Bookmarks:", filteredBookmarks);
       }
     } catch (error) {
@@ -259,6 +273,79 @@ const MangaDetailsDialog = (props: Props) => {
     }
   };
 
+  const handleAddToLibrary = async () => {
+    try {
+      const chapterData = await fetchMangaFeed(
+        mangaDetails.id,
+        1,
+        0,
+        "asc",
+        "en",
+      );
+      console.log(chapterData);
+
+      if (accountId !== null) {
+        let existingReading = null;
+
+        try {
+          existingReading = await getReadingByUserIdAndMangaId(
+            accountId,
+            mangaDetails.id,
+          );
+        } catch (error) {
+          if (isAxiosError(error) && error.response?.status === 404) {
+            console.log("No existing reading entry found");
+          } else {
+            throw error; // Re-throw other errors
+          }
+        }
+
+        if (!existingReading) {
+          updateOrCreateReading({
+            userId: accountId,
+            mangaId: mangaDetails.id,
+            chapter:
+              oneshot === true
+                ? 1
+                : parseInt(chapterData[0].attributes.chapter),
+            mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
+            timestamp: new Date().toISOString(),
+          });
+          setLibraryEntryExists(true);
+        }
+
+        if (chapterData.length > 0) {
+          if (!existingReading) {
+            updateOrCreateBookmark({
+              userId: accountId,
+              mangaId: mangaDetails.id,
+              mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
+              chapterNumber:
+                oneshot === true
+                  ? 1
+                  : parseInt(chapterData[0].attributes.chapter),
+              chapterId: chapterData[0].id,
+              chapterIndex: Math.trunc(
+                oneshot === true
+                  ? 1
+                  : parseInt(chapterData[0].attributes.chapter),
+              ),
+              continueReading: true,
+            });
+          }
+        } else {
+          console.warn("No chapter data available");
+        }
+      }
+    } catch (error) {
+      console.error("Error handling library addition:", error);
+    }
+  };
+
+  // Helper function to check if an error is an Axios error
+  function isAxiosError(error: unknown): error is AxiosError {
+    return (error as AxiosError).isAxiosError !== undefined;
+  }
   const fetchCoverImages = async () => {
     for (const manga of bookmarks) {
       const fileName = manga.relationships.find((i) => i.type === "cover_art")
@@ -274,27 +361,34 @@ const MangaDetailsDialog = (props: Props) => {
   };
 
   useEffect(() => {
-    if (accountId) {
-      handleFetchingBookmarks();
+    if (openDetailsDialog) {
+      setLibraryEntryExists(false);
+
+      if (accountId) {
+        handleFetchingBookmarks();
+      }
+
+      if (bookmarks && bookmarks.length > 0) {
+        fetchCoverImages();
+      }
+
+      setMangaInfo({
+        name: mangaDetails.attributes.title.en || "",
+        description: mangaDetails.attributes.description.en || "",
+        altTitles: mangaDetails.attributes.altTitles || [],
+        languages: mangaDetails.attributes.availableTranslatedLanguages || [],
+        contentRating: mangaDetails.attributes.contentRating || "",
+        rawLink: mangaDetails.attributes.links?.raw || "",
+        tags: mangaDetails.attributes.tags || [],
+        author:
+          mangaDetails.relationships.find(
+            (element) => element.type === "author",
+          )?.attributes.name || "",
+        status: mangaDetails.attributes.status || "",
+        coverUrl,
+      });
     }
-    if (bookmarks && bookmarks.length > 0) {
-      fetchCoverImages();
-    }
-    setMangaInfo({
-      name: mangaDetails.attributes.title.en || "",
-      description: mangaDetails.attributes.description.en || "",
-      altTitles: mangaDetails.attributes.altTitles || [],
-      languages: mangaDetails.attributes.availableTranslatedLanguages || [],
-      contentRating: mangaDetails.attributes.contentRating || "",
-      rawLink: mangaDetails.attributes.links?.raw || "",
-      tags: mangaDetails.attributes.tags || [],
-      author:
-        mangaDetails.relationships.find((element) => element.type === "author")
-          ?.attributes.name || "",
-      status: mangaDetails.attributes.status || "",
-      coverUrl,
-    });
-  }, [accountId, props]);
+  }, [openDetailsDialog, accountId, mangaDetails]);
 
   return (
     <>
@@ -302,6 +396,14 @@ const MangaDetailsDialog = (props: Props) => {
         id="clicked-manga-dialog"
         open={openDetailsDialog}
         onClose={handleDetailsDialogClose}
+        PaperProps={{
+          sx: {
+            minWidth: "30vw",
+            "@media (max-width: 600px)": {
+              minWidth: "85vw",
+            },
+          },
+        }}
       >
         <DialogTitle className="clicked-manga-dialog-title">
           <Button
@@ -348,34 +450,20 @@ const MangaDetailsDialog = (props: Props) => {
                   }
                 </Typography>
               </div>
-              <Grid
-                container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="center"
-                className="manga-categories-dialog"
-              >
-                {mangaDetails.attributes.tags.map(
-                  (current: MangaTagsInterface) => (
-                    <Grid item>
-                      <Typography
-                        noWrap
-                        className="manga-categories-dialog-text"
-                      >
-                        {current.attributes.name.en}&nbsp;/&nbsp;
-                      </Typography>
-                    </Grid>
-                  ),
-                )}
-              </Grid>
+
               <div className="details-row">
+                <Typography className="manga-details-header-text-author">
+                  Status:&nbsp;
+                </Typography>
                 <Typography className="manga-details-header-text">
                   {mangaDetails.attributes.status}
                 </Typography>
-                <Typography className="manga-details-header-text">
-                  {mangaDetails.attributes.publicationDemographic}
-                </Typography>
               </div>
+              {oneshot && (
+                <Typography className="manga-categories-dialog-text">
+                  Oneshot
+                </Typography>
+              )}
               <div>
                 <MangaPageButtonHeader
                   mangaRaw={mangaInfo.rawLink}
@@ -419,6 +507,10 @@ const MangaDetailsDialog = (props: Props) => {
                   mangaContentRating={mangaInfo.contentRating}
                   mangaAddedAlert={uiState.mangaAddedAlert}
                   handleMangaCategoryClicked={handleMangaCategoryClicked}
+                  handleAddToLibrary={handleAddToLibrary}
+                  libraryEntryExists={libraryEntryExists}
+                  accountId={accountId}
+                  setFolders={setFolders}
                 />
               </div>
             </div>

@@ -46,7 +46,7 @@ type Props = {
   mangaName: string;
   scanlationGroup: string;
   readerMode: number;
-  accountId: number;
+  accountId: number | null;
   order: string;
   selectedLanguage: string;
   chapterIndex: number;
@@ -108,6 +108,10 @@ const PageAndControls = (props: Props) => {
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
     Array(pages.length).fill(false),
   );
+  const [longStripReaderWidth] = useState(
+    window.innerWidth > 900 ? "50%" : "100%",
+  );
+  const [pageHeight] = useState(window.innerWidth > 900 ? "90vh" : "");
   const [open, setOpen] = useState<boolean>(false);
   const [chapterIndexState, setChapterIndexState] =
     useState<number>(chapterIndex);
@@ -202,9 +206,11 @@ const PageAndControls = (props: Props) => {
   };
 
   const handlePreviousPage = () => {
+    console.log("Previous page");
     if (currentPage === 0 || readerMode === 3 || readerMode === 4) {
       handlePreviousChapter();
     } else {
+      console.log(currentPage);
       setCurrentPage(currentPage - 1);
       handleChangePageNumber(currentPage - 1);
     }
@@ -212,6 +218,7 @@ const PageAndControls = (props: Props) => {
   };
 
   const handleNextPage = () => {
+    console.log("Next page");
     if (
       currentPage === pages.length - 1 ||
       readerMode === 3 ||
@@ -219,6 +226,7 @@ const PageAndControls = (props: Props) => {
     ) {
       handleNextChapter();
     } else {
+      console.log(currentPage);
       setCurrentPage(currentPage + 1);
       handleChangePageNumber(currentPage + 1);
     }
@@ -341,12 +349,83 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
+    let localPage = currentPage; // Local variable to track the current page
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "ArrowLeft":
+          if (readerMode === 1 || readerMode === 3) {
+            if (localPage === pages.length - 1 || readerMode === 3) {
+              handleNextChapter();
+              localPage = 0; // Reset localPage for the next chapter
+            } else {
+              localPage += 1;
+              handleChangePageNumber(localPage);
+              setCurrentPage(localPage);
+            }
+          } else if (readerMode === 2 || readerMode === 4) {
+            if (localPage === 0 || readerMode === 4) {
+              handlePreviousChapter();
+              localPage = pages.length - 1; // Set localPage to last page of the previous chapter
+            } else {
+              localPage -= 1;
+              handleChangePageNumber(localPage);
+              setCurrentPage(localPage);
+            }
+          }
+          window.localStorage.setItem("position", window.scrollY.toString());
+          break;
+
+        case "ArrowRight":
+          if (readerMode === 1 || readerMode === 3) {
+            if (localPage === 0 || readerMode === 3) {
+              handlePreviousChapter();
+              localPage = pages.length - 1; // Set localPage to last page of the previous chapter
+            } else {
+              localPage -= 1;
+              handleChangePageNumber(localPage);
+              setCurrentPage(localPage);
+            }
+          } else if (readerMode === 2 || readerMode === 4) {
+            if (localPage === pages.length - 1 || readerMode === 4) {
+              handleNextChapter();
+              localPage = 0; // Reset localPage for the next chapter
+            } else {
+              localPage += 1;
+              handleChangePageNumber(localPage);
+              setCurrentPage(localPage);
+            }
+          }
+          window.localStorage.setItem("position", window.scrollY.toString());
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [
+    currentPage,
+    pages.length,
+    readerMode,
+    handleNextChapter,
+    handlePreviousChapter,
+    handleChangePageNumber,
+  ]);
+
+  useEffect(() => {
     setCurrentPage(startPage);
     setImageBlob({});
     handleLoadImage(hash, pages).catch((error) => {
       throw error;
     });
   }, [hash, pages]);
+
   return (
     <div className="reader-screen-container">
       <List className="reader-feed">
@@ -538,7 +617,15 @@ const PageAndControls = (props: Props) => {
       </Collapse>
       {open === true ? null : (
         <>
-          <div className="page-container">
+          <div
+            className="page-container"
+            style={{
+              width:
+                readerMode === 3 || readerMode === 4
+                  ? longStripReaderWidth
+                  : "",
+            }}
+          >
             {loadingStates[currentPage] ? (
               <div className="loading">
                 <CircularProgress size={25} className="loading-icon" />
@@ -552,7 +639,10 @@ const PageAndControls = (props: Props) => {
                           key={index}
                           className="page"
                           src={URL.createObjectURL(imageBlob[page])}
-                          style={{ display: "block" }}
+                          style={{
+                            display: "block",
+                            width: "100%",
+                          }}
                         />
                       ) : null,
                     )
@@ -561,9 +651,10 @@ const PageAndControls = (props: Props) => {
                         className="page"
                         src={URL.createObjectURL(imageBlob[pages[currentPage]])}
                         alt=""
+                        style={{ height: pageHeight }}
                       />
                     )}
-                <div className="overlay-buttons">
+                <div className="overlay-buttons" style={{}}>
                   <Button
                     className="chapter-page-traversal"
                     onClick={() => {

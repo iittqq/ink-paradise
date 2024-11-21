@@ -30,6 +30,11 @@ type Props = {
   mangaContentRating: string;
   mangaAddedAlert: boolean;
   handleMangaCategoryClicked: (category: MangaTagsInterface) => void;
+  oneshot: boolean;
+  handleAddToLibrary: () => void;
+  libraryEntryExists: boolean;
+  accountId: number | null;
+  setFolders: (folders: MangaFolder[]) => void;
 };
 
 const MangaBanner = (props: Props) => {
@@ -59,6 +64,11 @@ const MangaBanner = (props: Props) => {
     mangaContentRating,
     mangaAddedAlert,
     handleMangaCategoryClicked,
+    oneshot,
+    handleAddToLibrary,
+    libraryEntryExists,
+    accountId,
+    setFolders,
   } = props;
 
   return (
@@ -78,7 +88,7 @@ const MangaBanner = (props: Props) => {
             <Typography
               className="manga-author"
               sx={{
-                fontSize: { xs: 15, sm: 20, lg: 25 },
+                fontSize: { xs: 16, sm: 20, lg: 25 },
               }}
             >
               Author: <span className="manga-details-color-text">{author}</span>
@@ -87,7 +97,7 @@ const MangaBanner = (props: Props) => {
           <Typography
             className="manga-author"
             sx={{
-              fontSize: { xs: 15, sm: 20, lg: 25 },
+              fontSize: { xs: 16, sm: 20, lg: 25 },
             }}
           >
             Content Rating:{" "}
@@ -96,11 +106,21 @@ const MangaBanner = (props: Props) => {
           <Typography
             className="manga-author"
             sx={{
-              fontSize: { xs: 15, sm: 20, lg: 25 },
+              fontSize: { xs: 16, sm: 20, lg: 25 },
             }}
           >
             Status: <span className="manga-details-color-text"> {status}</span>
           </Typography>
+          {oneshot && (
+            <Typography
+              className="manga-details-color-text"
+              sx={{
+                fontSize: { xs: 16, sm: 20, lg: 25 },
+              }}
+            >
+              Oneshot
+            </Typography>
+          )}
           <MangaPageButtonHeader
             mangaRaw={mangaRaw}
             folders={folders}
@@ -121,6 +141,10 @@ const MangaBanner = (props: Props) => {
             mangaContentRating={mangaContentRating}
             mangaAddedAlert={mangaAddedAlert}
             handleMangaCategoryClicked={handleMangaCategoryClicked}
+            handleAddToLibrary={handleAddToLibrary}
+            libraryEntryExists={libraryEntryExists}
+            accountId={accountId}
+            setFolders={setFolders}
           />
         </div>
       </div>

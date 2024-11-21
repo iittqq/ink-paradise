@@ -11,6 +11,23 @@
   width: 100%;
 }
 
+.library-entry-exists-alert {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+  font-family: "Figtree" !important;
+  font-size: 14px !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.alert-container-library {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .centered-content {
   display: flex;
   justify-content: center;
@@ -58,6 +75,7 @@
   flex-direction: column;
   width: 100%;
   max-height: 90vh;
+  min-height: 80vh;
   -ms-overflow-style: none;
   scrollbar-width: none;
   padding-top: 10px;
@@ -88,7 +106,6 @@
   min-height: 50vh;
   overflow: scroll;
   width: 100%;
-
   scrollbar-width: none;
 }
 

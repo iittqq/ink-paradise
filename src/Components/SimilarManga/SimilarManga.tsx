@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
 import { useEffect, useState } from "react";
 
-type Props = { manga: Manga[]; accountId: number; contentFilter: number };
+type Props = {
+  manga: Manga[];
+  accountId: number | null;
+  contentFilter: number;
+};
 const SimilarManga = (props: Props) => {
   const { manga, accountId, contentFilter } = props;
   const navigate = useNavigate();
@@ -27,9 +31,7 @@ const SimilarManga = (props: Props) => {
 
   const handleClick = (id: string) => {
     handleDetailsDialogClose();
-    navigate(`/manga/${id}`, {
-      state: { accountId: accountId === null ? null : accountId },
-    });
+    navigate(`/manga/${id}`, {});
   };
 
   useEffect(() => {

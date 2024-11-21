@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
-import Header from "../../Components/Header/Header";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import SimilarManga from "../../Components/SimilarManga/SimilarManga";
+import { Reading } from "../../interfaces/ReadingInterfaces";
+import { AxiosError } from "axios";
 import {
   Manga,
   MangaTagsInterface,
@@ -26,13 +27,23 @@ import {
 import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces";
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-
+import {
+  updateOrCreateReading,
+  getReadingByUserIdAndMangaId,
+} from "../../api/Reading";
+import { updateOrCreateBookmark } from "../../api/Bookmarks";
 import "./IndividualManga.css";
 
-const IndividualManga = () => {
+interface IndividualMangaProps {
+  accountId: number | null;
+  contentFilter: number | null;
+}
+const IndividualManga: React.FC<IndividualMangaProps> = ({
+  accountId,
+  contentFilter,
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { state } = useLocation();
 
   // Consolidate related states
   const [mangaInfo, setMangaInfo] = useState<MangaInfo>({
@@ -48,6 +59,7 @@ const IndividualManga = () => {
     coverUrl: "",
   });
 
+  const [oneshot, setOneshot] = useState<boolean>(false);
   const [mangaFeed, setMangaFeed] = useState<MangaFeedScanlationGroup[]>([]);
   const [filteredMangaFeed, setFilteredMangaFeed] = useState<
     MangaFeedScanlationGroup[] | undefined
@@ -65,6 +77,8 @@ const IndividualManga = () => {
     ScanlationGroup | undefined
   >();
 
+  const [libraryEntryExists, setLibraryEntryExists] = useState(false);
+
   // State for UI feedback
   const [uiState, setUIState] = useState({
     open: false,
@@ -74,7 +88,96 @@ const IndividualManga = () => {
     mangaAddedAlert: false,
   });
 
-  // Consolidate repetitive state update logic for manga information
+  const checkLibraryEntry = useCallback(async () => {
+    console.log(accountId);
+    if (accountId && id) {
+      try {
+        const existingReading = await getReadingByUserIdAndMangaId(
+          accountId,
+          id,
+        );
+        if (existingReading) {
+          setLibraryEntryExists(true);
+        } else {
+          setLibraryEntryExists(false);
+        }
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 404) {
+          setLibraryEntryExists(false); // No progress found
+        } else {
+          console.error("Error checking library entry:", error);
+        }
+      }
+    }
+  }, [accountId, id]);
+
+  useEffect(() => {
+    checkLibraryEntry();
+  }, [checkLibraryEntry]);
+
+  const handleAddToLibrary = async () => {
+    if (accountId !== null) {
+      try {
+        // Check if the reading entry already exists
+        let existingReading: Reading | null = null;
+
+        try {
+          existingReading = await getReadingByUserIdAndMangaId(
+            accountId,
+            id ?? "",
+          );
+        } catch (error) {
+          if (isAxiosError(error) && error.response?.status === 404) {
+            console.log("No existing reading entry found");
+          } else {
+            throw error; // Re-throw other errors
+          }
+        }
+        if (!existingReading) {
+          // If reading does not exist, create it
+          updateOrCreateReading({
+            userId: accountId,
+            mangaId: id ?? "",
+            chapter:
+              oneshot === true ? 1 : parseInt(mangaFeed[0].attributes.chapter),
+            mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
+            timestamp: new Date().toISOString(),
+          });
+          setLibraryEntryExists(true);
+        }
+        if (mangaFeed.length > 0) {
+          if (!existingReading) {
+            // If bookmark does not exist, create it
+            updateOrCreateBookmark({
+              userId: accountId,
+              mangaId: id ?? "",
+              mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
+              chapterNumber:
+                oneshot === true
+                  ? 1
+                  : parseInt(mangaFeed[0].attributes.chapter),
+              chapterId: mangaFeed[0].id,
+              chapterIndex: Math.trunc(
+                oneshot === true
+                  ? 1
+                  : parseInt(mangaFeed[0].attributes.chapter),
+              ),
+              continueReading: true,
+            });
+          }
+        } else {
+          console.warn("No chapter data available");
+        }
+      } catch (error) {
+        console.error("Error while handling library entry:", error);
+      }
+    }
+  };
+
+  // Helper function to check if an error is an Axios error
+  function isAxiosError(error: unknown): error is AxiosError {
+    return (error as AxiosError).isAxiosError !== undefined;
+  } // Consolidate repetitive state update logic for manga information
   const fetchAndSetMangaData = useCallback(async () => {
     if (!id) return;
 
@@ -86,6 +189,14 @@ const IndividualManga = () => {
     const coverUrl = coverArt
       ? URL.createObjectURL(await fetchMangaCoverBackend(id, coverArt))
       : "";
+    setOneshot(
+      mangaData.attributes.tags.some(
+        (current: MangaTagsInterface) =>
+          current.attributes.name.en === "Oneshot",
+      )
+        ? true
+        : false,
+    );
 
     setMangaInfo({
       name: mangaData.attributes.title.en || "",
@@ -104,13 +215,11 @@ const IndividualManga = () => {
   }, [id]);
 
   const fetchFolders = useCallback(async () => {
-    if (state.accountId) {
+    if (accountId) {
       const response = await getMangaFolders();
-      setFolders(
-        response.filter((folder) => folder.userId === state.accountId),
-      );
+      setFolders(response.filter((folder) => folder.userId === accountId));
     }
-  }, [state.accountId]);
+  }, [accountId]);
 
   const fetchFeedData = useCallback(async () => {
     if (id) {
@@ -141,18 +250,13 @@ const IndividualManga = () => {
       if (tags.length === 0) return; // Exit if tags are empty
 
       try {
-        const data = await fetchSimilarManga(
-          10,
-          0,
-          tags,
-          state.contentFilter ?? 3,
-        );
+        const data = await fetchSimilarManga(10, 0, tags, contentFilter ?? 3);
         setSimilarManga(data);
       } catch (error) {
         console.error("Error fetching similar manga:", error);
       }
     },
-    [state.contentFilter],
+    [contentFilter],
   );
 
   // useEffect for initial fetch on mount
@@ -241,7 +345,7 @@ const IndividualManga = () => {
         state: {
           listType: category.attributes.name.en,
           manga: data,
-          accountId: state.accountId,
+          accountId: accountId,
         },
       }),
     );
@@ -249,11 +353,6 @@ const IndividualManga = () => {
 
   return (
     <div className="individual-page-container">
-      <Header
-        accountId={state.accountId ?? null}
-        contentFilter={state.contentFilter ?? 3}
-      />
-
       <MangaBanner
         coverUrl={mangaInfo.coverUrl}
         mangaDescription={mangaInfo.description}
@@ -294,8 +393,12 @@ const IndividualManga = () => {
         mangaContentRating={mangaInfo.contentRating}
         mangaAddedAlert={uiState.mangaAddedAlert}
         handleMangaCategoryClicked={handleMangaCategoryClicked}
+        oneshot={oneshot}
+        handleAddToLibrary={handleAddToLibrary}
+        libraryEntryExists={libraryEntryExists}
+        accountId={accountId ?? null}
+        setFolders={setFolders}
       />
-
       <div className="controls-chapters-section">
         <Typography fontSize={20} fontFamily="Figtree" align="center">
           Filters
@@ -313,9 +416,15 @@ const IndividualManga = () => {
           selectedScanlationGroup={selectedScanlationGroup}
         />
         <div className="bottom-desktop-container">
-          <Typography fontSize={20} fontFamily="Figtree" align="center">
-            Chapters
-          </Typography>
+          {mangaFeed.length > 0 ? (
+            <Typography fontSize={20} fontFamily="Figtree" align="center">
+              Chapters
+            </Typography>
+          ) : (
+            <Typography fontSize={20} fontFamily="Figtree" align="center">
+              No Chapters...
+            </Typography>
+          )}
           <div className="manga-chapter-list">
             {mangaFeed.length > 0 && (
               <>
@@ -330,9 +439,10 @@ const IndividualManga = () => {
                   mangaId={id ?? ""}
                   insideReader={false}
                   coverUrl={decodeURIComponent(mangaInfo.coverUrl)}
-                  accountId={state.accountId ?? null}
-                  contentFilter={state.contentFilter}
+                  accountId={accountId ?? null}
+                  contentFilter={contentFilter === null ? 3 : contentFilter}
                   sortOrder={currentOrder}
+                  oneshot={oneshot}
                 />
               </>
             )}
@@ -347,8 +457,8 @@ const IndividualManga = () => {
             <div className="similar-manga-section">
               <SimilarManga
                 manga={similarManga}
-                accountId={state.accountId ?? null}
-                contentFilter={state.contentFilter}
+                accountId={accountId === null ? null : accountId}
+                contentFilter={contentFilter === null ? 3 : contentFilter}
               />
             </div>
           </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Grid, Typography, Button } from "@mui/material";
-import Header from "../../Components/Header/Header";
 import MangaClickable from "../../Components/MangaClickable/MangaClickable";
 import { useLocation } from "react-router-dom";
 import "./MangaCoverList.css";
@@ -83,12 +82,6 @@ const MangaCoverList = () => {
 
   return (
     <>
-      <div className="header">
-        <Header
-          accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={state.contentFilter}
-        />
-      </div>
       <Typography className="title">{state.listType}</Typography>
       <div
         style={{

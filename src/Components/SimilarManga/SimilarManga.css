@@ -48,11 +48,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100% !important;
   padding-top: 10px;
-  @media (width < 600px) {
-    width: 100% !important;
-  }
 }
 .similar-manga-grid-item {
   display: flex;
@@ -62,16 +58,14 @@
   border-radius: 15px;
   padding-bottom: 10px;
   padding-top: 10px;
-  @media (width > 1500px) {
-    min-width: 20% !important;
-    max-width: 20% !important;
-  }
   min-width: 30%;
   max-width: 30%;
-  @media screen and (min-width: 600px) and (max-width: 900px) {
-    min-width: 46% !important;
-    max-width: 46% !important;
+
+  @media (width > 1500px) {
+    min-width: 18% !important;
+    max-width: 18% !important;
   }
+
   @media (width < 600px) {
     max-width: 33% !important;
     min-width: 33% !important;

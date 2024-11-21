@@ -36,6 +36,64 @@
   }
 }
 
+.create-button {
+  margin-top: 10px !important;
+  color: #ffffff !important;
+  text-transform: none !important;
+  background-color: #222222 !important;
+  font-family: "Figtree" !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+#create-folder-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 40vw;
+    }
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.folder-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px;
+  border-radius: 25px !important;
+  text-align: center;
+}
+
+.folder-header-button-create {
+  color: unset !important;
+  max-width: 30px !important;
+  min-width: 30px !important;
+  position: absolute !important;
+  right: 20px;
+  height: 30px;
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
 .content-rating-container {
   display: flex;
   flex-direction: row;

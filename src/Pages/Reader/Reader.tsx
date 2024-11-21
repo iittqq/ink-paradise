@@ -2,10 +2,9 @@ import { Typography, Button, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Header from "../../Components/Header/Header";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
 import "./Reader.css";
-
+import { Account } from "../../interfaces/AccountInterfaces";
 import { updateOrCreateReading } from "../../api/Reading";
 import { fetchChapterData } from "../../api/MangaDexApi";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
@@ -19,7 +18,10 @@ import {
 } from "../../api/AccountDetails";
 import { updateOrCreateBookmark } from "../../api/Bookmarks";
 
-const Reader = () => {
+interface ReaderProps {
+  account: Account | null;
+}
+const Reader: React.FC<ReaderProps> = ({ account }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);
@@ -40,26 +42,22 @@ const Reader = () => {
   };
 
   function handleClickTitle() {
-    navigate(`/manga/${state.mangaId}`, {
-      state: { accountId: state.accountId === null ? null : state.accountId },
-    });
+    navigate(`/manga/${state.mangaId}`, {});
   }
 
   const handleEditAccountInfo = () => {
-    if (state.accountId !== null) {
-      fetchAccountDetails(parseInt(state.accountId)).then(
-        (data: AccountDetails) => {
-          updateAccountDetails(parseInt(state.accountId), {
-            accountId: data.accountId,
-            bio: data.bio,
-            profilePicture: data.profilePicture,
-            headerPicture: data.headerPicture,
-            contentFilter: data.contentFilter,
-            readerMode: readerInteger,
-            theme: data.theme,
-          });
-        },
-      );
+    if (account !== null) {
+      fetchAccountDetails(account.id).then((data: AccountDetails) => {
+        updateAccountDetails(account.id, {
+          accountId: data.accountId,
+          bio: data.bio,
+          profilePicture: data.profilePicture,
+          headerPicture: data.headerPicture,
+          contentFilter: data.contentFilter,
+          readerMode: readerInteger,
+          theme: data.theme,
+        });
+      });
     }
     window.localStorage.setItem("readerMode", readerInteger.toString());
     setOpenSettings(false);
@@ -92,9 +90,9 @@ const Reader = () => {
 
     const tempBookmarks: number[] = [];
 
-    if (state.accountId !== null) {
+    if (account !== null) {
       updateOrCreateReading({
-        userId: parseInt(state.accountId),
+        userId: account.id,
         mangaId: state.mangaId,
         chapter: state.chapterNumber,
         mangaName: state.mangaName.replace(/[^a-zA-Z]/g, " "),
@@ -102,7 +100,7 @@ const Reader = () => {
       });
 
       updateOrCreateBookmark({
-        userId: parseInt(state.accountId),
+        userId: account.id,
         mangaId: state.mangaId,
         mangaName: state.mangaName.replace(/[^a-zA-Z]/g, " "),
         chapterNumber: state.chapterNumber,
@@ -142,14 +140,6 @@ const Reader = () => {
 
   return (
     <div className="reader-page">
-      <div className="header">
-        <Header
-          accountId={state.accountId === undefined ? null : state.accountId}
-          contentFilter={
-            state.contentFilter === undefined ? 3 : state.contentFilter
-          }
-        />
-      </div>
       <div className="active-page-area">
         <div className="current-manga-details">
           <Button
@@ -176,7 +166,7 @@ const Reader = () => {
           mangaName={state.mangaName}
           scanlationGroup={state.scanlationGroup}
           readerMode={readerInteger}
-          accountId={state.accountId === undefined ? null : state.accountId}
+          accountId={account === null ? null : account.id}
           order={state.sortOrder}
           selectedLanguage={selectedLanguage}
           chapterIndex={Math.trunc(state.chapterNumber)}

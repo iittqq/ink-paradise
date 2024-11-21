@@ -11,11 +11,12 @@ type Props = {
   manga: Manga[];
   accountId: number | null;
   contentFilter: number;
+  numbered: boolean;
 };
 
 const TrendingMangaCarousel = (props: Props) => {
   const scrollRef = useHorizontalScroll();
-  const { manga, accountId, contentFilter } = props;
+  const { manga, accountId, contentFilter, numbered } = props;
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
@@ -23,12 +24,7 @@ const TrendingMangaCarousel = (props: Props) => {
   const navigate = useNavigate();
 
   const handleClick = (id: string) => {
-    navigate(`/manga/${id}`, {
-      state: {
-        accountId: accountId === null ? null : accountId,
-        contentFilter: contentFilter,
-      },
-    });
+    navigate(`/manga/${id}`);
   };
 
   const handleDetailsDialogClose = () => {
@@ -95,9 +91,11 @@ const TrendingMangaCarousel = (props: Props) => {
                   ? Object.values(current.attributes.title)[0]
                   : current.attributes.title.en}
               </Typography>
-              <Typography className="popular-carousel-grid-item-rank">
-                {index + 1}
-              </Typography>
+              {numbered === true ? (
+                <Typography className="popular-carousel-grid-item-rank">
+                  {index + 1}
+                </Typography>
+              ) : null}
             </div>
             <Button
               disableRipple

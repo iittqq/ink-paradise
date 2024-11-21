@@ -37,12 +37,7 @@ const MangaCategoriesHomePage = (props: Props) => {
   const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
   const handleClick = (id: string) => {
-    navigate(`/manga/${id}`, {
-      state: {
-        accountId: accountId === null ? null : accountId,
-        contentFilter: contentFilter,
-      },
-    });
+    navigate(`/manga/${id}`);
   };
 
   const handleClickedShowMore = (
@@ -54,9 +49,7 @@ const MangaCategoriesHomePage = (props: Props) => {
       state: {
         listType: title,
         manga: manga,
-        accountId: accountId === null ? null : accountId,
         tagId: tagId,
-        contentFilter: contentFilter,
       },
     });
   };
@@ -124,6 +117,68 @@ const MangaCategoriesHomePage = (props: Props) => {
         />
       )}
       <div className="category-stack">
+        <Typography className="category-stack-name">Recently Added</Typography>
+        <Grid
+          container
+          spacing={1}
+          className="home-category-manga-grid-container"
+        >
+          {recentlyAddedManga.map((current) => (
+            <>
+              <Grid item className="home-category-manga-grid-item">
+                <Button
+                  className="home-category-manga-button"
+                  onClick={() => {
+                    handleMangaClicked(
+                      current,
+                      coverUrlsRecentlyAdded[current.id],
+                    );
+                  }}
+                >
+                  <Card
+                    sx={{
+                      minWidth: "80px",
+                      height: "110px",
+                    }}
+                  >
+                    <CardMedia
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      image={coverUrlsRecentlyAdded[current.id]}
+                    />
+                  </Card>
+                  <div className="home-category-manga-text">
+                    <Typography className="home-category-manga-name">
+                      {current.attributes.title.en === undefined
+                        ? Object.values(current.attributes.title)[0]
+                        : current.attributes.title.en}
+                    </Typography>
+                    <Typography className="home-category-manga-details">
+                      {current.attributes.status}
+                    </Typography>
+                    <Typography className="home-category-manga-details">
+                      {current.attributes.contentRating}
+                    </Typography>
+                  </div>
+                </Button>
+              </Grid>
+            </>
+          ))}
+        </Grid>
+        <Button
+          className="more-button"
+          onClick={() => {
+            fetchRecentlyAdded(100, 0, contentFilter).then((data: Manga[]) => {
+              handleClickedShowMore("Recently Added", data);
+            });
+          }}
+        >
+          Show More
+        </Button>
+      </div>
+      <div className="category-stack">
         <Typography className="category-stack-name">
           Recently Updated
         </Typography>
@@ -184,68 +239,6 @@ const MangaCategoriesHomePage = (props: Props) => {
                 handleClickedShowMore("Recently Updated", data);
               },
             );
-          }}
-        >
-          Show More
-        </Button>
-      </div>
-      <div className="category-stack">
-        <Typography className="category-stack-name"> Recently Added</Typography>
-        <Grid
-          container
-          spacing={1}
-          className="home-category-manga-grid-container"
-        >
-          {recentlyAddedManga.map((current) => (
-            <>
-              <Grid item className="home-category-manga-grid-item">
-                <Button
-                  className="home-category-manga-button"
-                  onClick={() => {
-                    handleMangaClicked(
-                      current,
-                      coverUrlsRecentlyAdded[current.id],
-                    );
-                  }}
-                >
-                  <Card
-                    sx={{
-                      minWidth: "80px",
-                      height: "110px",
-                    }}
-                  >
-                    <CardMedia
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      image={coverUrlsRecentlyAdded[current.id]}
-                    />
-                  </Card>
-                  <div className="home-category-manga-text">
-                    <Typography className="home-category-manga-name">
-                      {current.attributes.title.en === undefined
-                        ? Object.values(current.attributes.title)[0]
-                        : current.attributes.title.en}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.status}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.contentRating}
-                    </Typography>
-                  </div>
-                </Button>
-              </Grid>
-            </>
-          ))}
-        </Grid>
-        <Button
-          className="more-button"
-          onClick={() => {
-            fetchRecentlyAdded(100, 0, contentFilter).then((data: Manga[]) => {
-              handleClickedShowMore("Recently Added", data);
-            });
           }}
         >
           Show More

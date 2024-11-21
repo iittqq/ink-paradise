@@ -126,7 +126,7 @@ input[type="text"]:focus {
 #create-folder-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
-    border-radius: 25px !important;
+    border-radius: 10px !important;
     min-width: 80vw;
     @media screen and (min-width: 600px) {
       min-width: 40vw;

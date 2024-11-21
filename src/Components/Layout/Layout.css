@@ -1,0 +1,23 @@
+.main-content {
+  transition: margin-top 0.3s ease; /* Smoothly adjust margin on header visibility change */
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  min-height: 50px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.header-container.hidden {
+  transform: translateY(-100%);
+}
+
+.header-container.visible {
+  transform: translateY(0);
+}
