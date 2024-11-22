@@ -164,6 +164,10 @@ const globalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.body};
   }
 
+  .carousel-button{
+    background-color: ${({ theme }) => theme.body};
+    color: ${({ theme }) => theme.text};
+  }
 
   /* Add other global styles as needed */
 `;

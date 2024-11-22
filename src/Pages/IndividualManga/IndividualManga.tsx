@@ -38,10 +38,10 @@ interface IndividualMangaProps {
   accountId: number | null;
   contentFilter: number | null;
 }
-const IndividualManga: React.FC<IndividualMangaProps> = ({
+const IndividualManga = ({
   accountId,
   contentFilter,
-}) => {
+}: IndividualMangaProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
 

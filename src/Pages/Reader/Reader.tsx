@@ -21,7 +21,7 @@ import { updateOrCreateBookmark } from "../../api/Bookmarks";
 interface ReaderProps {
   account: Account | null;
 }
-const Reader: React.FC<ReaderProps> = ({ account }) => {
+const Reader = ({ account }: ReaderProps) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);

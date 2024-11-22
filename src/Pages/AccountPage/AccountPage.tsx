@@ -49,7 +49,7 @@ interface AccountPageProps {
   account: Account | null;
 }
 
-const AccountPage: React.FC<AccountPageProps> = ({ account }) => {
+const AccountPage = ({ account }: AccountPageProps) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [newFolderName, setNewFolderName] = useState<string>("");

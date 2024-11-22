@@ -22,7 +22,7 @@ interface HomeProps {
   accountDetails: AccountDetails | null;
 }
 
-const Home: React.FC<HomeProps> = ({ account, accountDetails }) => {
+const Home = ({ account, accountDetails }: HomeProps) => {
   const [popularManga, setPopularManga] = useState<Manga[]>([]);
   const [recentlyUpdatedManga, setRecentlyUpdatedManga] = useState<Manga[]>([]);
   const [popularNewManga, setPopularNewManga] = useState<Manga[]>([]);

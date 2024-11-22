@@ -22,7 +22,7 @@ interface LibraryProps {
   account: Account | null;
   accountDetails: AccountDetails | null;
 }
-const Library: React.FC<LibraryProps> = ({ account, accountDetails }) => {
+const Library = ({ account, accountDetails }: LibraryProps) => {
   const [library, setLibrary] = useState<Manga[]>([]);
   const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
