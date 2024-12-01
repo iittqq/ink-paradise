@@ -11,8 +11,15 @@ import {
   fetchRecentlyAdded,
 } from "../../api/MangaDexApi";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import { Account } from "../../interfaces/AccountInterfaces";
 
-const MangaCoverList = () => {
+interface MangaCoverListProps {
+  account: Account | null;
+  accountDetails: AccountDetails | null;
+}
+
+const MangaCoverList = ({ accountDetails, account }: MangaCoverListProps) => {
   const { state } = useLocation();
   const [mangaDetails, setMangaDetails] = useState<Manga[]>(state.manga);
   const [coverUrls, setCoverUrls] = useState<{ [key: string]: string }>({});
@@ -44,26 +51,33 @@ const MangaCoverList = () => {
 
   const handleShowMore = () => {
     if (state.tagId !== undefined) {
-      fetchSimilarManga(100, offset, [state.tagId], state.contentFilter).then(
-        (response: Manga[]) => {
-          setMangaDetails([...mangaDetails, ...response]);
-          fetchCoverImages(response);
-        },
-      );
+      fetchSimilarManga(
+        100,
+        offset,
+        [state.tagId],
+        accountDetails === null ? 3 : accountDetails.contentFilter,
+      ).then((response: Manga[]) => {
+        setMangaDetails([...mangaDetails, ...response]);
+        fetchCoverImages(response);
+      });
     } else if (state.listType === "Recently Updated") {
-      fetchRecentlyUpdated(100, offset, state.contentFilter).then(
-        (response: Manga[]) => {
-          setMangaDetails([...mangaDetails, ...response]);
-          fetchCoverImages(response);
-        },
-      );
+      fetchRecentlyUpdated(
+        100,
+        offset,
+        accountDetails === null ? 3 : accountDetails.contentFilter,
+      ).then((response: Manga[]) => {
+        setMangaDetails([...mangaDetails, ...response]);
+        fetchCoverImages(response);
+      });
     } else if (state.listType === "Recently Added") {
-      fetchRecentlyAdded(100, offset, state.contentFilter).then(
-        (response: Manga[]) => {
-          setMangaDetails([...mangaDetails, ...response]);
-          fetchCoverImages(response);
-        },
-      );
+      fetchRecentlyAdded(
+        100,
+        offset,
+        accountDetails === null ? 3 : accountDetails.contentFilter,
+      ).then((response: Manga[]) => {
+        setMangaDetails([...mangaDetails, ...response]);
+        fetchCoverImages(response);
+      });
     }
     setOffset(offset + 100);
   };
@@ -110,9 +124,7 @@ const MangaCoverList = () => {
                     : element.attributes.title.en
                 }
                 coverUrl={coverUrls[element.id]}
-                accountId={
-                  state.accountId === undefined ? null : state.accountId
-                }
+                accountId={account === null ? null : account.id}
                 contentFilter={state.contentFilter}
               />
             </Grid>

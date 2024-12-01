@@ -95,6 +95,7 @@
   -ms-overflow-style: none;
   word-break: break-word;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .manga-details-description-text {
@@ -155,10 +156,11 @@
 }
 
 .manga-dialog-bookmarks {
-  padding-bottom: 10px;
   width: 100% !important;
-  align-self: center;
   margin: 0px !important;
+  overflow: scroll;
+  padding-bottom: 2px;
+  scrollbar-width: none;
 }
 
 .manga-dialog-continue-button {

@@ -19,6 +19,7 @@ import { getUserDetails } from "./api/Account";
 import { fetchAccountDetails } from "./api/AccountDetails";
 import { AccountDetails } from "./interfaces/AccountDetailsInterfaces";
 import { Account } from "./interfaces/AccountInterfaces";
+import { refreshTokenFunction, isTokenExpired } from "./api/Account";
 
 function App() {
   const [account, setAccount] = useState<Account | null>(null);
@@ -27,18 +28,57 @@ function App() {
   );
   const [loading, setLoading] = useState<boolean>(true);
 
+  const validateTokens = async () => {
+    let accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!accessToken || isTokenExpired(accessToken)) {
+      console.error(
+        "Access token is expired or missing. Attempting to refresh.",
+      );
+
+      if (refreshToken) {
+        try {
+          accessToken = await refreshTokenFunction(refreshToken);
+          localStorage.setItem("accessToken", accessToken);
+        } catch (error) {
+          console.error("Refresh token failed.");
+          return null;
+        }
+      } else {
+        console.error("No refresh token found.");
+        return null;
+      }
+    }
+
+    return accessToken;
+  };
+
   const fetchAccount = async () => {
     try {
+      setLoading(true);
+
+      const accessToken = await validateTokens();
+      if (!accessToken) {
+        setAccount(null);
+        setAccountDetails(null);
+        return;
+      }
+
       const account = await getUserDetails();
-      console.log(account);
       if (account) {
         setAccount(account);
 
         const accountDetails = await fetchAccountDetails(account.id);
         setAccountDetails(accountDetails);
+      } else {
+        setAccount(null);
+        setAccountDetails(null);
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
+      setAccount(null);
+      setAccountDetails(null);
     } finally {
       setLoading(false);
     }
@@ -91,7 +131,15 @@ function App() {
               }
             />
             <Route path="/reset/password/:email" element={<ResetPassword />} />
-            <Route path="/mangaCoverList" element={<MangaCoverList />} />
+            <Route
+              path="/mangaCoverList"
+              element={
+                <MangaCoverList
+                  account={account}
+                  accountDetails={accountDetails}
+                />
+              }
+            />
             <Route path="/reader" element={<Reader account={account} />} />
             <Route
               path="/library"
@@ -101,9 +149,14 @@ function App() {
             />
             <Route
               path="/account"
-              element={<AccountPage account={account} />}
+              element={
+                <AccountPage account={account} fetchAccount={fetchAccount} />
+              }
             />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={<Login fetchAccount={fetchAccount} />}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>

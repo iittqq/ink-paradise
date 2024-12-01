@@ -14,7 +14,6 @@
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
   height: 30px;
-  min-width: 20px !important;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
@@ -57,34 +56,15 @@
 .controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-
-  @media (width >= 900px) {
-    justify-content: center;
-  }
-}
-
-.list-container {
-  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  border-radius: 25px;
-  padding: 8px 10px 8px 10px !important;
-  @media (width >= 900px) {
-    margin: 0 10px 0 10px !important;
-  }
+  gap: 10px;
 }
 
 .list-button {
-  width: 150px;
   justify-content: center !important;
   align-items: center !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  border-radius: 4px !important;
+  height: 30px;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
@@ -101,4 +81,37 @@
 
 .language-text {
   font-family: "Figtree", sans-serif !important;
+}
+
+.controls-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px;
+    color: #ffffff !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 35vw;
+    }
+  }
+}
+
+.controls-dialog-option-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.controls-dialog-title {
+  text-align: center;
+}
+
+.controls-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px !important;
+  border-radius: 25px !important;
+  text-align: center;
 }

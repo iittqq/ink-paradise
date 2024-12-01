@@ -9,11 +9,7 @@ interface LayoutProps {
   accountDetails: AccountDetails | null;
 }
 
-const Layout: React.FC<LayoutProps> = ({
-  children,
-  account,
-  accountDetails,
-}) => {
+const Layout = ({ children, account, accountDetails }: LayoutProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -36,19 +32,30 @@ const Layout: React.FC<LayoutProps> = ({
 
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
 
-    // Determine the total distance scrolled since visibility changed
+    if (currentScrollY === 0) {
+      setIsVisible(true);
+      return;
+    }
+
     const scrolledDistance = Math.abs(currentScrollY - lastScrollY);
 
-    // Show or hide header based on the total scroll distance
-    if (scrolledDistance > 50) {
-      // Change 50 to any threshold you want
+    const isAtBottom = currentScrollY + windowHeight >= documentHeight - 10;
+
+    if (isAtBottom) {
+      setIsVisible(false); // Force hiding the header when at the bottom
+      return;
+    }
+
+    if (scrolledDistance > 15) {
       if (currentScrollY < lastScrollY) {
-        setIsVisible(true); // Scrolling up
+        setIsVisible(true);
       } else if (currentScrollY > lastScrollY) {
-        setIsVisible(false); // Scrolling down
+        setIsVisible(false);
       }
-      setLastScrollY(currentScrollY); // Update the last known position
+      setLastScrollY(currentScrollY);
     }
   };
 

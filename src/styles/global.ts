@@ -169,6 +169,18 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   }
 
+  .folder-header-button, .library-header-button{
+    background-color: ${({ theme }) => theme.elevatedSection};
+  }
+
+  .controls-icon {
+    color: ${({ theme }) => theme.elevatedSection};
+  }
+
+  .library-divider{
+    border: 1px solid ${({ theme }) => theme.elevatedSection};
+  }
+
   /* Add other global styles as needed */
 `;
 export default withTheme(globalStyle);

@@ -1,7 +1,6 @@
 .library-entries-container {
-  max-height: calc(var(--vh, 1vh) * 94);
-  overflow: scroll;
-  scrollbar-width: none;
+  position: relative;
+  padding-bottom: 20px;
 }
 
 .manga-entry-overlay-button {

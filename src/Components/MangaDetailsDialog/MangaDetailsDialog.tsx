@@ -427,12 +427,14 @@ const MangaDetailsDialog = (props: Props) => {
                 maxWidth: "110px",
                 minWidth: "110px",
                 height: "160px",
+                borderRadius: "4px !important",
               }}
             >
               <CardMedia
                 sx={{
                   width: "100%",
                   height: "160px",
+                  borderRadius: "4px !important",
                 }}
                 image={coverUrl}
               />
@@ -513,15 +515,55 @@ const MangaDetailsDialog = (props: Props) => {
                   setFolders={setFolders}
                 />
               </div>
+              {accountId !== null && bookmarks.length > 0 ? (
+                loading === true ? (
+                  <div className="loading-indicator-dialog">
+                    <CircularProgress size={25} className="loading-icon" />
+                  </div>
+                ) : (
+                  <>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      spacing={1}
+                      className="manga-dialog-bookmarks"
+                    >
+                      {bookmarks.map((bookmark) => {
+                        if (mangaDetails.id === bookmark.id) {
+                          const buttonIcon =
+                            bookmark.bookmarkContinueReading ? (
+                              <BookmarkIcon />
+                            ) : (
+                              <>
+                                <BookmarksIcon /> {bookmark.chapterNumber} :{" "}
+                                {bookmark.bookmarkPageNumber}
+                              </>
+                            );
+
+                          return (
+                            <Grid item key={bookmark.id}>
+                              <Button
+                                className="manga-dialog-continue-button"
+                                onClick={() => {
+                                  handleBookmarkClick(bookmark);
+                                }}
+                              >
+                                {buttonIcon}
+                              </Button>
+                            </Grid>
+                          );
+                        }
+                        return null;
+                      })}
+                    </Grid>
+                  </>
+                )
+              ) : null}
             </div>
           </div>
-          <div
-            className="manga-details-description"
-            style={{
-              marginBottom:
-                accountId !== null && bookmarks.length > 0 ? "0px" : "10px",
-            }}
-          >
+          <div className="manga-details-description">
             <Typography className="manga-description-header-text">
               Description:
             </Typography>
@@ -529,54 +571,6 @@ const MangaDetailsDialog = (props: Props) => {
               {mangaDetails.attributes.description.en}
             </Typography>
           </div>
-          {accountId !== null && bookmarks.length > 0 ? (
-            loading === true ? (
-              <div className="loading-indicator-dialog">
-                <CircularProgress size={25} className="loading-icon" />
-              </div>
-            ) : (
-              <>
-                <Typography className="manga-dialog-bookmarks-header">
-                  Bookmarks
-                </Typography>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={1}
-                  className="manga-dialog-bookmarks"
-                >
-                  {bookmarks.map((bookmark) => {
-                    if (mangaDetails.id === bookmark.id) {
-                      const buttonIcon = bookmark.bookmarkContinueReading ? (
-                        <BookmarkIcon />
-                      ) : (
-                        <>
-                          <BookmarksIcon /> {bookmark.chapterNumber} :{" "}
-                          {bookmark.bookmarkPageNumber}
-                        </>
-                      );
-
-                      return (
-                        <Grid item key={bookmark.id}>
-                          <Button
-                            className="manga-dialog-continue-button"
-                            onClick={() => {
-                              handleBookmarkClick(bookmark);
-                            }}
-                          >
-                            {buttonIcon}
-                          </Button>
-                        </Grid>
-                      );
-                    }
-                    return null;
-                  })}
-                </Grid>
-              </>
-            )
-          ) : null}
           <Dialog
             open={dialogOpen}
             onClose={handleDialogClose}

@@ -43,44 +43,40 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              <SocialIcon network="discord" />
+              <SocialIcon network="discord" style={{ height: 30, width: 30 }} />
             </Button>
-          </Grid>{" "}
+          </Grid>
           <Grid item>
-            {" "}
             <Button
               onClick={() => {
                 window.location.href = "https://www.reddit.com/r/inkparadise/";
               }}
               className="info-button"
             >
-              <SocialIcon network="reddit" />{" "}
+              <SocialIcon network="reddit" style={{ height: 30, width: 30 }} />{" "}
             </Button>
-          </Grid>{" "}
+          </Grid>
           <Grid item>
-            {" "}
             <Button
               onClick={() => {
                 window.location.href = "https://x.com/iittqqq";
               }}
               className="info-button"
             >
-              <SocialIcon network="twitter" />
+              <SocialIcon network="twitter" style={{ height: 30, width: 30 }} />
             </Button>
-          </Grid>{" "}
+          </Grid>
           <Grid item>
-            {" "}
             <Button
               onClick={() => {
                 window.location.href = "https://www.patreon.com/inkparadise";
               }}
               className="info-button"
             >
-              <SocialIcon network="patreon" />{" "}
+              <SocialIcon network="patreon" style={{ height: 30, width: 30 }} />
             </Button>
-          </Grid>{" "}
+          </Grid>
           <Grid item>
-            {" "}
             <Button
               onClick={() => {
                 window.location.href =
@@ -88,9 +84,12 @@ const InfoButtonHome = (props: Props) => {
               }}
               className="info-button"
             >
-              <SocialIcon network="instagram" />{" "}
-            </Button>{" "}
-          </Grid>{" "}
+              <SocialIcon
+                network="instagram"
+                style={{ height: 30, width: 30 }}
+              />
+            </Button>
+          </Grid>
         </Grid>
       </Dialog>
     </div>

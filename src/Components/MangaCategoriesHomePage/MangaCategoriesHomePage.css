@@ -5,7 +5,7 @@
   align-items: center;
   width: 100%;
 
-  @media (width < 1000px) {
+  @media (width < 600px) {
     flex-direction: column;
   }
 }
@@ -49,12 +49,9 @@
   border-radius: 15px;
   padding-bottom: 10px;
   padding-top: 10px;
-  min-width: 40% !important;
-  max-width: 40% !important;
-  @media screen and (min-width: 600px) and (max-width: 900px) {
-    min-width: 46% !important;
-    max-width: 46% !important;
-  }
+
+  min-width: 46% !important;
+  max-width: 46% !important;
   @media (width < 600px) {
     max-width: 33% !important;
     min-width: 33% !important;
@@ -71,7 +68,7 @@
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
-  @media (width < 600px) {
+  @media (width < 800px) {
     flex-direction: column !important;
   }
   &.MuiButtonBase-root:hover {
@@ -84,7 +81,7 @@
   max-width: 100%;
   flex-shrink: 1;
   overflow: hidden;
-  @media (width > 600px) {
+  @media (width > 800px) {
     margin-left: 10px;
   }
 }
@@ -100,7 +97,7 @@
   white-space: nowrap;
 
   text-align: left;
-  @media (width < 600px) {
+  @media (width < 800px) {
     font-size: 16px !important;
     text-align: center;
   }
@@ -111,7 +108,7 @@
   text-transform: none !important;
   font-size: 15px !important;
   text-align: left;
-  @media (width < 600px) {
+  @media (width < 800px) {
     text-align: center;
   }
 }

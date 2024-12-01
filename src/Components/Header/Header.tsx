@@ -19,7 +19,6 @@ import {
   fetchAccountDetails,
   updateAccountDetails,
 } from "../../api/AccountDetails";
-import { isTokenExpired, refreshTokenFunction } from "../../api/Account";
 import { Manga, MangaTagsInterface } from "../../interfaces/MangaDexInterfaces";
 import ThemeButton from "../../Components/ThemeButton/ThemeButton";
 import MangaTagsHome from "../../Components/MangaTagsHome/MangaTagsHome";
@@ -39,7 +38,7 @@ interface Props {
   account: Account | null;
   accountDetails: AccountDetails | null;
 }
-const Header: React.FC<Props> = ({ account, accountDetails }) => {
+const Header = ({ account, accountDetails }: Props) => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
@@ -56,33 +55,6 @@ const Header: React.FC<Props> = ({ account, accountDetails }) => {
   const { toggleTheme } = useTheme();
 
   const handleClickLibrary = async () => {
-    let accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    console.log(accessToken);
-    console.log(refreshToken);
-
-    if (accessToken !== null) {
-      if (isTokenExpired(accessToken)) {
-        console.error("Access token is expired. Attempting to refresh.");
-
-        if (refreshToken) {
-          try {
-            accessToken = await refreshTokenFunction(refreshToken);
-            localStorage.setItem("accessToken", accessToken);
-          } catch (error) {
-            console.error("Refresh token failed. Please log in again.");
-            navigate("/login");
-            return;
-          }
-        } else {
-          console.error("No refresh token found. Please log in again.");
-          navigate("/login");
-          return;
-        }
-      }
-    }
-
     if (account !== null) {
       if (account.verified === true) {
         navigate("/library", {});
@@ -98,33 +70,6 @@ const Header: React.FC<Props> = ({ account, accountDetails }) => {
   };
 
   const handleClickAccount = async () => {
-    let accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    console.log(accessToken);
-    console.log(refreshToken);
-
-    if (accessToken !== null) {
-      if (isTokenExpired(accessToken)) {
-        console.error("Access token is expired. Attempting to refresh.");
-
-        if (refreshToken) {
-          try {
-            accessToken = await refreshTokenFunction(refreshToken);
-            localStorage.setItem("accessToken", accessToken);
-          } catch (error) {
-            console.error("Refresh token failed. Please log in again.");
-            navigate("/login");
-            return;
-          }
-        } else {
-          console.error("No refresh token found. Please log in again.");
-          navigate("/login");
-          return;
-        }
-      }
-    }
-
     if (account !== null) {
       if (account.verified === true) {
         navigate("/account");
@@ -228,6 +173,7 @@ const Header: React.FC<Props> = ({ account, accountDetails }) => {
   };
 
   const handleSearch = async () => {
+    setDialogOpen(false);
     fetchSearch(
       searchMangaName,
       searchAuthorName,

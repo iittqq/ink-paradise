@@ -12,7 +12,7 @@ type Props = {
   title: string;
   coverUrl?: string;
   disabled?: boolean;
-  accountId: number;
+  accountId: number | null;
   contentFilter: number;
 };
 

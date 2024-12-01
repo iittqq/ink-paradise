@@ -9,7 +9,7 @@
 #open-info-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
-    border-radius: 25px;
+    border-radius: 10px;
     padding: 20px;
   }
   & .MuiDialogContent-root {
@@ -32,7 +32,8 @@
   text-transform: none !important;
   background-color: transparent !important;
   color: #fff !important;
-  width: 100px;
+  min-width: 50px !important;
+  max-width: 50px !important;
 }
 
 .info-dialog-content {

@@ -416,16 +416,21 @@ const IndividualManga = ({
           selectedScanlationGroup={selectedScanlationGroup}
         />
         <div className="bottom-desktop-container">
-          {mangaFeed.length > 0 ? (
-            <Typography fontSize={20} fontFamily="Figtree" align="center">
-              Chapters
-            </Typography>
-          ) : (
-            <Typography fontSize={20} fontFamily="Figtree" align="center">
-              No Chapters...
-            </Typography>
-          )}
           <div className="manga-chapter-list">
+            {mangaFeed.length > 0 ? (
+              <Typography
+                fontSize={20}
+                fontFamily="Figtree"
+                align="center"
+                sx={{ height: "50px" }}
+              >
+                Chapters
+              </Typography>
+            ) : (
+              <Typography fontSize={20} fontFamily="Figtree" align="center">
+                No Chapters...
+              </Typography>
+            )}
             {mangaFeed.length > 0 && (
               <>
                 <MangaChapterList

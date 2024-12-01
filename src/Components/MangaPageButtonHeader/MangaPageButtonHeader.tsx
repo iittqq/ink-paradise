@@ -148,15 +148,17 @@ const MangaPageButtonHeader = (props: Props) => {
 
   return (
     <div className="manga-details-buttons-container">
-      <Button
-        className="individual-details-button"
-        disableFocusRipple
-        onClick={() => {
-          handleClickOpen();
-        }}
-      >
-        <FolderIcon />
-      </Button>
+      {accountId === null ? null : (
+        <Button
+          className="individual-details-button"
+          disableFocusRipple
+          onClick={() => {
+            handleClickOpen();
+          }}
+        >
+          <FolderIcon />
+        </Button>
+      )}
       <Dialog open={open} onClose={handleClose} id="folder-dialog">
         <DialogTitle sx={{ color: "#ffffff", textAlign: "center" }}>
           Select Folder
@@ -287,7 +289,7 @@ const MangaPageButtonHeader = (props: Props) => {
         <Button className="individual-details-button">
           <BookmarkAddedIcon />
         </Button>
-      ) : (
+      ) : accountId === null ? null : (
         <Button
           className="individual-details-button"
           disableFocusRipple

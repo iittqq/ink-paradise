@@ -33,7 +33,6 @@
   display: flex;
   overflow-x: scroll;
   scrollbar-width: none;
-  scroll-padding-right: 50px;
   scroll-behavior: smooth;
 }
 

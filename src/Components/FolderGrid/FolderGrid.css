@@ -16,11 +16,10 @@
 }
 
 .folder-grid {
-  margin-top: 0px !important;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .folder {
@@ -34,16 +33,6 @@
 
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
-  }
-
-  @media screen and (min-width: 600px) {
-    min-width: 200px !important;
-    max-width: 200px !important;
-  }
-
-  @media screen and (max-width: 600px) {
-    min-width: 45vw !important;
-    max-width: 45vw !important;
   }
 }
 

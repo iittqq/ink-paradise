@@ -59,7 +59,7 @@ const SimilarManga = (props: Props) => {
   }, [manga]);
 
   return (
-    <div className="similar-manga-container">
+    <>
       {mangaDetailsToDisplay && (
         <MangaDetailsDialog
           mangaDetails={mangaDetailsToDisplay}
@@ -114,7 +114,7 @@ const SimilarManga = (props: Props) => {
           </>
         ))}
       </Grid>
-    </div>
+    </>
   );
 };
 

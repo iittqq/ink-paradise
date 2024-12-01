@@ -82,9 +82,8 @@ input[type="text"]:focus {
 .create-folder-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  width: 100px;
 }
 
 .folder-header-button {

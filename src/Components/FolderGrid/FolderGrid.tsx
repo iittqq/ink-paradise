@@ -79,9 +79,9 @@ const FolderGrid = (props: Props) => {
     <Grid
       container
       justifyContent="center"
-      alignItems="flex-start"
+      alignItems="center"
       direction="row"
-      spacing={2}
+      spacing={1}
       className="folder-grid"
     >
       {loading ? (
@@ -107,6 +107,10 @@ const FolderGrid = (props: Props) => {
                   folder.folderCover !== ""
                     ? `url(${folder.folderCover})`
                     : "none",
+
+                width: { xs: "90px", sm: "130px", md: "130px", lg: "130px" },
+                height: { xs: "140px", sm: "200px", md: "200px", lg: "200px" },
+                position: "relative",
               }}
             >
               <Typography
