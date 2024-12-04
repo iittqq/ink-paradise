@@ -5,8 +5,6 @@ import {
   DialogTitle,
   Grid,
   DialogContent,
-  Typography,
-  Alert,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SearchIcon from "@mui/icons-material/Search";
@@ -42,7 +40,6 @@ type Props = {
   handleFolderBackgroundChange: (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => void;
-  newFolderName: string;
   mangaFoldersToDelete: number[];
   toggleMangaEntriesDelete: (value: boolean) => void;
   handleDeleteMangaFolders: () => void;
@@ -67,7 +64,6 @@ const LibraryHeader = (props: Props) => {
     handleFolderNameChange,
     handleFolderDescriptionChange,
     handleFolderBackgroundChange,
-    newFolderName,
     mangaFoldersToDelete,
     toggleMangaEntriesDelete,
     handleDeleteMangaFolders,
@@ -157,73 +153,54 @@ const LibraryHeader = (props: Props) => {
             >
               Create Folder
             </DialogTitle>
-            <DialogContent>
-              <Typography fontFamily={"Figtree"}>Name</Typography>
-              <input
-                type="text"
-                id="folderName"
-                placeholder="New Folder Name"
-                className="folder-inputs"
-                onChange={(e) => handleFolderNameChange(e)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleCreateFolder();
-                  }
-                }}
-              />
-              <Typography fontFamily={"Figtree"}>Description</Typography>
-              <input
-                type="text"
-                id="folderDescription"
-                placeholder="New Folder Description"
-                className="folder-inputs"
-                onChange={(e) => handleFolderDescriptionChange(e)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (newFolderName !== "") {
-                      handleCreateFolder();
-                    }
-                  }
-                }}
-              />
-              <Typography fontFamily={"Figtree"}>Background Url</Typography>
-              <input
-                type="text"
-                id="folderBackground"
-                placeholder="Folder Background Url"
-                className="folder-inputs"
-                onChange={(e) => handleFolderBackgroundChange(e)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    if (newFolderName !== "") {
-                      handleCreateFolder();
-                    }
-                  }
-                }}
-              />
-
-              <Button
-                className="create-button"
-                onClick={() => {
-                  handleCreateFolder();
-                  setShowAddedFolderAlert(true);
-                  setTimeout(() => {
-                    setShowAddedFolderAlert(false);
-                  }, 3000);
-                }}
-              >
-                Create
-              </Button>
-            </DialogContent>
-            {showAddedFolderAlert === true ? (
-              <Alert
-                variant="outlined"
-                severity="success"
-                className="manga-folder-alert"
-              >
-                Manga added to folder
-              </Alert>
-            ) : null}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateFolder();
+              }}
+            >
+              {" "}
+              <DialogContent>
+                <input
+                  type="text"
+                  id="folderName"
+                  placeholder="New Folder Name"
+                  className="folder-inputs"
+                  onChange={(e) => handleFolderNameChange(e)}
+                />
+                <input
+                  type="text"
+                  id="folderDescription"
+                  placeholder="New Folder Description"
+                  className="folder-inputs"
+                  onChange={(e) => handleFolderDescriptionChange(e)}
+                />
+                <input
+                  type="text"
+                  id="folderBackground"
+                  placeholder="Folder Background Url"
+                  className="folder-inputs"
+                  onChange={(e) => handleFolderBackgroundChange(e)}
+                />
+                <Button
+                  className="create-button"
+                  type="submit"
+                  onClick={() => {
+                    setShowAddedFolderAlert(true);
+                    setTimeout(() => {
+                      setShowAddedFolderAlert(false);
+                    }, 3000);
+                  }}
+                >
+                  Create
+                </Button>
+                {showAddedFolderAlert === true ? (
+                  <div className="manga-folder-alert-library">
+                    Folder Created
+                  </div>
+                ) : null}{" "}
+              </DialogContent>
+            </form>{" "}
           </Dialog>
 
           {selectAll ? (

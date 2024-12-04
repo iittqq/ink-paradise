@@ -34,10 +34,6 @@
   text-align: center;
 }
 
-input[type="text"]:focus {
-  border: 2px solid #ffffff;
-}
-
 .search-button {
   max-width: 50px !important;
   min-width: 30px !important;
@@ -88,8 +84,8 @@ input[type="text"]:focus {
 
 .folder-header-button {
   color: unset !important;
-  max-width: 30px !important;
-  min-width: 30px !important;
+  max-width: 40px !important;
+  min-width: 40px !important;
   height: 30px;
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
@@ -137,5 +133,18 @@ input[type="text"]:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .manga-folder-alert-action-bar {
+    min-width: 200px !important;
+    max-width: 200px !important;
+    margin-top: 10px;
+    border-radius: 25px !important;
+    padding: 5px !important;
+    align-self: center;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #fff !important;
   }
 }

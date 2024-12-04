@@ -59,7 +59,6 @@ const IndividualManga = ({
     coverUrl: "",
   });
 
-  const [oneshot, setOneshot] = useState<boolean>(false);
   const [mangaFeed, setMangaFeed] = useState<MangaFeedScanlationGroup[]>([]);
   const [filteredMangaFeed, setFilteredMangaFeed] = useState<
     MangaFeedScanlationGroup[] | undefined
@@ -79,7 +78,6 @@ const IndividualManga = ({
 
   const [libraryEntryExists, setLibraryEntryExists] = useState(false);
 
-  // State for UI feedback
   const [uiState, setUIState] = useState({
     open: false,
     mangaExistsError: false,
@@ -89,7 +87,6 @@ const IndividualManga = ({
   });
 
   const checkLibraryEntry = useCallback(async () => {
-    console.log(accountId);
     if (accountId && id) {
       try {
         const existingReading = await getReadingByUserIdAndMangaId(
@@ -118,7 +115,6 @@ const IndividualManga = ({
   const handleAddToLibrary = async () => {
     if (accountId !== null) {
       try {
-        // Check if the reading entry already exists
         let existingReading: Reading | null = null;
 
         try {
@@ -134,12 +130,19 @@ const IndividualManga = ({
           }
         }
         if (!existingReading) {
-          // If reading does not exist, create it
           updateOrCreateReading({
             userId: accountId,
             mangaId: id ?? "",
             chapter:
-              oneshot === true ? 1 : parseInt(mangaFeed[0].attributes.chapter),
+              (mangaInfo.tags.some(
+                (current: MangaTagsInterface) =>
+                  current.attributes.name.en === "Oneshot",
+              ) ||
+              (mangaInfo.status === "completed" && mangaFeed.length === 1)
+                ? true
+                : false) === true
+                ? 1
+                : parseInt(mangaFeed[0].attributes.chapter),
             mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
             timestamp: new Date().toISOString(),
           });
@@ -147,18 +150,29 @@ const IndividualManga = ({
         }
         if (mangaFeed.length > 0) {
           if (!existingReading) {
-            // If bookmark does not exist, create it
             updateOrCreateBookmark({
               userId: accountId,
               mangaId: id ?? "",
               mangaName: mangaInfo.name.replace(/[^a-zA-Z]/g, " "),
               chapterNumber:
-                oneshot === true
+                (mangaInfo.tags.some(
+                  (current: MangaTagsInterface) =>
+                    current.attributes.name.en === "Oneshot",
+                ) ||
+                (mangaInfo.status === "completed" && mangaFeed.length === 1)
+                  ? true
+                  : false) === true
                   ? 1
                   : parseInt(mangaFeed[0].attributes.chapter),
               chapterId: mangaFeed[0].id,
               chapterIndex: Math.trunc(
-                oneshot === true
+                (mangaInfo.tags.some(
+                  (current: MangaTagsInterface) =>
+                    current.attributes.name.en === "Oneshot",
+                ) ||
+                (mangaInfo.status === "completed" && mangaFeed.length === 1)
+                  ? true
+                  : false) === true
                   ? 1
                   : parseInt(mangaFeed[0].attributes.chapter),
               ),
@@ -174,10 +188,10 @@ const IndividualManga = ({
     }
   };
 
-  // Helper function to check if an error is an Axios error
   function isAxiosError(error: unknown): error is AxiosError {
     return (error as AxiosError).isAxiosError !== undefined;
-  } // Consolidate repetitive state update logic for manga information
+  }
+
   const fetchAndSetMangaData = useCallback(async () => {
     if (!id) return;
 
@@ -189,14 +203,6 @@ const IndividualManga = ({
     const coverUrl = coverArt
       ? URL.createObjectURL(await fetchMangaCoverBackend(id, coverArt))
       : "";
-    setOneshot(
-      mangaData.attributes.tags.some(
-        (current: MangaTagsInterface) =>
-          current.attributes.name.en === "Oneshot",
-      )
-        ? true
-        : false,
-    );
 
     setMangaInfo({
       name: mangaData.attributes.title.en || "",
@@ -235,6 +241,7 @@ const IndividualManga = ({
       } else {
         setMangaFeed((previousFeed) => [...previousFeed, ...data]);
       }
+
       setScanlationGroups([
         ...new Set(
           data.flatMap((item) =>
@@ -259,11 +266,10 @@ const IndividualManga = ({
     [contentFilter],
   );
 
-  // useEffect for initial fetch on mount
   useEffect(() => {
     fetchAndSetMangaData();
-    fetchFolders();
     fetchFeedData();
+    fetchFolders();
   }, [fetchAndSetMangaData, fetchFolders, fetchFeedData]);
 
   useEffect(() => {
@@ -393,7 +399,15 @@ const IndividualManga = ({
         mangaContentRating={mangaInfo.contentRating}
         mangaAddedAlert={uiState.mangaAddedAlert}
         handleMangaCategoryClicked={handleMangaCategoryClicked}
-        oneshot={oneshot}
+        oneshot={
+          mangaInfo.tags.some(
+            (current: MangaTagsInterface) =>
+              current.attributes.name.en === "Oneshot",
+          ) ||
+          (mangaInfo.status === "completed" && mangaFeed.length === 1)
+            ? true
+            : false
+        }
         handleAddToLibrary={handleAddToLibrary}
         libraryEntryExists={libraryEntryExists}
         accountId={accountId ?? null}
@@ -418,12 +432,7 @@ const IndividualManga = ({
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">
             {mangaFeed.length > 0 ? (
-              <Typography
-                fontSize={20}
-                fontFamily="Figtree"
-                align="center"
-                sx={{ height: "50px" }}
-              >
+              <Typography fontSize={20} fontFamily="Figtree" align="center">
                 Chapters
               </Typography>
             ) : (
@@ -447,7 +456,15 @@ const IndividualManga = ({
                   accountId={accountId ?? null}
                   contentFilter={contentFilter === null ? 3 : contentFilter}
                   sortOrder={currentOrder}
-                  oneshot={oneshot}
+                  oneshot={
+                    mangaInfo.tags.some(
+                      (current: MangaTagsInterface) =>
+                        current.attributes.name.en === "Oneshot",
+                    ) ||
+                    (mangaInfo.status === "completed" && mangaFeed.length === 1)
+                      ? true
+                      : false
+                  }
                 />
               </>
             )}

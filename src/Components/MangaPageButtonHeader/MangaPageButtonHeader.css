@@ -24,6 +24,19 @@
     font-family: "Figtree" !important;
     min-width: 300px;
   }
+  .manga-folder-alert {
+    min-width: 200px !important;
+    max-width: 300px !important;
+    margin-top: 10px;
+    border-radius: 25px !important;
+    padding: 5px !important;
+    align-self: center;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #fff !important;
+  }
 }
 
 .folder-button {
@@ -66,6 +79,11 @@
     justify-content: center;
     align-items: center;
   }
+  .manga-folder-alert {
+    padding: 0px !important;
+    width: 90% !important;
+    align-self: center;
+  }
 }
 
 .folder-inputs {
@@ -100,10 +118,4 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-}
-
-.manga-folder-alert {
-  padding: 0px !important;
-  width: 90% !important;
-  align-self: center;
 }

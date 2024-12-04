@@ -27,6 +27,24 @@ async function getMangaFolders(): Promise<MangaFolder[]> {
   }
 }
 
+async function editMangaFolder(folder: {
+  folderId: number;
+  folderName: string;
+  folderDescription: string;
+  folderCover: string;
+}): Promise<MangaFolder> {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/v1/manga_folders/update/${folder.folderId}`,
+      folder,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 async function deleteMangaFolder(folderId: number): Promise<MangaFolder> {
   try {
     const response = await axios.delete(
@@ -38,4 +56,4 @@ async function deleteMangaFolder(folderId: number): Promise<MangaFolder> {
     throw error;
   }
 }
-export { addMangaFolder, getMangaFolders, deleteMangaFolder };
+export { addMangaFolder, getMangaFolders, editMangaFolder, deleteMangaFolder };

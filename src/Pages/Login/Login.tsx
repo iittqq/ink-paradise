@@ -11,7 +11,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-const Login = ({ fetchAccount }: { fetchAccount: () => void }) => {
+import { Account } from "../../interfaces/AccountInterfaces";
+
+interface LoginProps {
+  fetchAccount: () => Promise<{ account: Account } | null>;
+  account: Account | null;
+}
+const Login = ({ fetchAccount, account }: LoginProps) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -35,6 +41,9 @@ const Login = ({ fetchAccount }: { fetchAccount: () => void }) => {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
+  const [notVerified] = useState<boolean>(
+    account && account.verified === true ? false : true,
+  );
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
@@ -107,8 +116,14 @@ const Login = ({ fetchAccount }: { fetchAccount: () => void }) => {
           setAttemptedLogin(false);
           localStorage.setItem("accessToken", response.accessToken);
           localStorage.setItem("refreshToken", response.refreshToken);
-          fetchAccount();
-          navigate("/");
+
+          const fetchedData = await fetchAccount();
+          console.log(fetchedData);
+          if (fetchedData?.account && fetchedData.account.verified === true) {
+            navigate("/");
+          } else {
+            console.log("not verified");
+          }
         } else {
           setEmail("");
           setPassword("");
@@ -485,9 +500,15 @@ const Login = ({ fetchAccount }: { fetchAccount: () => void }) => {
             </Typography>
           </Button>
           <div className="register-button-and-message-container">
-            <Typography className="register-message">
-              Don't have an account yet?
-            </Typography>
+            {account && notVerified === true ? (
+              <Typography className="register-message">
+                Please verify your account via email
+              </Typography>
+            ) : (
+              <Typography className="register-message">
+                Don't have an account yet?
+              </Typography>
+            )}
 
             <Button
               className="register-button"

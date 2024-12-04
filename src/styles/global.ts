@@ -181,6 +181,14 @@ const globalStyle = createGlobalStyle`
     border: 1px solid ${({ theme }) => theme.elevatedSection};
   }
 
+  .manga-folder-alert-library, .folder-inputs, .manga-folder-alert, .manga-folder-alert-action-bar{
+    outline: 1px solid ${({ theme }) => theme.elevatedSection};
+  }
+
+  .folder-description-library, .current-folder-header{
+  color: ${({ theme }) => theme.text};
+  }
+
   /* Add other global styles as needed */
 `;
 export default withTheme(globalStyle);

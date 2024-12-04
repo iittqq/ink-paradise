@@ -62,7 +62,7 @@ function App() {
       if (!accessToken) {
         setAccount(null);
         setAccountDetails(null);
-        return;
+        return null;
       }
 
       const account = await getUserDetails();
@@ -71,14 +71,17 @@ function App() {
 
         const accountDetails = await fetchAccountDetails(account.id);
         setAccountDetails(accountDetails);
+        return { account, accountDetails };
       } else {
         setAccount(null);
         setAccountDetails(null);
+        return null;
       }
     } catch (error) {
       console.error("Error fetching account details:", error);
       setAccount(null);
       setAccountDetails(null);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -155,7 +158,7 @@ function App() {
             />
             <Route
               path="/login"
-              element={<Login fetchAccount={fetchAccount} />}
+              element={<Login fetchAccount={fetchAccount} account={account} />}
             />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -36,7 +36,9 @@ const MangaChapterList = (props: Props) => {
     sortOrder,
     oneshot,
   } = props;
-  const [xsValue] = useState(window.innerWidth > 900 ? 3 : 6);
+  const [xsValue] = useState(
+    window.innerWidth > 900 ? 3 : mangaFeed.length === 1 ? 12 : 6,
+  );
   const [userProgress, setUserProgress] = useState<number | null>(null);
 
   const navigate = useNavigate();
@@ -73,6 +75,7 @@ const MangaChapterList = (props: Props) => {
           contentFilter: contentFilter,
           sortOrder: sortOrder,
           pageNumber: 0,
+          oneshot: oneshot,
         },
       });
       if (setOpen !== undefined) setOpen(false);
@@ -93,6 +96,7 @@ const MangaChapterList = (props: Props) => {
           chapterIndex: index,
           contentFilter: contentFilter,
           sortOrder: sortOrder,
+          oneshot: oneshot,
         },
       });
     }

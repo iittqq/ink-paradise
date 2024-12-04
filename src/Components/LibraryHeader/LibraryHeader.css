@@ -106,19 +106,24 @@
     justify-content: center;
     align-items: center;
   }
+
+  .manga-folder-alert-library {
+    min-width: 200px !important;
+    margin-top: 10px;
+    border-radius: 25px !important;
+    padding: 5px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 .folder-inputs {
   all: unset;
   font-family: "Figtree";
   padding: 5px;
-  border: none;
   width: 80%;
   margin: 10px 0px 10px 0px;
   border-radius: 25px !important;
   text-align: center;
-}
-
-input[type="text"]:focus {
-  border: 2px solid #ffffff;
 }

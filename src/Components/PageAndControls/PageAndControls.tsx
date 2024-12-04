@@ -70,6 +70,7 @@ type Props = {
   readerModeString: string;
   coverUrl: string;
   contentFilter: number;
+  oneshot: boolean;
 };
 
 const PageAndControls = (props: Props) => {
@@ -103,6 +104,7 @@ const PageAndControls = (props: Props) => {
     readerModeString,
     coverUrl,
     contentFilter,
+    oneshot,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
   const [loadingStates, setLoadingStates] = useState<boolean[]>(
@@ -441,9 +443,9 @@ const PageAndControls = (props: Props) => {
                 sx={{ width: "100%" }}
                 noWrap
               >
-                {volume +
+                {(oneshot === true ? 1 : volume) +
                   " : " +
-                  chapterNumber +
+                  (oneshot === true ? 1 : chapterNumber) +
                   " : " +
                   (currentPage + 1) +
                   " / " +
@@ -601,20 +603,6 @@ const PageAndControls = (props: Props) => {
           </div>
         </div>
       </List>
-      <Collapse className="reader-feed-collapse" in={open} timeout="auto">
-        <MangaChapterList
-          mangaId={mangaId}
-          mangaFeed={mangaFeedState}
-          mangaName={mangaName}
-          selectedLanguage={selectedLanguage}
-          insideReader={true}
-          setOpen={setOpen}
-          coverUrl={coverUrl}
-          accountId={accountId}
-          contentFilter={contentFilter}
-          sortOrder={orderState}
-        />
-      </Collapse>
       {open === true ? null : (
         <>
           <div
@@ -738,6 +726,26 @@ const PageAndControls = (props: Props) => {
           </div>
         </>
       )}
+      <Collapse
+        className="reader-feed-collapse"
+        sx={{ paddingTop: open === true ? "5px" : "0px !important" }}
+        in={open}
+        timeout="auto"
+      >
+        <MangaChapterList
+          mangaId={mangaId}
+          mangaFeed={mangaFeedState}
+          mangaName={mangaName}
+          selectedLanguage={selectedLanguage}
+          insideReader={true}
+          setOpen={setOpen}
+          coverUrl={coverUrl}
+          accountId={accountId}
+          contentFilter={contentFilter}
+          sortOrder={orderState}
+          oneshot={oneshot}
+        />
+      </Collapse>
     </div>
   );
 };

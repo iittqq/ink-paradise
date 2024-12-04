@@ -5,7 +5,6 @@ import {
   DialogTitle,
   Grid,
   Typography,
-  Alert,
 } from "@mui/material";
 import { useState } from "react";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -259,30 +258,20 @@ const MangaPageButtonHeader = (props: Props) => {
                     }
                   }}
                 >
-                  {current.folderName}
+                  {current.folderName === "" ? "no name" : current.folderName}
                 </Button>
               </Grid>
             ))}
           </Grid>
         </DialogContent>
         {mangaAddedAlert === true ? (
-          <Alert
-            variant="outlined"
-            severity="success"
-            className="manga-folder-alert"
-          >
-            Manga added to folder
-          </Alert>
+          <div className="manga-folder-alert">Manga added to folder</div>
         ) : null}
 
         {mangaExistsError === true ? (
-          <Alert
-            variant="outlined"
-            severity="error"
-            className="manga-folder-alert"
-          >
+          <div className="manga-folder-alert">
             Manga already exists in the folder
-          </Alert>
+          </div>
         ) : null}
       </Dialog>
       {libraryEntryExists === true ? (

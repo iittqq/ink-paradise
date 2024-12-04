@@ -40,7 +40,6 @@ import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces"
 import MangaPageButtonHeader from "../MangaPageButtonHeader/MangaPageButtonHeader";
 import { getMangaFolders } from "../../api/MangaFolder";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-import LaunchIcon from "@mui/icons-material/Launch";
 import {
   updateOrCreateReading,
   getReadingByUserIdAndMangaId,
@@ -131,7 +130,6 @@ const MangaDetailsDialog = (props: Props) => {
   }, [fetchFolders]);
 
   const handleDelete = async () => {
-    console.log(selectedBookmark);
     if (
       selectedBookmark !== null &&
       selectedBookmark.bookmarkId !== undefined
@@ -195,12 +193,9 @@ const MangaDetailsDialog = (props: Props) => {
         "asc",
         "en",
       ).then((mangaFeed: MangaFeedScanlationGroup[]) => {
-        console.log(mangaFeed);
         if (selectedBookmark.chapterId !== undefined) {
           fetchChapterDetails(selectedBookmark.chapterId).then(
             (response: ChapterDetails) => {
-              console.log(response);
-              console.log(selectedBookmark);
               navigate("/reader", {
                 state: {
                   mangaId: selectedBookmark.id,
@@ -264,7 +259,6 @@ const MangaDetailsDialog = (props: Props) => {
         if (filteredBookmarks.length > 0) {
           setLibraryEntryExists(true);
         }
-        console.log("Bookmarks:", filteredBookmarks);
       }
     } catch (error) {
       console.error("Error fetching bookmarks data:", error);
@@ -282,7 +276,6 @@ const MangaDetailsDialog = (props: Props) => {
         "asc",
         "en",
       );
-      console.log(chapterData);
 
       if (accountId !== null) {
         let existingReading = null;
@@ -417,7 +410,7 @@ const MangaDetailsDialog = (props: Props) => {
                 ? Object.values(mangaDetails.attributes.title)[0]
                 : mangaDetails.attributes.title.en}
             </Typography>
-            <LaunchIcon sx={{ paddingLeft: "5px" }} />
+            <AutoStoriesIcon sx={{ paddingLeft: "5px" }} />
           </Button>
         </DialogTitle>
         <div className="manga-details-dialog-contents">

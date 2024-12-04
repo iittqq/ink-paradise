@@ -42,7 +42,6 @@ const Header = ({ account, accountDetails }: Props) => {
   const navigate = useNavigate();
 
   const [showAlert, setShowAlert] = useState(false);
-  const [showAlertAccount, setShowAlertAccount] = useState(false);
   const [mangaTags, setMangaTags] = useState<MangaTagsInterface[]>([]);
   const [openTags, setOpenTags] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -59,10 +58,11 @@ const Header = ({ account, accountDetails }: Props) => {
       if (account.verified === true) {
         navigate("/library", {});
       } else {
-        setShowAlertAccount(true);
+        setShowAlert(true);
         setTimeout(() => {
-          setShowAlertAccount(false);
+          setShowAlert(false);
         }, 3000);
+        navigate("/login");
       }
     } else {
       navigate("/login");
@@ -78,6 +78,7 @@ const Header = ({ account, accountDetails }: Props) => {
         setTimeout(() => {
           setShowAlert(false);
         }, 3000);
+        navigate("/login");
       }
     } else {
       navigate("/login");
@@ -173,7 +174,7 @@ const Header = ({ account, accountDetails }: Props) => {
   };
 
   const handleSearch = async () => {
-    setDialogOpen(false);
+    handleDialogClose();
     fetchSearch(
       searchMangaName,
       searchAuthorName,
@@ -187,7 +188,6 @@ const Header = ({ account, accountDetails }: Props) => {
           manga: results,
         },
       });
-      handleDialogClose();
     });
     setSearchMangaName("");
     setSearchAuthorName("");
@@ -216,15 +216,16 @@ const Header = ({ account, accountDetails }: Props) => {
   return (
     <>
       <div className="container-header">
-        <Button
-          onClick={() => handleClickLogo()}
-          className="logo-header-button"
-        >
-          <HomeIcon sx={{ height: "30px", width: "30px" }} />
-        </Button>
+        <div className="home-and-credit-container">
+          <Button
+            onClick={() => handleClickLogo()}
+            className="logo-header-button"
+          >
+            <HomeIcon sx={{ height: "30px", width: "30px" }} />
+          </Button>
+          <div className="manga-dex-credit">API by MangaDex </div>{" "}
+        </div>
         <>
-          <div className="manga-dex-credit">API by MangaDex </div>
-
           <ThemeButton
             openThemes={openThemes}
             handleThemeDialogClose={handleThemeDialogClose}
@@ -244,16 +245,10 @@ const Header = ({ account, accountDetails }: Props) => {
               className="header-buttons"
               onClick={() => setDialogOpen(true)}
             >
-              <div className="header-nav-dialog-columns">
-                <SearchIcon />
-                <Typography className="header-nav-label">Search</Typography>
-              </div>
+              <SearchIcon sx={{ width: "30px", height: "30px" }} />
             </Button>
             <Button className="header-buttons" onClick={handleClickMenu}>
-              <div className="header-nav-dialog-columns">
-                <MenuIcon />
-                <Typography className="header-nav-label">Menu</Typography>
-              </div>{" "}
+              <MenuIcon sx={{ width: "30px", height: "30px" }} />
             </Button>
 
             <Menu
@@ -330,17 +325,6 @@ const Header = ({ account, accountDetails }: Props) => {
           </Alert>
         </div>
       ) : null}
-      {showAlertAccount == true ? (
-        <div className="alert-container">
-          <Alert
-            icon={<ErrorIcon className="account-verification-alert-icon" />}
-            severity="info"
-            className="account-verification-alert"
-          >
-            Please create and verify your account
-          </Alert>
-        </div>
-      ) : null}{" "}
       <Dialog
         open={dialogOpen}
         onClose={handleDialogClose}
@@ -348,55 +332,40 @@ const Header = ({ account, accountDetails }: Props) => {
       >
         <DialogTitle className="search-dialog-title">Search</DialogTitle>
 
-        <DialogActions className="search-dialog-option-list">
-          <input
-            type="text"
-            id="searchName"
-            placeholder="Manga Name"
-            className="search-inputs"
-            onChange={(e) => handleSearchMangaNameChange(e)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
-          <input
-            type="text"
-            id="searchAuthor"
-            placeholder="Author Name"
-            className="search-inputs"
-            onChange={(e) => handleSearchAuthorNameChange(e)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
-
-          <input
-            type="text"
-            id="searchScanlationGroup"
-            placeholder="Scanlation Group"
-            className="search-inputs"
-            onChange={(e) => handleSearchScanlationGroupChange(e)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
-
-          <Button
-            className="create-button"
-            onClick={() => {
-              handleSearch();
-            }}
-          >
-            Search
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch();
+          }}
+        >
+          <DialogActions className="search-dialog-option-list">
+            <input
+              type="text"
+              id="searchName"
+              placeholder="Manga Name"
+              className="search-inputs"
+              onChange={(e) => handleSearchMangaNameChange(e)}
+            />
+            <input
+              type="text"
+              id="searchAuthor"
+              placeholder="Author Name"
+              className="search-inputs"
+              onChange={(e) => handleSearchAuthorNameChange(e)}
+            />
+            <input
+              type="text"
+              id="searchScanlationGroup"
+              placeholder="Scanlation Group"
+              className="search-inputs"
+              onChange={(e) => handleSearchScanlationGroupChange(e)}
+            />
+            <Button className="create-button" type="submit">
+              Search
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>{" "}
     </>
   );
 };

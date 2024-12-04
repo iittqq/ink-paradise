@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../Header/Header";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
+import "./Layout.css";
 
 interface LayoutProps {
   children: React.ReactNode;

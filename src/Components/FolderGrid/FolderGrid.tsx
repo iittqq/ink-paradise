@@ -113,22 +113,25 @@ const FolderGrid = (props: Props) => {
                 position: "relative",
               }}
             >
-              <Typography
-                textTransform="none"
-                fontFamily="Figtree"
-                sx={{
-                  backgroundColor:
-                    folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "5px",
-                  height: "100%",
-                  width: "100%",
-                }}
-              >
-                {folder.folderName}{" "}
-              </Typography>
+              {folder.folderName === "" ? null : (
+                <Typography
+                  textTransform="none"
+                  fontFamily="Figtree"
+                  sx={{
+                    backgroundColor:
+                      folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "5px",
+                    height: "100%",
+                    width: "100%",
+                    color: folder.folderCover !== "" ? "#ffffff" : "none",
+                  }}
+                >
+                  {folder.folderName}{" "}
+                </Typography>
+              )}
             </Button>
           </Grid>
         ))

@@ -192,6 +192,7 @@ const Reader = ({ account }: ReaderProps) => {
           readerModeString={readerMode}
           coverUrl={state.coverUrl}
           contentFilter={state.contentFilter}
+          oneshot={state.oneshot}
         />
       </div>
     </div>
