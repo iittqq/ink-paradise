@@ -12,6 +12,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Menu,
   Collapse,
 } from "@mui/material";
 import {
@@ -37,6 +38,7 @@ import MangaChapterList from "../MangaChapterList/MangaChapterList";
 import HomeIcon from "@mui/icons-material/Home";
 import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type Props = {
   pages: string[];
@@ -118,6 +120,7 @@ const PageAndControls = (props: Props) => {
   const [chapterIndexState, setChapterIndexState] =
     useState<number>(chapterIndex);
   const [orderState] = useState<string>(order || "asc");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(startPage);
@@ -350,6 +353,14 @@ const PageAndControls = (props: Props) => {
     });
   };
 
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     let localPage = currentPage; // Local variable to track the current page
 
@@ -456,7 +467,30 @@ const PageAndControls = (props: Props) => {
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <div className="title-settings-row">
-          <div className="settings-icon">
+          <Button
+            className="reader-menu-button"
+            onClick={handleClickMenu}
+            sx={{ minWidth: "40px", color: "unset" }}
+          >
+            <MenuIcon />
+          </Button>
+          <Menu
+            id="header-menu-reader"
+            disableScrollLock
+            disableEnforceFocus
+            disableAutoFocus
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
             <Button
               className="home-button"
               onClick={() => handleClickLogo()}
@@ -600,7 +634,7 @@ const PageAndControls = (props: Props) => {
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
+          </Menu>
         </div>
       </List>
       {open === true ? null : (

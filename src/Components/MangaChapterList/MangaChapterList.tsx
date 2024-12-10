@@ -4,7 +4,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { getReadingByUserId } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 import "./MangaChapterList.css";
 import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
@@ -37,7 +37,7 @@ const MangaChapterList = (props: Props) => {
     oneshot,
   } = props;
   const [xsValue] = useState(
-    window.innerWidth > 900 ? 3 : mangaFeed.length === 1 ? 12 : 6,
+    window.innerWidth > 900 ? 2 : mangaFeed.length === 1 ? 12 : 6,
   );
   const [userProgress, setUserProgress] = useState<number | null>(null);
 
@@ -166,55 +166,37 @@ const MangaChapterList = (props: Props) => {
                 }}
               >
                 <div className="info-stack">
-                  <Typography
-                    className="chapter-details"
-                    sx={{
-                      fontSize: { xs: 10, sm: 10, lg: 13 },
-                      textTransform: "none",
-                    }}
-                  >
-                    {oneshot === true
-                      ? "Oneshot"
-                      : "Chapter " + current.attributes.chapter}
-                  </Typography>
-                  <Typography
-                    fontFamily="Figtree"
-                    className="chapter-details"
-                    sx={{
-                      fontSize: { xs: 10, sm: 10, lg: 13 },
-                    }}
-                  >
-                    {current.attributes.translatedLanguage}
-                  </Typography>
+                  <div className="chapter-row">
+                    <AutoStoriesIcon />
+                    <Typography
+                      className="chapter-details"
+                      sx={{
+                        fontSize: { xs: 12, sm: 12, lg: 14 },
+                        textTransform: "none",
+                      }}
+                    >
+                      {oneshot === true
+                        ? "Oneshot"
+                        : "Ch " + current.attributes.chapter}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      className="scanlation-name"
+                      sx={{
+                        fontSize: { xs: 12, sm: 12, lg: 14 },
+                        textTransform: "none",
+                      }}
+                    >
+                      {current.attributes.title}
+                    </Typography>
+                  </div>
                 </div>
                 {current.attributes.externalUrl !== null ? (
                   <div className="external-link-button">
                     <OpenInNewIcon />
                   </div>
                 ) : null}
-                <div className="info-stack">
-                  <Typography
-                    className="chapter-details"
-                    sx={{
-                      fontSize: { xs: 10, sm: 10, lg: 13 },
-                      textTransform: "none",
-                    }}
-                  >
-                    {current.relationships[0].type === "scanlation_group"
-                      ? current.relationships[0].attributes.name
-                      : "Unknown"}
-                  </Typography>
-
-                  <Typography
-                    className="chapter-details"
-                    sx={{
-                      fontSize: { xs: 10, sm: 10, lg: 13 },
-                      textTransform: "none",
-                    }}
-                  >
-                    {dayjs(current.attributes.createdAt).format("DD/MM/YYYY")}
-                  </Typography>
-                </div>
               </Button>
             </Grid>
           ) : null,

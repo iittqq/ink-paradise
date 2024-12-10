@@ -43,6 +43,7 @@ type Props = {
   libraryEntryExists: boolean;
   accountId: number | null;
   setFolders: (folders: MangaFolder[]) => void;
+  loading?: boolean;
 };
 
 const MangaPageButtonHeader = (props: Props) => {
@@ -70,6 +71,7 @@ const MangaPageButtonHeader = (props: Props) => {
     libraryEntryExists,
     accountId,
     setFolders,
+    loading,
   } = props;
 
   const [openAddFolder, setOpenAddFolder] = useState<boolean>(false);
@@ -258,7 +260,11 @@ const MangaPageButtonHeader = (props: Props) => {
                     }
                   }}
                 >
-                  {current.folderName === "" ? "no name" : current.folderName}
+                  {current.folderName === ""
+                    ? current.folderDescription === ""
+                      ? "no name"
+                      : current.folderDescription
+                    : current.folderName}
                 </Button>
               </Grid>
             ))}
@@ -282,6 +288,7 @@ const MangaPageButtonHeader = (props: Props) => {
         <Button
           className="individual-details-button"
           disableFocusRipple
+          disabled={loading}
           onClick={() => {
             handleAddToLibrary();
           }}

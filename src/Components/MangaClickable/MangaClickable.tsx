@@ -77,6 +77,16 @@ const MangaClickable = (props: Props) => {
         </Card>
 
         <div className="overlay">
+          <div className="chapter-count-number">
+            {manga.latestChapter &&
+            manga.chapterNumber !== null &&
+            manga.chapterNumber !== undefined
+              ? Math.floor(
+                  Number(manga.latestChapter[0]?.attributes?.chapter) -
+                    manga.chapterNumber,
+                )
+              : null}
+          </div>
           <Typography
             textTransform="none"
             color="white"

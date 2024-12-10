@@ -18,7 +18,10 @@
 
 .library-header-and-contents {
   min-height: calc(var(--vh, 1vh) * 98);
-  max-height: calc(var(--vh, 1vh) * 98);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .folder-bar-and-grid-library {
@@ -50,8 +53,17 @@
 }
 
 .scrolling-library {
-  max-height: calc(var(--vh, 1vh) * 95);
-  min-height: calc(var(--vh, 1vh) * 95);
-  overflow: scroll;
+  max-height: calc(var(--vh, 1vh) * 98);
+  overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.library-divider {
+  width: 100%;
+  margin-top: 20px !important;
 }

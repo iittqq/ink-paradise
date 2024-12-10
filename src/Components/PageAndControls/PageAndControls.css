@@ -106,7 +106,8 @@
 
 .bookmark-button,
 .home-button,
-.library-button-reader {
+.library-button-reader,
+.reader-menu-button {
   max-height: 30px !important;
   margin: 0 4px !important;
   box-shadow:
@@ -191,20 +192,10 @@
   min-width: 90vw;
   display: flex;
   flex-grow: 1;
-  overflow: scroll !important;
+  overflow-y: scroll !important;
   padding-top: 5px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-}
-
-.settings-icon {
-  background-color: transparent;
-  max-height: 30px;
-  justify-content: space-between;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
 }
 
 .title-settings-row {
@@ -216,4 +207,21 @@
 
 .chapter-page-traversal-buttons {
   color: unset !important;
+}
+
+#header-menu-reader {
+  & .MuiList-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    gap: 10px;
+  }
+  & .MuiPaper-root {
+    background-color: #1f1f1f !important;
+    border-radius: 10px;
+  }
 }

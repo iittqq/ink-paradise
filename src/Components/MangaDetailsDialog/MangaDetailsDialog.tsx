@@ -506,6 +506,7 @@ const MangaDetailsDialog = (props: Props) => {
                   libraryEntryExists={libraryEntryExists}
                   accountId={accountId}
                   setFolders={setFolders}
+                  loading={loading}
                 />
               </div>
               {accountId !== null && bookmarks.length > 0 ? (

@@ -119,7 +119,7 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.elevatedSectionLight};
   }
 
-  .list-button{
+  .list-button, .filter-button{
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
@@ -132,7 +132,7 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   }
 
-  .reader-feed-button, .bookmark-button, .settings-button, .home-button, .library-button-reader{
+  .reader-feed-button, .bookmark-button, .settings-button, .home-button, .library-button-reader, .reader-menu-button{
     outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
@@ -173,7 +173,7 @@ const globalStyle = createGlobalStyle`
     background-color: ${({ theme }) => theme.elevatedSection};
   }
 
-  .controls-icon {
+  .controls-icon, .filter-icon {
     color: ${({ theme }) => theme.elevatedSection};
   }
 
@@ -181,12 +181,16 @@ const globalStyle = createGlobalStyle`
     border: 1px solid ${({ theme }) => theme.elevatedSection};
   }
 
-  .manga-folder-alert-library, .folder-inputs, .manga-folder-alert, .manga-folder-alert-action-bar{
+  .manga-folder-alert-library, .folder-inputs, .manga-folder-alert, .manga-folder-alert-action-bar, .search-inputs{
     outline: 1px solid ${({ theme }) => theme.elevatedSection};
   }
 
-  .folder-description-library, .current-folder-header{
-  color: ${({ theme }) => theme.text};
+  .folder-description-library, .current-folder-header, .scanlation-button{
+    color: ${({ theme }) => theme.text};
+  }
+
+  .library-header, .folder-section-header{
+    background-color: ${({ theme }) => theme.body};
   }
 
   /* Add other global styles as needed */

@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Menu } from "@mui/material";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
-import SimilarManga from "../../Components/SimilarManga/SimilarManga";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { AxiosError } from "axios";
 import {
@@ -33,6 +32,8 @@ import {
 } from "../../api/Reading";
 import { updateOrCreateBookmark } from "../../api/Bookmarks";
 import "./IndividualManga.css";
+import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 interface IndividualMangaProps {
   accountId: number | null;
@@ -75,7 +76,7 @@ const IndividualManga = ({
   const [selectedScanlationGroup, setSelectedScanlationGroup] = useState<
     ScanlationGroup | undefined
   >();
-
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [libraryEntryExists, setLibraryEntryExists] = useState(false);
 
   const [uiState, setUIState] = useState({
@@ -357,6 +358,16 @@ const IndividualManga = ({
     );
   };
 
+  const handleClickFilterMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseFilterMenu = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div className="individual-page-container">
       <MangaBanner
@@ -414,21 +425,41 @@ const IndividualManga = ({
         setFolders={setFolders}
       />
       <div className="controls-chapters-section">
-        <Typography fontSize={20} fontFamily="Figtree" align="center">
-          Filters
-        </Typography>
-        <MangaControls
-          mangaLanguages={mangaInfo.languages}
-          selectedLanguage={selectedLanguage}
-          handleClickedLanguageButton={handleLanguageChange}
-          mangaTranslators={scanlationGroups}
-          setTranslator={setScanlationGroups}
-          handleSwitchOrder={() =>
-            setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
-          }
-          handleFilterScanlationGroups={handleFilterScanlationGroups}
-          selectedScanlationGroup={selectedScanlationGroup}
-        />
+        <Button className="filter-button" onClick={handleClickFilterMenu}>
+          {" "}
+          <FilterAltIcon className="filter-icon" />
+        </Button>
+        <Menu
+          id="filter-menu"
+          disableScrollLock
+          disableEnforceFocus
+          disableAutoFocus
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseFilterMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          {" "}
+          <MangaControls
+            mangaLanguages={mangaInfo.languages}
+            selectedLanguage={selectedLanguage}
+            handleClickedLanguageButton={handleLanguageChange}
+            mangaTranslators={scanlationGroups}
+            setTranslator={setScanlationGroups}
+            handleSwitchOrder={() =>
+              setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
+            }
+            handleFilterScanlationGroups={handleFilterScanlationGroups}
+            selectedScanlationGroup={selectedScanlationGroup}
+          />
+        </Menu>{" "}
         <div className="bottom-desktop-container">
           <div className="manga-chapter-list">
             {mangaFeed.length > 0 ? (
@@ -473,16 +504,21 @@ const IndividualManga = ({
                 Show More
               </Button>
             )}
-            <Typography fontSize={20} fontFamily="Figtree" align="center">
-              Similar Manga
-            </Typography>{" "}
-            <div className="similar-manga-section">
-              <SimilarManga
-                manga={similarManga}
-                accountId={accountId === null ? null : accountId}
-                contentFilter={contentFilter === null ? 3 : contentFilter}
-              />
-            </div>
+            {similarManga.length > 0 && (
+              <>
+                <Typography fontSize={20} fontFamily="Figtree" align="center">
+                  Similar Manga
+                </Typography>
+                <div className="similar-manga-section">
+                  <TrendingMangaCarousel
+                    manga={similarManga}
+                    accountId={accountId === null ? null : accountId}
+                    contentFilter={contentFilter === null ? 3 : contentFilter}
+                    numbered={false}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

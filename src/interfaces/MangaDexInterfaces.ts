@@ -47,6 +47,7 @@ export interface Manga {
   index?: number;
   bookmarkPageNumber?: number;
   bookmarkContinueReading?: boolean;
+  latestChapter?: MangaFeedScanlationGroup[];
 }
 
 export interface MangaChapter {

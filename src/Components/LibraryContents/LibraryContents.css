@@ -1,12 +1,6 @@
-.library-entries-container {
-  position: relative;
-  padding-bottom: 20px;
-}
-
 .manga-entry-overlay-button {
   padding: 0px !important;
 }
 
-.redirect-button {
-  margin-top: 20px !important;
+.library-entries-grid {
 }

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
@@ -30,7 +29,6 @@ const LibraryContents = (props: Props) => {
     accountId,
     contentFilter,
   } = props;
-  const navigate = useNavigate();
 
   const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{
     [key: string]: string;
@@ -59,25 +57,15 @@ const LibraryContents = (props: Props) => {
   }, [libraryManga]);
 
   return (
-    <div className="library-entries-container">
+    <>
       <Grid
         container
         direction={"row"}
         justifyContent={"center"}
-        alignItems={"center"}
-        wrap={"wrap"}
+        alignItems={"flex-start"}
         spacing={1}
+        className="library-entries-grid"
       >
-        {libraryManga.length === 0 ? (
-          <Button
-            className="redirect-button"
-            onClick={() => {
-              navigate("/", { state: { accountId: accountId } });
-            }}
-          >
-            <Typography fontFamily="Figtree">Start Browsing</Typography>
-          </Button>
-        ) : null}
         {groupedLibraryManga !== null
           ? currentMetric === "Content Rating"
             ? groupedLibraryManga.map((currentRating: Manga[]) => (
@@ -198,7 +186,7 @@ const LibraryContents = (props: Props) => {
               </Grid>
             ))}
       </Grid>
-    </div>
+    </>
   );
 };
 

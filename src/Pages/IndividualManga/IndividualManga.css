@@ -38,22 +38,21 @@
 
 .controls-chapters-section {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   position: relative;
   flex-grow: 1;
   max-height: calc(var(--vh, 1vh) * 99);
-  min-height: calc(var(--vh, 1vh) * 99);
   overflow: hidden;
 }
 
 .show-more-button {
-  margin-bottom: 20px !important;
   font-family: "Figtree", sans-serif !important;
   text-transform: none !important;
+  margin-bottom: 10px !important;
   width: 50%;
-  height: 50px;
+  height: 36px;
   color: unset !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
@@ -93,7 +92,6 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  flex-grow: 1;
   overflow: hidden;
   width: 100%;
   &::-webkit-scrollbar {
@@ -102,11 +100,8 @@
 }
 
 .similar-manga-section {
-  overflow: scroll;
-  min-height: 40vh;
   width: 100%;
   display: flex;
-  flex-grow: 1;
   scrollbar-width: none;
 }
 
@@ -123,4 +118,32 @@
 
 .similar-manga::-webkit-scrollbar {
   display: none;
+}
+
+.filter-button {
+  justify-content: center !important;
+  align-items: center !important;
+  height: 30px;
+  margin-top: 2px !important;
+  align-self: flex-end;
+  right: 2px;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+#filter-menu {
+  & .MuiList-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #ffffff;
+  }
+  & .MuiPaper-root {
+    background-color: #1f1f1f !important;
+    border-radius: 10px;
+  }
 }

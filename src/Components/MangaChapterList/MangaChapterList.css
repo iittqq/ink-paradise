@@ -1,6 +1,7 @@
 .chapters-list {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  width: calc(99% + 8px) !important;
 }
 .chapters-list::-webkit-scrollbar {
   display: none;
@@ -15,8 +16,9 @@
 
 .chapter-button {
   color: unset !important;
-  width: 90%;
   height: 90%;
+  display: flex;
+  flex-grow: 1;
   justify-content: space-between !important;
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
@@ -31,7 +33,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
   padding-bottom: 10px;
 }
 
@@ -51,10 +52,10 @@
 
 .info-stack {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  width: 40%;
+  width: 100%;
 }
 
 .external-link-button {
@@ -69,12 +70,27 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   font-family: "Figtree" !important;
-  color: #fff;
+  max-width: 80px;
+  @media (width <= 1200px) and (width >= 400px) {
+    max-width: 100px !important;
+  }
+  @media (width >= 1200px) {
+    max-width: 120px !important;
+  }
+  text-transform: none;
 }
+
+.chapter-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .chapter-details {
   font-family: "Figtree" !important;
-  display: -webkit-box;
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography, Button } from "@mui/material";
 import "./Library.css";
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
@@ -10,7 +10,8 @@ import {
   getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
 } from "../../api/Reading";
-import { fetchMangaById } from "../../api/MangaDexApi";
+import { useNavigate } from "react-router-dom";
+import { fetchMangaById, fetchMangaFeed } from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
@@ -78,6 +79,33 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   const [folderBackground, setFolderBackground] = useState<string | null>(null);
   const [desktop] = useState(window.innerWidth > 600);
 
+  const [showHeader, setShowHeader] = useState(false);
+
+  const handleScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+
+    // Check if the user is at the bottom of the page
+    if (scrollTop + clientHeight >= scrollHeight) {
+      setShowHeader(true);
+    } else {
+      setShowHeader(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up event listener on unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const navigate = useNavigate();
+
   const searchFavorites = async (searchValue: string) => {
     setLibrary([]);
     if (searchValue === "") {
@@ -112,11 +140,26 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
       );
       const mangaData: Manga[] = await Promise.all(mangaPromises);
 
+      const latestChapterPromises = mangaData.map((manga) =>
+        fetchMangaFeed(manga.id, 1, 0, "desc", "en").then((feed) => {
+          return feed;
+        }),
+      );
+      const latestChapters = await Promise.all(latestChapterPromises);
+
+      console.log(data);
+      const mangaWithLatestChapter: Manga[] = mangaData.map((manga, index) => ({
+        ...manga,
+        latestChapter: latestChapters[index],
+        chapterNumber: data[index].chapter,
+      }));
+
       const sortedMangaData = sortMangaData(
-        mangaData,
+        mangaWithLatestChapter,
         contentFilter,
         ascending,
       );
+
       setLibrary(sortedMangaData);
       setGroupedLibrary(
         groupLibraryData(sortedMangaData, contentFilter, ascending),
@@ -321,19 +364,60 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   };
 
   const handleFindingFolderEntriesById = async (folderId: number) => {
-    findMangaFolderEntryById(folderId).then((response: MangaFolderEntry[]) => {
-      const promises = response.map((entry: MangaFolderEntry) => {
-        return fetchMangaById(entry.mangaId);
-      });
-      Promise.all(promises)
-        .then((data) => {
-          setFolderMangaData(data);
-          setLoadingFolder(false);
-        })
-        .catch((error) => console.log(error));
-    });
-  };
+    setLoadingFolder(true);
 
+    try {
+      // Fetch folder entries by folderId
+      const folderEntries: MangaFolderEntry[] =
+        await findMangaFolderEntryById(folderId);
+
+      // Fetch user reading data to get chapter numbers
+      const readingData: Reading[] = await getReadingByUserId(account!.id);
+
+      // Map folder entries to include the corresponding chapterNumber from readingData
+      const enrichedFolderEntries = folderEntries.map((entry) => {
+        const readingEntry = readingData.find(
+          (reading) => reading.mangaId === entry.mangaId,
+        );
+        return {
+          ...entry,
+          chapterNumber: readingEntry?.chapter ?? undefined, // Convert null to undefined
+        };
+      });
+
+      // Fetch manga details for each folder entry
+      const mangaPromises = enrichedFolderEntries.map((entry) =>
+        fetchMangaById(entry.mangaId),
+      );
+      const mangaData: Manga[] = await Promise.all(mangaPromises);
+
+      // Fetch the latest chapter for each manga
+      const latestChapterPromises = mangaData.map((manga) =>
+        fetchMangaFeed(manga.id, 1, 0, "desc", "en").then((feed) => {
+          return feed;
+        }),
+      );
+      const latestChapters = await Promise.all(latestChapterPromises);
+
+      // Combine manga data with latest chapter and chapter number
+      const mangaWithLatestChapter = mangaData.map((manga, index) => {
+        const folderEntry = enrichedFolderEntries.find(
+          (entry) => entry.mangaId === manga.id,
+        );
+        return {
+          ...manga,
+          latestChapter: latestChapters[index],
+          chapterNumber: folderEntry?.chapterNumber, // Use chapterNumber from enriched folder entries
+        };
+      });
+
+      setFolderMangaData(mangaWithLatestChapter);
+    } catch (error) {
+      console.error("Error finding folder entries:", error);
+    } finally {
+      setLoadingFolder(false);
+    }
+  };
   const handleFolderClick = async (folder: MangaFolder) => {
     if (checkedFolder && folder.folderId !== undefined) {
       if (mangaFoldersToDelete.includes(folder.folderId)) {
@@ -498,61 +582,72 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
       </div>
       <div className="library-header-and-contents">
         {desktop === true &&
-          (selectedFolder === null ? (
-            <LibraryHeader
-              searchFavorites={searchFavorites}
-              handleAscendingChange={handleAscendingChange}
-              handleContentFilter={handleContentFilter}
-              checked={checked}
-              toggleLibraryEntries={toggleLibraryEntries}
-              handleDeleteLibraryEntries={handleDeleteLibraryEntries}
-              toggleSelectAll={toggleSelectAll}
-              selectAll={selectAll}
-              libraryEntriesToDelete={libraryEntriesToDelete}
-              handleClickAddFolderButton={handleClickAddFolderButton}
-              openAddFolder={openAddFolder}
-              handleFolderDialogClose={handleFolderDialogClose}
-              handleCreateFolder={handleCreateFolder}
-              handleFolderNameChange={handleFolderNameChange}
-              handleFolderBackgroundChange={handleFolderBackgroundChange}
-              handleFolderDescriptionChange={handleFolderDescriptionChange}
-              mangaFoldersToDelete={mangaFoldersToDelete}
-              toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-              handleDeleteMangaFolders={handleDeleteMangaFolders}
-              checkedFolder={checkedFolder}
-            />
-          ) : (
-            <FolderActionsBar
-              handleClickBack={handleClickBack}
-              handleDeleteMangaEntries={handleDeleteMangaEntries}
-              handleDeleteMangaFolders={handleDeleteMangaFolders}
-              checked={checkedFolder}
-              toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-              handleClickAddFolderButton={handleClickAddFolderButton}
-              handleFolderDialogClose={handleFolderDialogClose}
-              handleCreateFolder={handleCreateFolder}
-              openAddFolder={openAddFolder}
-              selectedFolder={selectedFolder}
-              handleFolderNameChange={handleFolderNameChange}
-              handleFolderDescriptionChange={handleFolderDescriptionChange}
-              selectAll={selectAllFolderContent}
-              toggleSelectAll={toggleSelectAllFolderContent}
-              mangaFoldersToDelete={mangaFoldersToDelete}
-              mangaEntriesToDelete={mangaEntriesToDelete}
-              handleFolderBackgroundChange={handleFolderBackgroundChange}
-              handleClickEditFolderButton={handleClickEditFolderButton}
-              openEditFolder={openEditFolder}
-              handleEditFolder={handleEditFolder}
-              handleEditFolderDialogClose={handleEditFolderDialogClose}
-              newFolderName={newFolderName}
-              newFolderDescription={newFolderDescription}
-              folderBackground={folderBackground}
-            />
-          ))}
+          (selectedFolder === null
+            ? !loading && (
+                <LibraryHeader
+                  searchFavorites={searchFavorites}
+                  handleAscendingChange={handleAscendingChange}
+                  handleContentFilter={handleContentFilter}
+                  checked={checked}
+                  toggleLibraryEntries={toggleLibraryEntries}
+                  handleDeleteLibraryEntries={handleDeleteLibraryEntries}
+                  toggleSelectAll={toggleSelectAll}
+                  selectAll={selectAll}
+                  libraryEntriesToDelete={libraryEntriesToDelete}
+                  handleClickAddFolderButton={handleClickAddFolderButton}
+                  openAddFolder={openAddFolder}
+                  handleFolderDialogClose={handleFolderDialogClose}
+                  handleCreateFolder={handleCreateFolder}
+                  handleFolderNameChange={handleFolderNameChange}
+                  handleFolderBackgroundChange={handleFolderBackgroundChange}
+                  handleFolderDescriptionChange={handleFolderDescriptionChange}
+                  mangaFoldersToDelete={mangaFoldersToDelete}
+                  toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                  handleDeleteMangaFolders={handleDeleteMangaFolders}
+                  checkedFolder={checkedFolder}
+                />
+              )
+            : !loading && (
+                <FolderActionsBar
+                  handleClickBack={handleClickBack}
+                  handleDeleteMangaEntries={handleDeleteMangaEntries}
+                  handleDeleteMangaFolders={handleDeleteMangaFolders}
+                  checked={checkedFolder}
+                  toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                  handleClickAddFolderButton={handleClickAddFolderButton}
+                  handleFolderDialogClose={handleFolderDialogClose}
+                  handleCreateFolder={handleCreateFolder}
+                  openAddFolder={openAddFolder}
+                  selectedFolder={selectedFolder}
+                  handleFolderNameChange={handleFolderNameChange}
+                  handleFolderDescriptionChange={handleFolderDescriptionChange}
+                  selectAll={selectAllFolderContent}
+                  toggleSelectAll={toggleSelectAllFolderContent}
+                  mangaFoldersToDelete={mangaFoldersToDelete}
+                  mangaEntriesToDelete={mangaEntriesToDelete}
+                  handleFolderBackgroundChange={handleFolderBackgroundChange}
+                  handleClickEditFolderButton={handleClickEditFolderButton}
+                  openEditFolder={openEditFolder}
+                  handleEditFolder={handleEditFolder}
+                  handleEditFolderDialogClose={handleEditFolderDialogClose}
+                  newFolderName={newFolderName}
+                  newFolderDescription={newFolderDescription}
+                  folderBackground={folderBackground}
+                />
+              ))}
         {loading === true ? (
           <div className="loading-indicator-container">
             <CircularProgress className="loading-icon" size={25} />
           </div>
+        ) : library.length === 0 ? (
+          <Button
+            className="redirect-button"
+            onClick={() => {
+              navigate("/", { state: { accountId: account!.id } });
+            }}
+          >
+            <Typography fontFamily="Figtree">Start Browsing</Typography>
+          </Button>
         ) : (
           <div className="scrolling-library">
             {selectedFolder === null ? (
@@ -602,8 +697,11 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
                 accountDetails === null ? 3 : accountDetails.contentFilter
               }
             />
-            {desktop === false &&
-              (selectedFolder === null ? (
+          </div>
+        )}{" "}
+        {desktop === false &&
+          (selectedFolder === null
+            ? showHeader && (
                 <div
                   style={{
                     position: "fixed",
@@ -637,7 +735,8 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
                     checkedFolder={checkedFolder}
                   />
                 </div>
-              ) : (
+              )
+            : showHeader && (
                 <div
                   style={{
                     position: "fixed",
@@ -676,8 +775,6 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
                   />
                 </div>
               ))}
-          </div>
-        )}{" "}
       </div>
     </div>
   );

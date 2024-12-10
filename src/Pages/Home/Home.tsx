@@ -41,25 +41,25 @@ const Home = ({ account, accountDetails }: HomeProps) => {
   useEffect(() => {
     const fetchData = async () => {
       const selectedMangaIds = [
-        "db692d58-4b13-4174-ae8c-30c515c0689c",
+        "e5ce88e2-8c46-482d-8acf-5c6d5a64a585",
 
-        "29ab6984-7c1d-4d45-b925-25aa082b492e",
+        "53c628b3-d1f5-43aa-8df3-080034285cb4",
 
-        "baa95345-24fb-47a9-83e9-434ff671f968",
+        "f29d4785-396a-494e-b48f-47d02f583276",
 
-        "a77742b1-befd-49a4-bff5-1ad4e6b0ef7b",
+        "90ea8757-c0d8-42f1-b4a8-4594b5065eb4",
 
-        "566ab917-4893-423a-8b0c-787ba77b6def",
+        "e1e38166-20e4-4468-9370-187f985c550e",
 
-        "8946189d-682f-4838-9c2a-3c2dd5132f2c",
+        "6fef1f74-a0ad-4f0d-99db-d32a7cd24098",
 
-        "44a5cbe1-0204-4cc7-a1ff-0fda2ac004b6",
+        "34f45c13-2b78-4900-8af2-d0bb551101f4",
 
-        "319df2e2-e6a6-4e3a-a31c-68539c140a84",
+        "2e0fdb3b-632c-4f8f-a311-5b56952db647",
 
-        "d1a9fdeb-f713-407f-960c-8326b586e6fd",
+        "65263bf9-4f87-4513-b72f-ad6436b3911c",
 
-        "6b1eb93e-473a-4ab3-9922-1a66d2a29a4a",
+        "a4b39b6e-a448-4644-a540-64ceff1d8305",
       ];
 
       if (account && accountDetails) {
