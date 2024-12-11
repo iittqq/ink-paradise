@@ -12,7 +12,6 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  Menu,
   Collapse,
 } from "@mui/material";
 import {
@@ -38,7 +37,6 @@ import MangaChapterList from "../MangaChapterList/MangaChapterList";
 import HomeIcon from "@mui/icons-material/Home";
 import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import MenuIcon from "@mui/icons-material/Menu";
 
 type Props = {
   pages: string[];
@@ -120,7 +118,6 @@ const PageAndControls = (props: Props) => {
   const [chapterIndexState, setChapterIndexState] =
     useState<number>(chapterIndex);
   const [orderState] = useState<string>(order || "asc");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(startPage);
@@ -353,14 +350,6 @@ const PageAndControls = (props: Props) => {
     });
   };
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
   useEffect(() => {
     let localPage = currentPage; // Local variable to track the current page
 
@@ -468,173 +457,145 @@ const PageAndControls = (props: Props) => {
         </ListItemButton>
         <div className="title-settings-row">
           <Button
-            className="reader-menu-button"
-            onClick={handleClickMenu}
-            sx={{ minWidth: "40px", color: "unset" }}
+            className="home-button"
+            onClick={() => handleClickLogo()}
+            sx={{
+              minWidth: "40px",
+              color: "unset",
+            }}
           >
-            <MenuIcon />
+            <HomeIcon />
           </Button>
-          <Menu
-            id="header-menu-reader"
-            disableScrollLock
-            disableEnforceFocus
-            disableAutoFocus
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleCloseMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
+          {accountId === null ? null : (
             <Button
-              className="home-button"
-              onClick={() => handleClickLogo()}
+              className="library-button-reader"
+              onClick={() => {
+                handleClickLibrary();
+              }}
               sx={{
                 minWidth: "40px",
                 color: "unset",
               }}
             >
-              <HomeIcon />
+              <BookIcon />
             </Button>
-            {accountId === null ? null : (
-              <Button
-                className="library-button-reader"
-                onClick={() => {
-                  handleClickLibrary();
-                }}
-                sx={{
-                  minWidth: "40px",
-                  color: "unset",
-                }}
-              >
-                <BookIcon />
-              </Button>
-            )}
-            {readerMode === 3 || readerMode === 4 ? (
-              bookmarks.includes(parseInt(chapterNumber)) || accountId === null
-            ) : bookmarks.includes(pageNumber + 1) ||
-              accountId === null ? null : (
-              <Button
-                className="bookmark-button"
-                sx={{ minWidth: "40px", color: "unset" }}
-                onClick={async () => {
-                  const simpleMangaName = mangaName.replace(/[^a-zA-Z]/g, " ");
-                  const newBookmark = {
-                    userId: accountId,
-                    mangaId: mangaId,
-                    mangaName: simpleMangaName,
-                    chapterNumber: parseInt(chapterNumber),
-                    chapterId: chapterId,
-                    chapterIndex: Math.trunc(parseInt(chapterNumber)),
-                    continueReading: false,
-                    pageNumber: pageNumber + 1,
-                  };
-
-                  try {
-                    // Call the API to update or create the bookmark
-                    const response = await updateOrCreateBookmark(newBookmark);
-
-                    // Update the state with the new bookmark if the API call succeeds
-                    setBookmarks((prevBookmarks) => [
-                      ...prevBookmarks,
-                      pageNumber + 1,
-                    ]);
-
-                    console.log(
-                      "Bookmark updated or created successfully:",
-                      response,
-                    );
-                  } catch (error) {
-                    console.error(
-                      "Failed to update or create bookmark:",
-                      error,
-                    );
-                  }
-                }}
-              >
-                <BookmarkAddIcon />
-              </Button>
-            )}
+          )}
+          {readerMode === 3 || readerMode === 4 ? (
+            bookmarks.includes(parseInt(chapterNumber)) || accountId === null
+          ) : bookmarks.includes(pageNumber + 1) ||
+            accountId === null ? null : (
             <Button
-              className="settings-button"
-              onClick={() => {
-                setOpenSettings(true);
-              }}
+              className="bookmark-button"
               sx={{ minWidth: "40px", color: "unset" }}
-            >
-              {" "}
-              <SettingsIcon />{" "}
-            </Button>
-            <Dialog
-              id="settings-dialog"
-              open={openSettings}
-              onClose={() => {
-                handleSettingsDialogClose();
+              onClick={async () => {
+                const simpleMangaName = mangaName.replace(/[^a-zA-Z]/g, " ");
+                const newBookmark = {
+                  userId: accountId,
+                  mangaId: mangaId,
+                  mangaName: simpleMangaName,
+                  chapterNumber: parseInt(chapterNumber),
+                  chapterId: chapterId,
+                  chapterIndex: Math.trunc(parseInt(chapterNumber)),
+                  continueReading: false,
+                  pageNumber: pageNumber + 1,
+                };
+
+                try {
+                  // Call the API to update or create the bookmark
+                  const response = await updateOrCreateBookmark(newBookmark);
+
+                  // Update the state with the new bookmark if the API call succeeds
+                  setBookmarks((prevBookmarks) => [
+                    ...prevBookmarks,
+                    pageNumber + 1,
+                  ]);
+
+                  console.log(
+                    "Bookmark updated or created successfully:",
+                    response,
+                  );
+                } catch (error) {
+                  console.error("Failed to update or create bookmark:", error);
+                }
               }}
             >
-              <DialogTitle
-                sx={{
-                  color: "#fff",
-                  textAlign: "center",
-                  fontFamily: "Figtree",
-                }}
-              >
-                Settings
-              </DialogTitle>
-              <DialogContent>
-                <Typography color="white" fontFamily="Figtree">
-                  Reader Mode
-                </Typography>
-                <FormControl fullWidth>
-                  <Select
-                    id="edit-reader-mode-select"
-                    className="edit-reader-mode-dropdown"
-                    value={readerModeString}
-                    label="Reader Mode"
-                    variant="standard"
-                    disableUnderline={true}
-                    onChange={handleChangeNewReaderMode}
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        color: "white",
-                      },
-                    }}
-                    MenuProps={{
-                      PaperProps: { style: { backgroundColor: "#333333" } },
-                    }}
-                  >
-                    <MenuItem className="edit-reader-mode-item" value={1}>
-                      Right to Left
-                    </MenuItem>
-                    <MenuItem className="edit-reader-mode-item" value={2}>
-                      Left to Right
-                    </MenuItem>
-                    <MenuItem className="edit-reader-mode-item" value={3}>
-                      Vertical Right to Left
-                    </MenuItem>
-                    <MenuItem className="edit-reader-mode-item" value={4}>
-                      Vertical Left to Right
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                <div className="edit-reader-mode-container">
-                  <Button
-                    className="save-reader-mode-button"
-                    onClick={() => {
-                      handleEditAccountInfo();
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </Menu>
+              <BookmarkAddIcon />
+            </Button>
+          )}
+          <Button
+            className="settings-button"
+            onClick={() => {
+              setOpenSettings(true);
+            }}
+            sx={{ minWidth: "40px", color: "unset" }}
+          >
+            {" "}
+            <SettingsIcon />{" "}
+          </Button>
+          <Dialog
+            id="settings-dialog"
+            open={openSettings}
+            onClose={() => {
+              handleSettingsDialogClose();
+            }}
+          >
+            <DialogTitle
+              sx={{
+                color: "#fff",
+                textAlign: "center",
+                fontFamily: "Figtree",
+              }}
+            >
+              Settings
+            </DialogTitle>
+            <DialogContent>
+              <Typography color="white" fontFamily="Figtree">
+                Reader Mode
+              </Typography>
+              <FormControl fullWidth>
+                <Select
+                  id="edit-reader-mode-select"
+                  className="edit-reader-mode-dropdown"
+                  value={readerModeString}
+                  label="Reader Mode"
+                  variant="standard"
+                  disableUnderline={true}
+                  onChange={handleChangeNewReaderMode}
+                  sx={{
+                    "& .MuiSvgIcon-root": {
+                      color: "white",
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: { style: { backgroundColor: "#333333" } },
+                  }}
+                >
+                  <MenuItem className="edit-reader-mode-item" value={1}>
+                    Right to Left
+                  </MenuItem>
+                  <MenuItem className="edit-reader-mode-item" value={2}>
+                    Left to Right
+                  </MenuItem>
+                  <MenuItem className="edit-reader-mode-item" value={3}>
+                    Vertical Right to Left
+                  </MenuItem>
+                  <MenuItem className="edit-reader-mode-item" value={4}>
+                    Vertical Left to Right
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <div className="edit-reader-mode-container">
+                <Button
+                  className="save-reader-mode-button"
+                  onClick={() => {
+                    handleEditAccountInfo();
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </List>
       {open === true ? null : (

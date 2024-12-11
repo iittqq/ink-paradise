@@ -65,19 +65,11 @@
 }
 
 .scanlation-name {
-  display: -webkit-box;
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-family: "Figtree" !important;
-  max-width: 80px;
-  @media (width <= 1200px) and (width >= 400px) {
-    max-width: 100px !important;
-  }
-  @media (width >= 1200px) {
-    max-width: 120px !important;
-  }
-  text-transform: none;
+  max-width: 90px;
 }
 
 .chapter-row {
@@ -93,4 +85,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.show-more-button {
+  font-family: "Figtree", sans-serif !important;
+  text-transform: none !important;
+  width: 50%;
+  margin-top: 10px !important;
+  height: 36px;
+  color: unset !important;
+  align-self: center;
+  display: flex !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }

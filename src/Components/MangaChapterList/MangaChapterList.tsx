@@ -21,6 +21,8 @@ type Props = {
   contentFilter: number;
   sortOrder: string;
   oneshot?: boolean;
+  handleShowMore?: () => void;
+  offset?: number;
 };
 const MangaChapterList = (props: Props) => {
   const {
@@ -35,6 +37,8 @@ const MangaChapterList = (props: Props) => {
     contentFilter,
     sortOrder,
     oneshot,
+    handleShowMore,
+    offset,
   } = props;
   const [xsValue] = useState(
     window.innerWidth > 900 ? 2 : mangaFeed.length === 1 ? 12 : 6,
@@ -202,6 +206,12 @@ const MangaChapterList = (props: Props) => {
           ) : null,
         )}
       </Grid>
+
+      {handleShowMore !== undefined && mangaFeed.length >= offset! + 100 && (
+        <Button className="show-more-button" onClick={handleShowMore}>
+          Show More
+        </Button>
+      )}
     </div>
   );
 };

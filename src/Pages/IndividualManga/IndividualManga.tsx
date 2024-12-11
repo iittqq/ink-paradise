@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Typography, Menu } from "@mui/material";
+import {
+  Typography,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+} from "@mui/material";
 import MangaBanner from "../../Components/MangaBanner/MangaBanner";
 import MangaControls from "../../Components/MangaControls/MangaControls";
 import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
@@ -33,7 +38,8 @@ import {
 import { updateOrCreateBookmark } from "../../api/Bookmarks";
 import "./IndividualManga.css";
 import TrendingMangaCarousel from "../../Components/TrendingMangaCarousel/TrendingMangaCarousel";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 interface IndividualMangaProps {
   accountId: number | null;
@@ -76,9 +82,8 @@ const IndividualManga = ({
   const [selectedScanlationGroup, setSelectedScanlationGroup] = useState<
     ScanlationGroup | undefined
   >();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [libraryEntryExists, setLibraryEntryExists] = useState(false);
-
+  const [openFeed, setOpenFeed] = useState(false);
   const [uiState, setUIState] = useState({
     open: false,
     mangaExistsError: false,
@@ -86,6 +91,10 @@ const IndividualManga = ({
     showCategoriesToggled: false,
     mangaAddedAlert: false,
   });
+
+  const handleOpenFeed = () => {
+    setOpenFeed(!openFeed);
+  };
 
   const checkLibraryEntry = useCallback(async () => {
     if (accountId && id) {
@@ -358,16 +367,6 @@ const IndividualManga = ({
     );
   };
 
-  const handleClickFilterMenu = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseFilterMenu = () => {
-    setAnchorEl(null);
-  };
-
   return (
     <div className="individual-page-container">
       <MangaBanner
@@ -425,101 +424,89 @@ const IndividualManga = ({
         setFolders={setFolders}
       />
       <div className="controls-chapters-section">
-        <Button className="filter-button" onClick={handleClickFilterMenu}>
-          {" "}
-          <FilterAltIcon className="filter-icon" />
-        </Button>
-        <Menu
-          id="filter-menu"
-          disableScrollLock
-          disableEnforceFocus
-          disableAutoFocus
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseFilterMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {" "}
-          <MangaControls
-            mangaLanguages={mangaInfo.languages}
-            selectedLanguage={selectedLanguage}
-            handleClickedLanguageButton={handleLanguageChange}
-            mangaTranslators={scanlationGroups}
-            setTranslator={setScanlationGroups}
-            handleSwitchOrder={() =>
-              setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
-            }
-            handleFilterScanlationGroups={handleFilterScanlationGroups}
-            selectedScanlationGroup={selectedScanlationGroup}
-          />
-        </Menu>{" "}
+        {" "}
         <div className="bottom-desktop-container">
-          <div className="manga-chapter-list">
-            {mangaFeed.length > 0 ? (
-              <Typography fontSize={20} fontFamily="Figtree" align="center">
-                Chapters
-              </Typography>
-            ) : (
-              <Typography fontSize={20} fontFamily="Figtree" align="center">
-                No Chapters...
-              </Typography>
-            )}
-            {mangaFeed.length > 0 && (
-              <>
-                <MangaChapterList
-                  mangaFeed={
-                    selectedScanlationGroup && filteredMangaFeed
-                      ? filteredMangaFeed
-                      : mangaFeed
-                  }
-                  mangaName={mangaInfo.name}
-                  selectedLanguage={selectedLanguage}
-                  mangaId={id ?? ""}
-                  insideReader={false}
-                  coverUrl={decodeURIComponent(mangaInfo.coverUrl)}
-                  accountId={accountId ?? null}
-                  contentFilter={contentFilter === null ? 3 : contentFilter}
-                  sortOrder={currentOrder}
-                  oneshot={
-                    mangaInfo.tags.some(
-                      (current: MangaTagsInterface) =>
-                        current.attributes.name.en === "Oneshot",
-                    ) ||
-                    (mangaInfo.status === "completed" && mangaFeed.length === 1)
-                      ? true
-                      : false
-                  }
-                />
-              </>
-            )}
-            {mangaFeed.length >= currentOffset + 100 && (
-              <Button className="show-more-button" onClick={handleShowMore}>
-                Show More
-              </Button>
-            )}
-            {similarManga.length > 0 && (
-              <>
-                <Typography fontSize={20} fontFamily="Figtree" align="center">
-                  Similar Manga
-                </Typography>
-                <div className="similar-manga-section">
-                  <TrendingMangaCarousel
-                    manga={similarManga}
-                    accountId={accountId === null ? null : accountId}
-                    contentFilter={contentFilter === null ? 3 : contentFilter}
-                    numbered={false}
-                  />
-                </div>
-              </>
-            )}
+          <div className="controls-and-feed-container">
+            <ListItemButton
+              className="individual-page-feed-button"
+              onClick={() => handleOpenFeed()}
+            >
+              <AutoStoriesIcon sx={{ paddingLeft: "4px" }} />
+              <ListItemText
+                primary={
+                  <Typography
+                    className="reader-page-text"
+                    sx={{ width: "100%" }}
+                    noWrap
+                  >
+                    Chapters
+                  </Typography>
+                }
+              />
+              {openFeed ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <MangaControls
+              mangaLanguages={mangaInfo.languages}
+              selectedLanguage={selectedLanguage}
+              handleClickedLanguageButton={handleLanguageChange}
+              mangaTranslators={scanlationGroups}
+              setTranslator={setScanlationGroups}
+              handleSwitchOrder={() =>
+                setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
+              }
+              handleFilterScanlationGroups={handleFilterScanlationGroups}
+              selectedScanlationGroup={selectedScanlationGroup}
+            />
           </div>
+          <Collapse
+            className="individual-page-feed-collapse"
+            sx={{ paddingTop: openFeed === true ? "5px" : "0px !important" }}
+            in={openFeed}
+            timeout="auto"
+          >
+            <MangaChapterList
+              mangaFeed={
+                selectedScanlationGroup && filteredMangaFeed
+                  ? filteredMangaFeed
+                  : mangaFeed
+              }
+              mangaName={mangaInfo.name}
+              selectedLanguage={selectedLanguage}
+              mangaId={id ?? ""}
+              insideReader={false}
+              coverUrl={decodeURIComponent(mangaInfo.coverUrl)}
+              accountId={accountId ?? null}
+              contentFilter={contentFilter === null ? 3 : contentFilter}
+              sortOrder={currentOrder}
+              oneshot={
+                mangaInfo.tags.some(
+                  (current: MangaTagsInterface) =>
+                    current.attributes.name.en === "Oneshot",
+                ) ||
+                (mangaInfo.status === "completed" && mangaFeed.length === 1)
+                  ? true
+                  : false
+              }
+              offset={currentOffset}
+              handleShowMore={handleShowMore}
+            />
+          </Collapse>
+
+          {!openFeed && similarManga.length > 0 && (
+            <>
+              <Typography fontSize={20} fontFamily="Figtree" align="center">
+                Similar Manga
+              </Typography>
+              <div className="similar-manga-section">
+                <TrendingMangaCarousel
+                  manga={similarManga}
+                  accountId={accountId === null ? null : accountId}
+                  contentFilter={contentFilter === null ? 3 : contentFilter}
+                  numbered={false}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

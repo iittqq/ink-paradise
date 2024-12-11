@@ -42,25 +42,8 @@
   align-items: center;
   flex-direction: column;
   position: relative;
-  flex-grow: 1;
-  max-height: calc(var(--vh, 1vh) * 99);
+  max-height: calc(var(--vh, 1vh) * 99) !important;
   overflow: hidden;
-}
-
-.show-more-button {
-  font-family: "Figtree", sans-serif !important;
-  text-transform: none !important;
-  margin-bottom: 10px !important;
-  width: 50%;
-  height: 36px;
-  color: unset !important;
-  &.MuiButtonBase-root:hover {
-    background-color: transparent;
-  }
-
-  box-shadow:
-    0 4px 8px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .page-header {
@@ -90,9 +73,11 @@
 .bottom-desktop-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
+  flex-grow: 1;
+  padding-top: 10px;
   width: 100%;
   &::-webkit-scrollbar {
     display: none;
@@ -145,5 +130,31 @@
   & .MuiPaper-root {
     background-color: #1f1f1f !important;
     border-radius: 10px;
+  }
+}
+
+.individual-page-feed-collapse {
+  min-width: 90vw;
+  display: flex;
+  overflow-y: scroll !important;
+  margin-top: 5px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.individual-page-feed-button {
+  gap: 10px;
+  max-width: 190px !important;
+  max-height: 30px;
+  padding: 0px !important;
+  margin: 0px 0px 0px 2px !important;
+  background-color: transparent;
+  border-radius: 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  text-align: center !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
   }
 }

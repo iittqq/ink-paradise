@@ -55,7 +55,7 @@ const globalStyle = createGlobalStyle`
   }
   
   .asc-desc-button {
-    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+    outline: 2px solid ${({ theme }) => theme.elevatedSection};
     color: ${({ theme }) => theme.text} !important;
   }
 
@@ -63,10 +63,10 @@ const globalStyle = createGlobalStyle`
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
-  .loading-icon, .loading-{
+  .loading-icon {
     color: ${({ theme }) => theme.text};
   }
-  
+
   .folder{
     &.MuiButtonBase-root:hover {
       background-color: ${({ theme }) => theme.elevatedSectionLight};
@@ -120,7 +120,7 @@ const globalStyle = createGlobalStyle`
   }
 
   .list-button, .filter-button{
-    outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+    outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
   .return-button{
@@ -132,7 +132,7 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   }
 
-  .reader-feed-button, .bookmark-button, .settings-button, .home-button, .library-button-reader, .reader-menu-button{
+  .individual-page-feed-button, .reader-feed-button, .bookmark-button, .settings-button, .home-button, .library-button-reader, .reader-menu-button{
     outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
@@ -174,7 +174,7 @@ const globalStyle = createGlobalStyle`
   }
 
   .controls-icon, .filter-icon {
-    color: ${({ theme }) => theme.elevatedSection};
+    color: ${({ theme }) => theme.text};
   }
 
   .library-divider{
