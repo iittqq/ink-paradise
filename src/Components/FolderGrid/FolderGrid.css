@@ -29,6 +29,7 @@
   background-repeat: no-repeat;
   overflow: hidden;
   word-wrap: break-word;
+  color: unset;
   text-overflow: ellipsis;
   padding: 0 !important;
   box-shadow:

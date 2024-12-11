@@ -176,15 +176,9 @@ const MangaBanner = (props: Props) => {
       </div>
       <div
         className="manga-details"
-        style={{ maxHeight: showMore === true ? "none" : "50px" }}
+        style={{ maxHeight: showMore === true ? "none" : "3em" }}
       >
-        <Typography
-          className="manga-description"
-          sx={{
-            WebkitLineClamp: 5,
-            fontSize: { xs: 15, sm: 15, lg: 18 },
-          }}
-        >
+        <Typography className="manga-description">
           {mangaDescription}
         </Typography>
       </div>

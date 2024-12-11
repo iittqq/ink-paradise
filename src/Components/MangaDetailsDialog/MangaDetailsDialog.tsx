@@ -353,6 +353,45 @@ const MangaDetailsDialog = (props: Props) => {
     }
   };
 
+  const handleStartReadingNew = async () => {
+    try {
+      const mangaFeed = await fetchMangaFeed(
+        mangaDetails.id,
+        100,
+        0,
+        "asc",
+        "en",
+      );
+      fetchChapterDetails(mangaFeed[0].id).then((response: ChapterDetails) => {
+        navigate("/reader", {
+          state: {
+            mangaId: mangaDetails.id,
+            chapterId: response.id,
+            title: response.attributes.title,
+            volume: response.attributes.volume,
+            mangaName:
+              mangaDetails.attributes.title.en === undefined
+                ? Object.values(mangaDetails.attributes.title)[0]
+                : mangaDetails.attributes.title.en,
+            chapterNumber: Number(mangaFeed[0].attributes.chapter),
+            externalUrl: response.attributes.externalUrl,
+            scanlationGroup:
+              response.relationships[0].type === "scanlation_group"
+                ? response.relationships[0].attributes.name
+                : "Unknown",
+            coverUrl: coverUrl,
+            accountId: accountId,
+            chapterIndex: 1,
+            mangaFeed: mangaFeed,
+            pageNumber: 0,
+          },
+        });
+      });
+    } catch (error) {
+      console.error("Error fetching first chapter:", error);
+    }
+  };
+
   useEffect(() => {
     if (openDetailsDialog) {
       setLibraryEntryExists(false);
@@ -410,7 +449,6 @@ const MangaDetailsDialog = (props: Props) => {
                 ? Object.values(mangaDetails.attributes.title)[0]
                 : mangaDetails.attributes.title.en}
             </Typography>
-            <AutoStoriesIcon sx={{ paddingLeft: "5px" }} />
           </Button>
         </DialogTitle>
         <div className="manga-details-dialog-contents">
@@ -433,81 +471,86 @@ const MangaDetailsDialog = (props: Props) => {
               />
             </Card>
             <div className="manga-details-stack">
-              <div className="author-container">
-                <Typography className="manga-details-header-text-author">
-                  Author:&nbsp;
-                </Typography>
-                <Typography className="manga-details-header-text-author-name">
-                  {
-                    mangaDetails.relationships.find(
-                      (element) => element.type === "author",
-                    )?.attributes.name
-                  }
-                </Typography>
-              </div>
-
-              <div className="details-row">
-                <Typography className="manga-details-header-text-author">
-                  Status:&nbsp;
-                </Typography>
-                <Typography className="manga-details-header-text">
-                  {mangaDetails.attributes.status}
-                </Typography>
-              </div>
-              {oneshot && (
-                <Typography className="manga-categories-dialog-text">
-                  Oneshot
-                </Typography>
-              )}
               <div>
-                <MangaPageButtonHeader
-                  mangaRaw={mangaInfo.rawLink}
-                  folders={folders}
-                  mangaAltTitles={mangaInfo.altTitles}
-                  mangaTags={mangaInfo.tags}
-                  id={mangaDetails.id !== undefined ? mangaDetails.id : ""}
-                  handleAddToFolder={handleAddToFolder}
-                  handleClickOpen={() =>
-                    setUIState((prev) => ({ ...prev, open: true }))
-                  }
-                  handleCloseCategories={() =>
-                    setUIState((prev) => ({
-                      ...prev,
-                      showCategoriesToggled: false,
-                    }))
-                  }
-                  handleCloseInfo={() =>
-                    setUIState((prev) => ({ ...prev, showInfoToggled: false }))
-                  }
-                  handleOpenCategories={() =>
-                    setUIState((prev) => ({
-                      ...prev,
-                      showCategoriesToggled: true,
-                    }))
-                  }
-                  handleOpenInfo={() =>
-                    setUIState((prev) => ({ ...prev, showInfoToggled: true }))
-                  }
-                  open={uiState.open}
-                  showInfoToggled={uiState.showInfoToggled}
-                  showCategoriesToggled={uiState.showCategoriesToggled}
-                  mangaExistsError={uiState.mangaExistsError}
-                  handleClose={() =>
-                    setUIState((prev) => ({
-                      ...prev,
-                      open: false,
-                      mangaExistsError: false,
-                    }))
-                  }
-                  mangaContentRating={mangaInfo.contentRating}
-                  mangaAddedAlert={uiState.mangaAddedAlert}
-                  handleMangaCategoryClicked={handleMangaCategoryClicked}
-                  handleAddToLibrary={handleAddToLibrary}
-                  libraryEntryExists={libraryEntryExists}
-                  accountId={accountId}
-                  setFolders={setFolders}
-                  loading={loading}
-                />
+                <div className="author-container">
+                  <Typography className="manga-details-header-text-author">
+                    Author:&nbsp;
+                  </Typography>
+                  <Typography className="manga-details-header-text-author-name">
+                    {
+                      mangaDetails.relationships.find(
+                        (element) => element.type === "author",
+                      )?.attributes.name
+                    }
+                  </Typography>
+                </div>
+
+                <div className="details-row">
+                  <Typography className="manga-details-header-text-author">
+                    Status:&nbsp;
+                  </Typography>
+                  <Typography className="manga-details-header-text">
+                    {mangaDetails.attributes.status}
+                  </Typography>
+                </div>
+                {oneshot && (
+                  <Typography className="manga-categories-dialog-text">
+                    Oneshot
+                  </Typography>
+                )}
+                <div>
+                  <MangaPageButtonHeader
+                    mangaRaw={mangaInfo.rawLink}
+                    folders={folders}
+                    mangaAltTitles={mangaInfo.altTitles}
+                    mangaTags={mangaInfo.tags}
+                    id={mangaDetails.id !== undefined ? mangaDetails.id : ""}
+                    handleAddToFolder={handleAddToFolder}
+                    handleClickOpen={() =>
+                      setUIState((prev) => ({ ...prev, open: true }))
+                    }
+                    handleCloseCategories={() =>
+                      setUIState((prev) => ({
+                        ...prev,
+                        showCategoriesToggled: false,
+                      }))
+                    }
+                    handleCloseInfo={() =>
+                      setUIState((prev) => ({
+                        ...prev,
+                        showInfoToggled: false,
+                      }))
+                    }
+                    handleOpenCategories={() =>
+                      setUIState((prev) => ({
+                        ...prev,
+                        showCategoriesToggled: true,
+                      }))
+                    }
+                    handleOpenInfo={() =>
+                      setUIState((prev) => ({ ...prev, showInfoToggled: true }))
+                    }
+                    open={uiState.open}
+                    showInfoToggled={uiState.showInfoToggled}
+                    showCategoriesToggled={uiState.showCategoriesToggled}
+                    mangaExistsError={uiState.mangaExistsError}
+                    handleClose={() =>
+                      setUIState((prev) => ({
+                        ...prev,
+                        open: false,
+                        mangaExistsError: false,
+                      }))
+                    }
+                    mangaContentRating={mangaInfo.contentRating}
+                    mangaAddedAlert={uiState.mangaAddedAlert}
+                    handleMangaCategoryClicked={handleMangaCategoryClicked}
+                    handleAddToLibrary={handleAddToLibrary}
+                    libraryEntryExists={libraryEntryExists}
+                    accountId={accountId}
+                    setFolders={setFolders}
+                    loading={loading}
+                  />
+                </div>
               </div>
               {accountId !== null && bookmarks.length > 0 ? (
                 loading === true ? (
@@ -554,7 +597,17 @@ const MangaDetailsDialog = (props: Props) => {
                     </Grid>
                   </>
                 )
-              ) : null}
+              ) : null}{" "}
+              {bookmarks.length > 0 ? null : (
+                <Button
+                  className="start-reading-button-dialog"
+                  onClick={() => {
+                    handleStartReadingNew();
+                  }}
+                >
+                  <AutoStoriesIcon /> Start Reading
+                </Button>
+              )}
             </div>
           </div>
           <div className="manga-details-description">

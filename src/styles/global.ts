@@ -19,7 +19,8 @@ const globalStyle = createGlobalStyle`
   .chapter-details, 
   .folder-description-library, 
   .current-folder-header, 
-  .scanlation-button {
+  .scanlation-button,
+  .folder, {
     color: ${({ theme }) => theme.text};
   }
 
@@ -47,12 +48,15 @@ const globalStyle = createGlobalStyle`
   .folder-inputs, 
   .manga-folder-alert, 
   .manga-folder-alert-action-bar, 
-  .search-inputs {
+  .search-inputs,
+  .categories-buttons,
+   {
     outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
   .folder,
- .library-divider {
+ .library-divider,
+  .start-reading-button-dialog {
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
@@ -88,7 +92,8 @@ const globalStyle = createGlobalStyle`
   .library-entry-exists-alert-icon, 
   .login-text-field-headers, 
   .register-text-field-headers, 
-  .manga-folder-alert-action-bar {
+  .manga-folder-alert-action-bar,
+  .bookmark-clicked-dialog-option,{
     color: ${({ theme }) => theme.elevatedSectionLight};
   }
 
@@ -101,7 +106,7 @@ const globalStyle = createGlobalStyle`
 
  .carousel-button, 
  .controls-icon, 
- .filter-icon {
+ .filter-icon{
     color: ${({ theme }) => theme.text};
   }
 
