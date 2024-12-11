@@ -1,4 +1,5 @@
-import { Typography } from "@mui/material";
+import { Typography, Button, Grid } from "@mui/material";
+import { useState } from "react";
 import "./MangaBanner.css";
 import MangaPageButtonHeader from "../MangaPageButtonHeader/MangaPageButtonHeader";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
@@ -70,6 +71,8 @@ const MangaBanner = (props: Props) => {
     accountId,
     setFolders,
   } = props;
+
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   return (
     <div className="banner-container">
@@ -146,9 +149,35 @@ const MangaBanner = (props: Props) => {
             accountId={accountId}
             setFolders={setFolders}
           />
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={1}
+            wrap="nowrap"
+            sx={{ minHeight: "50px" }}
+            className="categories-buttons-container"
+          >
+            {mangaTags.map((current: MangaTagsInterface) => (
+              <Grid item>
+                <Button
+                  className="categories-buttons"
+                  onClick={() => {
+                    handleMangaCategoryClicked(current);
+                  }}
+                >
+                  {current.attributes.name.en}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
         </div>
       </div>
-      <div className="manga-details">
+      <div
+        className="manga-details"
+        style={{ maxHeight: showMore === true ? "none" : "50px" }}
+      >
         <Typography
           className="manga-description"
           sx={{
@@ -158,6 +187,11 @@ const MangaBanner = (props: Props) => {
         >
           {mangaDescription}
         </Typography>
+      </div>
+      <div className="show-more-container">
+        <Button className="show-button" onClick={() => setShowMore(!showMore)}>
+          {showMore ? "Show Less" : "Show More"}
+        </Button>
       </div>
     </div>
   );

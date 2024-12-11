@@ -95,7 +95,7 @@ const MangaControls = (props: Props) => {
         className="controls-dialog"
       >
         <DialogTitle className="controls-dialog-title">
-          Scalation Groups
+          Scanlation Groups
         </DialogTitle>
 
         <DialogActions className="controls-dialog-option-list">

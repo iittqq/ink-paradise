@@ -429,6 +429,10 @@ const IndividualManga = ({
           <div className="controls-and-feed-container">
             <ListItemButton
               className="individual-page-feed-button"
+              sx={{
+                width: openFeed === true ? "unset" : "100%",
+                maxWidth: openFeed === true ? "140px" : "none",
+              }}
               onClick={() => handleOpenFeed()}
             >
               <AutoStoriesIcon sx={{ paddingLeft: "4px" }} />
@@ -445,18 +449,20 @@ const IndividualManga = ({
               />
               {openFeed ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            <MangaControls
-              mangaLanguages={mangaInfo.languages}
-              selectedLanguage={selectedLanguage}
-              handleClickedLanguageButton={handleLanguageChange}
-              mangaTranslators={scanlationGroups}
-              setTranslator={setScanlationGroups}
-              handleSwitchOrder={() =>
-                setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
-              }
-              handleFilterScanlationGroups={handleFilterScanlationGroups}
-              selectedScanlationGroup={selectedScanlationGroup}
-            />
+            {openFeed && (
+              <MangaControls
+                mangaLanguages={mangaInfo.languages}
+                selectedLanguage={selectedLanguage}
+                handleClickedLanguageButton={handleLanguageChange}
+                mangaTranslators={scanlationGroups}
+                setTranslator={setScanlationGroups}
+                handleSwitchOrder={() =>
+                  setCurrentOrder((order) => (order === "asc" ? "desc" : "asc"))
+                }
+                handleFilterScanlationGroups={handleFilterScanlationGroups}
+                selectedScanlationGroup={selectedScanlationGroup}
+              />
+            )}
           </div>
           <Collapse
             className="individual-page-feed-collapse"
