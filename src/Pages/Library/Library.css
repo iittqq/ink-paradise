@@ -34,11 +34,7 @@
 }
 
 .personal-folders-library {
-  overflow: scroll;
   width: 100%;
-  scrollbar-width: none;
-  padding-bottom: 10px;
-  position: relative;
 }
 
 .folder-description-library {
@@ -55,6 +51,7 @@
 
 .scrolling-library {
   max-height: calc(var(--vh, 1vh) * 98);
+  width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -66,5 +63,7 @@
 
 .library-divider {
   width: 100%;
-  margin-top: 20px !important;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+
 }

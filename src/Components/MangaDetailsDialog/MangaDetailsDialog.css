@@ -5,6 +5,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
   & .MuiDialogContent-root {
     color: #ffffff !important;
     display: flex;
@@ -127,6 +128,10 @@
   flex-direction: column;
   justify-content: flex-start !important;
   align-items: center;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
 
 .manga-details-dialog-header-text {
@@ -224,6 +229,7 @@
     color: #ffffff !important;
     align-items: center;
   }
+
   & .MuiDialogContent-root {
     color: #ffffff !important;
     display: flex;
@@ -245,6 +251,7 @@
   flex-direction: column;
   justify-content: center;
   text-transform: none !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent !important;
   }

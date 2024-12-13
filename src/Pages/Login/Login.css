@@ -31,10 +31,12 @@
   align-self: left;
   border-radius: 25px !important;
   font-family: "Figtree" !important;
+
   &.MuiButtonBase-root:hover {
     color: #fff !important;
   }
 }
+
 .password-util-container {
   display: flex;
   flex-direction: row;
@@ -48,6 +50,7 @@
   font-size: 12px !important;
   max-width: 75%;
 }
+
 .header-back-button-container {
   display: flex;
   flex-direction: row;
@@ -62,12 +65,15 @@
   position: absolute !important;
   left: 50% !important;
   transform: translateX(-50%);
+  color: #fff
 }
+
 .login-header {
   font-size: 30px !important;
   font-family: "Figtree" !important;
   color: #ffffff !important;
 }
+
 .password-strength-text {
   font-family: "Figtree" !important;
   font-size: 14px !important;
@@ -80,10 +86,12 @@
   align-items: flex-start;
   width: 100%;
 }
+
 .toggle-password-visibility-button {
   color: #ffffff !important;
   min-width: 40px !important;
   height: 40px !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -93,6 +101,7 @@
   color: #ffffff !important;
   min-width: 40px !important;
   height: 40px !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -112,6 +121,7 @@
   width: 20px !important;
   height: 20px !important;
 }
+
 .login-input-fields,
 .register-input-fields {
   width: 95%;
@@ -165,6 +175,7 @@ input.register-input-fields:focus {
   position: relative !important;
   float: right !important;
   font-family: "Figtree" !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -203,6 +214,15 @@ input.register-input-fields:focus {
   font-family: "Figtree" !important;
   margin-top: -20px !important;
   margin-bottom: 10px !important;
+}
+
+.register-button-and-message-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}  margin-bottom: 10px !important;
 }
 
 .register-button-and-message-container {

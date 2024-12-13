@@ -172,13 +172,13 @@ const MangaDetailsDialog = (props: Props) => {
         setUIState((prev) => ({ ...prev, mangaAddedAlert: true }));
         setTimeout(
           () => setUIState((prev) => ({ ...prev, mangaAddedAlert: false })),
-          3000,
+          2000,
         );
       } else {
         setUIState((prev) => ({ ...prev, mangaExistsError: true }));
         setTimeout(
           () => setUIState((prev) => ({ ...prev, mangaExistsError: false })),
-          3000,
+          2000,
         );
       }
     });
@@ -459,6 +459,9 @@ const MangaDetailsDialog = (props: Props) => {
                 minWidth: "110px",
                 height: "160px",
                 borderRadius: "4px !important",
+              }}
+              onClick={() => {
+                handleClick(mangaDetails.id);
               }}
             >
               <CardMedia
