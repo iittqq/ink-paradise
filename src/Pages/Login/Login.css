@@ -222,13 +222,4 @@ input.register-input-fields:focus {
   justify-content: center;
   align-items: center;
   width: 100%;
-}  margin-bottom: 10px !important;
-}
-
-.register-button-and-message-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
 }

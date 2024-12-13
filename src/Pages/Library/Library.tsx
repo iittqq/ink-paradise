@@ -624,7 +624,10 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
             <Typography fontFamily="Figtree">Start Browsing</Typography>
           </Button>
         ) : (
-          <div className="scrolling-library">
+          <div
+            className="scrolling-library"
+            style={{ paddingBottom: desktop === true ? "0px" : "30px" }}
+          >
             {selectedFolder === null ? (
               <LibraryContents
                 libraryManga={library}
