@@ -54,10 +54,13 @@ const globalStyle = createGlobalStyle`
     outline: 2px solid ${({ theme }) => theme.elevatedSection};
   }
 
-  .folder,
- .library-divider,
+  .folder, 
   .start-reading-button-dialog {
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
+  }
+
+  .library-divider {
+  border: 1px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
   .redirect-button,
@@ -78,7 +81,7 @@ const globalStyle = createGlobalStyle`
   .password-strength-results, 
   .individual-details-button, 
   .return-button,
-  .categories-buttons, {
+  , {
     color: ${({ theme }) => theme.elevatedSection};
   }
 
@@ -106,7 +109,8 @@ const globalStyle = createGlobalStyle`
 
  .carousel-button, 
  .controls-icon, 
- .filter-icon{
+ .filter-icon, 
+.categories-buttons{
     color: ${({ theme }) => theme.text};
   }
 

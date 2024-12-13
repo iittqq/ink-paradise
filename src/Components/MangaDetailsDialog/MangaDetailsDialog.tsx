@@ -597,8 +597,7 @@ const MangaDetailsDialog = (props: Props) => {
                     </Grid>
                   </>
                 )
-              ) : null}{" "}
-              {bookmarks.length > 0 ? null : (
+              ) : (
                 <Button
                   className="start-reading-button-dialog"
                   onClick={() => {

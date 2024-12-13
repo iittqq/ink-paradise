@@ -81,9 +81,12 @@ const MangaClickable = (props: Props) => {
             {manga.latestChapter &&
             manga.chapterNumber !== null &&
             manga.chapterNumber !== undefined
-              ? Math.floor(
-                  Number(manga.latestChapter[0]?.attributes?.chapter) -
-                    manga.chapterNumber,
+              ? Math.max(
+                  0,
+                  Math.floor(
+                    Number(manga.latestChapter[0]?.attributes?.chapter) -
+                      manga.chapterNumber,
+                  ),
                 )
               : null}
           </div>

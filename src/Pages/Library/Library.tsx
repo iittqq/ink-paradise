@@ -79,31 +79,6 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   const [folderBackground, setFolderBackground] = useState<string | null>(null);
   const [desktop] = useState(window.innerWidth > 600);
 
-  const [showHeader, setShowHeader] = useState(false);
-
-  const handleScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight;
-
-    // Check if the user is at the bottom of the page
-    if (scrollTop + clientHeight >= scrollHeight) {
-      setShowHeader(true);
-    } else {
-      setShowHeader(false);
-    }
-  };
-
-  useEffect(() => {
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up event listener on unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   const navigate = useNavigate();
 
   const searchFavorites = async (searchValue: string) => {
@@ -700,81 +675,75 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
           </div>
         )}{" "}
         {desktop === false &&
-          (selectedFolder === null
-            ? showHeader && (
-                <div
-                  style={{
-                    position: "fixed",
-                    width: "100%",
-                    bottom: 0,
-                    left: 0,
-                  }}
-                >
-                  <LibraryHeader
-                    searchFavorites={searchFavorites}
-                    handleAscendingChange={handleAscendingChange}
-                    handleContentFilter={handleContentFilter}
-                    checked={checked}
-                    toggleLibraryEntries={toggleLibraryEntries}
-                    handleDeleteLibraryEntries={handleDeleteLibraryEntries}
-                    toggleSelectAll={toggleSelectAll}
-                    selectAll={selectAll}
-                    libraryEntriesToDelete={libraryEntriesToDelete}
-                    handleClickAddFolderButton={handleClickAddFolderButton}
-                    openAddFolder={openAddFolder}
-                    handleFolderDialogClose={handleFolderDialogClose}
-                    handleCreateFolder={handleCreateFolder}
-                    handleFolderNameChange={handleFolderNameChange}
-                    handleFolderBackgroundChange={handleFolderBackgroundChange}
-                    handleFolderDescriptionChange={
-                      handleFolderDescriptionChange
-                    }
-                    mangaFoldersToDelete={mangaFoldersToDelete}
-                    toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-                    handleDeleteMangaFolders={handleDeleteMangaFolders}
-                    checkedFolder={checkedFolder}
-                  />
-                </div>
-              )
-            : showHeader && (
-                <div
-                  style={{
-                    position: "fixed",
-                    width: "100%",
-                    bottom: 0,
-                    left: 0,
-                  }}
-                >
-                  <FolderActionsBar
-                    handleClickBack={handleClickBack}
-                    handleDeleteMangaEntries={handleDeleteMangaEntries}
-                    handleDeleteMangaFolders={handleDeleteMangaFolders}
-                    checked={checkedFolder}
-                    toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-                    handleClickAddFolderButton={handleClickAddFolderButton}
-                    handleFolderDialogClose={handleFolderDialogClose}
-                    handleCreateFolder={handleCreateFolder}
-                    openAddFolder={openAddFolder}
-                    selectedFolder={selectedFolder}
-                    handleFolderNameChange={handleFolderNameChange}
-                    handleFolderDescriptionChange={
-                      handleFolderDescriptionChange
-                    }
-                    selectAll={selectAllFolderContent}
-                    toggleSelectAll={toggleSelectAllFolderContent}
-                    mangaFoldersToDelete={mangaFoldersToDelete}
-                    mangaEntriesToDelete={mangaEntriesToDelete}
-                    handleFolderBackgroundChange={handleFolderBackgroundChange}
-                    handleClickEditFolderButton={handleClickEditFolderButton}
-                    openEditFolder={openEditFolder}
-                    handleEditFolder={handleEditFolder}
-                    handleEditFolderDialogClose={handleEditFolderDialogClose}
-                    newFolderName={newFolderName}
-                    newFolderDescription={newFolderDescription}
-                    folderBackground={folderBackground}
-                  />
-                </div>
-              ))}
+          (selectedFolder === null ? (
+            <div
+              style={{
+                position: "fixed",
+                width: "100%",
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              <LibraryHeader
+                searchFavorites={searchFavorites}
+                handleAscendingChange={handleAscendingChange}
+                handleContentFilter={handleContentFilter}
+                checked={checked}
+                toggleLibraryEntries={toggleLibraryEntries}
+                handleDeleteLibraryEntries={handleDeleteLibraryEntries}
+                toggleSelectAll={toggleSelectAll}
+                selectAll={selectAll}
+                libraryEntriesToDelete={libraryEntriesToDelete}
+                handleClickAddFolderButton={handleClickAddFolderButton}
+                openAddFolder={openAddFolder}
+                handleFolderDialogClose={handleFolderDialogClose}
+                handleCreateFolder={handleCreateFolder}
+                handleFolderNameChange={handleFolderNameChange}
+                handleFolderBackgroundChange={handleFolderBackgroundChange}
+                handleFolderDescriptionChange={handleFolderDescriptionChange}
+                mangaFoldersToDelete={mangaFoldersToDelete}
+                toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                handleDeleteMangaFolders={handleDeleteMangaFolders}
+                checkedFolder={checkedFolder}
+              />
+            </div>
+          ) : (
+            <div
+              style={{
+                position: "fixed",
+                width: "100%",
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              <FolderActionsBar
+                handleClickBack={handleClickBack}
+                handleDeleteMangaEntries={handleDeleteMangaEntries}
+                handleDeleteMangaFolders={handleDeleteMangaFolders}
+                checked={checkedFolder}
+                toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                handleClickAddFolderButton={handleClickAddFolderButton}
+                handleFolderDialogClose={handleFolderDialogClose}
+                handleCreateFolder={handleCreateFolder}
+                openAddFolder={openAddFolder}
+                selectedFolder={selectedFolder}
+                handleFolderNameChange={handleFolderNameChange}
+                handleFolderDescriptionChange={handleFolderDescriptionChange}
+                selectAll={selectAllFolderContent}
+                toggleSelectAll={toggleSelectAllFolderContent}
+                mangaFoldersToDelete={mangaFoldersToDelete}
+                mangaEntriesToDelete={mangaEntriesToDelete}
+                handleFolderBackgroundChange={handleFolderBackgroundChange}
+                handleClickEditFolderButton={handleClickEditFolderButton}
+                openEditFolder={openEditFolder}
+                handleEditFolder={handleEditFolder}
+                handleEditFolderDialogClose={handleEditFolderDialogClose}
+                newFolderName={newFolderName}
+                newFolderDescription={newFolderDescription}
+                folderBackground={folderBackground}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

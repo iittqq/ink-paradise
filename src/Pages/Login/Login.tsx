@@ -169,7 +169,7 @@ const Login = ({ fetchAccount, account }: LoginProps) => {
           bio: "Hello World",
           profilePicture: null,
           headerPicture: null,
-          contentFilter: 1,
+          contentFilter: 3,
           readerMode: 1,
           theme: 0,
         });

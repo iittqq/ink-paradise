@@ -19,6 +19,10 @@
   color: #fff;
   font-size: 20px !important;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .manga-details-dialog-contents {
@@ -115,21 +119,25 @@
 }
 
 .manga-details-dialog-header {
-  text-transform: none !important;
-  background-color: transparent !important;
-  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3.5em !important;
+  font-size: 20px !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start !important;
+  align-items: center;
 }
 
 .manga-details-dialog-header-text {
+  font-size: 20px !important;
+  font-family: "Figtree" !important;
+  text-transform: none !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  max-height: 62px;
-  font-size: 20px !important;
-  font-family: "Figtree", sans-serif !important;
 }
 
 .manga-categories-dialog {

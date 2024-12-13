@@ -155,8 +155,7 @@ const MangaBanner = (props: Props) => {
             justifyContent="flex-start"
             alignItems="center"
             spacing={1}
-            wrap="nowrap"
-            sx={{ minHeight: "50px" }}
+            sx={{ minHeight: "50px", paddingBottom: "2px" }}
             className="categories-buttons-container"
           >
             {mangaTags.map((current: MangaTagsInterface) => (

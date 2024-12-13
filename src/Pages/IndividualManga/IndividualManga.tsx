@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Typography,
@@ -91,9 +91,22 @@ const IndividualManga = ({
     showCategoriesToggled: false,
     mangaAddedAlert: false,
   });
+  const feedRef = useRef<HTMLDivElement | null>(null);
 
   const handleOpenFeed = () => {
     setOpenFeed(!openFeed);
+    console.log(openFeed);
+    if (openFeed === false && feedRef.current) {
+      console.log(feedRef.current);
+      setTimeout(() => {
+        feedRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 0);
+    } else if (openFeed === true) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   const checkLibraryEntry = useCallback(async () => {
@@ -425,7 +438,7 @@ const IndividualManga = ({
       />
       <div className="controls-chapters-section">
         {" "}
-        <div className="bottom-desktop-container">
+        <div className="bottom-desktop-container" ref={feedRef}>
           <div className="controls-and-feed-container">
             <ListItemButton
               className="individual-page-feed-button"

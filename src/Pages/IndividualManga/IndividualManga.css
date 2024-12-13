@@ -43,6 +43,7 @@
   flex-direction: column;
   position: relative;
   max-height: calc(var(--vh, 1vh) * 99) !important;
+  min-height: calc(var(--vh, 1vh) * 99) !important;
   overflow: hidden;
 }
 
