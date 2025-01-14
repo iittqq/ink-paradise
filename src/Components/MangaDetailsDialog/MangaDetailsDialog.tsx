@@ -432,7 +432,7 @@ const MangaDetailsDialog = (props: Props) => {
           sx: {
             minWidth: "30vw",
             "@media (max-width: 600px)": {
-              minWidth: "85vw",
+              minWidth: "95vw",
             },
           },
         }}
@@ -474,7 +474,7 @@ const MangaDetailsDialog = (props: Props) => {
               />
             </Card>
             <div className="manga-details-stack">
-              <div>
+              <div className="manga-details-section">
                 <div className="author-container">
                   <Typography className="manga-details-header-text-author">
                     Author:&nbsp;
@@ -612,10 +612,10 @@ const MangaDetailsDialog = (props: Props) => {
               )}
             </div>
           </div>
+          <Typography className="manga-description-header-text">
+            Description:
+          </Typography>{" "}
           <div className="manga-details-description">
-            <Typography className="manga-description-header-text">
-              Description:
-            </Typography>
             <Typography className="manga-details-description-text">
               {mangaDetails.attributes.description.en}
             </Typography>

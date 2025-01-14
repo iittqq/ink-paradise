@@ -50,7 +50,7 @@ const Layout = ({ children, account, accountDetails }: LayoutProps) => {
       return;
     }
 
-    if (scrolledDistance > 15) {
+    if (scrolledDistance > 50) {
       if (currentScrollY < lastScrollY) {
         setIsVisible(true);
       } else if (currentScrollY > lastScrollY) {

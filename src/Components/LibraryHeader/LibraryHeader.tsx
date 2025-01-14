@@ -336,8 +336,9 @@ const LibraryHeader = (props: Props) => {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
+                spacing={1}
               >
-                <Grid>
+                <Grid item>
                   <Button
                     onClick={() => {
                       handleContentFilter("Alphabetical Order");
@@ -348,7 +349,7 @@ const LibraryHeader = (props: Props) => {
                     Alphabetical Order
                   </Button>
                 </Grid>{" "}
-                <Grid>
+                <Grid item>
                   {" "}
                   <Button
                     onClick={() => {
@@ -360,7 +361,7 @@ const LibraryHeader = (props: Props) => {
                     Continue Reading
                   </Button>
                 </Grid>{" "}
-                <Grid>
+                <Grid item>
                   {" "}
                   <Button
                     onClick={() => {
@@ -372,7 +373,7 @@ const LibraryHeader = (props: Props) => {
                     Recently Updated
                   </Button>
                 </Grid>{" "}
-                <Grid>
+                <Grid item>
                   {" "}
                   <Button
                     onClick={() => {
@@ -384,7 +385,7 @@ const LibraryHeader = (props: Props) => {
                     Release Date
                   </Button>
                 </Grid>{" "}
-                <Grid>
+                <Grid item>
                   <Button
                     onClick={() => {
                       handleContentFilter("Content Rating");
@@ -395,7 +396,7 @@ const LibraryHeader = (props: Props) => {
                     Content Rating
                   </Button>
                 </Grid>
-                <Grid>
+                <Grid item>
                   <Button
                     onClick={() => {
                       handleContentFilter("Publication Demographic");

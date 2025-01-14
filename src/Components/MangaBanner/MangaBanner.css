@@ -25,6 +25,7 @@
     display: none !important;
     min-height: 0px !important;
   }
+
   min-height: 50px !important;
   padding-right: 2px;
 }
@@ -39,9 +40,11 @@
   text-overflow: ellipsis;
   border-radius: 4px;
   height: 20px;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: white;
   }
@@ -66,6 +69,7 @@
 .manga-details {
   overflow: hidden;
   padding-top: 10px;
+  word-break: break-all;
 }
 
 .alt-name-container {
@@ -117,12 +121,14 @@
   background-position: center;
   background-color: unset;
   color: white !important;
+
   &.MuiButtonBase-root:hover {
     background-image: url("../../assets/vagabondSky.jpg");
     background-size: cover;
     background-position: center;
     background-color: unset;
   }
+
   .MuiTouchRipple-child {
     background-color: white;
   }
@@ -137,6 +143,7 @@
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff;
   }

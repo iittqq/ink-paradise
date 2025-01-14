@@ -607,6 +607,9 @@ const PageAndControls = (props: Props) => {
                 readerMode === 3 || readerMode === 4
                   ? longStripReaderWidth
                   : "",
+              display:
+                readerMode === 3 || readerMode === 4 ? "inline-block" : "flex",
+              maxHeight: pageHeight,
             }}
           >
             {loadingStates[currentPage] ? (
@@ -634,7 +637,7 @@ const PageAndControls = (props: Props) => {
                         className="page"
                         src={URL.createObjectURL(imageBlob[pages[currentPage]])}
                         alt=""
-                        style={{ height: pageHeight }}
+                        style={{ maxHeight: pageHeight }}
                       />
                     )}
                 <div className="overlay-buttons" style={{}}>
@@ -663,13 +666,7 @@ const PageAndControls = (props: Props) => {
             )}{" "}
           </div>
 
-          <div
-            className="centered"
-            style={{
-              position:
-                readerMode === 1 || readerMode === 2 ? "fixed" : "relative",
-            }}
-          >
+          <div className="centered">
             <Button
               className="chapter-page-traversal-buttons"
               onClick={() => {
@@ -723,7 +720,11 @@ const PageAndControls = (props: Props) => {
       )}
       <Collapse
         className="reader-feed-collapse"
-        sx={{ paddingTop: open === true ? "5px" : "0px !important" }}
+        sx={{
+          paddingTop: open === true ? "5px" : "0px !important",
+          maxHeight: open === true ? "auto" : "30px !important",
+          display: open === true ? "auto" : "none",
+        }}
         in={open}
         timeout="auto"
       >

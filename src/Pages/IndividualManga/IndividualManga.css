@@ -1,7 +1,9 @@
 .individual-page-container {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-height: calc((var(--vh, 1vh) * 99) - 50px) !important;
 }
 
 .header {
@@ -41,9 +43,9 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  flex-grow: 1;
   position: relative;
   max-height: calc(var(--vh, 1vh) * 99) !important;
-  min-height: calc(var(--vh, 1vh) * 99) !important;
   overflow: hidden;
 }
 
@@ -62,7 +64,8 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   margin-top: 5px;
-  @media (width <= 1000px) {
+
+  @media (width <=1000px) {
     width: 100%;
   }
 }
@@ -77,22 +80,22 @@
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
-  flex-grow: 1;
   padding-top: 10px;
+  flex-grow: 1;
   width: 100%;
+
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
 .similar-manga-section {
-  width: 100%;
   display: flex;
   scrollbar-width: none;
 }
 
 .empty-chapters-text {
-  @media (width >= 1600px) {
+  @media (width >=1600px) {
     display: none;
   }
 }
@@ -128,6 +131,7 @@
     background-color: #1f1f1f;
     color: #ffffff;
   }
+
   & .MuiPaper-root {
     background-color: #1f1f1f !important;
     border-radius: 10px;
@@ -154,6 +158,7 @@
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
   text-align: center !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }

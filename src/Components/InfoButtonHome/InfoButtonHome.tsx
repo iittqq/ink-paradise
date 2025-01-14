@@ -18,7 +18,7 @@ const InfoButtonHome = (props: Props) => {
         onClose={handleInfoDialogClose}
       >
         <DialogTitle className="open-info-dialog-title">
-          Welcome to ink-paradise
+          Welcome to<br></br> ink-paradise
         </DialogTitle>
         <div className="info-dialog-text-content">
           <p>Developer:</p>

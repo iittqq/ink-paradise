@@ -3,6 +3,7 @@
   scrollbar-width: none;
   width: calc(99% + 8px) !important;
 }
+
 .chapters-list::-webkit-scrollbar {
   display: none;
 }
@@ -23,6 +24,7 @@
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
   .MuiTouchRipple-child {
     background-color: #fff !important;
   }
@@ -39,12 +41,15 @@
 .chapter-button-text {
   display: flex;
   flex-direction: row;
-  @media (width >= 1200px) {
+
+  @media (width >=1200px) {
     width: 70%;
   }
-  @media (width <= 1200px) {
+
+  @media (width <=1200px) {
     justify-content: flex-start;
   }
+
   justify-content: space-between;
   align-items: center;
   width: 90%;
@@ -69,7 +74,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   font-family: "Figtree" !important;
-  max-width: 90px;
+  max-width: 75px;
 }
 
 .chapter-row {
@@ -96,11 +101,11 @@
   color: unset !important;
   align-self: center;
   display: flex !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
 
-  box-shadow:
-    0 4px 8px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+  0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }

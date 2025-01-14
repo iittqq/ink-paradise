@@ -1,5 +1,5 @@
 .main-content {
-  transition: margin-top 0.3s ease; /* Smoothly adjust margin on header visibility change */
+  transition: margin-top 0.3s ease-in-out;
 }
 
 .header-container {

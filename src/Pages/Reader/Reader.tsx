@@ -148,7 +148,7 @@ const Reader = ({ account }: ReaderProps) => {
               handleClickTitle();
             }}
           >
-            <Typography className="reader-page-text" fontSize={20}>
+            <Typography className="reader-page-text-name" fontSize={20}>
               {state.mangaName}
             </Typography>
           </Button>

@@ -12,7 +12,7 @@
   border-radius: 10px;
   object-fit: cover;
 
-  @media (width <= 600px) {
+  @media (width <=600px) {
     width: 150px;
     height: 150px;
   }
@@ -27,7 +27,8 @@
   padding: 10px 10px 10px 10px;
   background-size: cover;
   border-radius: 10px;
-  @media (width <= 600px) {
+
+  @media (width <=600px) {
     max-height: 150px;
   }
 }
@@ -64,9 +65,11 @@
 input.edit-info-fields:focus {
   outline: 2px solid #ffffff;
 }
+
 input[type="file"] {
   display: none;
 }
+
 .custom-file-upload {
   display: inline-block;
   width: 100%;
@@ -99,9 +102,11 @@ input[type="file"] {
   color: #fff !important;
   font-family: "Figtree" !important;
   text-transform: none !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: "white";
   }
@@ -125,6 +130,7 @@ input[type="file"] {
   background-color: #333333 !important;
   text-transform: none !important;
   color: #ffffff !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -195,12 +201,15 @@ input[type="file"] {
 
 .category-button {
   color: #ffffff;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: "white";
   }
+
   text-transform: none;
 }
 
@@ -216,13 +225,7 @@ input[type="file"] {
   -ms-overflow-style: none;
 }
 
-.current-folder-header {
-  font-size: 20px;
-  font-family: "Figtree";
-  padding-bottom: 10px;
-  text-align: center;
-  width: 100%;
-}
+
 .folder-description {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -235,6 +238,7 @@ input[type="file"] {
   font-size: 12px;
   width: 90dvw;
 }
+
 .info-button-container {
   position: absolute;
   right: 5px;
@@ -245,9 +249,11 @@ input[type="file"] {
   width: 30px !important;
   min-width: 30px !important;
   color: unset !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -260,6 +266,7 @@ input[type="file"] {
   justify-content: flex-start;
   width: 300px;
 }
+
 .css-j204z7-MuiFormControlLabel-root {
   margin: 0px 0px 0px 0px !important;
 }
@@ -318,6 +325,7 @@ input[type="file"] {
   background-color: #333333 !important;
   margin: 5px 0px 5px 0px !important;
   outline: none !important;
+
   :focus {
     border: none !important;
     border: none !important;

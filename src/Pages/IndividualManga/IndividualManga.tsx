@@ -281,7 +281,7 @@ const IndividualManga = ({
 
       try {
         const data = await fetchSimilarManga(10, 0, tags, contentFilter ?? 3);
-        setSimilarManga(data);
+        setSimilarManga(data.filter((manga) => manga.id !== id));
       } catch (error) {
         console.error("Error fetching similar manga:", error);
       }
@@ -436,9 +436,20 @@ const IndividualManga = ({
         accountId={accountId ?? null}
         setFolders={setFolders}
       />
-      <div className="controls-chapters-section">
+      <div
+        className="controls-chapters-section"
+        style={{
+          minHeight: openFeed === true ? "calc(var(--vh, 1vh) * 99)" : "0px",
+        }}
+      >
         {" "}
-        <div className="bottom-desktop-container" ref={feedRef}>
+        <div
+          className="bottom-desktop-container"
+          ref={feedRef}
+          style={{
+            justifyContent: openFeed === true ? "flex-start" : "space-between",
+          }}
+        >
           <div className="controls-and-feed-container">
             <ListItemButton
               className="individual-page-feed-button"
@@ -512,11 +523,12 @@ const IndividualManga = ({
           </Collapse>
 
           {!openFeed && similarManga.length > 0 && (
-            <>
+            <div style={{ width: "100%" }}>
               <Typography fontSize={20} fontFamily="Figtree" align="center">
                 Similar Manga
-              </Typography>
+              </Typography>{" "}
               <div className="similar-manga-section">
+                {" "}
                 <TrendingMangaCarousel
                   manga={similarManga}
                   accountId={accountId === null ? null : accountId}
@@ -524,7 +536,7 @@ const IndividualManga = ({
                   numbered={false}
                 />
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
