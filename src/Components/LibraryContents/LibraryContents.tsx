@@ -65,6 +65,7 @@ const LibraryContents = (props: Props) => {
         alignItems={"flex-start"}
         spacing={1}
         className="library-entries-grid"
+        columns={{ xs: 12, sm: 15, md: 21, lg: 24 }}
       >
         {groupedLibraryManga !== null
           ? currentMetric === "Content Rating"
@@ -83,7 +84,7 @@ const LibraryContents = (props: Props) => {
                     {currentRating[0].attributes.contentRating}
                   </Typography>
                   {currentRating.map((manga: Manga) => (
-                    <Grid item key={manga.id}>
+                    <Grid item key={manga.id} xs={3}>
                       <Button
                         className="manga-entry-overlay-button"
                         onClick={() => handleLibraryEntryClick(manga)}
@@ -128,7 +129,7 @@ const LibraryContents = (props: Props) => {
                       : "unknown"}
                   </Typography>
                   {demographic.map((manga: Manga) => (
-                    <Grid item key={manga.id}>
+                    <Grid item key={manga.id} xs={3}>
                       <Button
                         className="manga-entry-overlay-button"
                         onClick={() => handleLibraryEntryClick(manga)}
@@ -157,7 +158,7 @@ const LibraryContents = (props: Props) => {
                 </>
               ))
           : libraryManga.map((manga: Manga) => (
-              <Grid item>
+              <Grid item xs={3}>
                 <Button
                   className="manga-entry-overlay-button"
                   onClick={() => {

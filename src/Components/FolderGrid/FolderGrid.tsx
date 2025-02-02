@@ -83,6 +83,7 @@ const FolderGrid = (props: Props) => {
       direction="row"
       spacing={1}
       className="folder-grid"
+      columns={{ xs: 12, sm: 15, md: 21, lg: 24 }}
     >
       {loading ? (
         <Grid item>
@@ -90,7 +91,7 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : selectedFolder === null ? (
         folders.map((folder: MangaFolder) => (
-          <Grid item key={folder.folderId} className="folder-grid-item">
+          <Grid item key={folder.folderId} className="folder-grid-item" xs={3}>
             <Button
               className="folder"
               onClick={() => {
@@ -108,8 +109,9 @@ const FolderGrid = (props: Props) => {
                     ? `url(${folder.folderCover})`
                     : "none",
 
-                width: { xs: "90px", sm: "130px", md: "130px", lg: "130px" },
-                height: { xs: "140px", sm: "200px", md: "200px", lg: "200px" },
+                width: "100%",
+                aspectRatio: "7 / 10",
+                height: "100%",
                 position: "relative",
               }}
             >
@@ -148,7 +150,7 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : (
         folderMangaData?.map((element: Manga) => (
-          <Grid item key={element.id}>
+          <Grid item key={element.id} xs={3}>
             <Button
               className="manga-entry-overlay-button"
               onClick={() => {

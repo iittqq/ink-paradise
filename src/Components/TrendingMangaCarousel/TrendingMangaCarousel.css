@@ -41,6 +41,8 @@
 }
 
 .manga-button-trending-carousel {
+  width: 100%;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -76,6 +78,7 @@
   align-items: center;
   height: 250px;
   width: 20px;
+
   @media (width < 600px) {
     height: 200px;
   }

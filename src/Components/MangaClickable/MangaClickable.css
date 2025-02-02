@@ -24,14 +24,18 @@
   font-size: 13px !important;
   font-family: "Figtree" !important;
 }
+
 .manga-button {
   background-color: transparent;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: white;
   }
+
   width: 100%;
   padding: 0px !important;
   display: flex;

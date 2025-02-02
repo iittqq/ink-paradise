@@ -28,7 +28,7 @@
 
 .manga-name-button {
   text-transform: none !important;
-  color: unset !important;
+  color: unset;
   align-self: center;
 
   &.MuiButtonBase-root:hover {

@@ -605,7 +605,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
         </div>
       ) : library.length === 0 ? (
         <Button
-          className="redirect-button"
+          className="redirect-button-library"
           onClick={() => {
             navigate("/", { state: { accountId: account!.id } });
           }}

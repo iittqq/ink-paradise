@@ -171,19 +171,14 @@ const TrendingMangaCarousel = (props: Props) => {
                       md: "180px",
                       lg: "180px",
                     },
-                    height: {
-                      xs: "200px",
-                      sm: "250px",
-                      md: "250px",
-                      lg: "250px",
-                    },
+                    height: "auto",
                     position: "relative",
                   }}
                 >
                   <CardMedia
                     sx={{
                       width: "100%",
-                      height: "100%",
+                      aspectRatio: "7 / 10",
                     }}
                     image={coverUrls[current.id]}
                   />

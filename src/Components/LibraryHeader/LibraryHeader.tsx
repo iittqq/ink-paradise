@@ -186,6 +186,7 @@ const LibraryHeader = (props: Props) => {
                   className="create-button"
                   type="submit"
                   onClick={() => {
+                    handleCreateFolder();
                     setShowAddedFolderAlert(true);
                     setTimeout(() => {
                       setShowAddedFolderAlert(false);

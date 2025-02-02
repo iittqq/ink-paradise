@@ -149,6 +149,22 @@ const MangaPageButtonHeader = (props: Props) => {
 
   return (
     <div className="manga-details-buttons-container">
+      {libraryEntryExists === true ? (
+        <Button className="individual-details-button">
+          <BookmarkAddedIcon />
+        </Button>
+      ) : accountId === null ? null : (
+        <Button
+          className="individual-details-button"
+          disableFocusRipple
+          disabled={loading}
+          onClick={() => {
+            handleAddToLibrary();
+          }}
+        >
+          <BookmarkAddIcon />
+        </Button>
+      )}
       {accountId === null ? null : (
         <Button
           className="individual-details-button"
@@ -280,22 +296,7 @@ const MangaPageButtonHeader = (props: Props) => {
           </div>
         ) : null}
       </Dialog>
-      {libraryEntryExists === true ? (
-        <Button className="individual-details-button">
-          <BookmarkAddedIcon />
-        </Button>
-      ) : accountId === null ? null : (
-        <Button
-          className="individual-details-button"
-          disableFocusRipple
-          disabled={loading}
-          onClick={() => {
-            handleAddToLibrary();
-          }}
-        >
-          <BookmarkAddIcon />
-        </Button>
-      )}
+
       <Button
         className="individual-details-button"
         onClick={() => {

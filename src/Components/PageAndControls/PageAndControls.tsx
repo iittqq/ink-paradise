@@ -8,11 +8,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
   Collapse,
+  Grid,
 } from "@mui/material";
 import {
   fetchAccountData,
@@ -37,6 +34,9 @@ import MangaChapterList from "../MangaChapterList/MangaChapterList";
 import HomeIcon from "@mui/icons-material/Home";
 import { fetchPageImageBackend, fetchMangaFeed } from "../../api/MangaDexApi";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 type Props = {
   pages: string[];
@@ -63,7 +63,7 @@ type Props = {
   pageNumber: number;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
   handleSettingsDialogClose: () => void;
-  handleChangeNewReaderMode: (event: SelectChangeEvent) => void;
+  handleChangeNewReaderMode: (newReaderMode: number) => void;
   handleEditAccountInfo: () => void;
   chapterId: string;
   openSettings: boolean;
@@ -101,7 +101,6 @@ const PageAndControls = (props: Props) => {
     handleEditAccountInfo,
     chapterId,
     openSettings,
-    readerModeString,
     coverUrl,
     contentFilter,
     oneshot,
@@ -118,6 +117,12 @@ const PageAndControls = (props: Props) => {
   const [chapterIndexState, setChapterIndexState] =
     useState<number>(chapterIndex);
   const [orderState] = useState<string>(order || "asc");
+  const [leftToRight, setLeftToRight] = useState<boolean>(
+    readerMode === 2 || readerMode === 4 ? true : false,
+  );
+  const [vertical, setVertical] = useState<boolean>(
+    readerMode === 3 || readerMode === 4 ? true : false,
+  );
 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(startPage);
@@ -537,6 +542,7 @@ const PageAndControls = (props: Props) => {
             open={openSettings}
             onClose={() => {
               handleSettingsDialogClose();
+              handleEditAccountInfo();
             }}
           >
             <DialogTitle
@@ -546,54 +552,83 @@ const PageAndControls = (props: Props) => {
                 fontFamily: "Figtree",
               }}
             >
-              Settings
+              Reader Settings
             </DialogTitle>
             <DialogContent>
-              <Typography color="white" fontFamily="Figtree">
-                Reader Mode
-              </Typography>
-              <FormControl fullWidth>
-                <Select
-                  id="edit-reader-mode-select"
-                  className="edit-reader-mode-dropdown"
-                  value={readerModeString}
-                  label="Reader Mode"
-                  variant="standard"
-                  disableUnderline={true}
-                  onChange={handleChangeNewReaderMode}
-                  sx={{
-                    "& .MuiSvgIcon-root": {
-                      color: "white",
-                    },
-                  }}
-                  MenuProps={{
-                    PaperProps: { style: { backgroundColor: "#333333" } },
-                  }}
-                >
-                  <MenuItem className="edit-reader-mode-item" value={1}>
+              <Grid
+                container
+                flexDirection="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                className="reader-options-buttons"
+              >
+                <Grid item>
+                  <Button
+                    className="reader-options-button"
+                    sx={{
+                      outline: !leftToRight ? "1px solid #fff" : "none",
+                    }}
+                    onClick={() => {
+                      setLeftToRight(false);
+                      if (!vertical) {
+                        handleChangeNewReaderMode(3);
+                      } else {
+                        handleChangeNewReaderMode(1);
+                      }
+                    }}
+                  >
+                    <ArrowBackIcon />
                     Right to Left
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={2}>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className="reader-options-button"
+                    sx={{
+                      outline: leftToRight ? "1px solid #fff" : "none",
+                    }}
+                    onClick={() => {
+                      setLeftToRight(true);
+                      if (!vertical) {
+                        handleChangeNewReaderMode(4);
+                      } else {
+                        handleChangeNewReaderMode(2);
+                      }
+                    }}
+                  >
+                    <ArrowForwardIcon />
                     Left to Right
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={3}>
-                    Vertical Right to Left
-                  </MenuItem>
-                  <MenuItem className="edit-reader-mode-item" value={4}>
-                    Vertical Left to Right
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <div className="edit-reader-mode-container">
-                <Button
-                  className="save-reader-mode-button"
-                  onClick={() => {
-                    handleEditAccountInfo();
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className="reader-options-button"
+                    sx={{
+                      outline: !vertical ? "1px solid #fff" : "none",
+                    }}
+                    onClick={() => {
+                      setVertical(!vertical);
+                      if (vertical) {
+                        if (leftToRight) {
+                          handleChangeNewReaderMode(4);
+                        } else {
+                          handleChangeNewReaderMode(3);
+                        }
+                      } else {
+                        if (leftToRight) {
+                          handleChangeNewReaderMode(2);
+                        } else {
+                          handleChangeNewReaderMode(1);
+                        }
+                      }
+                    }}
+                  >
+                    <ArrowDownwardIcon />
+                    Vertical
+                  </Button>
+                </Grid>
+              </Grid>
             </DialogContent>
           </Dialog>
         </div>
@@ -609,7 +644,7 @@ const PageAndControls = (props: Props) => {
                   : "",
               display:
                 readerMode === 3 || readerMode === 4 ? "inline-block" : "flex",
-              maxHeight: pageHeight,
+              //maxHeight: pageHeight,
             }}
           >
             {loadingStates[currentPage] ? (

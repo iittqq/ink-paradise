@@ -10,6 +10,9 @@
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .library-contents-header {
@@ -17,6 +20,17 @@
   font-family: "Figtree";
   text-align: center;
   padding-bottom: 10px;
+}
+
+.redirect-button-library {
+  color: unset !important;
+  text-transform: none !important;
+  width: 200px;
+  align-self: center;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }
 
 .folder-bar-and-grid-library {
@@ -62,4 +76,5 @@
   width: 100%;
   margin-top: 10px !important;
   margin-bottom: 10px !important;
+  border-radius: 10px;
 }

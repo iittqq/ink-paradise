@@ -62,15 +62,15 @@ const MangaClickable = (props: Props) => {
       >
         <Card
           sx={{
-            width: { xs: "90px", sm: "130px", md: "130px", lg: "130px" },
-            height: { xs: "140px", sm: "200px", md: "200px", lg: "200px" },
+            width: "100%",
+            height: "auto",
             position: "relative",
           }}
         >
           <CardMedia
             sx={{
               width: "100%",
-              height: "100%",
+              aspectRatio: "7 / 10",
             }}
             image={coverUrl}
           />

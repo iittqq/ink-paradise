@@ -31,7 +31,6 @@ const globalStyle = createGlobalStyle`
   .scanlation-button, 
   .language-button, 
   .asc-desc-button, 
-  .home-category-manga-button, 
   .list-button, 
   .filter-button, 
   .manga-dialog-continue-button, 
@@ -59,11 +58,16 @@ const globalStyle = createGlobalStyle`
     outline: 2px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
-  .library-divider {
+  .library-divider, {
   border: 1px solid ${({ theme }) => theme.elevatedSectionLight};
   }
 
+  .divider-home {
+    border: 2px solid ${({ theme }) => theme.elevatedSectionLight}; 
+  }
+
   .redirect-button,
+  .redirect-button-library,
   .login-button, 
   .register-button, 
   .back-button, 
@@ -81,6 +85,7 @@ const globalStyle = createGlobalStyle`
   .password-strength-results, 
   .individual-details-button, 
   .return-button,
+  .manga-name-button,
   , {
     color: ${({ theme }) => theme.elevatedSection};
   }

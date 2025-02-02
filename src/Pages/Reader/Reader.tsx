@@ -1,4 +1,4 @@
-import { Typography, Button, SelectChangeEvent } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -72,9 +72,9 @@ const Reader = ({ account }: ReaderProps) => {
     setBookmarks(pages);
   };
 
-  const handleChangeNewReaderMode = (event: SelectChangeEvent) => {
-    setReaderInteger(parseInt(event.target.value));
-    setReaderMode(event.target.value as string);
+  const handleChangeNewReaderMode = (newReaderMode: number) => {
+    setReaderInteger(newReaderMode);
+    setReaderMode(String(newReaderMode));
   };
 
   useEffect(() => {

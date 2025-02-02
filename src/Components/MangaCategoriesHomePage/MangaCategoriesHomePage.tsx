@@ -4,7 +4,14 @@ import {
   Relationship,
   MangaTagsInterface,
 } from "../../interfaces/MangaDexInterfaces";
-import { Grid, Typography, Card, CardMedia, Button } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  Button,
+  Divider,
+} from "@mui/material";
 import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
@@ -123,11 +130,12 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Grid
           container
           spacing={1}
+          columns={{ xs: 12, sm: 12, md: 16, lg: 20, xl: 28 }}
           className="home-category-manga-grid-container"
         >
           {recentlyUpdatedManga.map((current) => (
             <>
-              <Grid item className="home-category-manga-grid-item">
+              <Grid item className="home-category-manga-grid-item" xs={4}>
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
@@ -139,31 +147,18 @@ const MangaCategoriesHomePage = (props: Props) => {
                 >
                   <Card
                     sx={{
-                      minWidth: "80px",
-                      height: "110px",
+                      minWidth: "100%",
+                      height: "auto",
                     }}
                   >
                     <CardMedia
                       sx={{
                         width: "100%",
-                        height: "100%",
+                        aspectRatio: "7 / 10",
                       }}
                       image={coverUrlsRecentlyUpdated[current.id]}
                     />
                   </Card>
-                  <div className="home-category-manga-text">
-                    <Typography className="home-category-manga-name">
-                      {current.attributes.title.en === undefined
-                        ? Object.values(current.attributes.title)[0]
-                        : current.attributes.title.en}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.status}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.contentRating}
-                    </Typography>
-                  </div>
                 </Button>
               </Grid>
             </>
@@ -182,16 +177,23 @@ const MangaCategoriesHomePage = (props: Props) => {
           Show More
         </Button>
       </div>
+      <Divider
+        orientation="vertical"
+        className="divider-home"
+        variant="middle"
+        flexItem
+      />
       <div className="category-stack">
         <Typography className="category-stack-name">Recently Added</Typography>
         <Grid
           container
           spacing={1}
+          columns={{ xs: 12, sm: 12, md: 16, lg: 20, xl: 28 }}
           className="home-category-manga-grid-container"
         >
           {recentlyAddedManga.map((current) => (
             <>
-              <Grid item className="home-category-manga-grid-item">
+              <Grid item className="home-category-manga-grid-item" xs={4}>
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
@@ -203,31 +205,18 @@ const MangaCategoriesHomePage = (props: Props) => {
                 >
                   <Card
                     sx={{
-                      minWidth: "80px",
-                      height: "110px",
+                      minWidth: "100%",
+                      height: "auto",
                     }}
                   >
                     <CardMedia
                       sx={{
                         width: "100%",
-                        height: "100%",
+                        aspectRatio: "7 / 10",
                       }}
                       image={coverUrlsRecentlyAdded[current.id]}
                     />
                   </Card>
-                  <div className="home-category-manga-text">
-                    <Typography className="home-category-manga-name">
-                      {current.attributes.title.en === undefined
-                        ? Object.values(current.attributes.title)[0]
-                        : current.attributes.title.en}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.status}
-                    </Typography>
-                    <Typography className="home-category-manga-details">
-                      {current.attributes.contentRating}
-                    </Typography>
-                  </div>
                 </Button>
               </Grid>
             </>

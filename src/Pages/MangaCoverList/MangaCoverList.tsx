@@ -112,9 +112,10 @@ const MangaCoverList = ({ accountDetails, account }: MangaCoverListProps) => {
           alignItems="center"
           wrap="wrap"
           spacing={1}
+          columns={{ xs: 12, sm: 15, md: 21, lg: 30, xl: 39 }}
         >
           {mangaDetails.map((element: Manga) => (
-            <Grid item>
+            <Grid item xs={3}>
               <MangaClickable
                 manga={element}
                 id={element.id}
