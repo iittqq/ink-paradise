@@ -501,59 +501,6 @@ const MangaDetailsDialog = (props: Props) => {
                     Oneshot
                   </Typography>
                 )}
-                <div>
-                  <MangaPageButtonHeader
-                    mangaRaw={mangaInfo.rawLink}
-                    folders={folders}
-                    mangaAltTitles={mangaInfo.altTitles}
-                    mangaTags={mangaInfo.tags}
-                    id={mangaDetails.id !== undefined ? mangaDetails.id : ""}
-                    handleAddToFolder={handleAddToFolder}
-                    handleClickOpen={() =>
-                      setUIState((prev) => ({ ...prev, open: true }))
-                    }
-                    handleCloseCategories={() =>
-                      setUIState((prev) => ({
-                        ...prev,
-                        showCategoriesToggled: false,
-                      }))
-                    }
-                    handleCloseInfo={() =>
-                      setUIState((prev) => ({
-                        ...prev,
-                        showInfoToggled: false,
-                      }))
-                    }
-                    handleOpenCategories={() =>
-                      setUIState((prev) => ({
-                        ...prev,
-                        showCategoriesToggled: true,
-                      }))
-                    }
-                    handleOpenInfo={() =>
-                      setUIState((prev) => ({ ...prev, showInfoToggled: true }))
-                    }
-                    open={uiState.open}
-                    showInfoToggled={uiState.showInfoToggled}
-                    showCategoriesToggled={uiState.showCategoriesToggled}
-                    mangaExistsError={uiState.mangaExistsError}
-                    handleClose={() =>
-                      setUIState((prev) => ({
-                        ...prev,
-                        open: false,
-                        mangaExistsError: false,
-                      }))
-                    }
-                    mangaContentRating={mangaInfo.contentRating}
-                    mangaAddedAlert={uiState.mangaAddedAlert}
-                    handleMangaCategoryClicked={handleMangaCategoryClicked}
-                    handleAddToLibrary={handleAddToLibrary}
-                    libraryEntryExists={libraryEntryExists}
-                    accountId={accountId}
-                    setFolders={setFolders}
-                    loading={loading}
-                  />
-                </div>
               </div>
               {accountId !== null && bookmarks.length > 0 ? (
                 loading === true ? (
@@ -610,6 +557,59 @@ const MangaDetailsDialog = (props: Props) => {
                   <AutoStoriesIcon /> Start Reading
                 </Button>
               )}
+            </div>
+            <div>
+              <MangaPageButtonHeader
+                mangaRaw={mangaInfo.rawLink}
+                folders={folders}
+                mangaAltTitles={mangaInfo.altTitles}
+                mangaTags={mangaInfo.tags}
+                id={mangaDetails.id !== undefined ? mangaDetails.id : ""}
+                handleAddToFolder={handleAddToFolder}
+                handleClickOpen={() =>
+                  setUIState((prev) => ({ ...prev, open: true }))
+                }
+                handleCloseCategories={() =>
+                  setUIState((prev) => ({
+                    ...prev,
+                    showCategoriesToggled: false,
+                  }))
+                }
+                handleCloseInfo={() =>
+                  setUIState((prev) => ({
+                    ...prev,
+                    showInfoToggled: false,
+                  }))
+                }
+                handleOpenCategories={() =>
+                  setUIState((prev) => ({
+                    ...prev,
+                    showCategoriesToggled: true,
+                  }))
+                }
+                handleOpenInfo={() =>
+                  setUIState((prev) => ({ ...prev, showInfoToggled: true }))
+                }
+                open={uiState.open}
+                showInfoToggled={uiState.showInfoToggled}
+                showCategoriesToggled={uiState.showCategoriesToggled}
+                mangaExistsError={uiState.mangaExistsError}
+                handleClose={() =>
+                  setUIState((prev) => ({
+                    ...prev,
+                    open: false,
+                    mangaExistsError: false,
+                  }))
+                }
+                mangaContentRating={mangaInfo.contentRating}
+                mangaAddedAlert={uiState.mangaAddedAlert}
+                handleMangaCategoryClicked={handleMangaCategoryClicked}
+                handleAddToLibrary={handleAddToLibrary}
+                libraryEntryExists={libraryEntryExists}
+                accountId={accountId}
+                setFolders={setFolders}
+                loading={loading}
+              />
             </div>
           </div>
           <Typography className="manga-description-header-text">

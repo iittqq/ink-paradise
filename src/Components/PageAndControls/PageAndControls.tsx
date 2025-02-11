@@ -17,7 +17,7 @@ import {
   refreshTokenFunction,
 } from "../../api/Account";
 import { Account } from "../../interfaces/AccountInterfaces";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -39,6 +39,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 type Props = {
+  id: string;
   pages: string[];
   hash: string;
   currentChapter: string;
@@ -75,6 +76,7 @@ type Props = {
 
 const PageAndControls = (props: Props) => {
   const {
+    id,
     pages,
     hash,
     currentChapter,
@@ -112,6 +114,7 @@ const PageAndControls = (props: Props) => {
   const [longStripReaderWidth] = useState(
     window.innerWidth > 900 ? "50%" : "100%",
   );
+  const [currentOffset, setCurrentOffset] = useState(0);
   const [pageHeight] = useState(window.innerWidth > 900 ? "90vh" : "");
   const [open, setOpen] = useState<boolean>(false);
   const [chapterIndexState, setChapterIndexState] =
@@ -126,6 +129,32 @@ const PageAndControls = (props: Props) => {
 
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(startPage);
+
+  const fetchFeedData = useCallback(async () => {
+    if (id) {
+      const data = await fetchMangaFeed(
+        id,
+        100,
+        currentOffset,
+        "asc",
+        selectedLanguage,
+      );
+      if (currentOffset === 0) {
+        setMangaFeedState(data);
+      } else {
+        setMangaFeedState((previousFeed) => [...previousFeed, ...data]);
+      }
+    }
+  }, [id, selectedLanguage, currentOffset]);
+
+  const handleShowMore = () => {
+    setCurrentOffset(currentOffset + 100);
+    console.log(currentOffset);
+  };
+
+  useEffect(() => {
+    fetchFeedData();
+  }, [fetchFeedData]);
 
   const handleNextChapter = () => {
     setCurrentPage(0);
@@ -158,8 +187,8 @@ const PageAndControls = (props: Props) => {
     if (!chapterFound) {
       fetchMangaFeed(
         mangaId,
-        10,
-        chapterIndexState - 1,
+        100,
+        tempMangaFeed.length,
         orderState,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
@@ -204,8 +233,6 @@ const PageAndControls = (props: Props) => {
         orderState,
         selectedLanguage,
       ).then((data: MangaFeedScanlationGroup[]) => {
-        console.log(data);
-        console.log([...data, ...mangaFeedState]);
         setMangaFeedState(data);
       });
     }
@@ -356,7 +383,7 @@ const PageAndControls = (props: Props) => {
   };
 
   useEffect(() => {
-    let localPage = currentPage; // Local variable to track the current page
+    let localPage = currentPage;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
@@ -364,7 +391,7 @@ const PageAndControls = (props: Props) => {
           if (readerMode === 1 || readerMode === 3) {
             if (localPage === pages.length - 1 || readerMode === 3) {
               handleNextChapter();
-              localPage = 0; // Reset localPage for the next chapter
+              localPage = 0;
             } else {
               localPage += 1;
               handleChangePageNumber(localPage);
@@ -373,7 +400,7 @@ const PageAndControls = (props: Props) => {
           } else if (readerMode === 2 || readerMode === 4) {
             if (localPage === 0 || readerMode === 4) {
               handlePreviousChapter();
-              localPage = pages.length - 1; // Set localPage to last page of the previous chapter
+              localPage = pages.length - 1;
             } else {
               localPage -= 1;
               handleChangePageNumber(localPage);
@@ -387,7 +414,7 @@ const PageAndControls = (props: Props) => {
           if (readerMode === 1 || readerMode === 3) {
             if (localPage === 0 || readerMode === 3) {
               handlePreviousChapter();
-              localPage = pages.length - 1; // Set localPage to last page of the previous chapter
+              localPage = pages.length - 1;
             } else {
               localPage -= 1;
               handleChangePageNumber(localPage);
@@ -396,7 +423,7 @@ const PageAndControls = (props: Props) => {
           } else if (readerMode === 2 || readerMode === 4) {
             if (localPage === pages.length - 1 || readerMode === 4) {
               handleNextChapter();
-              localPage = 0; // Reset localPage for the next chapter
+              localPage = 0;
             } else {
               localPage += 1;
               handleChangePageNumber(localPage);
@@ -426,6 +453,8 @@ const PageAndControls = (props: Props) => {
   ]);
 
   useEffect(() => {
+    console.log(readerMode);
+    console.log(vertical);
     setCurrentPage(startPage);
     setImageBlob({});
     handleLoadImage(hash, pages).catch((error) => {
@@ -571,7 +600,7 @@ const PageAndControls = (props: Props) => {
                     }}
                     onClick={() => {
                       setLeftToRight(false);
-                      if (!vertical) {
+                      if (vertical) {
                         handleChangeNewReaderMode(3);
                       } else {
                         handleChangeNewReaderMode(1);
@@ -590,7 +619,7 @@ const PageAndControls = (props: Props) => {
                     }}
                     onClick={() => {
                       setLeftToRight(true);
-                      if (!vertical) {
+                      if (vertical) {
                         handleChangeNewReaderMode(4);
                       } else {
                         handleChangeNewReaderMode(2);
@@ -605,11 +634,14 @@ const PageAndControls = (props: Props) => {
                   <Button
                     className="reader-options-button"
                     sx={{
-                      outline: !vertical ? "1px solid #fff" : "none",
+                      outline:
+                        vertical || readerMode === 3 || readerMode === 4
+                          ? "1px solid #fff"
+                          : "none",
                     }}
                     onClick={() => {
                       setVertical(!vertical);
-                      if (vertical) {
+                      if (!vertical) {
                         if (leftToRight) {
                           handleChangeNewReaderMode(4);
                         } else {
@@ -775,6 +807,8 @@ const PageAndControls = (props: Props) => {
           contentFilter={contentFilter}
           sortOrder={orderState}
           oneshot={oneshot}
+          handleShowMore={handleShowMore}
+          offset={currentOffset}
         />
       </Collapse>
     </div>

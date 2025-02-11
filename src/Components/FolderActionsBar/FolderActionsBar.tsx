@@ -3,7 +3,6 @@ import { Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearIcon from "@mui/icons-material/Clear";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,7 +10,6 @@ import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
 import "./FolderActionsBar.css";
 
 type Props = {
-  handleClickBack: () => void;
   handleDeleteMangaEntries: () => void;
   handleDeleteMangaFolders: () => void;
   checked: boolean;
@@ -43,7 +41,6 @@ type Props = {
 
 const FolderActionsBar = (props: Props) => {
   const {
-    handleClickBack,
     handleDeleteMangaEntries,
     handleDeleteMangaFolders,
     checked,
@@ -73,17 +70,6 @@ const FolderActionsBar = (props: Props) => {
 
   return (
     <div className="folder-section-header">
-      {selectedFolder !== null ? (
-        <Button
-          className="folder-header-button"
-          sx={{ backgroundColor: "transparent !important" }}
-          onClick={() => {
-            handleClickBack();
-          }}
-        >
-          <ArrowBackIcon />
-        </Button>
-      ) : null}
       {selectedFolder !== null ? (
         selectAll ? (
           <Button

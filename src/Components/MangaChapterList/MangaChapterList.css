@@ -28,6 +28,11 @@
   .MuiTouchRipple-child {
     background-color: #fff !important;
   }
+
+  &.MuiButtonBase-root:hover {
+    transform: translateY(-3px);
+  }
+
 }
 
 .manga-chapters {
@@ -71,10 +76,12 @@
 
 .scanlation-name {
   overflow: hidden;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   text-overflow: ellipsis;
   font-family: "Figtree" !important;
-  max-width: 75px;
+  padding-left: 20px;
 }
 
 .chapter-row {
@@ -89,6 +96,8 @@
   min-height: 100%;
   display: flex;
   justify-content: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   align-items: center;
 }
 
@@ -103,6 +112,7 @@
   display: flex !important;
 
   &.MuiButtonBase-root:hover {
+    transform: translateY(-3px);
     background-color: transparent;
   }
 

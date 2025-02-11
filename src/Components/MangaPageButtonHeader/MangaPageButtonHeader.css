@@ -1,17 +1,19 @@
 .manga-details-buttons-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
 .individual-details-button {
   color: unset;
-  width: 30px !important;
-  min-width: 30px !important;
+  width: 50px !important;
+  min-width: 50px !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #fff !important;
   }
@@ -24,6 +26,7 @@
     font-family: "Figtree" !important;
     min-width: 300px;
   }
+
   .manga-folder-alert {
     min-width: 200px !important;
     max-width: 300px !important;
@@ -44,6 +47,7 @@
   text-transform: none !important;
   font-family: "Figtree" !important;
   font-size: 16px !important;
+
   &:hover {
     background-color: transparent !important;
   }
@@ -55,9 +59,11 @@
   text-transform: none !important;
   background-color: #222222 !important;
   font-family: "Figtree" !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -68,10 +74,12 @@
     background-color: #121212 !important;
     border-radius: 10px !important;
     min-width: 80vw;
+
     @media screen and (min-width: 600px) {
       min-width: 40vw;
     }
   }
+
   & .MuiDialogContent-root {
     color: #ffffff !important;
     display: flex;
@@ -79,6 +87,7 @@
     justify-content: center;
     align-items: center;
   }
+
   .manga-folder-alert {
     padding: 0px !important;
     width: 90% !important;
@@ -104,9 +113,11 @@
   position: absolute !important;
   right: 20px;
   height: 30px;
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -118,4 +129,11 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+.button-header-icon {
+  width: 25px !important;
+  height: 25px !important;
+
+
 }

@@ -40,9 +40,7 @@ const MangaChapterList = (props: Props) => {
     handleShowMore,
     offset,
   } = props;
-  const [xsValue] = useState(
-    window.innerWidth > 900 ? 2 : mangaFeed.length === 1 ? 12 : 6,
-  );
+
   const [userProgress, setUserProgress] = useState<number | null>(null);
 
   const navigate = useNavigate();
@@ -127,11 +125,12 @@ const MangaChapterList = (props: Props) => {
         justifyContent="center"
         alignItems="center"
         className="chapters-list"
-        spacing={1}
+        spacing={1.5}
+        columns={{ xs: 10, sm: 20, md: 25, lg: 25, xl: 35 }}
       >
         {mangaFeed.map((current: MangaFeedScanlationGroup, index: number) =>
           current.attributes.translatedLanguage === selectedLanguage ? (
-            <Grid item xs={xsValue} className="chapter-button-container">
+            <Grid item className="chapter-button-container" xs={5}>
               <Button
                 className="chapter-button"
                 disableRipple
@@ -207,7 +206,7 @@ const MangaChapterList = (props: Props) => {
         )}
       </Grid>
 
-      {handleShowMore !== undefined && mangaFeed.length >= offset! + 100 && (
+      {mangaFeed.length >= offset! + 100 && (
         <Button className="show-more-button" onClick={handleShowMore}>
           Show More
         </Button>

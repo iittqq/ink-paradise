@@ -7,7 +7,6 @@ import LibraryContents from "../../Components/LibraryContents/LibraryContents";
 import { Manga } from "../../interfaces/MangaDexInterfaces";
 import {
   getReadingByUserId,
-  getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
 } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +31,9 @@ import { MangaFolderEntry } from "../../interfaces/MangaFolderEntriesInterfaces"
 import FolderActionsBar from "../../Components/FolderActionsBar/FolderActionsBar";
 import Divider from "@mui/material/Divider";
 import { deleteBookmarkByMangaIdAndUserId } from "../../api/Bookmarks";
+import TuneIcon from "@mui/icons-material/Tune";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface LibraryProps {
   account: Account | null;
@@ -43,7 +45,6 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   const [ascending, setAscending] = useState<boolean>(true);
   const [contentFilter, setContentFilter] =
     useState<string>("Alphabetical Order");
-  const [loadLibrary, setLoadLibrary] = useState<boolean>(true);
   const [checked, setChecked] = useState<boolean>(false);
   const [libraryEntriesToDelete, setLibraryEntriesToDelete] = useState<
     string[]
@@ -75,32 +76,11 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
 
   const [selectAllFolderContent, setSelectAllFolderContent] =
     useState<boolean>(false);
+  const [showControls, setShowControls] = useState<boolean>(false);
 
   const [folderBackground, setFolderBackground] = useState<string | null>(null);
 
   const navigate = useNavigate();
-
-  const searchFavorites = async (searchValue: string) => {
-    setLibrary([]);
-    if (searchValue === "") {
-      setLoadLibrary(!loadLibrary);
-      return;
-    }
-    setLoading(true);
-    if (account !== null) {
-      getReadingByMangaName(account.id, searchValue).then(
-        (filteredReading: Reading[]) => {
-          const promises = filteredReading.map((readingEntry: Reading) => {
-            return fetchMangaById(readingEntry.mangaId);
-          });
-          Promise.all(promises).then((data) => {
-            setLibrary(data);
-            setLoading(false);
-          });
-        },
-      );
-    }
-  };
 
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
@@ -538,6 +518,10 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
     fetchFolders();
   }, [account]);
 
+  const showHideControls = () => {
+    setShowControls(!showControls);
+  };
+
   useEffect(() => {
     if (account !== null) {
       handleFetchingLibrary(account.id, ascending);
@@ -546,59 +530,28 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
 
   return (
     <div className="library-page-container">
-      {selectedFolder === null
-        ? !loading && (
-            <LibraryHeader
-              searchFavorites={searchFavorites}
-              handleAscendingChange={handleAscendingChange}
-              handleContentFilter={handleContentFilter}
-              checked={checked}
-              toggleLibraryEntries={toggleLibraryEntries}
-              handleDeleteLibraryEntries={handleDeleteLibraryEntries}
-              toggleSelectAll={toggleSelectAll}
-              selectAll={selectAll}
-              libraryEntriesToDelete={libraryEntriesToDelete}
-              handleClickAddFolderButton={handleClickAddFolderButton}
-              openAddFolder={openAddFolder}
-              handleFolderDialogClose={handleFolderDialogClose}
-              handleCreateFolder={handleCreateFolder}
-              handleFolderNameChange={handleFolderNameChange}
-              handleFolderBackgroundChange={handleFolderBackgroundChange}
-              handleFolderDescriptionChange={handleFolderDescriptionChange}
-              mangaFoldersToDelete={mangaFoldersToDelete}
-              toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-              handleDeleteMangaFolders={handleDeleteMangaFolders}
-              checkedFolder={checkedFolder}
-            />
-          )
-        : !loading && (
-            <FolderActionsBar
-              handleClickBack={handleClickBack}
-              handleDeleteMangaEntries={handleDeleteMangaEntries}
-              handleDeleteMangaFolders={handleDeleteMangaFolders}
-              checked={checkedFolder}
-              toggleMangaEntriesDelete={toggleMangaEntriesDelete}
-              handleClickAddFolderButton={handleClickAddFolderButton}
-              handleFolderDialogClose={handleFolderDialogClose}
-              handleCreateFolder={handleCreateFolder}
-              openAddFolder={openAddFolder}
-              selectedFolder={selectedFolder}
-              handleFolderNameChange={handleFolderNameChange}
-              handleFolderDescriptionChange={handleFolderDescriptionChange}
-              selectAll={selectAllFolderContent}
-              toggleSelectAll={toggleSelectAllFolderContent}
-              mangaFoldersToDelete={mangaFoldersToDelete}
-              mangaEntriesToDelete={mangaEntriesToDelete}
-              handleFolderBackgroundChange={handleFolderBackgroundChange}
-              handleClickEditFolderButton={handleClickEditFolderButton}
-              openEditFolder={openEditFolder}
-              handleEditFolder={handleEditFolder}
-              handleEditFolderDialogClose={handleEditFolderDialogClose}
-              newFolderName={newFolderName}
-              newFolderDescription={newFolderDescription}
-              folderBackground={folderBackground}
-            />
-          )}
+      <div className="inside-folder-header">
+        {selectedFolder !== null ? (
+          <Button
+            className="exit-library-button"
+            onClick={() => {
+              handleClickBack();
+            }}
+          >
+            <ArrowBackIcon />
+          </Button>
+        ) : (
+          <div></div>
+        )}{" "}
+        <Button
+          className="open-library-controls-button"
+          onClick={() => {
+            showHideControls();
+          }}
+        >
+          {!showControls ? <TuneIcon /> : <CloseIcon />}
+        </Button>
+      </div>
       {loading === true ? (
         <div className="loading-indicator-container">
           <CircularProgress className="loading-icon" size={25} />
@@ -613,55 +566,111 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
           <Typography fontFamily="Figtree">Start Browsing</Typography>
         </Button>
       ) : (
-        <div>
-          {selectedFolder === null ? (
-            <LibraryContents
-              libraryManga={library}
-              handleLibraryEntryClick={handleLibraryEntryClick}
-              currentMetric={contentFilter}
-              checked={checked}
-              libraryEntriesToDelete={libraryEntriesToDelete}
-              selectAll={selectAll}
-              groupedLibraryManga={groupedLibrary}
+        <div className="library-contents-and-buttons">
+          <div style={{ width: "100%" }}>
+            {selectedFolder === null ? (
+              <LibraryContents
+                libraryManga={library}
+                handleLibraryEntryClick={handleLibraryEntryClick}
+                currentMetric={contentFilter}
+                checked={checked}
+                libraryEntriesToDelete={libraryEntriesToDelete}
+                selectAll={selectAll}
+                groupedLibraryManga={groupedLibrary}
+                accountId={account!.id}
+                contentFilter={
+                  accountDetails === null ? 3 : accountDetails.contentFilter
+                }
+              />
+            ) : (
+              <div className="personal-folders-library">
+                <div className="current-folder-header">
+                  {selectedFolder.folderName}
+                  <div>
+                    {selectedFolder.folderDescription !== null ? (
+                      <Typography className="folder-description-library">
+                        {selectedFolder.folderDescription}
+                      </Typography>
+                    ) : null}
+                  </div>
+                </div>
+                <Divider className="library-divider" />
+              </div>
+            )}
+            {folders.length > 0 && selectedFolder === null ? (
+              <Divider className="library-divider" />
+            ) : null}
+
+            <FolderGrid
+              folderClick={handleFolderClick}
+              mangaEntryClick={handleMangaEntryClick}
+              loading={loadingFolder}
+              selectedFolder={selectedFolder}
+              checked={checkedFolder}
+              folders={folders}
+              mangaFoldersToDelete={mangaFoldersToDelete}
+              folderMangaData={folderMangaData}
+              mangaEntriesToDelete={mangaEntriesToDelete}
+              selectAll={selectAllFolderContent}
               accountId={account!.id}
               contentFilter={
                 accountDetails === null ? 3 : accountDetails.contentFilter
               }
             />
-          ) : (
-            <div className="personal-folders-library">
-              <div className="current-folder-header">
-                {selectedFolder.folderName}
-                <div>
-                  {selectedFolder.folderDescription !== null ? (
-                    <Typography className="folder-description-library">
-                      {selectedFolder.folderDescription}
-                    </Typography>
-                  ) : null}
-                </div>
-              </div>
-              <Divider className="library-divider" />
-            </div>
-          )}
-          {folders.length > 0 && selectedFolder === null ? (
-            <Divider className="library-divider" />
-          ) : null}
-          <FolderGrid
-            folderClick={handleFolderClick}
-            mangaEntryClick={handleMangaEntryClick}
-            loading={loadingFolder}
-            selectedFolder={selectedFolder}
-            checked={checkedFolder}
-            folders={folders}
-            mangaFoldersToDelete={mangaFoldersToDelete}
-            folderMangaData={folderMangaData}
-            mangaEntriesToDelete={mangaEntriesToDelete}
-            selectAll={selectAllFolderContent}
-            accountId={account!.id}
-            contentFilter={
-              accountDetails === null ? 3 : accountDetails.contentFilter
-            }
-          />
+          </div>
+          {selectedFolder === null
+            ? !loading &&
+              showControls === true && (
+                <LibraryHeader
+                  handleAscendingChange={handleAscendingChange}
+                  handleContentFilter={handleContentFilter}
+                  checked={checked}
+                  toggleLibraryEntries={toggleLibraryEntries}
+                  handleDeleteLibraryEntries={handleDeleteLibraryEntries}
+                  toggleSelectAll={toggleSelectAll}
+                  selectAll={selectAll}
+                  libraryEntriesToDelete={libraryEntriesToDelete}
+                  handleClickAddFolderButton={handleClickAddFolderButton}
+                  openAddFolder={openAddFolder}
+                  handleFolderDialogClose={handleFolderDialogClose}
+                  handleCreateFolder={handleCreateFolder}
+                  handleFolderNameChange={handleFolderNameChange}
+                  handleFolderBackgroundChange={handleFolderBackgroundChange}
+                  handleFolderDescriptionChange={handleFolderDescriptionChange}
+                  mangaFoldersToDelete={mangaFoldersToDelete}
+                  toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                  handleDeleteMangaFolders={handleDeleteMangaFolders}
+                  checkedFolder={checkedFolder}
+                />
+              )
+            : !loading &&
+              showControls === true && (
+                <FolderActionsBar
+                  handleDeleteMangaEntries={handleDeleteMangaEntries}
+                  handleDeleteMangaFolders={handleDeleteMangaFolders}
+                  checked={checkedFolder}
+                  toggleMangaEntriesDelete={toggleMangaEntriesDelete}
+                  handleClickAddFolderButton={handleClickAddFolderButton}
+                  handleFolderDialogClose={handleFolderDialogClose}
+                  handleCreateFolder={handleCreateFolder}
+                  openAddFolder={openAddFolder}
+                  selectedFolder={selectedFolder}
+                  handleFolderNameChange={handleFolderNameChange}
+                  handleFolderDescriptionChange={handleFolderDescriptionChange}
+                  selectAll={selectAllFolderContent}
+                  toggleSelectAll={toggleSelectAllFolderContent}
+                  mangaFoldersToDelete={mangaFoldersToDelete}
+                  mangaEntriesToDelete={mangaEntriesToDelete}
+                  handleFolderBackgroundChange={handleFolderBackgroundChange}
+                  handleClickEditFolderButton={handleClickEditFolderButton}
+                  openEditFolder={openEditFolder}
+                  handleEditFolder={handleEditFolder}
+                  handleEditFolderDialogClose={handleEditFolderDialogClose}
+                  newFolderName={newFolderName}
+                  newFolderDescription={newFolderDescription}
+                  folderBackground={folderBackground}
+                />
+              )}
         </div>
       )}{" "}
     </div>

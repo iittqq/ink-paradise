@@ -6,8 +6,7 @@ import {
   Grid,
   DialogContent,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SearchIcon from "@mui/icons-material/Search";
+
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ListIcon from "@mui/icons-material/List";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,7 +19,6 @@ import FolderDeleteIcon from "@mui/icons-material/FolderDelete";
 import "./LibraryHeader.css";
 
 type Props = {
-  searchFavorites: (searchValue: string) => void;
   handleAscendingChange: () => void;
   handleContentFilter: (selection: string) => void;
   checked: boolean;
@@ -48,7 +46,6 @@ type Props = {
 
 const LibraryHeader = (props: Props) => {
   const {
-    searchFavorites,
     handleAscendingChange,
     handleContentFilter,
     checked,
@@ -70,73 +67,14 @@ const LibraryHeader = (props: Props) => {
     checkedFolder,
   } = props;
   const [openFilterDialog, setOpenFilterDialog] = useState<boolean>(false);
-  const [searchBarValue, setSearchBarValue] = useState<string>("");
-  const [searching, setSearching] = useState(false);
+
   const [showAddedFolderAlert, setShowAddedFolderAlert] =
     useState<boolean>(false);
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchBarValue(event.target.value);
-  };
-
-  const handleEnter = () => {
-    searchFavorites(searchBarValue);
-    setSearchBarValue("");
-  };
-
-  const handleClickSearchIcon = async () => {
-    setSearching(!searching);
-  };
 
   return (
     <>
       <div className="library-header">
         <>
-          {searching ? (
-            <div className="library-input-section">
-              <Button
-                className="library-header-button"
-                sx={{ backgroundColor: "transparent !important" }}
-                onClick={() => handleClickSearchIcon()}
-              >
-                <ArrowBackIcon />
-              </Button>
-              <input
-                type="search"
-                placeholder="Search Library"
-                className="library-search-bar"
-                onChange={(event) => {
-                  handleInput(event);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleEnter();
-                    handleClickSearchIcon();
-                  }
-                }}
-              />
-              <Button
-                className="library-header-button"
-                sx={{ backgroundColor: "transparent !important" }}
-                onClick={() => {
-                  handleEnter();
-                  handleClickSearchIcon();
-                }}
-              >
-                <SearchIcon />
-              </Button>
-            </div>
-          ) : (
-            <Button
-              className="library-header-button"
-              sx={{ backgroundColor: "transparent !important" }}
-              onClick={() => {
-                handleClickSearchIcon();
-              }}
-            >
-              <SearchIcon />
-            </Button>
-          )}
           <Dialog
             id="create-folder-dialog"
             open={openAddFolder}

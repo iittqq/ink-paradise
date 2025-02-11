@@ -5,6 +5,40 @@
   justify-content: center;
 }
 
+.inside-folder-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.exit-library-button {
+  color: unset !important;
+  padding: 3px 4px !important;
+  max-width: 40px !important;
+  min-width: 40px !important;
+  margin: 0px 2px 0px 2px !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.open-library-controls-button {
+  position: fixed !important;
+  z-index: 1000;
+  max-width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  border-radius: 20px !important;
+  right: 20px;
+  bottom: 20px;
+
+  &.MuiButtonBase-root:hover {
+    transform: translateY(-5px);
+  }
+}
+
+
 .library-page-container {
   min-height: calc(var(--vh, 1vh) * 98);
   overflow-y: scroll;

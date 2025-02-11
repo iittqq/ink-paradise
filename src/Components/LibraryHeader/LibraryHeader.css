@@ -1,9 +1,14 @@
 .library-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  width: 100%;
+  max-height: 50vh;
+  min-height: 50vh;
+  position: fixed;
+  right: 0px;
+  top: 25%;
+  border-radius: 10px;
 }
 
 .library-header-button {
@@ -12,6 +17,7 @@
   max-width: 60px !important;
   min-width: 40px !important;
   margin: 0px 2px 0px 2px !important;
+
   &:hover {
     background-color: transparent !important;
   }
@@ -24,7 +30,8 @@
   align-items: center;
   width: 30%;
   padding-bottom: 5px;
-  @media (width <= 800px) {
+
+  @media (width <=800px) {
     width: 100%;
     justify-content: space-between;
   }
@@ -37,6 +44,7 @@
   border-radius: 25px !important;
   width: 80%;
   text-align: center;
+
   &:focus {
     outline: 2px solid #ffffff;
   }
@@ -72,9 +80,15 @@
   color: #ffffff !important;
   text-transform: none !important;
   font-family: "Figtree" !important;
+
   &:hover {
     background-color: transparent !important;
   }
+}
+
+.library-contents-and-buttons {
+  display: flex;
+  flex-direction: row;
 }
 
 .create-button {
@@ -83,9 +97,11 @@
   text-transform: none !important;
   background-color: #222222 !important;
   font-family: "Figtree" !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -96,10 +112,12 @@
     background-color: #121212 !important;
     border-radius: 10px !important;
     min-width: 80vw;
+
     @media screen and (min-width: 600px) {
       min-width: 40vw;
     }
   }
+
   & .MuiDialogContent-root {
     color: #ffffff !important;
     display: flex;

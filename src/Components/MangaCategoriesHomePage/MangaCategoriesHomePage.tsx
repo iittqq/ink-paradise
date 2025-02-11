@@ -130,12 +130,12 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Grid
           container
           spacing={1}
-          columns={{ xs: 12, sm: 12, md: 16, lg: 20, xl: 28 }}
+          columns={{ xs: 20, sm: 20, md: 25, lg: 25, xl: 35 }}
           className="home-category-manga-grid-container"
         >
           {recentlyUpdatedManga.map((current) => (
             <>
-              <Grid item className="home-category-manga-grid-item" xs={4}>
+              <Grid item className="home-category-manga-grid-item" xs={5}>
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
@@ -188,12 +188,12 @@ const MangaCategoriesHomePage = (props: Props) => {
         <Grid
           container
           spacing={1}
-          columns={{ xs: 12, sm: 12, md: 16, lg: 20, xl: 28 }}
+          columns={{ xs: 20, sm: 20, md: 25, lg: 25, xl: 35 }}
           className="home-category-manga-grid-container"
         >
           {recentlyAddedManga.map((current) => (
             <>
-              <Grid item className="home-category-manga-grid-item" xs={4}>
+              <Grid item className="home-category-manga-grid-item" xs={5}>
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {

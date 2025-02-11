@@ -79,51 +79,77 @@ const MangaBanner = (props: Props) => {
       <div className="cover-name-container">
         <img className="cover-image" src={coverUrl} alt="" />
         <div className="header-details-stack">
-          <Typography
-            className="manga-name"
-            sx={{
-              fontSize: { xs: 20, sm: 25, lg: 30 },
-            }}
-          >
-            {mangaName}
-          </Typography>
-          {author !== undefined ? (
+          <div className="manga-banner-manga-details">
+            <Typography
+              className="manga-name"
+              sx={{
+                fontSize: { xs: 20, sm: 25, lg: 30 },
+              }}
+            >
+              {mangaName}
+            </Typography>
+            {author !== undefined ? (
+              <Typography
+                className="manga-author"
+                sx={{
+                  fontSize: { xs: 16, sm: 20, lg: 25 },
+                }}
+              >
+                Author:{" "}
+                <span className="manga-details-color-text">{author}</span>
+              </Typography>
+            ) : null}
             <Typography
               className="manga-author"
               sx={{
                 fontSize: { xs: 16, sm: 20, lg: 25 },
               }}
             >
-              Author: <span className="manga-details-color-text">{author}</span>
+              Content Rating:{" "}
+              <span className="manga-details-color-text">{contentRating}</span>
             </Typography>
-          ) : null}
-          <Typography
-            className="manga-author"
-            sx={{
-              fontSize: { xs: 16, sm: 20, lg: 25 },
-            }}
-          >
-            Content Rating:{" "}
-            <span className="manga-details-color-text">{contentRating}</span>
-          </Typography>
-          <Typography
-            className="manga-author"
-            sx={{
-              fontSize: { xs: 16, sm: 20, lg: 25 },
-            }}
-          >
-            Status: <span className="manga-details-color-text"> {status}</span>
-          </Typography>
-          {oneshot && (
             <Typography
-              className="manga-details-color-text"
+              className="manga-author"
               sx={{
                 fontSize: { xs: 16, sm: 20, lg: 25 },
               }}
             >
-              Oneshot
+              Status:{" "}
+              <span className="manga-details-color-text"> {status}</span>
             </Typography>
-          )}
+            {oneshot && (
+              <Typography
+                className="manga-details-color-text"
+                sx={{
+                  fontSize: { xs: 16, sm: 20, lg: 25 },
+                }}
+              >
+                Oneshot
+              </Typography>
+            )}
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={1}
+              sx={{ minHeight: "50px", paddingBottom: "2px" }}
+              className="categories-buttons-container"
+            >
+              {mangaTags.map((current: MangaTagsInterface) => (
+                <Grid item>
+                  <Button
+                    className="categories-buttons"
+                    onClick={() => {
+                      handleMangaCategoryClicked(current);
+                    }}
+                  >
+                    {current.attributes.name.en}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+          </div>
           <MangaPageButtonHeader
             mangaRaw={mangaRaw}
             folders={folders}
@@ -149,28 +175,6 @@ const MangaBanner = (props: Props) => {
             accountId={accountId}
             setFolders={setFolders}
           />
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={1}
-            sx={{ minHeight: "50px", paddingBottom: "2px" }}
-            className="categories-buttons-container"
-          >
-            {mangaTags.map((current: MangaTagsInterface) => (
-              <Grid item>
-                <Button
-                  className="categories-buttons"
-                  onClick={() => {
-                    handleMangaCategoryClicked(current);
-                  }}
-                >
-                  {current.attributes.name.en}
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
         </div>
       </div>
       <div

@@ -159,6 +159,7 @@ const Reader = ({ account }: ReaderProps) => {
           </Typography>
         </div>
         <PageAndControls
+          id={state.mangaId}
           pages={pages}
           hash={hash}
           currentChapter={state.chapterNumber}

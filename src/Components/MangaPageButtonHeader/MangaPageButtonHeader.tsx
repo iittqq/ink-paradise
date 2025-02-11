@@ -151,7 +151,7 @@ const MangaPageButtonHeader = (props: Props) => {
     <div className="manga-details-buttons-container">
       {libraryEntryExists === true ? (
         <Button className="individual-details-button">
-          <BookmarkAddedIcon />
+          <BookmarkAddedIcon className="button-header-icon" />
         </Button>
       ) : accountId === null ? null : (
         <Button
@@ -162,7 +162,7 @@ const MangaPageButtonHeader = (props: Props) => {
             handleAddToLibrary();
           }}
         >
-          <BookmarkAddIcon />
+          <BookmarkAddIcon className="button-header-icon" />
         </Button>
       )}
       {accountId === null ? null : (
@@ -173,7 +173,7 @@ const MangaPageButtonHeader = (props: Props) => {
             handleClickOpen();
           }}
         >
-          <FolderIcon />
+          <FolderIcon className="button-header-icon" />
         </Button>
       )}
       <Dialog open={open} onClose={handleClose} id="folder-dialog">
@@ -185,7 +185,7 @@ const MangaPageButtonHeader = (props: Props) => {
               handleClickAddFolderButton();
             }}
           >
-            <CreateNewFolderIcon sx={{ width: "25px", height: "25px" }} />
+            <CreateNewFolderIcon className="button-header-icon" />
           </Button>
           <Dialog
             id="create-folder-dialog"
@@ -303,7 +303,7 @@ const MangaPageButtonHeader = (props: Props) => {
           handleOpenCategories();
         }}
       >
-        <StyleIcon />
+        <StyleIcon className="button-header-icon" />
       </Button>
       <Dialog
         open={showCategoriesToggled}
@@ -344,7 +344,7 @@ const MangaPageButtonHeader = (props: Props) => {
           handleOpenInfo();
         }}
       >
-        <InfoIcon />
+        <InfoIcon className="button-header-icon" />
       </Button>
       <Dialog
         open={showInfoToggled}
@@ -404,7 +404,7 @@ const MangaPageButtonHeader = (props: Props) => {
         </DialogContent>
       </Dialog>
       <Button className="individual-details-button" href={mangaRaw}>
-        <RawOnIcon />
+        <RawOnIcon className="button-header-icon" />
       </Button>
     </div>
   );

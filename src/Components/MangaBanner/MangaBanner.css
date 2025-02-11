@@ -82,7 +82,11 @@
 
 .header-details-stack {
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
   padding-left: 10px;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .manga-name {

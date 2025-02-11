@@ -72,7 +72,8 @@ const globalStyle = createGlobalStyle`
   .register-button, 
   .back-button, 
   .folder-header-button, 
-  .library-header-button, 
+  .library-header-button,
+  .open-library-controls-button,
    {
     background-color: ${({ theme }) => theme.elevatedSection};
     color: ${({ theme }) => theme.text};
@@ -119,7 +120,7 @@ const globalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   }
 
-  .folder:hover {
+  .folder:hover, .open-library-controls-button:hover {
     background-color: ${({ theme }) => theme.elevatedSectionLight};
   }
 

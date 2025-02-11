@@ -91,14 +91,14 @@ const Home = ({ account, accountDetails }: HomeProps) => {
         const selectedManga = await fetchMangaListById(selectedMangaIds);
         setSelectedManga(selectedManga);
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
-          21,
+          20,
           0,
           accountDetails.contentFilter,
         );
         setRecentlyUpdatedManga(recentlyUpdatedManga);
 
         const recentlyAddedManga = await fetchRecentlyAdded(
-          21,
+          20,
           0,
           accountDetails.contentFilter,
         );
@@ -118,14 +118,14 @@ const Home = ({ account, accountDetails }: HomeProps) => {
         const selectedManga = await fetchMangaListById(selectedMangaIds);
         setSelectedManga(selectedManga);
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
-          21,
+          20,
           0,
           defaultContentFilter,
         );
         setRecentlyUpdatedManga(recentlyUpdatedManga);
 
         const recentlyAddedManga = await fetchRecentlyAdded(
-          21,
+          20,
           0,
           defaultContentFilter,
         );

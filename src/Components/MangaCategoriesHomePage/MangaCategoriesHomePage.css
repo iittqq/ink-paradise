@@ -70,7 +70,8 @@
   }
 
   &.MuiButtonBase-root:hover {
-    background-color: transparent;
+    transform: translateY(-5px);
+    background-color: #fff;
   }
 }
 
