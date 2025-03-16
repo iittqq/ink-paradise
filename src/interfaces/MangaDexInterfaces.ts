@@ -73,6 +73,21 @@ export interface MangaFeed {
   };
 }
 
+export interface MangaAggregated {
+  volumes: {
+    [key: string]: {
+      volume: string;
+      count: number;
+      chapters: {
+        chapter: string;
+        id: string;
+        others: string[];
+        count: number;
+      }[];
+    };
+  };
+}
+
 interface Tag {
   id: string;
   type: string;

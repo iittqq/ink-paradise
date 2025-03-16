@@ -14,6 +14,7 @@ const globalStyle = createGlobalStyle`
     -ms-overflow-style: none;
   }
 
+
   a, 
   .loading-icon,
   .chapter-details, 

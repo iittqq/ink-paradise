@@ -10,15 +10,18 @@ import {
   ScanlationGroup,
   MangaFeedScanlationGroup,
   ChapterDetails,
+  MangaAggregated,
 } from "../interfaces/MangaDexInterfaces";
 
 async function fetchRecentlyUpdated(
   limit: number,
   offset: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/recently-updated`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         offset: offset,
@@ -36,9 +39,11 @@ async function fetchRecentlyAdded(
   limit: number,
   offset: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/recently-added`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         offset: offset,
@@ -52,9 +57,13 @@ async function fetchRecentlyAdded(
   }
 }
 
-async function fetchMangaTags(): Promise<MangaTagsInterface[]> {
+async function fetchMangaTags(
+  abortSignal?: AbortSignal,
+): Promise<MangaTagsInterface[]> {
   try {
-    const response = await axios.get(`${BASE_URL}/manga-dex/tags`);
+    const response = await axios.get(`${BASE_URL}/manga-dex/tags`, {
+      signal: abortSignal,
+    });
 
     return response.data.data;
   } catch (error) {
@@ -63,9 +72,13 @@ async function fetchMangaTags(): Promise<MangaTagsInterface[]> {
   }
 }
 
-async function fetchMangaById(mangaId: string): Promise<Manga> {
+async function fetchMangaById(
+  mangaId: string,
+  abortSignal?: AbortSignal,
+): Promise<Manga> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-id`, {
+      signal: abortSignal,
       params: {
         id: mangaId,
       },
@@ -81,9 +94,11 @@ async function fetchMangaByTitle(
   title: string,
   limit: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-title`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         title: title,
@@ -102,9 +117,11 @@ async function fetchMangaByTag(
   limit: number,
   offset: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-tag`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         offset: offset,
@@ -119,9 +136,13 @@ async function fetchMangaByTag(
   }
 }
 
-async function fetchMangaCover(coverId: string): Promise<CoverFile> {
+async function fetchMangaCover(
+  coverId: string,
+  abortSignal?: AbortSignal,
+): Promise<CoverFile> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-cover`, {
+      signal: abortSignal,
       params: {
         id: coverId,
       },
@@ -140,9 +161,11 @@ async function fetchMangaFeed(
   offset: number,
   order: string,
   language: string,
+  abortSignal?: AbortSignal,
 ): Promise<MangaFeedScanlationGroup[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-feed`, {
+      signal: abortSignal,
       params: {
         id: mangaId,
         limit: limit,
@@ -158,9 +181,33 @@ async function fetchMangaFeed(
   }
 }
 
-async function fetchScanlationGroup(id: string): Promise<ScanlationGroup> {
+async function fetchMangaAggregated(
+  id: string,
+  translatedLanguage: string,
+  abortSignal?: AbortSignal,
+): Promise<MangaAggregated> {
+  try {
+    const response = await axios.get(`${BASE_URL}/manga-dex/aggregate`, {
+      signal: abortSignal,
+      params: {
+        id: id,
+        translatedLanguage: translatedLanguage,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching manga:", error);
+    throw error;
+  }
+}
+
+async function fetchScanlationGroup(
+  id: string,
+  abortSignal?: AbortSignal,
+): Promise<ScanlationGroup> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/scanlation-group`, {
+      signal: abortSignal,
       params: {
         id: id,
       },
@@ -177,9 +224,11 @@ async function fetchMangaByAuthor(
   limit: number,
   offset: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-by-author`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         offset: offset,
@@ -194,9 +243,13 @@ async function fetchMangaByAuthor(
   }
 }
 
-async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
+async function fetchChapterData(
+  chapterId: string,
+  abortSignal?: AbortSignal,
+): Promise<MangaChapter> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/chapter-data`, {
+      signal: abortSignal,
       params: {
         id: chapterId,
       },
@@ -209,9 +262,13 @@ async function fetchChapterData(chapterId: string): Promise<MangaChapter> {
   }
 }
 
-async function fetchChapterDetails(chapterId: string): Promise<ChapterDetails> {
+async function fetchChapterDetails(
+  chapterId: string,
+  abortSignal?: AbortSignal,
+): Promise<ChapterDetails> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/chapter-details`, {
+      signal: abortSignal,
       params: {
         id: chapterId,
       },
@@ -228,6 +285,7 @@ async function fetchSimilarManga(
   offset: number,
   tags: string[],
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const params = new URLSearchParams();
@@ -238,6 +296,7 @@ async function fetchSimilarManga(
     });
     params.append("contentFilter", contentFilter.toString());
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-similar`, {
+      signal: abortSignal,
       params,
     });
     return response.data.data;
@@ -250,9 +309,11 @@ async function fetchSimilarManga(
 async function fetchPopularManga(
   limit: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/popular-manga`, {
+      signal: abortSignal,
       params: {
         limit: limit,
         contentFilter: contentFilter,
@@ -268,9 +329,11 @@ async function fetchPopularManga(
 async function fetchMangaCoverBackend(
   id: string,
   fileName: string,
+  abortSignal?: AbortSignal,
 ): Promise<Blob> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/cover-image`, {
+      signal: abortSignal,
       params: {
         id: id,
         fileName: fileName,
@@ -287,9 +350,11 @@ async function fetchMangaCoverBackend(
 async function fetchPageImageBackend(
   hash: string,
   page: string,
+  abortSignal?: AbortSignal,
 ): Promise<Blob> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/page-image`, {
+      signal: abortSignal,
       params: {
         hash: hash,
         page: page,
@@ -309,9 +374,11 @@ async function fetchSearch(
   scanlationGroup: string,
   contentFilter: number,
   offset: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-search`, {
+      signal: abortSignal,
       params: {
         mangaName: mangaName,
         authorName: authorName,
@@ -331,11 +398,13 @@ async function fetchPopularNewManga(
   limit: number,
   offset: number,
   contentFilter: number,
+  abortSignal?: AbortSignal,
 ): Promise<Manga[]> {
   try {
     const response = await axios.get(
       `${BASE_URL}/manga-dex/popular-new-manga`,
       {
+        signal: abortSignal,
         params: {
           limit: limit,
           offset: offset,
@@ -350,12 +419,16 @@ async function fetchPopularNewManga(
   }
 }
 
-async function fetchMangaListById(ids: string[]): Promise<Manga[]> {
+async function fetchMangaListById(
+  ids: string[],
+  abortSignal?: AbortSignal,
+): Promise<Manga[]> {
   try {
     const params = new URLSearchParams();
     ids.forEach((id) => params.append("ids[]", id));
 
     const response = await axios.get(`${BASE_URL}/manga-dex/manga-list-by-id`, {
+      signal: abortSignal,
       params,
     });
 
@@ -390,4 +463,5 @@ export {
   fetchSearch,
   fetchPopularNewManga,
   fetchMangaListById,
+  fetchMangaAggregated,
 };

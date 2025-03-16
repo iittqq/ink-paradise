@@ -1,14 +1,15 @@
 import { Typography, Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
 import "./Reader.css";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { updateOrCreateReading } from "../../api/Reading";
-import { fetchChapterData } from "../../api/MangaDexApi";
+import { fetchChapterData, fetchMangaAggregated } from "../../api/MangaDexApi";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
+  MangaAggregated,
   MangaChapter,
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
@@ -30,12 +31,14 @@ const Reader = ({ account }: ReaderProps) => {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [readerMode, setReaderMode] = useState<string>("");
   const [readerInteger, setReaderInteger] = useState<number>(1);
-  const [mangaFeedState, setMangaFeedState] = useState<
-    MangaFeedScanlationGroup[]
-  >(state.mangaFeed);
+  const [mangaAggregated, setMangaAggregated] = useState<MangaAggregated>();
   const [pageNumber, setPageNumber] = useState<number>(state.pageNumber);
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [newReaderMode, setNewReaderMode] = useState<boolean>(false);
+  const [mangaFeedState, setMangaFeedState] = useState<
+    MangaFeedScanlationGroup[]
+  >(state.mangaFeed);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleChangePageNumber = (newPageNumber: number) => {
     setPageNumber(newPageNumber);
@@ -78,11 +81,25 @@ const Reader = ({ account }: ReaderProps) => {
   };
 
   useEffect(() => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
     setBookmarks([]);
-    fetchChapterData(state.chapterId).then((data: MangaChapter) => {
-      setPages(data.chapter.data);
-      setHash(data.chapter.hash);
-    });
+    fetchChapterData(state.chapterId, abortControllerRef.current.signal).then(
+      (data: MangaChapter) => {
+        setPages(data.chapter.data);
+        setHash(data.chapter.hash);
+      },
+    );
+    if (state.mangaId) {
+      fetchMangaAggregated(
+        state.mangaId,
+        selectedLanguage,
+        abortControllerRef.current.signal,
+      ).then((data: MangaAggregated) => {
+        setMangaAggregated(data);
+        console.log(data);
+      });
+    }
     window.localStorage.setItem("position", window.scrollY.toString());
     const readerMode = window.localStorage.getItem("readerMode");
     setReaderMode(readerMode === null ? "1" : readerMode);
@@ -111,7 +128,7 @@ const Reader = ({ account }: ReaderProps) => {
         handleBookmarksChange(tempBookmarks);
       });
     }
-  }, [state, selectedLanguage, mangaFeedState, newReaderMode]);
+  }, [state, selectedLanguage, newReaderMode]);
 
   useEffect(() => {
     const setVh = () => {
@@ -171,8 +188,9 @@ const Reader = ({ account }: ReaderProps) => {
           order={state.sortOrder}
           selectedLanguage={selectedLanguage}
           chapterIndex={Math.trunc(state.chapterNumber)}
-          setMangaFeedState={setMangaFeedState}
+          mangaAggregated={mangaAggregated!}
           mangaFeedState={mangaFeedState}
+          setMangaFeedState={setMangaFeedState}
           handleChangePageNumber={handleChangePageNumber}
           startPage={
             pageNumber === null || state.pageNumber === undefined

@@ -93,6 +93,8 @@ const IndividualManga = ({
   });
   const feedRef = useRef<HTMLDivElement | null>(null);
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const handleOpenFeed = () => {
     setOpenFeed(!openFeed);
     console.log(openFeed);
@@ -218,13 +220,24 @@ const IndividualManga = ({
   const fetchAndSetMangaData = useCallback(async () => {
     if (!id) return;
 
-    const mangaData = await fetchMangaById(id);
+    abortControllerRef.current = new AbortController();
+
+    const mangaData = await fetchMangaById(
+      id,
+      abortControllerRef.current.signal,
+    );
     const coverArt = mangaData.relationships.find(
       (element) => element.type === "cover_art",
     )?.attributes.fileName;
 
     const coverUrl = coverArt
-      ? URL.createObjectURL(await fetchMangaCoverBackend(id, coverArt))
+      ? URL.createObjectURL(
+          await fetchMangaCoverBackend(
+            id,
+            coverArt,
+            abortControllerRef.current.signal,
+          ),
+        )
       : "";
 
     setMangaInfo({
@@ -252,12 +265,14 @@ const IndividualManga = ({
 
   const fetchFeedData = useCallback(async () => {
     if (id) {
+      abortControllerRef.current = new AbortController();
       const data = await fetchMangaFeed(
         id,
         100,
         currentOffset,
         currentOrder,
         selectedLanguage,
+        abortControllerRef.current.signal,
       );
       if (currentOffset === 0) {
         setMangaFeed(data);
@@ -277,10 +292,17 @@ const IndividualManga = ({
 
   const fetchSimilarMangaByTags = useCallback(
     async (tags: string[]) => {
+      abortControllerRef.current = new AbortController();
       if (tags.length === 0) return; // Exit if tags are empty
 
       try {
-        const data = await fetchSimilarManga(10, 0, tags, contentFilter ?? 3);
+        const data = await fetchSimilarManga(
+          10,
+          0,
+          tags,
+          contentFilter ?? 3,
+          abortControllerRef.current.signal,
+        );
         setSimilarManga(data.filter((manga) => manga.id !== id));
       } catch (error) {
         console.error("Error fetching similar manga:", error);

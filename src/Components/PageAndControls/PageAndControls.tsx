@@ -17,7 +17,7 @@ import {
   refreshTokenFunction,
 } from "../../api/Account";
 import { Account } from "../../interfaces/AccountInterfaces";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -26,7 +26,10 @@ import { useNavigate } from "react-router-dom";
 import "./PageAndControls.css";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { MangaFeedScanlationGroup } from "../../interfaces/MangaDexInterfaces";
+import {
+  MangaAggregated,
+  MangaFeedScanlationGroup,
+} from "../../interfaces/MangaDexInterfaces";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookIcon from "@mui/icons-material/Book";
 import { updateOrCreateBookmark } from "../../api/Bookmarks";
@@ -51,6 +54,7 @@ type Props = {
   order: string;
   selectedLanguage: string;
   chapterIndex: number;
+  mangaAggregated: MangaAggregated;
   setMangaFeedState: React.Dispatch<
     React.SetStateAction<MangaFeedScanlationGroup[]>
   >;
@@ -87,7 +91,7 @@ const PageAndControls = (props: Props) => {
     accountId,
     order,
     selectedLanguage,
-    chapterIndex,
+    mangaAggregated,
     setMangaFeedState,
     mangaFeedState,
     handleChangePageNumber,
@@ -108,17 +112,14 @@ const PageAndControls = (props: Props) => {
     oneshot,
   } = props;
   const [imageBlob, setImageBlob] = useState<{ [key: string]: Blob }>({});
-  const [loadingStates, setLoadingStates] = useState<boolean[]>(
-    Array(pages.length).fill(false),
-  );
+
   const [longStripReaderWidth] = useState(
     window.innerWidth > 900 ? "50%" : "100%",
   );
   const [currentOffset, setCurrentOffset] = useState(0);
   const [pageHeight] = useState(window.innerWidth > 900 ? "90vh" : "");
   const [open, setOpen] = useState<boolean>(false);
-  const [chapterIndexState, setChapterIndexState] =
-    useState<number>(chapterIndex);
+
   const [orderState] = useState<string>(order || "asc");
   const [leftToRight, setLeftToRight] = useState<boolean>(
     readerMode === 2 || readerMode === 4 ? true : false,
@@ -128,6 +129,7 @@ const PageAndControls = (props: Props) => {
   );
 
   const navigate = useNavigate();
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(startPage);
 
   const fetchFeedData = useCallback(async () => {
@@ -138,6 +140,7 @@ const PageAndControls = (props: Props) => {
         currentOffset,
         "asc",
         selectedLanguage,
+        abortControllerRef.current!.signal,
       );
       if (currentOffset === 0) {
         setMangaFeedState(data);
@@ -155,90 +158,106 @@ const PageAndControls = (props: Props) => {
   useEffect(() => {
     fetchFeedData();
   }, [fetchFeedData]);
-
   const handleNextChapter = () => {
     setCurrentPage(0);
     handleChangePageNumber(0);
 
-    let chapterFound = false;
-    const tempMangaFeed =
-      orderState === "desc" ? mangaFeedState.reverse() : mangaFeedState;
+    console.log(mangaAggregated);
 
-    for (let index = 0; index < tempMangaFeed.length; index++) {
-      const current = tempMangaFeed[index];
-      if (
-        parseFloat(current.attributes.chapter) > parseFloat(currentChapter) &&
-        tempMangaFeed[index].attributes.externalUrl === null
-      ) {
-        chapterFound = true;
-        handleClick(
-          mangaId,
-          tempMangaFeed[index].id,
-          tempMangaFeed[index].attributes.title,
-          tempMangaFeed[index].attributes.volume,
-          tempMangaFeed[index].attributes.chapter,
-          mangaName,
-          scanlationGroup,
-          chapterIndexState + 1,
-        );
-        break;
+    let chapterFound = false;
+    let nextChapter: { id: string; chapter: string; volume: string } | null =
+      null;
+
+    const volumeKeys = Object.keys(mangaAggregated.volumes).sort(
+      (a, b) => parseFloat(a) - parseFloat(b),
+    );
+    for (let vIndex = 0; vIndex < volumeKeys.length; vIndex++) {
+      const volume = mangaAggregated.volumes[volumeKeys[vIndex]];
+
+      const chapters = Object.values(volume.chapters);
+      console.log(chapters);
+
+      for (let cIndex = 0; cIndex < chapters.length; cIndex++) {
+        const current = chapters[cIndex];
+        if (parseFloat(current.chapter) > parseFloat(currentChapter)) {
+          chapterFound = true;
+          nextChapter = {
+            id: current.id,
+            chapter: current.chapter,
+            volume: volumeKeys[vIndex],
+          };
+          console.log(nextChapter);
+          break;
+        }
       }
+
+      if (chapterFound) break;
     }
-    if (!chapterFound) {
-      fetchMangaFeed(
+
+    if (nextChapter) {
+      handleClick(
         mangaId,
-        100,
-        tempMangaFeed.length,
-        orderState,
-        selectedLanguage,
-      ).then((data: MangaFeedScanlationGroup[]) => {
-        setMangaFeedState([...mangaFeedState, ...data]);
-      });
+        nextChapter.id,
+        nextChapter.chapter,
+        nextChapter.volume,
+        nextChapter.chapter,
+        mangaName,
+        scanlationGroup,
+      );
     }
-    setChapterIndexState(chapterIndexState + 1);
   };
 
   const handlePreviousChapter = () => {
     setCurrentPage(0);
     handleChangePageNumber(0);
+
     let chapterFound = false;
-    const tempMangaFeed =
-      orderState === "desc" ? mangaFeedState.reverse() : mangaFeedState;
+    let prevChapter: { id: string; chapter: string; volume: string } | null =
+      null;
 
-    for (let index = tempMangaFeed.length - 1; index >= 0; index--) {
-      const current = tempMangaFeed[index];
-      if (
-        parseFloat(current.attributes.chapter) < parseFloat(currentChapter) &&
-        tempMangaFeed[index].attributes.externalUrl === null
-      ) {
-        chapterFound = true;
-        handleClick(
-          mangaId,
-          tempMangaFeed[index].id,
-          tempMangaFeed[index].attributes.title,
-          tempMangaFeed[index].attributes.volume,
-          tempMangaFeed[index].attributes.chapter,
-          mangaName,
-          scanlationGroup,
-          Math.max(0, chapterIndexState - 10),
-        );
-        break;
+    const volumeKeys = Object.keys(mangaAggregated.volumes)
+      .sort((a, b) => parseFloat(a) - parseFloat(b))
+      .reverse();
+
+    console.log(volumeKeys);
+    console.log(volume);
+
+    for (let vIndex = 0; vIndex < volumeKeys.length; vIndex++) {
+      const volume = mangaAggregated.volumes[volumeKeys[vIndex]];
+      const chapters = Object.values(volume.chapters).sort(
+        (a, b) => parseFloat(b.chapter) - parseFloat(a.chapter),
+      );
+      console.log(chapters);
+
+      for (let cIndex = 0; cIndex < chapters.length; cIndex++) {
+        const current = chapters[cIndex];
+
+        if (parseFloat(current.chapter) < parseFloat(currentChapter)) {
+          chapterFound = true;
+          prevChapter = {
+            id: current.id,
+            chapter: current.chapter,
+            volume: volumeKeys[vIndex],
+          };
+          break;
+        }
       }
-    }
-    if (!chapterFound) {
-      fetchMangaFeed(
-        mangaId,
-        20,
-        Math.max(0, chapterIndexState - 10),
-        orderState,
-        selectedLanguage,
-      ).then((data: MangaFeedScanlationGroup[]) => {
-        setMangaFeedState(data);
-      });
-    }
-    setChapterIndexState(chapterIndex - 1);
-  };
 
+      if (chapterFound) break;
+    }
+
+    if (prevChapter) {
+      handleClick(
+        mangaId,
+        prevChapter.id,
+        prevChapter.chapter,
+        prevChapter.volume,
+        prevChapter.chapter,
+        mangaName,
+        scanlationGroup,
+      );
+    }
+  };
   const handlePreviousPage = () => {
     console.log("Previous page");
     if (currentPage === 0 || readerMode === 3 || readerMode === 4) {
@@ -271,33 +290,22 @@ const PageAndControls = (props: Props) => {
     hash: string,
     pages: string[],
   ): Promise<void> => {
-    const promises = pages.map(async (page, index) => {
-      setLoadingStates((prev) => {
-        const newLoadingStates = [...prev];
-        newLoadingStates[index] = true;
-        return newLoadingStates;
-      });
-
-      return fetchPageImageBackend(hash, page)
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    const promises = pages.map(async (page) => {
+      return fetchPageImageBackend(
+        hash,
+        page,
+        abortControllerRef.current!.signal,
+      )
         .then((blob) => {
           // Assuming setImageBlob is modified to handle multiple blobs
           setImageBlob((prevBlobs) => ({
             ...prevBlobs,
             [page]: blob,
           }));
-
-          setLoadingStates((prev) => {
-            const newLoadingStates = [...prev];
-            newLoadingStates[index] = false;
-            return newLoadingStates;
-          });
         })
         .catch((error) => {
-          setLoadingStates((prev) => {
-            const newLoadingStates = [...prev];
-            newLoadingStates[index] = false;
-            return newLoadingStates;
-          });
           console.error("Error loading image:", error);
           throw error;
         });
@@ -311,6 +319,8 @@ const PageAndControls = (props: Props) => {
   };
 
   const handleClickLogo = async () => {
+    abortControllerRef.current?.abort();
+
     navigate("/", { state: { accountId: accountId } });
   };
 
@@ -363,8 +373,9 @@ const PageAndControls = (props: Props) => {
     chapterNumber: string,
     mangaName: string,
     scanlationGroup: string,
-    chapterIndex: number,
   ) => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
     navigate("/reader", {
       state: {
         mangaId: mangaId,
@@ -375,8 +386,7 @@ const PageAndControls = (props: Props) => {
         mangaName: mangaName,
         scanlationGroup: scanlationGroup,
         accountId: accountId,
-        mangaFeed: mangaFeedState,
-        chapterIndex: chapterIndex,
+        mangaAggregated: mangaAggregated,
         pageNumber: 0,
       },
     });
@@ -679,58 +689,60 @@ const PageAndControls = (props: Props) => {
               //maxHeight: pageHeight,
             }}
           >
-            {loadingStates[currentPage] ? (
-              <div className="loading">
-                <CircularProgress size={25} className="loading-icon" />
-              </div>
-            ) : (
-              <>
-                {readerMode === 3 || readerMode === 4
-                  ? pages.map((page, index) =>
-                      imageBlob[page] ? (
-                        <img
-                          key={index}
-                          className="page"
-                          src={URL.createObjectURL(imageBlob[page])}
-                          style={{
-                            display: "block",
-                            width: "100%",
-                          }}
-                        />
-                      ) : null,
-                    )
-                  : imageBlob[pages[currentPage]] && (
-                      <img
-                        className="page"
-                        src={URL.createObjectURL(imageBlob[pages[currentPage]])}
-                        alt=""
-                        style={{ maxHeight: pageHeight }}
-                      />
-                    )}
-                <div className="overlay-buttons" style={{}}>
-                  <Button
-                    className="chapter-page-traversal"
-                    onClick={() => {
-                      if (readerMode === 1 || readerMode === 3) {
-                        handleNextPage();
-                      } else if (readerMode === 2 || readerMode === 4) {
-                        handlePreviousPage();
-                      }
-                    }}
-                  ></Button>
-                  <Button
-                    className="chapter-page-traversal"
-                    onClick={() => {
-                      if (readerMode === 1 || readerMode === 3) {
-                        handlePreviousPage();
-                      } else if (readerMode === 2 || readerMode === 4) {
-                        handleNextPage();
-                      }
-                    }}
-                  ></Button>
+            <>
+              {readerMode === 3 || readerMode === 4 ? (
+                pages.map((page, index) =>
+                  imageBlob[page] ? (
+                    <img
+                      key={index}
+                      className="page"
+                      src={URL.createObjectURL(imageBlob[page])}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                      }}
+                    />
+                  ) : (
+                    <div className="loading">
+                      <CircularProgress size={25} className="loading-icon" />
+                    </div>
+                  ),
+                )
+              ) : imageBlob[pages[currentPage]] ? (
+                <img
+                  className="page"
+                  src={URL.createObjectURL(imageBlob[pages[currentPage]])}
+                  alt=""
+                  style={{ maxHeight: pageHeight }}
+                />
+              ) : (
+                <div className="loading">
+                  <CircularProgress size={25} className="loading-icon" />
                 </div>
-              </>
-            )}{" "}
+              )}
+              <div className="overlay-buttons" style={{}}>
+                <Button
+                  className="chapter-page-traversal"
+                  onClick={() => {
+                    if (readerMode === 1 || readerMode === 3) {
+                      handleNextPage();
+                    } else if (readerMode === 2 || readerMode === 4) {
+                      handlePreviousPage();
+                    }
+                  }}
+                ></Button>
+                <Button
+                  className="chapter-page-traversal"
+                  onClick={() => {
+                    if (readerMode === 1 || readerMode === 3) {
+                      handlePreviousPage();
+                    } else if (readerMode === 2 || readerMode === 4) {
+                      handleNextPage();
+                    }
+                  }}
+                ></Button>
+              </div>
+            </>
           </div>
 
           <div className="centered">

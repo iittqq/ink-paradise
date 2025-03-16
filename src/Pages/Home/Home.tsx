@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Home.css";
 import {
   fetchPopularManga,
@@ -38,8 +38,10 @@ const Home = ({ account, accountDetails }: HomeProps) => {
   const handleInfoDialogClose = () => {
     setOpenInfo(false);
   };
+  const abortControllerRef = useRef<AbortController | null>(null);
   useEffect(() => {
     const fetchData = async () => {
+      abortControllerRef.current = new AbortController();
       const selectedMangaIds = [
         "e5ce88e2-8c46-482d-8acf-5c6d5a64a585",
 
@@ -80,20 +82,27 @@ const Home = ({ account, accountDetails }: HomeProps) => {
         const popularManga = await fetchPopularManga(
           15,
           accountDetails.contentFilter,
+          abortControllerRef.current.signal,
         );
+        console.log("pop");
         setPopularManga(popularManga);
         const popularNewManga = await fetchPopularNewManga(
           15,
           0,
           accountDetails.contentFilter,
+          abortControllerRef.current.signal,
         );
         setPopularNewManga(popularNewManga);
-        const selectedManga = await fetchMangaListById(selectedMangaIds);
+        const selectedManga = await fetchMangaListById(
+          selectedMangaIds,
+          abortControllerRef.current.signal,
+        );
         setSelectedManga(selectedManga);
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
           20,
           0,
           accountDetails.contentFilter,
+          abortControllerRef.current.signal,
         );
         setRecentlyUpdatedManga(recentlyUpdatedManga);
 
@@ -101,26 +110,35 @@ const Home = ({ account, accountDetails }: HomeProps) => {
           20,
           0,
           accountDetails.contentFilter,
+          abortControllerRef.current.signal,
         );
         setRecentlyAddedManga(recentlyAddedManga);
       } else {
         const defaultContentFilter = 3;
-        const popularManga = await fetchPopularManga(15, defaultContentFilter);
+        const popularManga = await fetchPopularManga(
+          15,
+          defaultContentFilter,
+          abortControllerRef.current.signal,
+        );
         setPopularManga(popularManga);
-
         const popularNewManga = await fetchPopularNewManga(
           15,
           0,
           defaultContentFilter,
+          abortControllerRef.current.signal,
         );
         setPopularNewManga(popularNewManga);
 
-        const selectedManga = await fetchMangaListById(selectedMangaIds);
+        const selectedManga = await fetchMangaListById(
+          selectedMangaIds,
+          abortControllerRef.current.signal,
+        );
         setSelectedManga(selectedManga);
         const recentlyUpdatedManga = await fetchRecentlyUpdated(
           20,
           0,
           defaultContentFilter,
+          abortControllerRef.current.signal,
         );
         setRecentlyUpdatedManga(recentlyUpdatedManga);
 
@@ -128,6 +146,7 @@ const Home = ({ account, accountDetails }: HomeProps) => {
           20,
           0,
           defaultContentFilter,
+          abortControllerRef.current.signal,
         );
         setRecentlyAddedManga(recentlyAddedManga);
       }

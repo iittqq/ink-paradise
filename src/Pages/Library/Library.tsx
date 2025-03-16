@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-import { CircularProgress, Typography, Button } from "@mui/material";
+import { Typography, Button, CircularProgress } from "@mui/material";
 import "./Library.css";
 import LibraryHeader from "../../Components/LibraryHeader/LibraryHeader";
 import LibraryContents from "../../Components/LibraryContents/LibraryContents";
@@ -10,7 +10,11 @@ import {
   deleteReadingByMangaIdAndUserId,
 } from "../../api/Reading";
 import { useNavigate } from "react-router-dom";
-import { fetchMangaById, fetchMangaFeed } from "../../api/MangaDexApi";
+import {
+  fetchMangaById,
+  fetchMangaFeed,
+  fetchMangaListById,
+} from "../../api/MangaDexApi";
 import { Reading } from "../../interfaces/ReadingInterfaces";
 import { Account } from "../../interfaces/AccountInterfaces";
 import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
@@ -41,7 +45,6 @@ interface LibraryProps {
 }
 const Library = ({ account, accountDetails }: LibraryProps) => {
   const [library, setLibrary] = useState<Manga[]>([]);
-  const [loading, setLoading] = useState(true);
   const [ascending, setAscending] = useState<boolean>(true);
   const [contentFilter, setContentFilter] =
     useState<string>("Alphabetical Order");
@@ -51,6 +54,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   >([]);
   const [groupedLibrary, setGroupedLibrary] = useState<Manga[][] | null>(null);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const [newFolderName, setNewFolderName] = useState<string | null>(null);
@@ -81,48 +85,52 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   const [folderBackground, setFolderBackground] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleFetchingLibrary = async (userId: number, ascending: boolean) => {
     setLoading(true);
+    const data: Reading[] = await getReadingByUserId(userId);
+    const sortedData = sortLibraryData(data, contentFilter, ascending);
+    abortControllerRef.current = new AbortController();
 
-    try {
-      const data: Reading[] = await getReadingByUserId(userId);
-      const sortedData = sortLibraryData(data, contentFilter, ascending);
+    let mangaData: Manga[] = [];
+    async function fetchMangaInBatches(sortedData: { mangaId: string }[]) {
+      const batchSize = 40;
+      const abortSignal = abortControllerRef.current!.signal;
 
-      const mangaPromises = sortedData.map((entry: Reading) =>
-        fetchMangaById(entry.mangaId),
-      );
-      const mangaData: Manga[] = await Promise.all(mangaPromises);
+      for (let i = 0; i < sortedData.length; i += batchSize) {
+        const batch = sortedData
+          .slice(i, i + batchSize)
+          .map((obj) => obj.mangaId);
 
-      const latestChapterPromises = mangaData.map((manga) =>
-        fetchMangaFeed(manga.id, 1, 0, "desc", "en").then((feed) => {
-          return feed;
-        }),
-      );
-      const latestChapters = await Promise.all(latestChapterPromises);
-
-      console.log(data);
-      const mangaWithLatestChapter: Manga[] = mangaData.map((manga, index) => ({
-        ...manga,
-        latestChapter: latestChapters[index],
-        chapterNumber: data[index].chapter,
-      }));
-
-      const sortedMangaData = sortMangaData(
-        mangaWithLatestChapter,
-        contentFilter,
-        ascending,
-      );
-
-      setLibrary(sortedMangaData);
-      setGroupedLibrary(
-        groupLibraryData(sortedMangaData, contentFilter, ascending),
-      );
-    } catch (error) {
-      console.error("Error fetching library data:", error);
-    } finally {
-      setLoading(false);
+        try {
+          const batchResult = await fetchMangaListById(batch, abortSignal);
+          mangaData = [...mangaData, ...batchResult];
+        } catch (error) {
+          console.error("Error fetching batch:", error);
+        }
+      }
     }
+
+    await fetchMangaInBatches(sortedData);
+
+    console.log(data);
+    const mangaWithLatestChapter: Manga[] = mangaData.map((manga, index) => ({
+      ...manga,
+      chapterNumber: data[index].chapter,
+    }));
+
+    const sortedMangaData = sortMangaData(
+      mangaWithLatestChapter,
+      contentFilter,
+      ascending,
+    );
+
+    setLibrary(sortedMangaData);
+    setGroupedLibrary(
+      groupLibraryData(sortedMangaData, contentFilter, ascending),
+    );
+    setLoading(false);
   };
 
   const sortLibraryData = (
@@ -319,7 +327,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
 
   const handleFindingFolderEntriesById = async (folderId: number) => {
     setLoadingFolder(true);
-
+    abortControllerRef.current = new AbortController();
     try {
       // Fetch folder entries by folderId
       const folderEntries: MangaFolderEntry[] =
@@ -341,13 +349,20 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
 
       // Fetch manga details for each folder entry
       const mangaPromises = enrichedFolderEntries.map((entry) =>
-        fetchMangaById(entry.mangaId),
+        fetchMangaById(entry.mangaId, abortControllerRef.current!.signal),
       );
       const mangaData: Manga[] = await Promise.all(mangaPromises);
 
       // Fetch the latest chapter for each manga
       const latestChapterPromises = mangaData.map((manga) =>
-        fetchMangaFeed(manga.id, 1, 0, "desc", "en").then((feed) => {
+        fetchMangaFeed(
+          manga.id,
+          1,
+          0,
+          "desc",
+          "en",
+          abortControllerRef.current!.signal,
+        ).then((feed) => {
           return feed;
         }),
       );
@@ -529,7 +544,10 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
   }, [ascending, contentFilter]);
 
   return (
-    <div className="library-page-container">
+    <div
+      className="library-page-container"
+      style={{ justifyContent: library.length === 0 ? "center" : "flex-start" }}
+    >
       <div className="inside-folder-header">
         {selectedFolder !== null ? (
           <Button
@@ -619,8 +637,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
             />
           </div>
           {selectedFolder === null
-            ? !loading &&
-              showControls === true && (
+            ? showControls === true && (
                 <LibraryHeader
                   handleAscendingChange={handleAscendingChange}
                   handleContentFilter={handleContentFilter}
@@ -643,8 +660,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
                   checkedFolder={checkedFolder}
                 />
               )
-            : !loading &&
-              showControls === true && (
+            : showControls === true && (
                 <FolderActionsBar
                   handleDeleteMangaEntries={handleDeleteMangaEntries}
                   handleDeleteMangaFolders={handleDeleteMangaFolders}
@@ -672,7 +688,7 @@ const Library = ({ account, accountDetails }: LibraryProps) => {
                 />
               )}
         </div>
-      )}{" "}
+      )}
     </div>
   );
 };

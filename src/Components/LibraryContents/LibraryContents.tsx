@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
@@ -30,11 +30,15 @@ const LibraryContents = (props: Props) => {
     contentFilter,
   } = props;
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const [coverUrlsLibrary, setCoverUrlsLibrary] = useState<{
     [key: string]: string;
   }>({});
 
   useEffect(() => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
     const fetchCoverImagesLibrary = async () => {
       const coverUrlsLibrary: { [key: string]: string } = {};
       for (const manga of libraryManga) {
@@ -42,7 +46,11 @@ const LibraryContents = (props: Props) => {
           (i: Relationship) => i.type === "cover_art",
         )?.attributes?.fileName;
         if (fileName) {
-          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          const imageBlob = await fetchMangaCoverBackend(
+            manga.id,
+            fileName,
+            abortControllerRef.current!.signal,
+          );
           coverUrlsLibrary[manga.id] = URL.createObjectURL(imageBlob);
           setCoverUrlsLibrary((prevCoverUrls) => ({
             ...prevCoverUrls,

@@ -40,6 +40,7 @@ const MangaCoverList = ({ accountDetails, account }: MangaCoverListProps) => {
           mangaCurrent.id,
           fileName,
         );
+        console.log(imageBlob);
         const imageUrl = URL.createObjectURL(imageBlob);
         setCoverUrls((prevCoverUrls) => ({
           ...prevCoverUrls,

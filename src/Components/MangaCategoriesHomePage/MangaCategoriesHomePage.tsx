@@ -72,6 +72,7 @@ const MangaCategoriesHomePage = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log(recentlyUpdatedManga);
     const fetchCoverImagesRecentlyUpdated = async () => {
       for (const manga of recentlyUpdatedManga) {
         const fileName = manga.relationships.find(

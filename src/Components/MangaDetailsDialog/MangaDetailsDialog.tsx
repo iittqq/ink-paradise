@@ -237,7 +237,11 @@ const MangaDetailsDialog = (props: Props) => {
       if (accountId !== null) {
         const bookmarks: Bookmark[] = await getBookmarksByUserId(accountId);
 
-        const mangaPromises = bookmarks.map(async (bookmark) => {
+        const filteredBookmarks = bookmarks.filter(
+          (bookmark) => bookmark.mangaId === mangaDetails.id,
+        );
+
+        const mangaPromises = filteredBookmarks.map(async (bookmark) => {
           const manga = await fetchMangaById(bookmark.mangaId);
           return {
             ...manga,
@@ -251,14 +255,9 @@ const MangaDetailsDialog = (props: Props) => {
         });
 
         const enrichedBookmarks = await Promise.all(mangaPromises);
-        const filteredBookmarks = enrichedBookmarks.filter(
-          (bookmark) => bookmark.id === mangaDetails.id,
-        );
 
-        setBookmarks(filteredBookmarks);
-        if (filteredBookmarks.length > 0) {
-          setLibraryEntryExists(true);
-        }
+        setBookmarks(enrichedBookmarks);
+        setLibraryEntryExists(enrichedBookmarks.length > 0);
       }
     } catch (error) {
       console.error("Error fetching bookmarks data:", error);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Typography,
   Button,
@@ -52,10 +52,12 @@ const Header = ({ account, accountDetails }: Props) => {
   const [searchAuthorName, setSearchAuthorName] = useState("");
   const [searchScanlationGroup, setSearchScanlationGroup] = useState("");
   const { toggleTheme } = useTheme();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const handleClickLibrary = async () => {
     if (account !== null) {
       if (account.verified === true) {
+        abortControllerRef.current?.abort();
         navigate("/library", {});
       } else {
         setShowAlert(true);
@@ -72,6 +74,7 @@ const Header = ({ account, accountDetails }: Props) => {
   const handleClickAccount = async () => {
     if (account !== null) {
       if (account.verified === true) {
+        abortControllerRef.current?.abort();
         navigate("/account");
       } else {
         setShowAlert(true);
@@ -87,11 +90,14 @@ const Header = ({ account, accountDetails }: Props) => {
 
   const handleClickedTag = (tag: MangaTagsInterface | null) => {
     if (tag !== null) {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
       fetchSimilarManga(
         100,
         0,
         [tag.id],
         accountDetails === null ? 3 : accountDetails.contentFilter,
+        abortControllerRef.current!.signal,
       ).then((data: Manga[]) => {
         navigate("/mangaCoverList", {
           state: {
@@ -148,6 +154,7 @@ const Header = ({ account, accountDetails }: Props) => {
   };
 
   const handleClickLogo = async () => {
+    abortControllerRef.current?.abort();
     navigate("/");
   };
 
@@ -175,12 +182,15 @@ const Header = ({ account, accountDetails }: Props) => {
 
   const handleSearch = async () => {
     handleDialogClose();
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
     fetchSearch(
       searchMangaName,
       searchAuthorName,
       searchScanlationGroup,
       accountDetails === null ? 3 : accountDetails.contentFilter,
       0,
+      abortControllerRef.current.signal,
     ).then((results: Manga[]) => {
       navigate("/mangaCoverList", {
         state: {
@@ -195,9 +205,12 @@ const Header = ({ account, accountDetails }: Props) => {
   };
 
   useEffect(() => {
-    fetchMangaTags().then((data: MangaTagsInterface[]) => {
-      setMangaTags(data);
-    });
+    abortControllerRef.current = new AbortController();
+    fetchMangaTags(abortControllerRef.current.signal).then(
+      (data: MangaTagsInterface[]) => {
+        setMangaTags(data);
+      },
+    );
     const localTheme = window.localStorage.getItem("theme");
     if (localTheme) {
       toggleTheme(parseInt(localTheme));
