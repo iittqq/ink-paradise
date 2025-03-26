@@ -1,10 +1,43 @@
-.logo-header-icon {
-  color: #ffffff !important;
-  height: 40px !important;
+.logo-header-button {
+  color: unset !important;
+  max-height: 40px !important;
+  max-width: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
   padding: 0px !important;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+}
+
+.home-and-credit-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  min-height: 50px;
+}
+
+.header-container.hidden {
+  transform: translateY(-100%); /* Slide the header out of view */
+}
+
+.header-container.visible {
+  transform: translateY(0); /* Slide the header back into view */
+}
+
+.logo-home-icon {
+  width: 40px;
+  height: 40px;
 }
 
 .container-header {
@@ -17,33 +50,19 @@
   top: 0;
 }
 
-.search-section {
-  position: relative;
-  right: 0px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
 #header-search-input {
   border-radius: 25px !important;
 }
 
 input[type="search"]:focus {
   font-family: "Figtree" !important;
-  border: 2px solid #ffffff !important;
 }
 
 .input-field {
   border-radius: 25px !important;
   font-family: "Figtree" !important;
-  &:focus {
-    border: 2px solid #ffffff !important;
-  }
+
   input {
-    color: white;
     text-align: center;
   }
 
@@ -88,12 +107,13 @@ input[type="search"]:focus {
 }
 
 .header-buttons {
-  color: #ffffff !important;
+  color: unset !important;
   background-color: transparent !important;
   padding: 0px !important;
   height: 40px !important;
+  margin: 0px 5px 0px 5px !important;
   @media screen and (max-width: 600px) {
-    min-width: 30px !important;
+    min-width: 40px !important;
   }
   &.MuiButtonBase-root:hover {
     background-color: transparent;
@@ -104,11 +124,29 @@ input[type="search"]:focus {
   }
 }
 
-.account-details-submit-button {
-  color: #ffffff !important;
-  background-color: #444444 !important;
-  margin-bottom: -10px;
-  text-transform: none;
+.header-buttons-option {
+  color: unset !important;
+  background-color: transparent !important;
+  padding: 0px !important;
+  height: 40px !important;
+  margin: 0px 5px 0px 5px !important;
+  @media screen and (max-width: 600px) {
+    min-width: 60px !important;
+  }
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: white;
+  }
+}
+
+.header-buttons-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .header-nav-dialog-columns {
@@ -120,7 +158,6 @@ input[type="search"]:focus {
 }
 
 .header-nav-label {
-  color: #ffffff !important;
   font-family: "Figtree" !important;
   font-size: 12px !important;
   text-transform: none !important;
@@ -129,11 +166,83 @@ input[type="search"]:focus {
 .account-verification-alert {
   background-color: #1f1f1f !important;
   color: #ffffff !important;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
+  font-family: "Figtree" !important;
+  font-size: 14px !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
 .account-verification-alert-icon {
   color: #ffffff !important;
+}
+
+.alert-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.manga-dex-credit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-family: "Figtree" !important;
+  min-width: 100px;
+  font-size: 12px;
+}
+
+#header-menu {
+  & .MuiList-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    min-height: 200px;
+  }
+  & .MuiPaper-root {
+    background-color: #1f1f1f !important;
+    border-radius: 10px;
+  }
+}
+
+.search-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px;
+    color: #ffffff !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 35vw;
+    }
+  }
+}
+
+.search-dialog-labels {
+  margin: 0px !important;
+  font-family: "Figtree" !important;
+}
+.search-dialog-option-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.search-dialog-title {
+  text-align: center;
+}
+
+.search-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px !important;
+  border-radius: 25px !important;
+  text-align: center;
 }

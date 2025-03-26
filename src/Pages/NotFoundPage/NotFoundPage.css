@@ -1,0 +1,14 @@
+.not-found-container {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Figtree", sans-serif !important;
+}
+
+.return-button {
+  text-decoration: none !important;
+  text-transform: none !important;
+  background-color: transparent !important;
+}

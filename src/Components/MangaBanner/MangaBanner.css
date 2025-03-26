@@ -1,29 +1,75 @@
 .cover-image {
-  @media (width <= 600px) and (width >= 1000px) {
-    width: 20%;
+  width: 100%;
+  height: 100%;
+  min-width: 100px;
+  max-width: 200px;
+
+  border-radius: 4px;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+  @media (width < 600px) {
+    min-width: 130px;
+    max-width: 130px;
   }
 
-  @media (width <= 600px) {
-    width: 30%;
+  @media (min-width: 600px) and (max-width: 960px) {
+    min-width: 100px;
+    max-width: 160px;
+  }
+}
+
+.categories-buttons-container {
+  @media (width < 600px) {
+    display: none !important;
+    min-height: 0px !important;
   }
 
-  width: 10%;
+  min-height: 50px !important;
+  padding-right: 2px;
+}
+
+.categories-buttons {
+  width: 80px;
+  font-family: "Figtree" !important;
+  text-transform: none !important;
+  font-size: 10px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 4px;
+  height: 20px;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: white;
+  }
+}
+
+.cover-name-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .banner-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
 }
 
 .manga-details {
-  @media (width <= 600px) {
-    margin-left: 10px;
-  }
-
-  width: 80%;
+  overflow: hidden;
+  padding-top: 10px;
+  word-break: break-all;
 }
 
 .alt-name-container {
@@ -34,35 +80,59 @@
   overflow: scroll;
 }
 
-.manga-name {
-  color: #ffffff;
-  font-family: "Figtree" !important;
+.header-details-stack {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.manga-alt-name {
-  color: #ffffff;
+.manga-name {
   font-family: "Figtree" !important;
-  display: -webkit-box;
   overflow: hidden;
-  -webkit-box-orient: vertical;
+  display: -webkit-box;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.manga-author {
+  font-family: "Figtree" !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
 }
 
 .manga-description {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  color: white;
+  font-family: "Figtree" !important;
+}
+
+.show-more-container {
+  width: 100%;
 }
 
 .show-button {
-  background-color: transparent !important;
-  position: absolute !important;
-  right: 50px;
+  width: 100%;
+  height: 20px;
+  font-family: "Figtree" !important;
   text-transform: none !important;
+  background-image: url("../../assets/vagabondSky.jpg");
+  background-size: cover;
+  background-position: center;
+  background-color: unset;
+  color: white !important;
+
   &.MuiButtonBase-root:hover {
-    background-color: transparent;
+    background-image: url("../../assets/vagabondSky.jpg");
+    background-size: cover;
+    background-position: center;
+    background-color: unset;
   }
+
   .MuiTouchRipple-child {
     background-color: white;
   }
@@ -77,6 +147,7 @@
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff;
   }

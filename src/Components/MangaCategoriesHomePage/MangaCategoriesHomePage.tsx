@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Manga,
   Relationship,
@@ -14,218 +15,225 @@ import {
 import {
   fetchRecentlyUpdated,
   fetchRecentlyAdded,
-  fetchSimilarManga,
+  fetchMangaCoverBackend,
 } from "../../api/MangaDexApi";
 import { useNavigate } from "react-router-dom";
+import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 import "./MangaCategoriesHomePage.css";
 
 type Props = {
   recentlyUpdatedManga: Manga[];
   recentlyAddedManga: Manga[];
-  mangaFromTag?: Manga[];
   tag?: MangaTagsInterface;
+  accountId: number | null;
+  contentFilter: number;
 };
 
 const MangaCategoriesHomePage = (props: Props) => {
   const navigate = useNavigate();
-  const { recentlyUpdatedManga, recentlyAddedManga, mangaFromTag, tag } = props;
-  const handleClick = (id: string, coverUrl: string) => {
-    navigate("/individualView", {
-      state: { id: id, coverUrl: coverUrl },
+  const { recentlyUpdatedManga, recentlyAddedManga, accountId, contentFilter } =
+    props;
+  const [coverUrlsRecentlyUpdated, setCoverUrlsRecentlyUpdated] = useState<{
+    [key: string]: string;
+  }>({});
+  const [coverUrlsRecentlyAdded, setCoverUrlsRecentlyAdded] = useState<{
+    [key: string]: string;
+  }>({});
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
+  const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
+
+  const handleClick = (id: string) => {
+    navigate(`/manga/${id}`);
+  };
+
+  const handleClickedShowMore = (
+    title: string,
+    manga: Manga[],
+    tagId?: string,
+  ) => {
+    navigate("/mangaCoverList", {
+      state: {
+        listType: title,
+        manga: manga,
+        tagId: tagId,
+      },
     });
   };
 
-  const handleClickedShowMore = (title: string, manga: Manga[]) => {
-    navigate("/mangaCoverList", { state: { listType: title, manga: manga } });
+  const handleDetailsDialogClose = () => {
+    setOpenDetailsDialog(false);
   };
+
+  const handleMangaClicked = (manga: Manga, cover: string) => {
+    setOpenDetailsDialog(true);
+    setMangaDetailsToDisplay(manga);
+    setMangaCoverToDisplay(cover);
+  };
+
+  useEffect(() => {
+    console.log(recentlyUpdatedManga);
+    const fetchCoverImagesRecentlyUpdated = async () => {
+      for (const manga of recentlyUpdatedManga) {
+        const fileName = manga.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          setCoverUrlsRecentlyUpdated((prevCoverUrlsRecentlyUpdated) => ({
+            ...prevCoverUrlsRecentlyUpdated,
+            [manga.id]: URL.createObjectURL(imageBlob),
+          }));
+        }
+      }
+    };
+
+    const fetchCoverImagesRecentlyAdded = async () => {
+      for (const manga of recentlyAddedManga) {
+        const fileName = manga.relationships.find(
+          (i: Relationship) => i.type === "cover_art",
+        )?.attributes?.fileName;
+        if (fileName) {
+          const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+          setCoverUrlsRecentlyAdded((prevCoverUrlsRecentlyAdded) => ({
+            ...prevCoverUrlsRecentlyAdded,
+            [manga.id]: URL.createObjectURL(imageBlob),
+          }));
+        }
+      }
+    };
+
+    if (recentlyAddedManga.length > 0) {
+      fetchCoverImagesRecentlyAdded();
+    }
+    if (recentlyUpdatedManga.length > 0) {
+      fetchCoverImagesRecentlyUpdated();
+    }
+  }, [recentlyUpdatedManga, recentlyAddedManga]);
 
   return (
     <div className="home-category-manga-container">
-      <Grid container className="home-category-manga-grid-container">
+      {mangaDetailsToDisplay && (
+        <MangaDetailsDialog
+          mangaDetails={mangaDetailsToDisplay}
+          openDetailsDialog={openDetailsDialog}
+          handleDetailsDialogClose={handleDetailsDialogClose}
+          coverUrl={mangaCoverToDisplay!}
+          handleClick={handleClick}
+          accountId={accountId}
+          contentFilter={contentFilter}
+        />
+      )}
+      <div className="category-stack">
         <Typography className="category-stack-name">
-          {" "}
           Recently Updated
         </Typography>
-        {recentlyUpdatedManga.map((current) => (
-          <>
-            <Grid item className="home-category-manga-grid-item">
-              <Button
-                className="home-category-manga-button"
-                onClick={() => {
-                  handleClick(
-                    current.id,
-                    "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName,
-                  );
-                }}
-              >
-                <Card
-                  sx={{
-                    width: "80px",
-                    height: "110px",
-                  }}
-                >
-                  <CardMedia
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    image={
-                      "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName
-                    }
-                  />
-                </Card>
-              </Button>
-              <div className="home-category-manga-text">
-                <Typography>{current.attributes.title.en}</Typography>
-              </div>
-            </Grid>
-            <Divider variant="fullWidth" className="divider" />
-          </>
-        ))}
-        <Button
-          className="more-button"
-          onClick={() => {
-            fetchRecentlyUpdated(50, 0).then((data: Manga[]) => {
-              handleClickedShowMore("Recently Updated", data);
-            });
-          }}
+        <Grid
+          container
+          spacing={1}
+          columns={{ xs: 20, sm: 20, md: 25, lg: 25, xl: 35 }}
+          className="home-category-manga-grid-container"
         >
-          Show More
-        </Button>
-      </Grid>
-      <Grid container className="home-category-manga-grid-container">
-        <Typography className="category-stack-name"> Recently Added</Typography>
-        {recentlyAddedManga.map((current) => (
-          <>
-            <Grid item className="home-category-manga-grid-item">
-              <Button
-                className="home-category-manga-button"
-                onClick={() => {
-                  handleClick(
-                    current.id,
-                    "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName,
-                  );
-                }}
-              >
-                <Card
-                  sx={{
-                    width: "80px",
-                    height: "110px",
-                  }}
-                >
-                  <CardMedia
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    image={
-                      "https://uploads.mangadex.org/covers/" +
-                      current.id +
-                      "/" +
-                      current.relationships.find(
-                        (i: Relationship) => i.type === "cover_art",
-                      )?.attributes?.fileName
-                    }
-                  />
-                </Card>
-              </Button>
-              <div className="home-category-manga-text">
-                <Typography>{current.attributes.title.en}</Typography>
-              </div>{" "}
-            </Grid>
-            <Divider variant="fullWidth" className="divider" />
-          </>
-        ))}
-        <Button
-          className="more-button"
-          onClick={() => {
-            fetchRecentlyAdded(50, 0).then((data: Manga[]) => {
-              handleClickedShowMore("Recently Updated", data);
-            });
-          }}
-        >
-          Show More
-        </Button>
-      </Grid>
-      {mangaFromTag !== undefined && tag !== undefined ? (
-        <Grid container className="home-category-manga-grid-container">
-          <Typography className="category-stack-name">
-            {tag.attributes.name.en}
-          </Typography>
-          {mangaFromTag.map((current) => (
+          {recentlyUpdatedManga.map((current) => (
             <>
-              <Grid item className="home-category-manga-grid-item">
+              <Grid item className="home-category-manga-grid-item" xs={5}>
                 <Button
                   className="home-category-manga-button"
                   onClick={() => {
-                    handleClick(
-                      current.id,
-                      "https://uploads.mangadex.org/covers/" +
-                        current.id +
-                        "/" +
-                        current.relationships.find(
-                          (i: Relationship) => i.type === "cover_art",
-                        )?.attributes?.fileName,
+                    handleMangaClicked(
+                      current,
+                      coverUrlsRecentlyUpdated[current.id],
                     );
                   }}
                 >
                   <Card
                     sx={{
-                      width: "80px",
-                      height: "110px",
+                      minWidth: "100%",
+                      height: "auto",
                     }}
                   >
                     <CardMedia
                       sx={{
                         width: "100%",
-                        height: "100%",
+                        aspectRatio: "7 / 10",
                       }}
-                      image={
-                        "https://uploads.mangadex.org/covers/" +
-                        current.id +
-                        "/" +
-                        current.relationships.find(
-                          (i: Relationship) => i.type === "cover_art",
-                        )?.attributes?.fileName
-                      }
+                      image={coverUrlsRecentlyUpdated[current.id]}
                     />
                   </Card>
                 </Button>
-                <div className="home-category-manga-text">
-                  <Typography>{current.attributes.title.en}</Typography>
-                </div>{" "}
               </Grid>
-              <Divider variant="fullWidth" className="divider" />
             </>
           ))}
-          <Button
-            className="more-button"
-            onClick={() => {
-              fetchSimilarManga(50, [tag.id]).then((data: Manga[]) => {
-                handleClickedShowMore(tag.attributes.name.en, data);
-              });
-            }}
-          >
-            {" "}
-            Show More
-          </Button>{" "}
         </Grid>
-      ) : null}
+        <Button
+          className="more-button"
+          onClick={() => {
+            fetchRecentlyUpdated(100, 0, contentFilter).then(
+              (data: Manga[]) => {
+                handleClickedShowMore("Recently Updated", data);
+              },
+            );
+          }}
+        >
+          Show More
+        </Button>
+      </div>
+      <Divider
+        orientation="vertical"
+        className="divider-home"
+        variant="middle"
+        flexItem
+      />
+      <div className="category-stack">
+        <Typography className="category-stack-name">Recently Added</Typography>
+        <Grid
+          container
+          spacing={1}
+          columns={{ xs: 20, sm: 20, md: 25, lg: 25, xl: 35 }}
+          className="home-category-manga-grid-container"
+        >
+          {recentlyAddedManga.map((current) => (
+            <>
+              <Grid item className="home-category-manga-grid-item" xs={5}>
+                <Button
+                  className="home-category-manga-button"
+                  onClick={() => {
+                    handleMangaClicked(
+                      current,
+                      coverUrlsRecentlyAdded[current.id],
+                    );
+                  }}
+                >
+                  <Card
+                    sx={{
+                      minWidth: "100%",
+                      height: "auto",
+                    }}
+                  >
+                    <CardMedia
+                      sx={{
+                        width: "100%",
+                        aspectRatio: "7 / 10",
+                      }}
+                      image={coverUrlsRecentlyAdded[current.id]}
+                    />
+                  </Card>
+                </Button>
+              </Grid>
+            </>
+          ))}
+        </Grid>
+        <Button
+          className="more-button"
+          onClick={() => {
+            fetchRecentlyAdded(100, 0, contentFilter).then((data: Manga[]) => {
+              handleClickedShowMore("Recently Added", data);
+            });
+          }}
+        >
+          Show More
+        </Button>
+      </div>
     </div>
   );
 };

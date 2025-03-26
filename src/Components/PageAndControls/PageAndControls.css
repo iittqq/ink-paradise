@@ -1,15 +1,26 @@
+.reader-screen-container {
+  min-height: calc((var(--vh, 1vh) * 100) - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .centered {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  min-height: 35px;
+  max-height: 35px;
 }
 
 .chapter-page-traversal {
   background-color: transparent;
   width: 50%;
   height: 100%;
-  color: #ffffff;
+  color: #fff !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -20,23 +31,27 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  color: unset !important;
+
 }
 
 .page-container {
   position: relative;
-  overflow: scroll;
+
   justify-content: center;
   align-items: center;
   scrollbar-width: none;
+  align-self: center;
+  flex-direction: column;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  z-index: 1;
 }
 
-.page-container: -webkit-scrollbar {
-  display: none;
-}
 .page {
-  width: 100%;
   object-fit: contain;
+  max-width: 100%;
 }
 
 .overlay-buttons {
@@ -44,4 +59,151 @@
   top: 0;
   height: 100%;
   width: 100%;
+}
+
+.reader-page-text {
+  font-family: "Figtree", sans-serif !important;
+  overflow: hidden;
+  max-height: 60px;
+  word-break: break-word;
+  white-space: word-wrap;
+  text-overflow: ellipsis;
+}
+
+.reader-feed {
+  width: 100%;
+  justify-content: space-between;
+  min-height: 40px;
+  max-height: 40px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  scrollbar-width: none;
+  padding: 0px !important;
+}
+
+.reader-feed::-webkit-scrollbar {
+  display: none;
+}
+
+.reader-feed-button {
+  max-width: 190px !important;
+  color: #121212;
+  max-height: 30px;
+  padding: 0px !important;
+  margin: 0px 0px 0px 2px !important;
+  background-color: transparent;
+  border-radius: 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  text-align: center !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+}
+
+.bookmark-button,
+.home-button,
+.library-button-reader,
+.reader-menu-button {
+  max-height: 30px !important;
+  margin: 0 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.settings-button {
+  max-height: 30px !important;
+  margin: 0 2px 0 4px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+#settings-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 25px !important;
+    width: 300px;
+  }
+
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.reader-feed-collapse {
+  min-width: 90vw;
+  display: flex;
+  flex-grow: 1;
+  overflow-y: scroll !important;
+  padding-top: 5px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.title-settings-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.chapter-page-traversal-buttons {
+  color: unset !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+}
+
+#header-menu-reader {
+  & .MuiList-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    gap: 10px;
+  }
+
+  & .MuiPaper-root {
+    background-color: #1f1f1f !important;
+    border-radius: 10px;
+  }
+}
+
+.reader-options-buttons {
+  padding-top: 10px;
+
+}
+
+.reader-options-button {
+  display: flex;
+  flex-direction: column;
+  text-transform: none !important;
+  color: #fff !important;
+  font-family: "Figtree" !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
 }

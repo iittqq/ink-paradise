@@ -32,13 +32,22 @@ export interface Manga {
     tags: { id: string; type: string; attributes: { name: { en: string } } }[];
     createdAt: string;
     updatedAt: string;
+    year: number;
+    publicationDemographic: string;
   };
   relationships: {
     id: string;
     type: string;
-    attributes?: { fileName: string };
+    attributes: { fileName: string; name: string };
   }[];
   status?: string;
+  bookmarkId?: number;
+  chapterNumber?: number;
+  chapterId?: string;
+  index?: number;
+  bookmarkPageNumber?: number;
+  bookmarkContinueReading?: boolean;
+  latestChapter?: MangaFeedScanlationGroup[];
 }
 
 export interface MangaChapter {
@@ -62,6 +71,43 @@ export interface MangaFeed {
     id: string;
     type: string;
   };
+}
+
+export interface MangaAggregated {
+  volumes: {
+    [key: string]: {
+      volume: string;
+      count: number;
+      chapters: {
+        chapter: string;
+        id: string;
+        others: string[];
+        count: number;
+      }[];
+    };
+  };
+}
+
+interface Tag {
+  id: string;
+  type: string;
+  attributes: {
+    name: {
+      en: string;
+    };
+  };
+}
+export interface MangaInfo {
+  name: string;
+  description: string;
+  altTitles: object[];
+  languages: string[];
+  contentRating: string;
+  rawLink: string;
+  tags: Tag[];
+  author: string;
+  status: string;
+  coverUrl: string;
 }
 
 export interface MangaFeedScanlationGroup {
@@ -99,6 +145,27 @@ export interface MangaFeedScanlationGroup {
       publishDelay: string | null;
       created_at: string;
       updated_at: string;
+    };
+  }[];
+}
+
+export interface ChapterDetails {
+  id: string;
+  attributes: {
+    title: string;
+    volume: string;
+    chapter: string;
+    translatedLanguage: string;
+    version: number;
+    createdAt: string;
+    updatedAt: string;
+    externalUrl: string;
+  };
+  relationships: {
+    id: string;
+    type: string;
+    attributes: {
+      name: string;
     };
   }[];
 }

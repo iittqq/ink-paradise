@@ -1,8 +1,7 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:8080";
-
 import { MangaFolderEntry } from "../interfaces/MangaFolderEntriesInterfaces";
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 async function getMangaFolderEntries(): Promise<MangaFolderEntry[]> {
   try {

@@ -12,7 +12,7 @@
   border-radius: 10px;
   object-fit: cover;
 
-  @media (width <= 600px) {
+  @media (width <=600px) {
     width: 150px;
     height: 150px;
   }
@@ -27,6 +27,19 @@
   padding: 10px 10px 10px 10px;
   background-size: cover;
   border-radius: 10px;
+
+  @media (width <=600px) {
+    max-height: 150px;
+  }
+}
+
+.folder-bar-and-grid {
+  min-height: 99vh;
+  max-height: 99vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .utility-buttons {
@@ -52,9 +65,11 @@
 input.edit-info-fields:focus {
   outline: 2px solid #ffffff;
 }
+
 input[type="file"] {
   display: none;
 }
+
 .custom-file-upload {
   display: inline-block;
   width: 100%;
@@ -70,6 +85,33 @@ input[type="file"] {
   font-family: "Figtree";
   box-sizing: border-box;
 }
+
+#logout-dialog .MuiPaper-root {
+  background-color: #121212 !important;
+  border-radius: 25px !important;
+}
+
+.logout-message-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.logout-options {
+  color: #fff !important;
+  font-family: "Figtree" !important;
+  text-transform: none !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: "white";
+  }
+}
+
 .edit-info-fields-container {
   display: flex;
   flex-direction: column;
@@ -88,20 +130,28 @@ input[type="file"] {
   background-color: #333333 !important;
   text-transform: none !important;
   color: #ffffff !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
 }
 
 .user-details {
-  padding-left: 10px;
-  padding-right: 10px;
-  overflow-y: scroll;
+  overflow: scroll;
+  max-width: 100%;
+  word-wrap: break-word;
   font-family: "Figtree" !important;
   scrollbar-width: none;
+  max-height: 100px;
+
   -webkit-scrollbar {
     display: none;
   }
+}
+
+.dialog-header-icon {
+  position: absolute;
+  right: 0;
 }
 
 .account-details-section {
@@ -110,11 +160,13 @@ input[type="file"] {
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 1;
-  padding: 10px;
-
-  margin-left: 10px;
+  padding: 5px;
+  width: 100%;
+  overflow: hidden;
   background-color: rgb(18, 18, 18, 0.8);
   border-radius: 10px;
+  max-height: 140px;
+  min-height: 140px;
 }
 
 .centered-content {
@@ -149,29 +201,31 @@ input[type="file"] {
 
 .category-button {
   color: #ffffff;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: "white";
   }
+
   text-transform: none;
 }
 
 .personal-folders {
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: scroll;
+  flex-grow: 1;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.current-folder-header {
-  font-size: 20px;
-  font-family: "Figtree";
-  padding-bottom: 10px;
-  text-align: center;
-}
+
 .folder-description {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -184,6 +238,7 @@ input[type="file"] {
   font-size: 12px;
   width: 90dvw;
 }
+
 .info-button-container {
   position: absolute;
   right: 5px;
@@ -193,10 +248,12 @@ input[type="file"] {
 .info-open-button {
   width: 30px !important;
   min-width: 30px !important;
-  color: #ffffff !important;
+  color: unset !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -209,18 +266,16 @@ input[type="file"] {
   justify-content: flex-start;
   width: 300px;
 }
+
 .css-j204z7-MuiFormControlLabel-root {
   margin: 0px 0px 0px 0px !important;
 }
 
 #info-dialog .MuiPaper-root {
   background-color: #121212 !important;
-  width: 20dvw !important;
-    border-radius: 25px !important;
-
-  @media (width <= 600px) {
-    width: 90vw !important;
-  }
+  width: 350px !important;
+  height: 750px !important;
+  border-radius: 25px !important;
 }
 
 .edit-content-filter-dropdown {
@@ -270,6 +325,7 @@ input[type="file"] {
   background-color: #333333 !important;
   margin: 5px 0px 5px 0px !important;
   outline: none !important;
+
   :focus {
     border: none !important;
     border: none !important;

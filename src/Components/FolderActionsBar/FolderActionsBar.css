@@ -1,8 +1,14 @@
 .folder-section-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
+  max-height: 50vh;
+  min-height: 50vh;
+  position: fixed;
+  right: 0px;
+  top: 25%;
+  border-radius: 10px;
 }
 
 .folder-search-bar {
@@ -14,9 +20,11 @@
   text-align: center;
   width: 50%;
   border-radius: 25px !important;
+
   @media screen and (min-width: 600px) {
     margin: 0px 0px 0px 0px;
   }
+
   &:focus {
     border: 2px solid #ffffff;
   }
@@ -33,29 +41,30 @@
   text-align: center;
 }
 
-input[type="text"]:focus {
-  border: 2px solid #ffffff;
-}
-
 .search-button {
   max-width: 50px !important;
   min-width: 30px !important;
 
-  color: #ffffff !important;
+  color: unset !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
 }
+
 .header-options-left {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
   @media screen and (max-width: 600px) {
     justify-content: flex-start;
   }
+
   align-items: center;
 }
 
@@ -67,13 +76,14 @@ input[type="text"]:focus {
 }
 
 .back-button-account-page {
-  color: #ffffff !important;
-  background-color: #121212 !important;
+  color: unset !important;
   max-width: 50px !important;
   min-width: 30px !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRippl e-child {
     background-color: #ffffff !important;
   }
@@ -82,18 +92,20 @@ input[type="text"]:focus {
 .create-folder-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
 
 .folder-header-button {
-  color: #ffffff !important;
-  max-width: 30px !important;
-  min-width: 30px !important;
+  color: unset !important;
+  max-width: 40px !important;
+  min-width: 40px !important;
   height: 30px;
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
@@ -114,9 +126,11 @@ input[type="text"]:focus {
   text-transform: none !important;
   background-color: #222222 !important;
   font-family: "Figtree" !important;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: #ffffff !important;
   }
@@ -125,13 +139,33 @@ input[type="text"]:focus {
 #create-folder-dialog {
   & .MuiPaper-root {
     background-color: #121212 !important;
-    border-radius: 25px !important;
+    border-radius: 10px !important;
+    min-width: 80vw;
+
+    @media screen and (min-width: 600px) {
+      min-width: 40vw;
+    }
   }
+
   & .MuiDialogContent-root {
     color: #ffffff !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .manga-folder-alert-action-bar {
+    min-width: 200px !important;
+    max-width: 200px !important;
+    margin-top: 10px;
+    border-radius: 25px !important;
+    padding: 5px !important;
+    align-self: center;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: #fff !important;
   }
 }

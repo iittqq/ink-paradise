@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL as string;
 
 import { Reading } from "../interfaces/ReadingInterfaces";
 
@@ -86,6 +86,21 @@ async function deleteReading(uniqueId: number): Promise<Reading> {
   }
 }
 
+async function getReadingByUserIdAndMangaId(
+  id: number,
+  mangaId: string,
+): Promise<Reading> {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/v1/reading/find_by_user_id_and_manga_id/${id}/${mangaId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 async function deleteReadingByMangaIdAndUserId(
   mangaId: string,
   userId: number,
@@ -93,6 +108,19 @@ async function deleteReadingByMangaIdAndUserId(
   try {
     const response = await axios.delete(
       `${BASE_URL}/api/v1/reading/delete_by_manga_id_and_user_id/${mangaId}/${userId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function updateOrCreateReading(reading: Reading): Promise<Reading> {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/reading/update_or_create`,
+      reading,
     );
     return response.data;
   } catch (error) {
@@ -109,4 +137,6 @@ export {
   getReadingByUserId,
   getReadingByMangaName,
   deleteReadingByMangaIdAndUserId,
+  getReadingByUserIdAndMangaId,
+  updateOrCreateReading,
 };

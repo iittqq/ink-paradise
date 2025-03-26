@@ -1,14 +1,14 @@
 .chapters-list {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  width: calc(99% + 8px) !important;
 }
+
 .chapters-list::-webkit-scrollbar {
   display: none;
 }
 
 .chapter-button-container {
-  height: 50px;
-  width: 25dvw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,14 +16,23 @@
 }
 
 .chapter-button {
-  color: #fff !important;
-  width: 95%;
+  color: unset !important;
   height: 90%;
-  justify-content: space-evenly !important;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 
   .MuiTouchRipple-child {
     background-color: #fff !important;
   }
+
+  &.MuiButtonBase-root:hover {
+    transform: translateY(-3px);
+  }
+
 }
 
 .manga-chapters {
@@ -31,18 +40,21 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
+  padding-bottom: 10px;
 }
 
 .chapter-button-text {
   display: flex;
   flex-direction: row;
-  @media (width >= 1200px) {
+
+  @media (width >=1200px) {
     width: 70%;
   }
-  @media (width <= 1200px) {
+
+  @media (width <=1200px) {
     justify-content: flex-start;
   }
+
   justify-content: space-between;
   align-items: center;
   width: 90%;
@@ -50,34 +62,60 @@
 
 .info-stack {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  width: 40%;
+  width: 100%;
 }
 
 .external-link-button {
-  position: absolute;
-  right: 10px;
   display: grid;
   justify-content: center;
   align-items: center;
 }
 
 .scanlation-name {
-  display: -webkit-box;
   overflow: hidden;
+  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
   font-family: "Figtree" !important;
-  color: #fff;
+  padding-left: 20px;
 }
+
+.chapter-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .chapter-details {
   font-family: "Figtree" !important;
-  color: #fff;
-  text-transform: none;
-  display: -webkit-box;
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  align-items: center;
+}
+
+.show-more-button {
+  font-family: "Figtree", sans-serif !important;
+  text-transform: none !important;
+  width: 50%;
+  margin-top: 10px !important;
+  height: 36px;
+  color: unset !important;
+  align-self: center;
+  display: flex !important;
+
+  &.MuiButtonBase-root:hover {
+    transform: translateY(-3px);
+    background-color: transparent;
+  }
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+  0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }

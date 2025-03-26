@@ -1,30 +1,28 @@
 import { useState, useEffect } from "react";
 import {
-  List,
-  ListItemButton,
-  Collapse,
   Grid,
   Typography,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-
+import GroupIcon from "@mui/icons-material/Group";
 import "./MangaControls.css";
 import { ScanlationGroup } from "../../interfaces/MangaDexInterfaces";
-
+import TranslateIcon from "@mui/icons-material/Translate";
 type Props = {
   mangaLanguages: string[];
-  currentOrder: string;
   selectedLanguage: string;
   handleClickedLanguageButton: (language: string) => void;
-  setCurrentOrder: React.Dispatch<React.SetStateAction<string>>;
   mangaTranslators: ScanlationGroup[];
   setTranslator: React.Dispatch<React.SetStateAction<ScanlationGroup[]>>;
   handleSwitchOrder: () => void;
   handleFilterScanlationGroups: (
     translator: ScanlationGroup | undefined,
   ) => void;
+  selectedScanlationGroup: ScanlationGroup | undefined;
 };
 
 const MangaControls = (props: Props) => {
@@ -34,18 +32,26 @@ const MangaControls = (props: Props) => {
 
   const {
     mangaLanguages,
-    currentOrder,
     handleClickedLanguageButton,
-    setCurrentOrder,
+    selectedLanguage,
     mangaTranslators,
     handleSwitchOrder,
     handleFilterScanlationGroups,
+    selectedScanlationGroup,
   } = props;
   const handleOpenLanguages = () => {
-    setOpen(!open);
+    setOpen(true);
   };
   const handleOpenTranslators = () => {
-    setOpenTranslators(!openTranslators);
+    setOpenTranslators(true);
+  };
+
+  const handleCloseTranslators = () => {
+    setOpenTranslators(false);
+  };
+
+  const handleCloseLanguages = () => {
+    setOpen(false);
   };
 
   const clickedTranslator = (translator: string | undefined) => {
@@ -53,8 +59,6 @@ const MangaControls = (props: Props) => {
       (current) => current.attributes.name === translator,
     );
     handleFilterScanlationGroups(translatorObject);
-
-    console.log(translatorObject);
   };
   useEffect(() => {
     setTranslators([
@@ -64,131 +68,131 @@ const MangaControls = (props: Props) => {
   return (
     <div className="controls-container">
       <div className="controls">
-        <List className="list-container">
-          <ListItemButton
-            className="list-button"
-            onClick={() => {
-              handleOpenTranslators();
-            }}
-          >
-            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
-              Translators
-            </Typography>
-            {openTranslators ? (
-              <ExpandLess sx={{ color: "#333333" }} />
-            ) : (
-              <ExpandMore sx={{ color: "#333333" }} />
-            )}
-          </ListItemButton>
-        </List>
+        <Button
+          className="list-button"
+          onClick={() => {
+            handleOpenTranslators();
+          }}
+        >
+          <GroupIcon className="controls-icon" />
+        </Button>
         <Button
           className="asc-desc-button"
           sx={{ ":hover": { backgroundColor: "transparent" } }}
           onClick={() => {
-            console.log(currentOrder);
             handleSwitchOrder();
-            if (currentOrder === "desc") {
-              setCurrentOrder("asc");
-            } else {
-              setCurrentOrder("desc");
-            }
           }}
         >
-          <SwapVertIcon />
+          <SwapVertIcon className="controls-icon" />
         </Button>{" "}
-        <List className="list-container">
-          <ListItemButton
-            className="list-button"
-            onClick={() => handleOpenLanguages()}
-          >
-            <Typography sx={{ color: "#555555", fontFamily: "Figtree" }}>
-              Languages
-            </Typography>{" "}
-            {open ? (
-              <ExpandLess sx={{ color: "#333333" }} />
-            ) : (
-              <ExpandMore sx={{ color: "#333333" }} />
-            )}
-          </ListItemButton>
-        </List>
+        <Button className="list-button" onClick={() => handleOpenLanguages()}>
+          <TranslateIcon className="controls-icon" />
+        </Button>
       </div>
-      <Collapse unmountOnExit in={openTranslators} timeout="auto">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          sx={{ paddingBottom: open ? "10px" : "0px" }}
-          spacing={1}
-        >
-          <Grid item>
-            {" "}
-            <Button
-              className="scanlation-button"
-              onClick={() => {
-                clickedTranslator(undefined);
-              }}
-            >
-              <Typography
-                className="scanlation-text"
-                sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-                color="#333333"
-                fontFamily="Figtree"
-              >
-                All
-              </Typography>
-            </Button>
-          </Grid>
+      <Dialog
+        open={openTranslators}
+        onClose={handleCloseTranslators}
+        className="controls-dialog"
+      >
+        <DialogTitle className="controls-dialog-title">
+          Scanlation Groups
+        </DialogTitle>
 
-          {translators?.map((current: string) => (
+        <DialogActions className="controls-dialog-option-list">
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            sx={{ paddingBottom: open ? "10px" : "0px" }}
+            spacing={1}
+          >
             <Grid item>
+              {" "}
               <Button
                 className="scanlation-button"
                 onClick={() => {
-                  clickedTranslator(current);
+                  clickedTranslator(undefined);
                 }}
               >
                 <Typography
                   className="scanlation-text"
-                  sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+                  sx={{
+                    fontSize: { xs: 10, sm: 10, lg: 12 },
+                    opacity: selectedScanlationGroup === undefined ? 0.5 : 1,
+                  }}
                 >
-                  {current}
+                  All
                 </Typography>
               </Button>
             </Grid>
-          ))}
-        </Grid>
-      </Collapse>
-      <Collapse unmountOnExit in={open} timeout="auto">
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          sx={{}}
-          spacing={1}
-        >
-          {mangaLanguages.map((current) => (
-            <Grid item>
-              <Button
-                className="language-button"
-                onClick={() => {
-                  handleClickedLanguageButton(current);
-                }}
-                sx={{ ":hover": { backgroundColor: "transparent" } }}
-              >
-                <Typography
-                  sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
-                  color="#333333"
-                  fontFamily="Figtree"
+
+            {translators?.map((current: string) => (
+              <Grid item>
+                <Button
+                  className="scanlation-button"
+                  sx={{
+                    opacity:
+                      current === selectedScanlationGroup?.attributes.name
+                        ? 0.5
+                        : 1,
+                  }}
+                  onClick={() => {
+                    clickedTranslator(current);
+                  }}
                 >
-                  {current}
-                </Typography>
-              </Button>
-            </Grid>
-          ))}
-        </Grid>
-      </Collapse>
+                  <Typography
+                    className="scanlation-text"
+                    sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+                  >
+                    {current}
+                  </Typography>
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={open}
+        onClose={handleCloseLanguages}
+        className="controls-dialog"
+      >
+        <DialogTitle className="controls-dialog-title">Languages</DialogTitle>
+        <DialogActions className="controls-dialog-option-list">
+          {" "}
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            sx={{}}
+            spacing={1}
+          >
+            {mangaLanguages.map((current) => (
+              <Grid item>
+                <Button
+                  className="language-button"
+                  onClick={() => {
+                    handleClickedLanguageButton(current);
+                  }}
+                  sx={{
+                    ":hover": { backgroundColor: "transparent" },
+                    opacity: current === selectedLanguage ? 0.5 : 1,
+                  }}
+                >
+                  <Typography
+                    sx={{ fontSize: { xs: 10, sm: 10, lg: 12 } }}
+                    className="language-text"
+                  >
+                    {current}
+                  </Typography>
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

@@ -1,183 +1,219 @@
-import {
-  Typography,
-  List,
-  ListItemButton,
-  ListItemText,
-  Collapse,
-  Button,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { Typography, Button } from "@mui/material";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Header from "../../Components/Header/Header";
-import dayjs from "dayjs";
-import { Reading } from "../../interfaces/ReadingInterfaces";
-
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import PageAndControls from "../../Components/PageAndControls/PageAndControls";
-import MangaChapterList from "../../Components/MangaChapterList/MangaChapterList";
 import "./Reader.css";
-
-import {
-  updateReading,
-  addReading,
-  getReadingByUserId,
-} from "../../api/Reading";
-
-import { fetchChapterData, fetchMangaFeed } from "../../api/MangaDexApi";
-
 import { Account } from "../../interfaces/AccountInterfaces";
+import { updateOrCreateReading } from "../../api/Reading";
+import { fetchChapterData, fetchMangaAggregated } from "../../api/MangaDexApi";
+import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import {
+  MangaAggregated,
   MangaChapter,
   MangaFeedScanlationGroup,
 } from "../../interfaces/MangaDexInterfaces";
+import {
+  fetchAccountDetails,
+  updateAccountDetails,
+} from "../../api/AccountDetails";
+import { updateOrCreateBookmark } from "../../api/Bookmarks";
 
-const pageBaseUrl = "https://uploads.mangadex.org/data/";
-
-const Reader = () => {
+interface ReaderProps {
+  account: Account | null;
+}
+const Reader = ({ account }: ReaderProps) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [pages, setPages] = useState<string[]>([]);
   const [hash, setHash] = useState<string>("");
-  const [chapters, setChapters] = useState<MangaFeedScanlationGroup[]>([]);
-  const [selectedLanguage] = useState("en");
-  const [open, setOpen] = useState(false);
-  const [order] = useState("asc");
+  const [selectedLanguage] = useState<string>("en");
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
+  const [readerMode, setReaderMode] = useState<string>("");
+  const [readerInteger, setReaderInteger] = useState<number>(1);
+  const [mangaAggregated, setMangaAggregated] = useState<MangaAggregated>();
+  const [pageNumber, setPageNumber] = useState<number>(state.pageNumber);
+  const [bookmarks, setBookmarks] = useState<number[]>([]);
+  const [newReaderMode, setNewReaderMode] = useState<boolean>(false);
+  const [mangaFeedState, setMangaFeedState] = useState<
+    MangaFeedScanlationGroup[]
+  >(state.mangaFeed);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const handleOpenChapters = () => {
-    setOpen(!open);
+  const handleChangePageNumber = (newPageNumber: number) => {
+    setPageNumber(newPageNumber);
   };
 
   function handleClickTitle() {
-    navigate(-1);
+    navigate(`/manga/${state.mangaId}`, {});
   }
-  useEffect(() => {
-    fetchChapterData(state.chapterId).then((data: MangaChapter) => {
-      setPages(data.chapter.data);
-      setHash(data.chapter.hash);
-    });
-    const date = dayjs();
 
-    const account = window.localStorage.getItem("account") as string | null;
-    let accountData: Account | null = null;
+  const handleEditAccountInfo = () => {
     if (account !== null) {
-      accountData = JSON.parse(account);
-    }
-    let readingExists = false;
-    if (accountData !== null) {
-      getReadingByUserId(accountData.id).then((data: Reading[]) => {
-        console.log(data);
-        data.forEach((reading: Reading) => {
-          if (reading.mangaId === state.mangaId) {
-            updateReading({
-              id: reading.id,
-              userId: reading.userId,
-              mangaId: reading.mangaId,
-              chapter: state.chapter,
-              mangaName: reading.mangaName,
-              timestamp: date.toISOString(),
-            });
-            readingExists = true;
-          }
+      fetchAccountDetails(account.id).then((data: AccountDetails) => {
+        updateAccountDetails(account.id, {
+          accountId: data.accountId,
+          bio: data.bio,
+          profilePicture: data.profilePicture,
+          headerPicture: data.headerPicture,
+          contentFilter: data.contentFilter,
+          readerMode: readerInteger,
+          theme: data.theme,
         });
-        if (readingExists === false) {
-          console.log(state.mangaId, state.chapterNumber);
-          const account = window.localStorage.getItem("account") as
-            | string
-            | null;
-          let accountData: Account | null = null;
-          if (account !== null) {
-            accountData = JSON.parse(account);
-          }
-
-          if (accountData !== null) {
-            addReading({
-              userId: accountData.id,
-              mangaId: state.mangaId,
-              chapter: state.chapterNumber,
-              mangaName: state.mangaName,
-              timestamp: date.toISOString(),
-            }).then((data) => {
-              console.log(data);
-            });
-          }
-        }
       });
     }
-    fetchMangaFeed(state.mangaId, 100, 0, order, selectedLanguage).then(
-      (data: MangaFeedScanlationGroup[]) => {
-        setChapters(data);
+    window.localStorage.setItem("readerMode", readerInteger.toString());
+    setOpenSettings(false);
+    setNewReaderMode(!newReaderMode);
+  };
+
+  const handleSettingsDialogClose = () => {
+    setOpenSettings(false);
+  };
+
+  const handleBookmarksChange = (pages: number[]) => {
+    setBookmarks(pages);
+  };
+
+  const handleChangeNewReaderMode = (newReaderMode: number) => {
+    setReaderInteger(newReaderMode);
+    setReaderMode(String(newReaderMode));
+  };
+
+  useEffect(() => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    setBookmarks([]);
+    fetchChapterData(state.chapterId, abortControllerRef.current.signal).then(
+      (data: MangaChapter) => {
+        setPages(data.chapter.data);
+        setHash(data.chapter.hash);
       },
     );
-  }, [state, order, selectedLanguage]);
+    if (state.mangaId) {
+      fetchMangaAggregated(
+        state.mangaId,
+        selectedLanguage,
+        abortControllerRef.current.signal,
+      ).then((data: MangaAggregated) => {
+        setMangaAggregated(data);
+        console.log(data);
+      });
+    }
+    window.localStorage.setItem("position", window.scrollY.toString());
+    const readerMode = window.localStorage.getItem("readerMode");
+    setReaderMode(readerMode === null ? "1" : readerMode);
+    setReaderInteger(readerMode === null ? 1 : parseInt(readerMode));
+
+    const tempBookmarks: number[] = [];
+
+    if (account !== null) {
+      updateOrCreateReading({
+        userId: account.id,
+        mangaId: state.mangaId,
+        chapter: state.chapterNumber,
+        mangaName: state.mangaName.replace(/[^a-zA-Z]/g, " "),
+        timestamp: new Date().toISOString(),
+      });
+
+      updateOrCreateBookmark({
+        userId: account.id,
+        mangaId: state.mangaId,
+        mangaName: state.mangaName.replace(/[^a-zA-Z]/g, " "),
+        chapterNumber: state.chapterNumber,
+        chapterId: state.chapterId,
+        chapterIndex: Math.trunc(state.chapterNumber),
+        continueReading: true,
+      }).then(() => {
+        handleBookmarksChange(tempBookmarks);
+      });
+    }
+  }, [state, selectedLanguage, newReaderMode]);
+
+  useEffect(() => {
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    setVh();
+    window.addEventListener("resize", setVh);
+
+    const scrollToBottom = () => {
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      });
+    };
+
+    const timeout = setTimeout(scrollToBottom, 100);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", setVh);
+    };
+  }, []);
 
   return (
     <div className="reader-page">
-      <div className="header">
-        <Header />
-      </div>
-      <div className="current-manga-details">
-        <Button
-          sx={{ textTransform: "none" }}
-          onClick={() => {
-            handleClickTitle();
-          }}
-        >
-          <Typography className="reader-page-text" fontSize={20}>
-            {state.mangaName}
-          </Typography>
-        </Button>
-        <Typography className="reader-page-text">{state.title}</Typography>
-        <Typography className="reader-page-text">
-          {" "}
-          Scanlation Group: {state.scanlationGroup}
-        </Typography>
-        <List className="reader-feed">
-          <ListItemButton
-            className="reader-feed-button"
-            onClick={() => handleOpenChapters()}
+      <div className="active-page-area">
+        <div className="current-manga-details">
+          <Button
+            className="manga-name-button"
+            onClick={() => {
+              handleClickTitle();
+            }}
           >
-            <ListItemText
-              primary={
-                <Typography
-                  className="reader-page-text"
-                  sx={{ width: "100%" }}
-                  noWrap
-                >
-                  {"Volume " + state.volume + " Chapter " + state.chapter}
-                </Typography>
-              }
-            />
-            {open ? (
-              <ExpandLess sx={{ color: "white" }} />
-            ) : (
-              <ExpandMore sx={{ color: "white" }} />
-            )}
-          </ListItemButton>
-          <Collapse className="reader-feed-collapse" in={open} timeout="auto">
-            <MangaChapterList
-              mangaId={state.mangaId}
-              mangaFeed={chapters}
-              mangaName={state.mangaName}
-              selectedLanguage={selectedLanguage}
-              insideReader={true}
-              setOpen={setOpen}
-            />
-          </Collapse>
-        </List>
-      </div>
-      {open === true ? null : (
+            <Typography className="reader-page-text-name" fontSize={20}>
+              {state.mangaName}
+            </Typography>
+          </Button>
+          <Typography className="reader-page-text">{state.title}</Typography>
+          <Typography className="reader-page-text">
+            {" "}
+            Scanlation Group: {state.scanlationGroup}
+          </Typography>
+        </div>
         <PageAndControls
-          chapters={chapters}
+          id={state.mangaId}
           pages={pages}
-          pageBaseUrl={pageBaseUrl}
           hash={hash}
-          currentChapter={state.chapter}
+          currentChapter={state.chapterNumber}
           mangaId={state.mangaId}
           mangaName={state.mangaName}
           scanlationGroup={state.scanlationGroup}
+          readerMode={readerInteger}
+          accountId={account === null ? null : account.id}
+          order={state.sortOrder}
+          selectedLanguage={selectedLanguage}
+          chapterIndex={Math.trunc(state.chapterNumber)}
+          mangaAggregated={mangaAggregated!}
+          mangaFeedState={mangaFeedState}
+          setMangaFeedState={setMangaFeedState}
+          handleChangePageNumber={handleChangePageNumber}
+          startPage={
+            pageNumber === null || state.pageNumber === undefined
+              ? 0
+              : state.pageNumber
+          }
+          volume={state.volume}
+          chapterNumber={state.chapterNumber}
+          bookmarks={bookmarks}
+          setBookmarks={setBookmarks}
+          pageNumber={pageNumber}
+          setOpenSettings={setOpenSettings}
+          handleSettingsDialogClose={handleSettingsDialogClose}
+          handleChangeNewReaderMode={handleChangeNewReaderMode}
+          handleEditAccountInfo={handleEditAccountInfo}
+          chapterId={state.chapterId}
+          openSettings={openSettings}
+          readerModeString={readerMode}
+          coverUrl={state.coverUrl}
+          contentFilter={state.contentFilter}
+          oneshot={state.oneshot}
         />
-      )}
+      </div>
     </div>
   );
 };

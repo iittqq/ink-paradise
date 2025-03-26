@@ -2,10 +2,8 @@ import { Button, Card, Typography } from "@mui/material";
 
 import "./Login.css";
 import { useState } from "react";
-import { createAccount, login } from "../../api/Account";
+import { createAccount, login, resetPassword } from "../../api/Account";
 import { useNavigate } from "react-router-dom";
-import { Account } from "../../interfaces/AccountInterfaces";
-import { AccountDetails } from "../../interfaces/AccountDetailsInterfaces";
 import { createAccountDetails } from "../../api/AccountDetails";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { PasswordResults } from "../../interfaces/PasswordStrengthInterface";
@@ -13,7 +11,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-const Login = () => {
+import { Account } from "../../interfaces/AccountInterfaces";
+
+interface LoginProps {
+  fetchAccount: () => Promise<{ account: Account } | null>;
+  account: Account | null;
+}
+const Login = ({ fetchAccount, account }: LoginProps) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,30 +31,34 @@ const Login = () => {
     uppercase: 0,
     numbers: 0,
     special: 0,
+    matches: 0,
   });
   const [togglePasswordVisibility, setTogglePasswordVisibility] =
     useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<boolean>(false);
-
+  const [passwordReset, setPasswordReset] = useState<boolean>(false);
+  const [accountExists, setAccountExists] = useState<boolean>(false);
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
+  const [notVerified] = useState<boolean>(
+    account && account.verified === true ? false : true,
+  );
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-    testPasswordStrength(event.target.value);
+    testPasswordStrength(event.target.value, confirmPassword);
     setPasswordError(false);
-    console.log(passwordStrength);
-    console.log(passwordResults);
   };
 
   const handleConfirmPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setConfirmPassword(event.target.value);
+    testPasswordStrength(password, event.target.value);
   };
 
-  const testPasswordStrength = (password: string) => {
+  const testPasswordStrength = (password: string, confirmPassword: string) => {
     let score = 0;
     const results: PasswordResults = {
       length: 0,
@@ -58,6 +66,7 @@ const Login = () => {
       uppercase: 0,
       numbers: 0,
       special: 0,
+      matches: 0,
     };
     if (!password) return "";
     // Check password length
@@ -87,6 +96,10 @@ const Login = () => {
       score += 1;
       results.special = 1;
     }
+    if (password === confirmPassword) {
+      score += 1;
+      results.matches = 1;
+    }
     setPasswordResults(results);
     setPasswordStrength(score);
   };
@@ -96,27 +109,42 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    console.log(email, password, username);
-    if (email !== "" || password !== "") {
-      login(email, password).then((response: Account | string) => {
-        if (typeof response !== "string") {
-          window.localStorage.setItem("account", JSON.stringify(response));
+    if (email !== "" && password !== "") {
+      try {
+        const response = await login(email, password);
+        if (response) {
           setAttemptedLogin(false);
-          navigate("/");
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
+
+          const fetchedData = await fetchAccount();
+          console.log(fetchedData);
+          if (fetchedData?.account && fetchedData.account.verified === true) {
+            navigate("/");
+          } else {
+            console.log("not verified");
+          }
         } else {
-          console.log("Invalid login");
           setEmail("");
           setPassword("");
           setAttemptedLogin(true);
         }
-      });
-    } else {
-      console.log("Entries are empty");
+      } catch (error) {
+        console.error("Login failed:", error);
+        setEmail("");
+        setPassword("");
+        setAttemptedLogin(true);
+      }
+    }
+  };
+
+  const handleRecoverPassword = () => {
+    if (email !== "") {
+      resetPassword(email);
     }
   };
 
   const handleRegister = async () => {
-    console.log(username, email, password, confirmPassword);
     if (
       password === confirmPassword &&
       email !== "" &&
@@ -125,31 +153,40 @@ const Login = () => {
       passwordStrength > 3 &&
       passwordResults.length === 1
     ) {
-      createAccount({
-        email: email,
-        username: username,
-        password: password,
-        verificationCode: "",
-        verified: false,
-      }).then((response: Account) => {
-        console.log(response);
-        window.localStorage.setItem("account", JSON.stringify(response));
+      try {
+        const id = await createAccount({
+          email: email,
+          username: username,
+          password: password,
+          verificationCode: "",
+          verified: false,
+        });
+
         navigate("/");
 
-        createAccountDetails({
-          accountId: response.id,
+        await createAccountDetails({
+          accountId: id,
           bio: "Hello World",
           profilePicture: null,
           headerPicture: null,
-          contentFilter: 1,
-        }).then((response: AccountDetails) => {
-          console.log(response);
+          contentFilter: 3,
+          readerMode: 1,
+          theme: 0,
         });
-      });
+      } catch (error) {
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "response" in error
+        ) {
+          setAccountExists(true);
+        } else {
+          console.error("Unexpected error:", error);
+        }
+      }
     } else {
       setPassword("");
       setConfirmPassword("");
-      console.log("Passwords do not match");
       setPasswordError(true);
     }
   };
@@ -160,7 +197,13 @@ const Login = () => {
       {visible === true ? (
         <Card className="login-card" elevation={5}>
           <div className="header-back-button-container">
-            <Button onClick={() => setVisible(false)} className="back-button">
+            <Button
+              onClick={() => {
+                setVisible(false);
+                setAccountExists(false);
+              }}
+              className="back-button"
+            >
               <ArrowBackIcon />
             </Button>
             <Typography className="register-header">Register</Typography>
@@ -245,7 +288,7 @@ const Login = () => {
             <div className="register-section">
               <div className="password-strength-container">
                 <Typography className="password-strength-text">
-                  Password Strength:{" "}
+                  Password Strength:&nbsp;
                   {passwordStrength > 3
                     ? "Strong"
                     : passwordStrength > 2
@@ -293,10 +336,23 @@ const Login = () => {
                       <CloseIcon className="results-icon" />
                     )}
                   </div>
+                  <div className="result-group">
+                    Password Matches:
+                    {passwordResults.matches === 1 ? (
+                      <CheckIcon className="results-icon" />
+                    ) : (
+                      <CloseIcon className="results-icon" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          {accountExists ? (
+            <Typography className="password-error-text">
+              Account Already Exists
+            </Typography>
+          ) : null}
           <Button
             variant="contained"
             className="register-button"
@@ -329,8 +385,52 @@ const Login = () => {
             Register
           </Button>
         </Card>
+      ) : passwordReset === true ? (
+        <Card className="password-reset-card" elevation={5}>
+          <div className="header-back-button-container">
+            <Button
+              onClick={() => setPasswordReset(false)}
+              className="back-button"
+            >
+              <ArrowBackIcon />
+            </Button>
+            <Typography className="register-header">Reset</Typography>
+          </div>
+          <div className="login-section-container">
+            <Typography className="login-text-field-headers">Email</Typography>
+            <input
+              type="email"
+              className="login-input-fields"
+              placeholder="Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+          </div>
+          <div className="register-button-and-message-container">
+            <Button
+              className="register-button"
+              onClick={() => {
+                handleRecoverPassword();
+              }}
+            >
+              <Typography fontFamily="Figtree" textTransform="none">
+                Recover Password
+              </Typography>
+            </Button>
+          </div>
+        </Card>
       ) : (
         <Card className="login-card" elevation={5}>
+          <div className="header-back-button-container">
+            <Button
+              onClick={() => {
+                navigate("/");
+              }}
+              className="back-button"
+            >
+              <ArrowBackIcon />
+            </Button>
+          </div>
           <Typography className="login-header">Login</Typography>
           <div className="login-section-container">
             <Typography className="login-text-field-headers">Email</Typography>
@@ -350,7 +450,7 @@ const Login = () => {
               Password
             </Typography>
             <input
-              type="password"
+              type={togglePasswordVisibility ? "text" : "password"}
               className="login-input-fields"
               placeholder="Password"
               value={password}
@@ -361,7 +461,12 @@ const Login = () => {
                 Invalid Credentials. Retry
               </Typography>
             ) : null}
-            <Button className="forgot-password-button">
+            <Button
+              className="forgot-password-button"
+              onClick={() => {
+                setPasswordReset(true);
+              }}
+            >
               <Typography
                 textTransform="none"
                 fontSize={12}
@@ -370,8 +475,19 @@ const Login = () => {
                 Forgot Password?
               </Typography>
             </Button>
+            <Button
+              className="toggle-password-visibility-button-login"
+              onClick={() =>
+                setTogglePasswordVisibility(!togglePasswordVisibility)
+              }
+            >
+              {togglePasswordVisibility ? (
+                <VisibilityOffIcon />
+              ) : (
+                <VisibilityIcon />
+              )}
+            </Button>{" "}
           </div>
-
           <Button
             variant="contained"
             className="login-button"
@@ -383,19 +499,30 @@ const Login = () => {
               Login
             </Typography>
           </Button>
+          <div className="register-button-and-message-container">
+            {account && notVerified === true ? (
+              <Typography className="register-message">
+                Please verify your account via email
+              </Typography>
+            ) : (
+              <Typography className="register-message">
+                Don't have an account yet?
+              </Typography>
+            )}
 
-          <Button
-            className="register-button"
-            onClick={() => {
-              setVisible(true);
-              setEmail("");
-              setPassword("");
-            }}
-          >
-            <Typography fontFamily="Figtree" textTransform="none">
-              Register
-            </Typography>
-          </Button>
+            <Button
+              className="register-button"
+              onClick={() => {
+                setVisible(true);
+                setEmail("");
+                setPassword("");
+              }}
+            >
+              <Typography fontFamily="Figtree" textTransform="none">
+                Register
+              </Typography>
+            </Button>
+          </div>
         </Card>
       )}
     </div>

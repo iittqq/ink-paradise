@@ -5,11 +5,18 @@
   width: 100%;
 }
 
+.active-page-area {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .reader-page {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
 }
 
 .current-manga-details {
@@ -19,37 +26,32 @@
   align-items: center;
 }
 
-.reader-page-text {
-  color: #fff;
-  font-family: "Figtree", sans-serif !important;
-}
+.manga-name-button {
+  text-transform: none !important;
+  color: unset;
+  align-self: center;
 
-.reader-feed {
-  @media (width <= 1200px) {
-    width: 95dvw;
-  }
-  width: 80dvw;
-
-  height: 100%;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.reader-feed::-webkit-scrollbar {
-  display: none;
-}
-.reader-feed-collapse {
-}
-
-.reader-feed-button {
-  width: 100%;
-  color: #121212;
-  background-color: transparent;
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+}
+
+.reader-page-text {
+  font-family: "Figtree", sans-serif !important;
+  overflow: hidden;
+  max-height: 60px;
+  word-break: break-word;
+  white-space: word-wrap;
+  text-overflow: ellipsis;
+}
+
+.reader-page-text-name {
+  font-family: "Figtree", sans-serif !important;
+  align-self: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }

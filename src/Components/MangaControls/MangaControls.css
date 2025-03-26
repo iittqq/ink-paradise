@@ -1,15 +1,8 @@
-.controls-container {
-  padding-bottom: 10px;
-  width: 100%;
+.page-and-controls-container {
+  height: 80vh;
 }
 
-.asc-desc-button {
-  font-family: "Figtree", sans-serif !important;
-  text-transform: none !important;
-  color: #333 !important;
-  height: 30px;
-  min-width: 20px !important;
-  background-color: #191919 !important;
+.controls-container {
 }
 
 .arrow-button {
@@ -17,56 +10,105 @@
 }
 
 .scanlation-button {
-  background-color: #191919 !important;
   width: 100px;
   height: 30px;
+  color: unset !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
 }
 
 .language-button {
-  background-color: #191919 !important;
   width: 60px;
   height: 25px;
-}
-
-.translator-button {
-  background-color: #191919 !important;
-  width: 55px;
-  height: 45px;
+  color: unset !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+  .MuiTouchRipple-child {
+    background-color: #fff !important;
+  }
 }
 
 .controls {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-
-  @media (width >= 900px) {
-    justify-content: center;
-  }
-}
-
-.list-container {
-  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  gap: 10px;
+  margin-right: 2px;
 }
 
-.list-button {
-  width: 150px;
-  color: #121212;
-  background-color: transparent;
+.list-button,
+.asc-desc-button {
   justify-content: center !important;
   align-items: center !important;
+  height: 30px;
+  min-width: 30px !important;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
 }
 
 .scanlation-text {
   text-transform: none;
   font-family: "Figtree", sans-serif !important;
-  color: #333 !important;
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+}
+
+.language-text {
+  font-family: "Figtree", sans-serif !important;
+}
+
+.controls-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px;
+    color: #ffffff !important;
+    min-width: 80vw;
+    @media screen and (min-width: 600px) {
+      min-width: 35vw;
+    }
+  }
+}
+
+.controls-and-feed-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls-dialog-option-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.controls-dialog-title {
+  text-align: center;
+}
+
+.controls-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  border: none;
+  width: 80%;
+  margin: 10px 0px 10px 0px !important;
+  border-radius: 25px !important;
+  text-align: center;
 }

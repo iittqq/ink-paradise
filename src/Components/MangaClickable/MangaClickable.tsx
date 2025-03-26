@@ -1,50 +1,76 @@
+import { useState } from "react";
 import { Card, CardMedia, Button, Typography } from "@mui/material";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { Manga } from "../../interfaces/MangaDexInterfaces";
+import MangaDetailsDialog from "../MangaDetailsDialog/MangaDetailsDialog";
 
 import "./MangaClickable.css";
 
 type Props = {
+  manga: Manga;
   id?: string;
   title: string;
   coverUrl?: string;
-  updatedAt?: string;
-  rank?: string;
   disabled?: boolean;
+  accountId: number | null;
+  contentFilter: number;
 };
 
 const MangaClickable = (props: Props) => {
   const navigate = useNavigate();
-  //const [showDetails, setShowDetails] = useState(false);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const [mangaDetailsToDisplay, setMangaDetailsToDisplay] = useState<Manga>();
+  const [mangaCoverToDisplay, setMangaCoverToDisplay] = useState<string>();
 
-  const { id, title, coverUrl, updatedAt, rank, disabled } = props;
+  const { manga, title, coverUrl, disabled, accountId, contentFilter } = props;
 
-  function handleClick() {
-    navigate("/individualView", {
-      state: { id: id, coverUrl: coverUrl },
-    });
-  }
+  const handleClick = (id: string) => {
+    console.log("id: ", id);
+    console.log(accountId);
+    navigate(`/manga/${id}`);
+  };
+  const handleDetailsDialogClose = () => {
+    setOpenDetailsDialog(false);
+  };
+
+  const handleMangaClicked = (mangaData: Manga, cover: string) => {
+    setOpenDetailsDialog(true);
+    setMangaDetailsToDisplay(mangaData);
+    setMangaCoverToDisplay(cover);
+  };
 
   return (
     <>
+      {mangaDetailsToDisplay && (
+        <MangaDetailsDialog
+          mangaDetails={mangaDetailsToDisplay}
+          openDetailsDialog={openDetailsDialog}
+          handleDetailsDialogClose={handleDetailsDialogClose}
+          coverUrl={mangaCoverToDisplay!}
+          handleClick={handleClick}
+          accountId={accountId}
+          contentFilter={contentFilter}
+        />
+      )}
+
       <Button
         className="manga-button"
         disabled={disabled && disabled != undefined ? true : false}
         onClick={() => {
-          handleClick();
+          handleMangaClicked(manga, coverUrl!);
         }}
       >
         <Card
           sx={{
-            width: { xs: "100px", sm: "130px", md: "130px", lg: "130px" },
-            height: { xs: "150px", sm: "200px", md: "200px", lg: "200px" },
+            width: "100%",
+            height: "auto",
             position: "relative",
           }}
         >
           <CardMedia
             sx={{
               width: "100%",
-              height: "100%",
+              aspectRatio: "7 / 10",
             }}
             image={coverUrl}
           />
@@ -54,27 +80,10 @@ const MangaClickable = (props: Props) => {
           <Typography
             textTransform="none"
             color="white"
-            noWrap
             className="overlay-title"
           >
             {title}
           </Typography>
-          <Typography color="white" className="overlay-date">
-            {updatedAt === undefined
-              ? null
-              : dayjs(updatedAt).format("DD/MM/YYYY / HH:MM")}
-          </Typography>
-          {rank === undefined ? null : (
-            <Typography
-              textTransform="none"
-              color="white"
-              sx={{
-                fontSize: 10,
-              }}
-            >
-              Rank: {rank}
-            </Typography>
-          )}
         </div>
       </Button>
     </>

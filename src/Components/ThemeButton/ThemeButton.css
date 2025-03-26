@@ -1,0 +1,45 @@
+.theme-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+}
+
+#open-theme-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 25px;
+    padding: 20px;
+  }
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.open-theme-dialog-title {
+  font-family: "Figtree", sans-serif !important;
+  font-size: 20px !important;
+  color: #fff !important;
+  align-self: center;
+}
+
+.theme-button {
+  text-transform: none !important;
+  background-color: transparent !important;
+  color: #fff !important;
+  font-family: "Figtree", sans-serif !important;
+  font-size: 16px !important;
+  width: 150px;
+}
+
+.theme-dialog-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

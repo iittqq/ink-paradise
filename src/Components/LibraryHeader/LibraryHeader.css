@@ -1,17 +1,23 @@
 .library-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  width: 100%;
+  max-height: 50vh;
+  min-height: 50vh;
+  position: fixed;
+  right: 0px;
+  top: 25%;
+  border-radius: 10px;
 }
 
 .library-header-button {
-  color: #ffffff !important;
+  color: unset !important;
   padding: 3px 4px !important;
   max-width: 60px !important;
   min-width: 40px !important;
   margin: 0px 2px 0px 2px !important;
+
   &:hover {
     background-color: transparent !important;
   }
@@ -20,8 +26,15 @@
 .library-header-options {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   align-items: center;
+  width: 30%;
+  padding-bottom: 5px;
+
+  @media (width <=800px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .library-search-bar {
@@ -31,6 +44,7 @@
   border-radius: 25px !important;
   width: 80%;
   text-align: center;
+
   &:focus {
     outline: 2px solid #ffffff;
   }
@@ -66,7 +80,69 @@
   color: #ffffff !important;
   text-transform: none !important;
   font-family: "Figtree" !important;
+
   &:hover {
     background-color: transparent !important;
   }
+}
+
+.library-contents-and-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.create-button {
+  margin-top: 10px !important;
+  color: #ffffff !important;
+  text-transform: none !important;
+  background-color: #222222 !important;
+  font-family: "Figtree" !important;
+
+  &.MuiButtonBase-root:hover {
+    background-color: transparent;
+  }
+
+  .MuiTouchRipple-child {
+    background-color: #ffffff !important;
+  }
+}
+
+#create-folder-dialog {
+  & .MuiPaper-root {
+    background-color: #121212 !important;
+    border-radius: 10px !important;
+    min-width: 80vw;
+
+    @media screen and (min-width: 600px) {
+      min-width: 40vw;
+    }
+  }
+
+  & .MuiDialogContent-root {
+    color: #ffffff !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .manga-folder-alert-library {
+    min-width: 200px !important;
+    margin-top: 10px;
+    border-radius: 25px !important;
+    padding: 5px !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.folder-inputs {
+  all: unset;
+  font-family: "Figtree";
+  padding: 5px;
+  width: 80%;
+  margin: 10px 0px 10px 0px;
+  border-radius: 25px !important;
+  text-align: center;
 }

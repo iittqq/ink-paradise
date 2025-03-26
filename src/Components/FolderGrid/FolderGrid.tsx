@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { Grid, Button, CircularProgress, Typography } from "@mui/material";
 import { MangaFolder } from "../../interfaces/MangaFolderInterfaces";
-import { Manga } from "../../interfaces/MangaDexInterfaces";
-import { Relationship } from "../../interfaces/MangaDexInterfaces";
+import { Manga, Relationship } from "../../interfaces/MangaDexInterfaces";
 import MangaClickable from "../MangaClickable/MangaClickable";
 import "./FolderGrid.css";
+import { fetchMangaCoverBackend } from "../../api/MangaDexApi";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   folderClick: (folder: MangaFolder) => void;
@@ -16,9 +18,12 @@ type Props = {
   folderMangaData: Manga[] | null;
   mangaEntriesToDelete: string[];
   selectAll: boolean;
+  accountId: number;
+  contentFilter: number;
 };
 
 const FolderGrid = (props: Props) => {
+  const navigate = useNavigate();
   const {
     folderClick,
     mangaEntryClick,
@@ -30,7 +35,14 @@ const FolderGrid = (props: Props) => {
     folderMangaData,
     mangaEntriesToDelete,
     selectAll,
+    accountId,
+    contentFilter,
   } = props;
+
+  const [coverUrlsFolderGrid, setCoverUrlsFolderGrid] = useState<{
+    [key: string]: string;
+  }>({});
+
   const handleFolderClick = (folder: MangaFolder) => {
     folderClick(folder);
   };
@@ -39,6 +51,30 @@ const FolderGrid = (props: Props) => {
     mangaEntryClick(manga);
   };
 
+  useEffect(() => {
+    const fetchCoverImagesFolderGrid = async () => {
+      if (folderMangaData) {
+        for (const manga of folderMangaData) {
+          const fileName = manga.relationships.find(
+            (i: Relationship) => i.type === "cover_art",
+          )?.attributes?.fileName;
+          if (fileName) {
+            const imageBlob = await fetchMangaCoverBackend(manga.id, fileName);
+            const imageUrl = URL.createObjectURL(imageBlob);
+            setCoverUrlsFolderGrid((prevCoverUrls) => ({
+              ...prevCoverUrls,
+              [manga.id]: imageUrl,
+            }));
+          }
+        }
+      }
+    };
+
+    if (folderMangaData) {
+      fetchCoverImagesFolderGrid();
+    }
+  }, [folderMangaData]);
+
   return (
     <Grid
       container
@@ -46,6 +82,8 @@ const FolderGrid = (props: Props) => {
       alignItems="center"
       direction="row"
       spacing={1}
+      className="folder-grid"
+      columns={{ xs: 12, sm: 15, md: 21, lg: 24 }}
     >
       {loading ? (
         <Grid item>
@@ -53,7 +91,7 @@ const FolderGrid = (props: Props) => {
         </Grid>
       ) : selectedFolder === null ? (
         folders.map((folder: MangaFolder) => (
-          <Grid item className="folder-grid-item">
+          <Grid item key={folder.folderId} className="folder-grid-item" xs={3}>
             <Button
               className="folder"
               onClick={() => {
@@ -65,28 +103,54 @@ const FolderGrid = (props: Props) => {
                     ? mangaFoldersToDelete.includes(folder.folderId)
                       ? 0.2
                       : 1
-                    : null,
+                    : undefined,
+                backgroundImage:
+                  folder.folderCover !== ""
+                    ? `url(${folder.folderCover})`
+                    : "none",
+
+                width: "100%",
+                aspectRatio: "7 / 10",
+                height: "100%",
+                position: "relative",
               }}
             >
-              <div>
+              {folder.folderName === "" ? null : (
                 <Typography
-                  textTransform={"none"}
-                  color={"#ffffff"}
-                  fontFamily={"Figtree"}
+                  textTransform="none"
+                  fontFamily="Figtree"
+                  sx={{
+                    backgroundColor:
+                      folder.folderCover !== "" ? "rgba(0, 0, 0, 0.6)" : "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "5px",
+                    height: "100%",
+                    width: "100%",
+                    color: folder.folderCover !== "" ? "#ffffff" : "none",
+                  }}
                 >
-                  {folder.folderName} <br />
+                  {folder.folderName}{" "}
                 </Typography>
-              </div>
+              )}
             </Button>
           </Grid>
         ))
       ) : folderMangaData?.length === 0 ? (
         <Grid item>
-          <Typography fontFamily={"Figtree"}>Empty...</Typography>
+          <Button
+            className="redirect-button"
+            onClick={() => {
+              navigate("/", { state: { accountId: accountId } });
+            }}
+          >
+            <Typography fontFamily="Figtree">Start Browsing</Typography>
+          </Button>
         </Grid>
       ) : (
         folderMangaData?.map((element: Manga) => (
-          <Grid item>
+          <Grid item key={element.id} xs={3}>
             <Button
               className="manga-entry-overlay-button"
               onClick={() => {
@@ -97,18 +161,17 @@ const FolderGrid = (props: Props) => {
               }}
             >
               <MangaClickable
+                manga={element}
                 id={element.id}
-                title={element.attributes.title.en}
-                coverUrl={
-                  "https://uploads.mangadex.org/covers/" +
-                  element.id +
-                  "/" +
-                  element.relationships.find(
-                    (i: Relationship) => i.type === "cover_art",
-                  )?.attributes?.fileName
+                title={
+                  element.attributes.title.en === undefined
+                    ? Object.values(element.attributes.title)[0]
+                    : element.attributes.title.en
                 }
-                updatedAt={element.attributes.updatedAt}
+                coverUrl={coverUrlsFolderGrid[element.id]}
                 disabled={checked || selectAll}
+                accountId={accountId}
+                contentFilter={contentFilter}
               />
             </Button>
           </Grid>

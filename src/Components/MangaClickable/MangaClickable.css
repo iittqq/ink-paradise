@@ -14,22 +14,42 @@
   font-size: 15px !important;
   max-width: 100%;
   font-family: "Figtree" !important;
+  display: -webkit-box;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .overlay-date {
   font-size: 13px !important;
   font-family: "Figtree" !important;
 }
+
 .manga-button {
   background-color: transparent;
+
   &.MuiButtonBase-root:hover {
     background-color: transparent;
   }
+
   .MuiTouchRipple-child {
     background-color: white;
   }
+
   width: 100%;
   padding: 0px !important;
   display: flex;
   flex-direction: column;
+}
+
+.chapter-count-number {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #131313;
+  padding: 0px 5px 0px 5px;
+  border-radius: 4px;
+  font-family: "Figtree";
+  line-height: 1.5;
+  color: #fff;
 }
